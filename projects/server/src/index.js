@@ -16,7 +16,7 @@ app.use(
 
 app.use(express.json());
 
-// const routes = require("./routes");
+const routes = require("./routes");
 const db = require("./models");
 // db.sequelize.sync({ alter: true });
 
@@ -24,6 +24,9 @@ const db = require("./models");
 
 // ===========================
 // NOTE : Add your routes here
+app.use("/address", routes.addressRoutesB);
+app.use("/category", routes.categoryRoutesB);
+app.use("/stock", routes.stockRoutesB);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

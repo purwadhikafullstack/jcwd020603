@@ -1,26 +1,34 @@
-import axios from "axios";
-import logo from "./logo.svg";
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import { Center, Spinner } from "@chakra-ui/react";
 import "./App.css";
 import { useEffect, useState } from "react";
+import { Routes } from "react-router-dom";
+import routes from "./routes/Routes";
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/greetings`
-      );
-      setMessage(data?.message || "");
-    })();
-  }, []);
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(setLoading(false));
+      }, 1000);
+    });
+  }, [loading]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {message}
-      </header>
-    </div>
+    <>
+      {loading ? (
+        <Center h={"100vh"}>
+          <Spinner />
+        </Center>
+      ) : (
+        <Provider store={store}>
+          <Routes>{routes.map((val) => val)}</Routes>
+        </Provider>
+      )}
+    </>
   );
 }
 
