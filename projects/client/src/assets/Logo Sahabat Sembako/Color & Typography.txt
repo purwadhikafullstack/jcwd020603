@@ -1,0 +1,9 @@
+Color Pallet:
+
+Primary Green #199950
+Brown #9D9C45
+
+Typography :
+Abril Fatface
+
+ contoh boxshadow : px px px px rgba(0,0,0,0.5)

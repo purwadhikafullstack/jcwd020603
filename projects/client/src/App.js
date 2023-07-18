@@ -1,26 +1,34 @@
-import axios from "axios";
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import routes from "./routes/Routes";
 import { useEffect, useState } from "react";
+import { Center, Image } from "@chakra-ui/react";
+import logo from "./assets/SVG/2.svg";
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/greetings`
-      );
-      setMessage(data?.message || "");
-    })();
-  }, []);
+    setTimeout(() => setLoading(false), 1000);
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {message}
-      </header>
-    </div>
+    <>
+      {loading ? (
+        <Center
+          h={"100vh"}
+          // maxW={"500px"}
+          w={"100%"}
+          display={"flex"}
+          flexDir={"column"}
+          justifyContent={"center"}
+        >
+          <Image src={logo} w={"30%"} h={"30%"} />
+        </Center>
+      ) : (
+        <Routes>{routes.map((val) => val)}</Routes>
+      )}
+    </>
   );
 }
 
