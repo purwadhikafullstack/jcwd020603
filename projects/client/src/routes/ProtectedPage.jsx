@@ -6,21 +6,20 @@ import logo from "../assets/SVG/2.svg";
 
 export default function ProtectedPage({
   children,
-  needLogin = false,
-  guestOnly = false,
+  needLogin,
+  guestOnly,
   // adminOnly = false,
-  userOnly = false,
+  userOnly,
 }) {
   const userSelector = useSelector((state) => state.auth);
   const nav = useNavigate();
   const [loading, setLoading] = useState(true);
-
+  console.log(guestOnly);
+  console.log(needLogin);
   useEffect(() => {
     console.log(userSelector);
 
-    if (needLogin) {
-      return nav("/");
-    } else if (guestOnly && userSelector.role) {
+    if (guestOnly && userSelector.role) {
       if (userSelector.role == "USER") {
         return nav("/");
       } else if (
@@ -29,40 +28,17 @@ export default function ProtectedPage({
       ) {
         return nav("/dashboard");
       }
-    } else if (userOnly && userSelector.role != "USER") {
+    } else if (
+      userOnly &&
+      guestOnly &&
+      needLogin &&
+      userSelector.role != "USER"
+    ) {
       return nav("/dashboard");
     } else {
       return nav("/");
     }
-
-    // else if (
-    // userSelector.role == "ADMIN" ||
-    // userSelector.role == "SUPER ADMIN"
-    // ) {
-    // return "/dashboard";
-    // }
-
-    // if (guestOnly && userSelector.role) {
-    // if (userSelector.role == "ADMIN" || userSelector.role == "SUPER ADMIN") {
-    // return nav("/dashboard");
-    // } else if (userSelector.role == "USER") {
-    // return nav("/");
-    // }
-    // } else if (userOnly && userSelector.role) {
-    // if (userSelector.role == "USER") {
-    // return nav("/");
-    // } else if (
-    // userSelector.role == "ADMIN" ||
-    // userSelector.role == "SUPER ADMIN"
-    // ) {
-    // return nav("/dashboard");
-    // }
-    // } else if (needLogin && !userSelector.role) {
-    // return nav("/");
-    // } else if (!adminOnly && userSelector.role != "USER") {
-    // return nav("/dashboard");
-    // }
-  }, []);
+  }, [userSelector]);
 
   useEffect(() => {
     setTimeout(() => {

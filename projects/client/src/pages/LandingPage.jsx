@@ -54,7 +54,7 @@ export default function LandingPage() {
         w={"100vw"}
         h={"100vh"}
         alignContent={"center"}
-        bgColor={("green.200", "green.200")}
+        // bgColor={("green.200", "green.200")}
       >
         <Flex
           size={"lg"}

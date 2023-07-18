@@ -10,19 +10,19 @@ import LandingPage from "../pages/LandingPage";
 
 const routes = [
   <Route
-    path="/dashboard"
+    path="/"
     element={
-      <ProtectedPage guestOnly={true} userOnly={false}>
-        <Dashboard />
+      <ProtectedPage needLogin={true} guestOnly={true} userOnly={true}>
+        <LandingPage />
       </ProtectedPage>
     }
   ></Route>,
 
   <Route
-    path="/"
+    path="/dashboard"
     element={
-      <ProtectedPage guestOnly={true} userOnly={true}>
-        <LandingPage />
+      <ProtectedPage needLogin={true}>
+        <Dashboard />
       </ProtectedPage>
     }
   ></Route>,
