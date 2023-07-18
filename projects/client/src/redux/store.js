@@ -1,13 +1,22 @@
-import { configureStore } from "@reduxjs/toolkit";
-import searchReducer from "./searchReducer"; // Update the path to your searchReducer.js file
+// import { configureStore } from "@reduxjs/toolkit";
+// import searchReducer from "./searchReducer";
+// const rootReducer = {
+//   search: searchReducer,
+// };
 
-const rootReducer = {
-  search: searchReducer, // Assuming 'searchReducer' is the reducer for the 'search' state slice
-  // Add other reducers here if needed
-};
+// const store = configureStore({
+//   reducer: rootReducer,
+// });
 
-const store = configureStore({
-  reducer: rootReducer,
+// export default store;
+
+import { combineReducers } from "redux";
+import searchReducer from "./searchReducer";
+import userReducer from "./auth";
+
+const rootReducer = combineReducers({
+  search: searchReducer,
+  auth: userReducer,
 });
 
-export default store;
+export default rootReducer;

@@ -8,18 +8,17 @@ import VerifyPage from "../pages/VerifyPage";
 import Dashboard from "../pages/Dashboard";
 import LandingPage from "../pages/LandingPage";
 import ProductPage from "../pages/ProductPage";
-import LandingPage from "../pages/LandingPage";
 import SAProductPage from "../pages/SAdminProductPage";
 
 const routes = [
-  <Route
-    path="/"
-    element={
-      <ProtectedPage needLogin={true} guestOnly={true} userOnly={true}>
-        <LandingPage />
-      </ProtectedPage>
-    }
-  ></Route>,
+  // <Route
+  //   path="/"
+  //   element={
+  //     <ProtectedPage needLogin={true} guestOnly={true} userOnly={true}>
+  //       <LandingPage />
+  //     </ProtectedPage>
+  //   }
+  // ></Route>,
 
   <Route
     path="/dashboard"

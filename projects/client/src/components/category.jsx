@@ -29,6 +29,7 @@ export default function Category() {
     api
       .get("/category")
       .then((response) => {
+        console.log(response.data);
         setCategories(response.data);
       })
       .catch((error) => {
@@ -44,14 +45,12 @@ export default function Category() {
         console.error(error);
       });
 
-    // Mengambil searchTerm dari local storage jika tersedia
     const storedSearchTerm = localStorage.getItem("searchTerm");
     if (storedSearchTerm) {
       setSearchTerm(storedSearchTerm);
     }
   }, []);
 
-  // Menyimpan searchTerm ke local storage setiap kali berubah
   useEffect(() => {
     localStorage.setItem("searchTerm", searchTerm);
   }, [searchTerm]);

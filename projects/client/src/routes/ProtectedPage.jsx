@@ -26,7 +26,7 @@ export default function ProtectedPage({
         userSelector.role == "ADMIN" ||
         userSelector.role == "SUPER ADMIN"
       ) {
-        return nav("/dashboard");
+        return nav("");
       }
     } else if (
       userOnly &&
@@ -34,9 +34,9 @@ export default function ProtectedPage({
       needLogin &&
       userSelector.role != "USER"
     ) {
-      return nav("/dashboard");
+      return nav("");
     } else {
-      return nav("/");
+      return nav("");
     }
   }, [userSelector]);
 
