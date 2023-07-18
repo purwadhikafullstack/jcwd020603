@@ -1,32 +1,32 @@
-import { Provider } from "react-redux";
-import store from "./redux/store";
-import { Center, Spinner } from "@chakra-ui/react";
+// import logo from "./logo.svg";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import { useEffect, useState } from "react";
-import { Routes } from "react-router-dom";
 import routes from "./routes/Routes";
+import { useEffect, useState } from "react";
+import { Center, Image } from "@chakra-ui/react";
+import logo from "./assets/SVG/2.svg";
 
 function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(setLoading(false));
-      }, 1000);
-    });
-  }, [loading]);
-
+    setTimeout(() => setLoading(false), 1000);
+  });
   return (
     <>
       {loading ? (
-        <Center h={"100vh"}>
-          <Spinner />
+        <Center
+          h={"100vh"}
+          // maxW={"500px"}
+          w={"100%"}
+          display={"flex"}
+          flexDir={"column"}
+          justifyContent={"center"}
+        >
+          <Image src={logo} w={"30%"} h={"30%"} />
         </Center>
       ) : (
-        <Provider store={store}>
-          <Routes>{routes.map((val) => val)}</Routes>
-        </Provider>
+        <Routes>{routes.map((val) => val)}</Routes>
       )}
     </>
   );

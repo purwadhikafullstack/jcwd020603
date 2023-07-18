@@ -1,0 +1,143 @@
+/* ini CSS untuk vefiry dan notfound */
+.logo_samping {
+  display: flex;
+
+  @media (max-width: 600px) {
+    display: none;
+  }
+}
+
+.logo_atas {
+  display: flex;
+
+  @media (min-width: 601px) {
+    display: none;
+  }
+}
+
+/* ini CSS untuk content navbar dan sidebar dasboard admin */
+
+/* content */
+.dash-content {
+  flex-direction: column;
+  gap: 5%;
+  padding-left: 220px;
+  padding-top: 100px;
+  padding-right: 10px;
+  height: 100vh;
+  width: 100%;
+  max-width: 1160px;
+  position: absolute;
+  z-index: 0;
+}
+
+.dash-content-highlight {
+  height: 100%;
+  width: 23%;
+  min-width: 15%;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+@media (max-width: 500px) {
+  .dash-content-highlight {
+    height: 100%;
+    padding: 5px;
+    width: 60%;
+  }
+}
+
+@media (max-width: 768px) {
+  .dash-content-highlight {
+    padding: 5px;
+    width: 40%;
+  }
+}
+
+/* navbar */
+.navbarR {
+  display: flex;
+  width: 100%;
+  max-width: 767px;
+  min-width: 80px;
+  height: 80px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 4;
+}
+
+@media (min-width: 768px) {
+  .navbarR {
+    display: none;
+  }
+
+  .dash-content {
+    padding-top: 3%;
+  }
+}
+
+/* sidebar */
+
+.sidebarR {
+  /* display: flex; */
+  background-color: #fff;
+  height: 100vh;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 200px;
+  border-right: 1px solid #e2dada;
+  position: absolute;
+  z-index: 10;
+  flex-direction: column;
+  column-gap: 4;
+  padding-left: 2;
+  padding-right: 2;
+}
+
+@media (max-width: 767px) {
+  .sidebarR {
+    display: none;
+  }
+
+  .dash-content {
+    padding-left: 5%;
+    width: 90%;
+  }
+}
+
+.flex-item-sidebarR {
+  height: 15%;
+  width: 100%;
+  justify-content: center;
+  transition: 1s;
+  border-top-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  cursor: pointer;
+}
+.flex-item-sidebarR:hover {
+  background: #53db8ede;
+}
+
+.box-sidebarR {
+  padding: 3%;
+  font-weight: bolder;
+  height: 100%;
+  width: 70%;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex1R {
+  margin-left: 8%;
+  width: 100%;
+  max-width: 1160px;
+  height: 100vh;
+
+  @media (max-width: 767px) {
+    margin-left: 0%;
+    width: 100%;
+    max-width: 767px;
+    height: 100vh;
+  }
+}

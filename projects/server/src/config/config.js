@@ -4,10 +4,10 @@ const PORT = process.env.PORT;
 
 module.exports = {
   development: {
-    username: db_username,
-    password: db_password,
-    database: db_database,
-    host: db_host,
-    dialect: db_dialect,
+    username: db_username, //"root",
+    password: db_password, //"password",
+    database: db_database, //"db_sahabat_sembako",
+    host: db_host, // "localhost",
+    dialect: "mysql",
   },
 };

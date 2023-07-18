@@ -1,29 +1,32 @@
 require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
+const db = require("./models");
 const { join } = require("path");
+const verify = require("./middleware/verify");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
-);
-
-app.use(express.json());
-
+// app.use(
+// cors({
+// origin: [
+// process.env.WHITELISTED_DOMAIN &&
+// process.env.WHITELISTED_DOMAIN.split(","),
+// ],
+// })
+// );
 const routes = require("./routes");
-const db = require("./models");
+app.use(cors());
+app.use(express.json());
+app.use(verify);
+// const { verify } = require("crypto");
 // db.sequelize.sync({ alter: true });
 
 //#region API ROUTES
 
 // ===========================
 // NOTE : Add your routes here
+app.use("/user", routes.userRoutes);
 app.use("/address", routes.addressRoutesB);
 app.use("/category", routes.categoryRoutesB);
 app.use("/stock", routes.stockRoutesB);
