@@ -27,6 +27,9 @@ app.use(verify);
 // ===========================
 // NOTE : Add your routes here
 app.use("/user", routes.userRoutes);
+app.use("/address", routes.addressRoutesB);
+app.use("/category", routes.categoryRoutesB);
+app.use("/stock", routes.stockRoutesB);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
