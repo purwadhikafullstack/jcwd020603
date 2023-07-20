@@ -6,12 +6,13 @@ export default function AuthProvider({ children }) {
   const dispatch = useDispatch();
   async function get() {
     try {
-      const token = JSON.parse(localStorage.setItem("auth"));
+      const token = JSON.parse(localStorage.getItem("auth"));
       if (token) {
         const dataUser = await api
           .get("user/id-token", { params: { token } })
           .then((res) => res.data);
         if (dataUser) {
+          console.log(dataUser);
           dispatch({
             type: "login",
             payload: dataUser,

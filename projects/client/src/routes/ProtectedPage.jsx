@@ -1,4 +1,4 @@
-import { Center, Image } from "@chakra-ui/react";
+import { Center, Image, Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -6,39 +6,39 @@ import logo from "../assets/SVG/2.svg";
 
 export default function ProtectedPage({
   children,
-  needLogin,
   guestOnly,
-  // adminOnly = false,
-  userOnly,
+  needLogin,
+  adminOnly,
 }) {
-  const userSelector = useSelector((state) => state.auth);
+  let userSelector = useSelector((state) => state.auth);
+  const user = userSelector;
   const nav = useNavigate();
   const [loading, setLoading] = useState(true);
+
   console.log(guestOnly);
   console.log(needLogin);
-  useEffect(() => {
-    console.log(userSelector);
+  console.log(adminOnly);
+  console.log(userSelector);
+  console.log(userSelector.role);
+  console.log(user.role);
 
-    if (guestOnly && userSelector.role) {
-      if (userSelector.role == "USER") {
+  useEffect(() => {
+    if (guestOnly && user.role) {
+      if (user.role == "USER") {
         return nav("/");
-      } else if (
-        userSelector.role == "ADMIN" ||
-        userSelector.role == "SUPER ADMIN"
-      ) {
+      } else {
         return nav("/dashboard");
       }
+    } else if (needLogin && !user.role) {
+      return nav("/");
     } else if (
-      userOnly &&
-      guestOnly &&
       needLogin &&
-      userSelector.role != "USER"
+      adminOnly &&
+      (user.role != "ADMIN" || user.role != "SUPER ADMIN")
     ) {
-      return nav("/dashboard");
-    } else {
       return nav("/");
     }
-  }, [userSelector]);
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -51,12 +51,16 @@ export default function ProtectedPage({
       {loading ? (
         <Center
           h={"100vh"}
+          maxW={"100vw"}
           w={"100%"}
           display={"flex"}
-          flexDir={"column"}
+          flexDir={"row"}
+          alignItems={"center"}
           justifyContent={"center"}
         >
-          <Image src={logo} w={"30%"} h={"30%"} />
+          <Flex w={"30%"} h={"30%"} justifyContent={"center"} p={4}>
+            <Image src={logo} />
+          </Flex>
         </Center>
       ) : (
         children

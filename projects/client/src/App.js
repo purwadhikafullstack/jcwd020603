@@ -1,9 +1,8 @@
-// import logo from "./logo.svg";
 import { Route, Routes } from "react-router-dom";
-import "./App.css";
+// import "./App.css";
 import routes from "./routes/Routes";
 import { useEffect, useState } from "react";
-import { Center, Image } from "@chakra-ui/react";
+import { Center, Image, Flex } from "@chakra-ui/react";
 import logo from "./assets/SVG/2.svg";
 
 function App() {
@@ -11,19 +10,22 @@ function App() {
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
-  });
+  }, []);
   return (
     <>
       {loading ? (
         <Center
           h={"100vh"}
-          // maxW={"500px"}
+          maxW={"100vw"}
           w={"100%"}
           display={"flex"}
-          flexDir={"column"}
+          flexDir={"row"}
+          alignItems={"center"}
           justifyContent={"center"}
         >
-          <Image src={logo} w={"30%"} h={"30%"} />
+          <Flex w={"30%"} h={"30%"} justifyContent={"center"} p={4}>
+            <Image src={logo} />
+          </Flex>
         </Center>
       ) : (
         <Routes>{routes.map((val) => val)}</Routes>
