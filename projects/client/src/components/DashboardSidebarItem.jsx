@@ -12,13 +12,8 @@ export default function DashboardSidebarItem() {
   const nav = useNavigate();
   return (
     <>
-      <Flex
-        h={"auto"}
-        w={"100%"}
-        flexDir={"column"}
-        borderBottom={"1px solid #E2DADA"}
-      >
-        <Flex className="flex-item-sidebarR" mt={"15%"}>
+      <Flex className="flex-bungkus-item-sidebarR">
+        <Flex className="flex-item-sidebarR" mt={"10%"}>
           <Icon
             p={2}
             as={RiDashboardFill}
@@ -62,7 +57,7 @@ export default function DashboardSidebarItem() {
           ></Icon>
           <Box className="box-sidebarR">Orders</Box>
         </Flex>
-        <Flex className="flex-item-sidebarR">
+        <Flex className="flex-item-sidebarR" mb={"10%"}>
           <Icon
             p={2}
             as={FaUserSecret}

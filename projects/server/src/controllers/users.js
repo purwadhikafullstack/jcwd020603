@@ -43,24 +43,50 @@ const userController = {
           user.dataValues.password
         );
 
-        console.log(user.dataValues);
+        // console.log(user.dataValues);
         if (cekPass) {
           const payload = user.dataValues.id;
           const generateToken = nanoid();
           // console.log(payload);
 
-          const token = await db.Token.create({
-            token: generateToken,
-            payload: JSON.stringify(payload),
-            expired: moment().add(1, "days").format(),
-            valid: true,
-            status: "LOGIN",
+          const cektok = await db.Token.findOne({
+            where: {
+              payload: JSON.stringify({ id: user.dataValues.id }),
+              status: "LOGIN",
+            },
           });
-          return res.status(200).send({
-            message: "Login Berhasil",
-            token: token.dataValues.token,
-            value: user,
-          });
+          console.log(cektok);
+          if (cektok) {
+            const token = await db.Token.update(
+              {
+                token: generateToken,
+                expired: moment().add(1, "days").format(),
+              },
+              {
+                where: {
+                  id: cektok.dataValues.id,
+                },
+              }
+            );
+            return res.status(200).send({
+              message: "Login Berhasil",
+              token: generateToken,
+              value: user,
+            });
+          } else {
+            const token = await db.Token.create({
+              token: generateToken,
+              payload: JSON.stringify({ id: payload }),
+              expired: moment().add(1, "days").format(),
+              valid: true,
+              status: "LOGIN",
+            });
+            return res.status(200).send({
+              message: "Login Berhasil",
+              token: generateToken,
+              value: user,
+            });
+          }
         } else {
           res.status(500).send({ message: "Pssword Salah" });
         }
@@ -93,20 +119,28 @@ const userController = {
       const { token } = req.query;
       const findToken = await db.Token.findOne({
         where: {
-          token,
-          expired: {
-            [Op.gte]: moment().format(),
-          },
-          valid: true,
+          [Op.and]: [
+            { token },
+
+            {
+              expired: {
+                [Op.gt]: moment().format(),
+                [Op.lte]: moment().add(1, "d").format(),
+              },
+            },
+            { valid: true },
+          ],
         },
       });
+
+      console.log(findToken);
 
       if (!findToken) {
         throw new Error("token expired");
       }
       const user = await db.User.findOne({
         where: {
-          id: JSON.parse(findToken.dataValues.payload).id,
+          id: JSON.parse(findToken?.dataValues?.payload).id,
         },
       });
       delete user.dataValues.password;
