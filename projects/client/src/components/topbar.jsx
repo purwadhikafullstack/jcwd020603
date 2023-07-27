@@ -6,6 +6,7 @@ import "../css/indexB.css";
 import { useEffect, useState } from "react";
 
 export default function TopBar({ address }) {
+  console.log(address);
   const getFormattedAddress = () => {
     if (address) {
       const splitAddress = address.split(",");

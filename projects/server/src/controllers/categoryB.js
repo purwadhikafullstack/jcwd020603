@@ -2,6 +2,8 @@ const db = require("../models");
 const Sequelize = require("sequelize");
 const { Op } = db.Sequelize;
 const moment = require("moment");
+const category_image = process.env.category_image;
+
 const categoryController = {
   getAll: async (req, res) => {
     try {
@@ -31,10 +33,24 @@ const categoryController = {
   },
   editCategory: async (req, res) => {
     try {
-      const { categoryName } = req.body;
+      const { category_name } = req.body;
+      // const { filename } = req.file;
+      const kategori = await db.Category.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
+      // console.log(kategori);
+      const cat_nm = category_name
+        ? category_name
+        : kategori.dataValues.category_name;
+      const cat_img = req.file
+        ? category_image + req.file.filename
+        : kategori.dataValues.photo_category_url;
       await db.Category.update(
         {
-          categoryName,
+          category_name: cat_nm,
+          photo_category_url: cat_img,
         },
         {
           where: {
@@ -42,7 +58,6 @@ const categoryController = {
           },
         }
       );
-
       return await db.Category.findOne({
         where: {
           id: req.params.id,
@@ -55,11 +70,16 @@ const categoryController = {
       });
     }
   },
+
   insertCategory: async (req, res) => {
     try {
-      const { categoryName } = req.body;
+      const { category_name } = req.body;
+      // console.log(req.body);
+      const { filename } = req.file;
+      console.log(req.file);
       await db.Category.create({
-        categoryName,
+        category_name,
+        photo_category_url: category_image + filename,
       });
       return await db.Category.findAll().then((result) => {
         res.send(result);

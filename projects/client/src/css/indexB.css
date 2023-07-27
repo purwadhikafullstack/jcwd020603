@@ -326,7 +326,7 @@ img {
 }
 
 #containerTableB {
-  width: 100%;
+  width: 900px;
   flex-wrap: wrap;
 }
 
@@ -375,4 +375,30 @@ img {
 
 #descendingB {
   transform: rotate(-90deg);
+}
+
+.SAImgCategoryB {
+  max-width: 50px;
+}
+
+#buttonAction {
+  max-width: 40px;
+  max-height: 20px;
+}
+
+.css-j7qwjs {
+  align-items: center;
+}
+
+.containerAddProduct {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputAddProduct {
+  height: 50px;
+  border-radius: 5px;
 }
