@@ -1,0 +1,28 @@
+const express = require("express");
+const router = express.Router();
+const { fileUploader } = require("../middleware/multer");
+const productControllerB = require("../controllers").productControllerB;
+const roleController = require("../middleware/checkRole");
+
+//get
+
+router.get("/", roleController.checkAllAdmin, productControllerB.getAll);
+router.post(
+  "/v1",
+  roleController.checkSuper,
+  fileUploader({ destinationFolder: "productImg" }).single("productImg"),
+  productControllerB.insertProduct
+);
+router.patch(
+  "/v2/:id",
+  roleController.checkSuper,
+  fileUploader({ destinationFolder: "productImg" }).single("productImg"),
+  productControllerB.editProduct
+);
+router.delete(
+  "/v3/:id",
+  roleController.checkSuper,
+  productControllerB.deleteProduct
+);
+
+module.exports = router;

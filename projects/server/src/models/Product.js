@@ -5,7 +5,6 @@ module.exports = (sequelize, Sequelize) => {
       product_name: Sequelize.STRING,
       price: Sequelize.INTEGER,
       photo_product_url: Sequelize.STRING,
-      photo_product_blob: Sequelize.BLOB("long"),
       desc: Sequelize.STRING,
       weight: Sequelize.INTEGER,
     },

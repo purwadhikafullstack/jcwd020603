@@ -325,9 +325,28 @@ img {
   color: wheat;
 }
 
-#containerTableB {
+.adminCategoryB {
+  max-width: 910px;
   width: 100%;
+  padding: 30px;
+  row-gap: 20px;
+  flex-direction: column;
+  margin-top: 60px;
+  border-top-left-radius: 20px;
+  background: #fff7e7;
+}
+
+.adminCategory2B {
+  font-size: 24px;
+  font-weight: 700;
+  padding-bottom: 20px;
+  justify-content: space-between;
+}
+
+#containerTableB {
+  width: 900px;
   flex-wrap: wrap;
+  overflow: auto;
 }
 
 .tHeadB {
@@ -359,7 +378,7 @@ img {
 }
 
 #tableNameB {
-  justify-content: space-around;
+  justify-content: center;
   gap: 10px;
 }
 
@@ -375,4 +394,30 @@ img {
 
 #descendingB {
   transform: rotate(-90deg);
+}
+
+.SAImgCategoryB {
+  max-width: 50px;
+}
+
+#buttonAction {
+  max-width: 40px;
+  max-height: 20px;
+}
+
+.css-j7qwjs {
+  align-items: center;
+}
+
+.containerAddProduct {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputAddProduct {
+  height: 50px;
+  border-radius: 5px;
 }

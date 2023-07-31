@@ -55,6 +55,8 @@ export default function LandingPage() {
     console.log(latlong);
   }, [latlong]);
 
+  console.log(address);
+
   const windowWidth = window.innerWidth;
   return (
     <>
