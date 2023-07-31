@@ -60,7 +60,42 @@ const productController = {
       });
     }
   },
+
+  insertProduct: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const { product_name, price, category_id, desc, weight } = req.body;
+      const { filename } = req.file;
+      // console.log(req.file);
+      console.log(product_name, price, category_id, desc, weight);
+      await db.Product.create(
+        {
+          product_name,
+          price: parseInt(price),
+          category_id: parseInt(category_id),
+          desc,
+          weight: parseInt(weight),
+          photo_product_url: product_image + filename,
+        },
+        {
+          transaction: trans,
+        }
+      );
+      await trans.commit();
+      return await db.Product.findAll().then((result) => {
+        res.send(result);
+      });
+    } catch (err) {
+      console.log(err);
+      await trans.rollback();
+      return res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
   editProduct: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
       const { product_name, price, desc, category_id, weight } = req.body;
       // const { filename } = req.file;
@@ -96,8 +131,10 @@ const productController = {
           where: {
             id: req.params.id,
           },
+          transaction: trans,
         }
       );
+      await trans.commit();
       return await db.Product.findOne({
         where: {
           id: req.params.id,
@@ -105,49 +142,29 @@ const productController = {
       }).then((result) => res.send(result));
     } catch (err) {
       console.log(err.message);
+      await trans.rollback();
       res.status(500).send({
         message: err.message,
       });
     }
   },
-  insertProduct: async (req, res) => {
-    try {
-      const { product_name, price, category_id, desc, weight } = req.body;
-      const { filename } = req.file;
-      // console.log(req.file);
-      console.log(product_name, price, category_id, desc, weight);
-      await db.Product.create({
-        product_name,
-        price: parseInt(price),
-        category_id: parseInt(category_id),
-        desc,
-        weight: parseInt(weight),
-        photo_product_url: product_image + filename,
-      });
-      return await db.Product.findAll().then((result) => {
-        res.send(result);
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).send({
-        message: err.message,
-      });
-    }
-  },
+
   deleteProduct: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
       await db.Product.destroy({
         where: {
           //  id: req.params.id
-
           //   [Op.eq]: req.params.id
-
           id: req.params.id,
         },
+        transaction: trans,
       });
+      await trans.commit();
       return await db.Product.findAll().then((result) => res.send(result));
     } catch (err) {
       console.log(err.message);
+      await trans.rollback();
       return res.status(500).send({
         error: err.message,
       });

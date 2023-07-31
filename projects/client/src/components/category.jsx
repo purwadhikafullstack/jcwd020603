@@ -85,7 +85,7 @@ export default function Category() {
         <Grid id="productB">
           {stocks.map((val, idx) => (
             <CardProduct
-              key={val.Product.id}
+              key={val.id}
               url={val.Product.photo_product_url}
               product_name={val.Product.product_name}
               price={val.Product.price}

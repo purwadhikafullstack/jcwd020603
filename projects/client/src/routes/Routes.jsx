@@ -8,9 +8,9 @@ import VerifyPage from "../pages/VerifyPage";
 import Dashboard from "../pages/Dashboard";
 import LandingPage from "../pages/LandingPage";
 import ProductPage from "../pages/ProductPage";
-import SAProductPage from "../pages/SAdminProductPage";
-import SAdminCategory from "../components/sAdminCategory";
-import SAdminCategoryPage from "../pages/SAdminCategoryPage";
+import SuperAdminCategoryPage from "../pages/Super-Admin-Category-Page";
+import SuperAdminProductPage from "../pages/Super-Admin-Product-Page";
+import AdminStockPage from "../pages/Admin-Stock-Page";
 
 const routes = [
   <Route
@@ -78,8 +78,10 @@ const routes = [
 
   // <Route path="/" element={<LandingPage />}></Route>,
   <Route path="/product" element={<ProductPage />}></Route>,
-  <Route path="/sa-product" element={<SAProductPage />}></Route>,
-  <Route path="/sa-category" element={<SAdminCategoryPage />}></Route>,
+  <Route path="/sa-category" element={<SuperAdminCategoryPage />}></Route>,
+  <Route path="/sa-product" element={<SuperAdminProductPage />}></Route>,
+  <Route path="/a-stock" element={<AdminStockPage />}></Route>,
+
   // <Route path="/home" element={<Home />}></Route>,
   // <Route path="/homeadmin" element={<HomeAdmin />}></Route>,
   // <Route path="/" element={<Dummy />}></Route>,

@@ -42,6 +42,7 @@ export function AddProduct(props) {
     };
     reader.readAsDataURL(file);
   };
+
   const inputHandler = (e) => {
     const { id, value } = e.target;
     const tempProduct = { ...product };

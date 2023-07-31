@@ -175,7 +175,7 @@ export function EditProduct(props) {
                 borderRadius="5px"
                 placeholder="Nama Produk"
                 id="product_name"
-                value={props.product.product_name}
+                defaultValue={props.product.product_name}
                 onChange={inputHandler}
               />
               <Input
@@ -183,7 +183,7 @@ export function EditProduct(props) {
                 borderRadius="5px"
                 placeholder="Harga Produk"
                 id="price"
-                value={props.product.price}
+                defaultValue={props.product.price}
                 onChange={inputHandler}
               />
               <Select
@@ -203,7 +203,7 @@ export function EditProduct(props) {
                 borderRadius="5px"
                 placeholder="Deskripsi Produk"
                 id="desc"
-                value={props.product.desc}
+                defaultValue={props.product.desc}
                 onChange={inputHandler}
               />
               <Input
@@ -211,7 +211,7 @@ export function EditProduct(props) {
                 borderRadius="5px"
                 placeholder="Berat Total"
                 id="weight"
-                value={props.product.weight}
+                defaultValue={props.product.weight}
                 onChange={inputHandler}
               />
             </Flex>

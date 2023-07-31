@@ -31,7 +31,39 @@ const categoryController = {
       });
     }
   },
+  insertCategory: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+
+    try {
+      const { category_name } = req.body;
+      const { filename } = req.file;
+      console.log(req.file);
+
+      await db.Category.create(
+        {
+          category_name,
+          photo_category_url: category_image + filename,
+        },
+        {
+          transaction: trans,
+        }
+      );
+      await trans.commit();
+      return await db.Category.findAll().then((result) => {
+        res.send(result);
+      });
+    } catch (err) {
+      console.log(err);
+      await trans.rollback();
+      return res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
   editCategory: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+
     try {
       const { category_name } = req.body;
       // const { filename } = req.file;
@@ -56,8 +88,10 @@ const categoryController = {
           where: {
             id: req.params.id,
           },
+          transaction: trans,
         }
       );
+      await trans.commit();
       return await db.Category.findOne({
         where: {
           id: req.params.id,
@@ -65,46 +99,29 @@ const categoryController = {
       }).then((result) => res.send(result));
     } catch (err) {
       console.log(err.message);
+      await trans.rollback();
       res.status(500).send({
         message: err.message,
       });
     }
   },
 
-  insertCategory: async (req, res) => {
-    try {
-      const { category_name } = req.body;
-      // console.log(req.body);
-      const { filename } = req.file;
-      console.log(req.file);
-      await db.Category.create({
-        category_name,
-        photo_category_url: category_image + filename,
-      });
-      return await db.Category.findAll().then((result) => {
-        res.send(result);
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).send({
-        message: err.message,
-      });
-    }
-  },
   deleteCategory: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
       await db.Category.destroy({
         where: {
           //  id: req.params.id
-
           //   [Op.eq]: req.params.id
-
           id: req.params.id,
         },
+        transaction: trans,
       });
+      await trans.commit();
       return await db.Category.findAll().then((result) => res.send(result));
     } catch (err) {
       console.log(err.message);
+      await trans.rollback();
       return res.status(500).send({
         error: err.message,
       });
