@@ -39,6 +39,7 @@ export default function Category() {
       .get("/stock")
       .then((response) => {
         setStocks(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -88,11 +89,14 @@ export default function Category() {
           {stocks.map((val, idx) => (
             <CardProduct
               key={val.Product.id}
-              url={val.Product.photo_product_url}
-              product_name={val.Product.product_name}
-              price={val.Product.price}
-              desc={val.Product.desc}
-              discount={val.discount}
+              id={val.product_id}
+              url={val.Product?.photo_product_url}
+              product_name={val.Product?.product_name}
+              price={val.Product?.price}
+              desc={val.Product?.desc}
+              discount={val.Discount?.nominal}
+              weight={val.Product?.weight}
+              stock_id={val.id}
             />
           ))}
         </Grid>

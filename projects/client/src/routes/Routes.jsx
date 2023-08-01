@@ -9,6 +9,9 @@ import Dashboard from "../pages/Dashboard";
 import LandingPage from "../pages/LandingPage";
 import ProductPage from "../pages/ProductPage";
 import SAProductPage from "../pages/SAdminProductPage";
+import CartPage from "../pages/CartPage";
+import AddressListPage from "../pages/AddressListPage";
+import OrderListPage from "../pages/OrderListPage";
 
 const routes = [
   <Route
@@ -85,6 +88,9 @@ const routes = [
   <Route path="/register" element={<RegisterPage />}></Route>,
   <Route path="/verify/:token" element={<VerifyPage />}></Route>,
   <Route path="/*" element={<NotFound />}></Route>,
+  <Route path="/cart" element={<CartPage />}></Route>,
+  <Route path="/address" element={<AddressListPage />}></Route>,
+  <Route path="/orders" element={<OrderListPage />}></Route>,
 ];
 
 export default routes;

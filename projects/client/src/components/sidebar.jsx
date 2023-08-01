@@ -38,6 +38,7 @@ export default function Sidebar() {
           gap={"10px"}
           onClick={(e) => {
             handleClick(e);
+            nav("/");
           }}
           bg={Clicked == "beranda" ? "#ECFFF4" : "white"}
           color={Clicked == "beranda" ? "#199950" : "black"}
@@ -96,7 +97,7 @@ export default function Sidebar() {
             id="keranjang"
             className="menuSidebarCartG"
             onClick={() => {
-              nav("/product");
+              nav("/cart");
             }}
           >
             <Flex gap={"10px"}>

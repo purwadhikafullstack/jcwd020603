@@ -16,8 +16,13 @@ const stockControllerB = {
               "price",
               "photo_product_url",
               "desc",
-              // "weight",
+              "weight",
             ],
+          },
+          {
+            model: db.Discount,
+            as: "Discount",
+            attributes: ["nominal", "title", "valid_start", "valid_to"],
           },
         ],
       });
