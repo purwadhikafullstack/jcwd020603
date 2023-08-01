@@ -156,24 +156,32 @@
 }
 
 #carouselB {
-  padding-top: 20px;
+  /* padding-top: 20px; */
   width: 100%;
   max-width: 910px;
 }
-
-#imageCarousel {
-  object-fit: cover;
-  width: 100%;
-  height: 23vw;
+.cardCarouselB {
+  /* background: red; */
 
   @media (max-width: 600px) {
-    height: 45vw;
+    height: 200px;
   }
 
   @media (min-width: 601px) and (max-width: 900px) {
-    height: 35vw;
+    height: 220px;
   }
 }
+
+#imageCarousel {
+  width: 100%;
+  max-width: 910px;
+  object-fit: cover;
+  height: fit-content;
+}
+
+/* img {
+  object-fit: cover;
+} */
 
 .cardCategoryB {
   margin: 1px;
@@ -188,10 +196,6 @@
   border-radius: 10%;
   font-weight: 600;
   color: #199950;
-}
-
-img {
-  object-fit: cover;
 }
 
 .cardCategoryB img {
