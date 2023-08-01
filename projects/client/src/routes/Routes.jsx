@@ -8,16 +8,13 @@ import VerifyPage from "../pages/VerifyPage";
 import Dashboard from "../pages/Dashboard";
 import LandingPage from "../pages/LandingPage";
 import ProductPage from "../pages/ProductPage";
-<<<<<<< HEAD
-import SAProductPage from "../pages/SAdminProductPage";
+// import SAProductPage from "../pages/SAdminProductPage";
 import CartPage from "../pages/CartPage";
 import AddressListPage from "../pages/AddressListPage";
 import OrderListPage from "../pages/OrderListPage";
-=======
 import SuperAdminCategoryPage from "../pages/Super-Admin-Category-Page";
 import SuperAdminProductPage from "../pages/Super-Admin-Product-Page";
 import AdminStockPage from "../pages/Admin-Stock-Page";
->>>>>>> develop
 
 const routes = [
   <Route

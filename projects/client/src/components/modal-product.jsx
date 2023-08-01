@@ -107,7 +107,7 @@ export default function ModalProduct(props) {
                 </Flex>
               </Flex>
             ) : (
-              <Flex flexDir={"column"}>
+              <Flex flexDir={"column"} alignItems={"start"}>
                 <Flex className="styleHargaG">
                   Rp {prodVal.discountedPrice.toLocaleString("id-ID")}
                 </Flex>
