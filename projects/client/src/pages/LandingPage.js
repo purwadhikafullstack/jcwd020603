@@ -9,7 +9,8 @@ import { api } from "../api/api";
 import SidebarMini from "../components/sidebar-mini";
 
 export default function LandingPage() {
-  const windowWidth = window.innerWidth;
+  const windowWidth = window.outerWidth;
+  console.log(windowWidth);
   const [latlong, setLatlong] = useState({
     latitude: "",
     longitude: "",
@@ -63,7 +64,7 @@ export default function LandingPage() {
     <>
       {windowWidth > 600 ? (
         <Center>
-          <Flex maxWidth={"1212px"} w={"100%"}>
+          <Flex maxWidth={"1160px"} w={"100%"}>
             <Flex>{windowWidth > 750 ? <Sidebar /> : <SidebarMini />}</Flex>
             <Flex flexDir={"column"}>
               <TopBar

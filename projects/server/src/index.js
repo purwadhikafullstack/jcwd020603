@@ -32,7 +32,6 @@ app.use("/user", routes.userRoutes);
 app.use("/address", routes.addressRoutesB);
 app.use("/category", routes.categoryRoutesB);
 app.use("/stock", routes.stockRoutesB);
-
 app.use("/addressG", routes.addressRoutesG);
 app.use("/city", routes.cityRoutes);
 app.use("/province", routes.provinceRoutes);
