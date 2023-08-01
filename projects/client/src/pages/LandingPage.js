@@ -9,7 +9,7 @@ import { api } from "../api/api";
 import SidebarMini from "../components/sidebar-mini";
 
 export default function LandingPage() {
-  const windowWidth = window.innerWidth;
+  const windowWidth = window.outerWidth;
   const [latlong, setLatlong] = useState({
     latitude: "",
     longitude: "",

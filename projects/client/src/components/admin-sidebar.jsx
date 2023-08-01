@@ -90,7 +90,13 @@ export default function AdminSidebar() {
                 <Icon as={BsDot} fontSize={"22px"} />
                 Produk
               </Flex>
-              <Flex alignItems={"center"}>
+              <Flex
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => {
+                  nav("/a-stock");
+                }}
+              >
                 <Icon as={BsDot} fontSize={"22px"} />
                 Stok Produk
               </Flex>
