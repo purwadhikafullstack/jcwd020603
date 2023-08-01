@@ -1,7 +1,7 @@
 const userRoutes = require("./user");
 const addressRoutesB = require("./addressB");
 const categoryRoutesB = require("./categoryB");
-// const productRoutesB = require("./productB");
+const productRoutesB = require("./productB");
 const stockRoutesB = require("./stockB");
 const addressRoutesG = require("./addressG");
 const provinceRoutes = require("./province");
@@ -14,7 +14,7 @@ module.exports = {
   userRoutes,
   addressRoutesB,
   categoryRoutesB,
-  // productRoutesB,
+  productRoutesB,
   stockRoutesB,
   addressRoutesG,
   provinceRoutes,

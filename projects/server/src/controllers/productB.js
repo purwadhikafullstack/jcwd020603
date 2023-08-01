@@ -3,6 +3,8 @@ const Sequelize = require("sequelize");
 const { Op } = db.Sequelize;
 const moment = require("moment");
 const { query } = require("express");
+const product_image = process.env.product_image;
+
 const productController = {
   getAll: async (req, res) => {
     try {
@@ -58,25 +60,81 @@ const productController = {
       });
     }
   },
-  editProduct: async (req, res) => {
+
+  insertProduct: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
-      const { productName, harga, stock, categoryId } = req.body;
+      const { product_name, price, category_id, desc, weight } = req.body;
+      const { filename } = req.file;
+      // console.log(req.file);
+      console.log(product_name, price, category_id, desc, weight);
+      await db.Product.create(
+        {
+          product_name,
+          price: parseInt(price),
+          category_id: parseInt(category_id),
+          desc,
+          weight: parseInt(weight),
+          photo_product_url: product_image + filename,
+        },
+        {
+          transaction: trans,
+        }
+      );
+      await trans.commit();
+      return await db.Product.findAll().then((result) => {
+        res.send(result);
+      });
+    } catch (err) {
+      console.log(err);
+      await trans.rollback();
+      return res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  editProduct: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const { product_name, price, desc, category_id, weight } = req.body;
       // const { filename } = req.file;
+      const produk = await db.Product.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
+      console.log(produk);
+      const prod_nm = product_name
+        ? product_name
+        : produk.dataValues.product_name;
+      const prod_price = price ? price : produk.dataValues.price;
+      const prod_desc = desc ? desc : produk.dataValues.desc;
+      const prod_category = category_id
+        ? category_id
+        : produk.dataValues.category_id;
+      const prod_weight = weight ? weight : produk.dataValues.weight;
+      const prod_img = req.file
+        ? product_image + req.file.filename
+        : produk.dataValues.photo_product_url;
+
       await db.Product.update(
         {
-          productName,
-          harga,
-          stock,
-          categoryId,
-          // product_url: productImage + filename,
+          product_name: prod_nm,
+          price: prod_price,
+          desc: prod_desc,
+          category_id: prod_category,
+          weight: prod_weight,
+          photo_product_url: prod_img,
         },
         {
           where: {
             id: req.params.id,
           },
+          transaction: trans,
         }
       );
-
+      await trans.commit();
       return await db.Product.findOne({
         where: {
           id: req.params.id,
@@ -84,44 +142,29 @@ const productController = {
       }).then((result) => res.send(result));
     } catch (err) {
       console.log(err.message);
+      await trans.rollback();
       res.status(500).send({
         message: err.message,
       });
     }
   },
-  insertProduct: async (req, res) => {
-    try {
-      const { productName, harga, stock, categoryId } = req.body;
-      await db.Product.create({
-        productName,
-        harga,
-        stock,
-        categoryId,
-      });
-      return await db.Product.findAll().then((result) => {
-        res.send(result);
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).send({
-        message: err.message,
-      });
-    }
-  },
+
   deleteProduct: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
       await db.Product.destroy({
         where: {
           //  id: req.params.id
-
           //   [Op.eq]: req.params.id
-
           id: req.params.id,
         },
+        transaction: trans,
       });
+      await trans.commit();
       return await db.Product.findAll().then((result) => res.send(result));
     } catch (err) {
       console.log(err.message);
+      await trans.rollback();
       return res.status(500).send({
         error: err.message,
       });
