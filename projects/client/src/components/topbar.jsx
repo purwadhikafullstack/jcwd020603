@@ -4,9 +4,19 @@ import logo from "../assets/logo/vertical.png";
 
 import "../css/indexB.css";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-export default function TopBar({ address }) {
-  console.log(address);
+export default function TopBar({
+  address,
+  selectedAddress,
+  setSelectedAddress,
+}) {
+  const selectAddress = useSelector((state) => state.address);
+  const userSelector = useSelector((state) => state.auth);
+  console.log(selectAddress);
+  console.log(userSelector);
+  const nav = useNavigate();
   const getFormattedAddress = () => {
     if (address) {
       const splitAddress = address.split(",");
@@ -23,6 +33,7 @@ export default function TopBar({ address }) {
             alignItems={"center"}
             className="flexSideBarB"
             cursor={"pointer"}
+            onClick={() => nav("/address")}
           >
             <Icon id="iconLocationB" as={MdLocationPin} />
             <Flex id="alamatTopBarB">

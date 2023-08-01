@@ -37,6 +37,7 @@ export default function Footer() {
               color={Clicked == "beranda" ? "#118925" : "black"}
               onClick={(e) => {
                 handleClick(e);
+                nav("/");
               }}
               zIndex={2}
             >
@@ -59,7 +60,7 @@ export default function Footer() {
             <Center
               className="cartCircleG"
               onClick={() => {
-                // nav("/product");
+                nav("/cart");
               }}
             >
               <Icon

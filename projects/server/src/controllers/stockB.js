@@ -20,6 +20,11 @@ const stockControllerB = {
               "weight",
             ],
           },
+          {
+            model: db.Discount,
+            as: "Discount",
+            attributes: ["nominal", "title", "valid_start", "valid_to"],
+          },
         ],
       });
       res.send(get);

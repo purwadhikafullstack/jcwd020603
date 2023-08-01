@@ -61,6 +61,7 @@ db.Stock = require("./Stock")(sequelize, Sequelize);
 db.StockHistory = require("./StockHistory")(sequelize, Sequelize);
 db.User = require("./User")(sequelize, Sequelize);
 db.Token = require("./Token")(sequelize, Sequelize);
+db.Cart = require("./Cart")(sequelize, Sequelize);
 
 db.Address.belongsTo(db.User, {
   foreignKey: "user_id",
@@ -110,6 +111,33 @@ db.StockHistory.belongsTo(db.Stock, {
 db.City.belongsTo(db.Province, {
   foreignKey: "province_id",
   as: "Province",
+});
+
+db.Stock.belongsTo(db.Discount, {
+  foreignKey: "discount_id",
+  as: "Discount",
+});
+
+db.Cart.belongsTo(db.Stock, {
+  foreignKey: "stock_id",
+  as: "Stock",
+});
+
+db.Cart.belongsTo(db.User, {
+  foreignKey: "user_id",
+  as: "User",
+});
+
+db.Address.belongsTo(db.City, {
+  foreignKey: "city_id",
+  as: "City",
+  target: "city_id",
+});
+
+db.Branch.belongsTo(db.City, {
+  foreignKey: "city_id",
+  as: "City",
+  target: "city_id",
 });
 
 module.exports = db;

@@ -8,9 +8,16 @@ import VerifyPage from "../pages/VerifyPage";
 import Dashboard from "../pages/Dashboard";
 import LandingPage from "../pages/LandingPage";
 import ProductPage from "../pages/ProductPage";
+<<<<<<< HEAD
+import SAProductPage from "../pages/SAdminProductPage";
+import CartPage from "../pages/CartPage";
+import AddressListPage from "../pages/AddressListPage";
+import OrderListPage from "../pages/OrderListPage";
+=======
 import SuperAdminCategoryPage from "../pages/Super-Admin-Category-Page";
 import SuperAdminProductPage from "../pages/Super-Admin-Product-Page";
 import AdminStockPage from "../pages/Admin-Stock-Page";
+>>>>>>> develop
 
 const routes = [
   <Route
@@ -90,6 +97,9 @@ const routes = [
   <Route path="/register" element={<RegisterPage />}></Route>,
   <Route path="/verify/:token" element={<VerifyPage />}></Route>,
   <Route path="/*" element={<NotFound />}></Route>,
+  <Route path="/cart" element={<CartPage />}></Route>,
+  <Route path="/address" element={<AddressListPage />}></Route>,
+  <Route path="/orders" element={<OrderListPage />}></Route>,
 ];
 
 export default routes;

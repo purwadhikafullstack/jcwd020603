@@ -39,17 +39,20 @@ export default function Category() {
       .get("/stock")
       .then((response) => {
         setStocks(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
 
+    // Mengambil searchTerm dari local storage jika tersedia
     const storedSearchTerm = localStorage.getItem("searchTerm");
     if (storedSearchTerm) {
       setSearchTerm(storedSearchTerm);
     }
   }, []);
 
+  // Menyimpan searchTerm ke local storage setiap kali berubah
   useEffect(() => {
     localStorage.setItem("searchTerm", searchTerm);
   }, [searchTerm]);
@@ -85,12 +88,15 @@ export default function Category() {
         <Grid id="productB">
           {stocks.map((val, idx) => (
             <CardProduct
-              key={val.id}
-              url={val.Product.photo_product_url}
-              product_name={val.Product.product_name}
-              price={val.Product.price}
-              desc={val.Product.desc}
-              discount={val.discount}
+              key={val.Product.id}
+              id={val.product_id}
+              url={val.Product?.photo_product_url}
+              product_name={val.Product?.product_name}
+              price={val.Product?.price}
+              desc={val.Product?.desc}
+              discount={val.Discount?.nominal}
+              weight={val.Product?.weight}
+              stock_id={val.id}
             />
           ))}
         </Grid>
