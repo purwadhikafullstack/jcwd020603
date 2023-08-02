@@ -120,7 +120,7 @@ export default function Sidebar({ navLeft }) {
             id="keranjang"
             className="menuSidebarCartG"
             onClick={() => {
-              nav("/product");
+              nav("/cart");
             }}
           >
             <Flex gap={"10px"}>

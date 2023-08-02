@@ -133,7 +133,8 @@ const userController = {
 
   getIdByToken: async (req, res, next) => {
     try {
-      const { token } = req.query;
+      const token = req.headers.authorization.split(" ")[1];
+      console.log(token);
       const findToken = await db.Token.findOne({
         where: {
           [Op.and]: [
@@ -162,6 +163,7 @@ const userController = {
       });
       delete user.dataValues.password;
       req.user = user.dataValues;
+      console.log(req.user.id);
       next();
     } catch (err) {
       res.status(500).send({ message: err.message });

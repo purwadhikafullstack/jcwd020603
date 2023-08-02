@@ -1,10 +1,24 @@
-import { Flex, Center, Grid, Image, Button, Icon } from "@chakra-ui/react";
+import {
+  Flex,
+  Center,
+  Grid,
+  Image,
+  Button,
+  Icon,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
 import "../css/indexB.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ModalProduct from "./modal-product";
 
 export function CardProduct(props) {
-  const { url, product_name, price, desc, weight, discount } = props;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { url, product_name, price, desc, weight, discount, id, stock_id } =
+    props;
   const discountedPrice = price - (price * discount) / 100;
 
   const formatCurrency = (amount) => {
@@ -22,9 +36,49 @@ export function CardProduct(props) {
   // }, []);
   console.log(props);
 
+  //get product value
+  const [prodVal, setProdVal] = useState({
+    //untuk simpan value product yang di klik
+    id: "",
+    stock_id: "",
+    photo_product_url: "",
+    price: "",
+    product_name: "",
+    desc: "",
+    weight: "",
+    qty: "",
+    discount: "",
+    discountedPrice: "",
+  });
+  const getProdVal = (val, idx) => {
+    setProdVal({
+      ...prodVal,
+      id: id,
+      stock_id: stock_id,
+      photo_product_url: url,
+      price: price,
+      product_name: product_name,
+      desc: desc,
+      weight: weight,
+      discount: discount,
+      discountedPrice: discountedPrice,
+    });
+  };
+  useEffect(() => {
+    console.log(prodVal);
+  }, [prodVal]);
+
   return (
     <>
-      <Flex id="cardProductB" flexDir="column" paddingBottom={"10px"}>
+      <Flex
+        id="cardProductB"
+        flexDir="column"
+        paddingBottom={"10px"}
+        onClick={() => {
+          getProdVal();
+          onOpen();
+        }}
+      >
         <Center flex="2">
           <Image id="image_productB" src={url} />
         </Center>
@@ -67,6 +121,23 @@ export function CardProduct(props) {
           </Flex>
         </Flex>
       </Flex>
+      <Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent
+          borderRadius={"15px"}
+          css={{
+            width: "500px",
+            margin: "0 auto",
+          }}
+        >
+          <ModalProduct
+            isOpen={isOpen}
+            onClose={onClose}
+            prodVal={prodVal}
+            setProdVal={setProdVal}
+          />
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }

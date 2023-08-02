@@ -14,6 +14,7 @@ import logo from "../assets/logo/horizontal.png";
 import "../css/indexB.css";
 
 export default function TopBar2({ address }) {
+  console.log(address);
   const getFormattedAddress = () => {
     if (address) {
       const splitAddress = address.split(",");

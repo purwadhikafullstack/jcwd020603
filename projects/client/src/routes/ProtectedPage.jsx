@@ -30,7 +30,7 @@ export default function ProtectedPage({
         return nav("/dashboard");
       }
     } else if (needLogin && !user.role) {
-      nav("/");
+      return nav("/");
     } else if (
       needLogin &&
       adminOnly &&

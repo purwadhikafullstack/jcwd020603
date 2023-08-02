@@ -6,8 +6,11 @@ import TopBar from "../components/topbar";
 import TopBar2 from "../components/topbar2";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
+import SidebarMini from "../components/sidebar-mini";
 
 export default function LandingPage() {
+  const windowWidth = window.outerWidth;
+  console.log(windowWidth);
   const [latlong, setLatlong] = useState({
     latitude: "",
     longitude: "",
@@ -54,23 +57,32 @@ export default function LandingPage() {
     }
     console.log(latlong);
   }, [latlong]);
+  //menyimpan alamat yang dipilih
+  const [selectedAddress, setSelectedAddress] = useState({});
 
-  const windowWidth = window.innerWidth;
   return (
     <>
-      {windowWidth > 850 ? (
+      {windowWidth > 600 ? (
         <Center>
-          <Box>
-            <Sidebar />
-          </Box>
-          <Box paddingLeft={"250px"}>
-            <TopBar address={address} />
-            <Category />
-          </Box>
+          <Flex maxWidth={"1160px"} w={"100%"}>
+            <Flex>{windowWidth > 750 ? <Sidebar /> : <SidebarMini />}</Flex>
+            <Flex flexDir={"column"}>
+              <TopBar
+                address={address}
+                selectedAddress={selectedAddress}
+                setSelectedAddress={setSelectedAddress}
+              />
+              <Category />
+            </Flex>
+          </Flex>
         </Center>
       ) : (
         <>
-          <TopBar2 address={address} />
+          <TopBar2
+            address={address}
+            selectedAddress={selectedAddress}
+            setSelectedAddress={setSelectedAddress}
+          />
           <Category />
           <Footer />
         </>

@@ -3,9 +3,13 @@ const addressControllerB = require("./addressB");
 const categoryControllerB = require("./categoryB");
 const productControllerB = require("./productB");
 const stockControllerB = require("./stockB");
-const branchController = require("./branch");
-const cityController = require("./city")
+const addressControllerG = require("./addressG");
 const provinceController = require("./province");
+const cityController = require("./city");
+const cartController = require("./cart");
+const orderDetailController = require("./orderDetail");
+const orderController = require("./orders");
+const branchController = require("./branch");
 
 module.exports = {
   userController,
@@ -13,7 +17,11 @@ module.exports = {
   categoryControllerB,
   productControllerB,
   stockControllerB,
-  branchController,
-  cityController,
+  addressControllerG,
   provinceController,
+  cityController,
+  cartController,
+  orderDetailController,
+  orderController,
+  branchController,
 };

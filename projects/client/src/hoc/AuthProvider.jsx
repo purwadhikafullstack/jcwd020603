@@ -9,7 +9,11 @@ export default function AuthProvider({ children }) {
       const token = JSON.parse(localStorage.getItem("auth"));
       if (token) {
         const dataUser = await api
-          .get("user/id-token", { params: { token } })
+          .get("user/id-token", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
           .then((res) => res.data);
         if (dataUser) {
           console.log(dataUser);

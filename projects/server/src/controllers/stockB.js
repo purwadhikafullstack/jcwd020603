@@ -15,9 +15,15 @@ const stockControllerB = {
               "product_name",
               "price",
               "photo_product_url",
+              "category_id",
               "desc",
-              // "weight",
+              "weight",
             ],
+          },
+          {
+            model: db.Discount,
+            as: "Discount",
+            attributes: ["nominal", "title", "valid_start", "valid_to"],
           },
         ],
       });
@@ -77,6 +83,98 @@ const stockControllerB = {
     } catch (err) {
       res.status(500).send({
         message: err.message,
+      });
+    }
+  },
+
+  insertStock: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const { quantity_stock, product_id, branch_id, discount } = req.body;
+      console.log(req.body);
+      await db.Stock.create(
+        {
+          quantity_stock: parseInt(quantity_stock),
+          product_id: parseInt(product_id),
+          branch_id: parseInt(branch_id),
+          discount: parseInt(discount),
+        },
+        {
+          transaction: trans,
+        }
+      );
+      await trans.commit();
+      return await db.Stock.findAll().then((result) => {
+        res.send(result);
+      });
+    } catch (err) {
+      console.log(err);
+      await trans.rollback();
+      return res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  editStock: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const { quantity_stock, discount } = req.body;
+      const stok = await db.Stock.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
+      console.log(stok);
+      const qty_stok = quantity_stock
+        ? quantity_stock
+        : stok.dataValues.quantity_stock;
+      const disc = discount ? discount : stok.dataValues.discount;
+
+      await db.Stock.update(
+        {
+          quantity_stock: qty_stok,
+          discount: disc,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+          transaction: trans,
+        }
+      );
+      await trans.commit();
+      return await db.Stock.findOne({
+        where: {
+          id: req.params.id,
+        },
+      }).then((result) => res.send(result));
+    } catch (err) {
+      console.log(err.message);
+      await trans.rollback();
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  deleteStock: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      await db.Stock.destroy({
+        where: {
+          //  id: req.params.id
+          //   [Op.eq]: req.params.id
+          id: req.params.id,
+        },
+      });
+      await trans.commit();
+      return await db.Stock.findAll().then((result) => res.send(result));
+    } catch (err) {
+      console.log(err.message);
+      await trans.rollback();
+      return res.status(500).send({
+        error: err.message,
       });
     }
   },

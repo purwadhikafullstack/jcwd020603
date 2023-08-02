@@ -6,26 +6,30 @@ const fileUploader = ({
   prefix = "POST",
   fileType = "image",
 }) => {
-  const storageConfing = multer.diskStorage({
+  const storageConfig = multer.diskStorage({
     destination: (req, file, cb) => {
+      // console.log("wwwwww");
       cb(null, `${__dirname}/../public/${destinationFolder}`);
     },
 
     filename: (req, file, cb) => {
-      const fileExtention = file.mimetype.split("/")[1];
+      // console.log(file);
+      const fileExtension = file.mimetype.split("/")[1];
 
-      const fileName = `${prefix}_${nanoid()}.${fileExtention}`;
-      cb(null, fileName);
+      const filename = `${prefix}_${nanoid()}.${fileExtension}`;
+      cb(null, filename);
     },
   });
-
+  // console.log(storageConfig);
   const uploader = multer({
-    storage: storageConfing,
+    storage: storageConfig,
 
     fileFilter: (req, file, cb) => {
+      //   console.log(file);
       if (file.mimetype.split("/")[0] != fileType) {
         return cb(null, false);
       }
+
       cb(null, true);
     },
   });
@@ -34,9 +38,10 @@ const fileUploader = ({
 
 const upload = multer({
   limits: {
-    fileSize: 10485760,
+    fileSize: 100000, //byte
   },
   fileFilter: (req, file, cb) => {
+    console.log(file);
     if (file.mimetype.split("/")[0] != "image") {
       return cb(null, false);
     }

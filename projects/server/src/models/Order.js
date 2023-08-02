@@ -3,8 +3,14 @@ module.exports = (sequelize, Sequelize) => {
     date: Sequelize.DATE,
     total: Sequelize.INTEGER,
     status: Sequelize.ENUM(
-      "Menunggu Pembayaran, Diproses, Selesai, Dibatalkan"
+      "Menunggu Pembayaran",
+      "Menunggu Konfirmasi Pembayaran",
+      "Diproses",
+      "Dikirim",
+      "Pesanan Dikonfirmasi",
+      "Dibatalkan"
     ),
+    order_number: Sequelize.STRING,
   });
   return Order;
 };
