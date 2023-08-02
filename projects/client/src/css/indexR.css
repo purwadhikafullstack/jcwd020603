@@ -158,3 +158,27 @@
     height: 100vh;
   }
 }
+
+/* untuk table */
+
+.custom-table {
+  border-collapse: separate;
+  border-spacing: 0 10px; /* Adjust the spacing value as needed */
+}
+
+.table-row {
+  border-radius: 20px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  padding: 5px;
+  background: whitesmoke;
+  color: black;
+  /* font-weight: bold; */
+}
+
+.table-row:hover {
+  transform: scale(
+    1.05
+  ); /* Adjust the scale value as needed for the hover effect */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow value as needed */
+  background: #c6f6d5;
+}

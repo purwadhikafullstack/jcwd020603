@@ -13,6 +13,9 @@ module.exports = (sequelize, Sequelize) => {
     phone_number: Sequelize.STRING,
     password: Sequelize.STRING,
     verification: { type: Sequelize.BOOLEAN, defaultValue: false },
+  },
+  {
+    paranoid : true
   });
   return User;
 };

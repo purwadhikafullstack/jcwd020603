@@ -16,6 +16,7 @@ const app = express();
 // })
 // );
 const routes = require("./routes");
+const { route } = require("./routes/branch");
 app.use(cors());
 app.use(express.json());
 // app.use(verify);
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use("/categoryImg", express.static(`${__dirname}/public/categoryImg`));
 app.use("/productImg", express.static(`${__dirname}/public/productImg`));
 app.use("/user", routes.userRoutes);
+app.use("/branch", routes.branchRoutes);
 app.use("/address", routes.addressRoutesB);
 app.use("/category", routes.categoryRoutesB);
 app.use("/stock", routes.stockRoutesB);
@@ -39,6 +41,7 @@ app.use("/cart", routes.cartRoutes);
 app.use("/order-details", routes.orderDetailRoutes);
 app.use("/order", routes.orderRoutes);
 app.use("/product", routes.productRoutesB);
+app.use("/avatar", express.static(`${__dirname}/public/Avatar`));
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

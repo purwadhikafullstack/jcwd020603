@@ -9,6 +9,7 @@ const cityController = require("./city");
 const cartController = require("./cart");
 const orderDetailController = require("./orderDetail");
 const orderController = require("./orders");
+const branchController = require("./branch");
 
 module.exports = {
   userController,
@@ -22,4 +23,5 @@ module.exports = {
   cartController,
   orderDetailController,
   orderController,
+  branchController,
 };

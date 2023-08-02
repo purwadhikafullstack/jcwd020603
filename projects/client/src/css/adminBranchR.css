@@ -1,0 +1,80 @@
+.flex1R-addbranch {
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex2R-addbranch{
+    height: auto;
+    width: 100%;
+    flex-direction: column; 
+    column-gap: 6;
+    box-shadow: 0px 2px 30px 5px #fff7e7;
+    border-radius: 20px;
+    padding: 15px;
+    background-color: #fff7e7;
+    
+
+}
+
+.flex2R-box-addbranch {
+   font-size: large;
+   font-weight: bolder;
+   color: black;
+   text-align: center;
+   margin-bottom: 10px;
+}
+
+.flex3R-addbranch {
+    display: flex;
+    flex-direction: row;
+    column-gap: 6;
+    justify-content: space-around;
+    margin-top: 10px;
+    height: 100%;
+}
+
+.flex3R-box-addbranch {
+   width: 0.1%;
+   height: 35%;
+   border: 1px solid #9d9c45;
+   border: 1px solid #cecc62;
+   border: 1px solid #f0ee93;
+   background-color: #9d9c45;
+   justify-content: center;
+   align-items: center;
+   display: flex;
+ }
+
+
+.flex3R-input_user-addbranch {
+    width: 40%;
+    color: black    ;
+    flex-direction: column;
+    gap: 15px;
+
+
+}
+
+.flex3R-input_branch-addbranch {
+    width: 40%;
+    color: black    ;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 10px;
+}  
+
+.flex3R-input-box-addbranch{
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+    background-color: #9d9c45;
+    border: 1px solid #fcfffe;
+    border-top-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+
+
+

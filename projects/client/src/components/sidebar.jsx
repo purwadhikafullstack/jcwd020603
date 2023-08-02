@@ -14,13 +14,26 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import logo from "../assets/logo/horizontal.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 // import ModalProduct from "./modal-product";
 
-export default function Sidebar() {
+export default function Sidebar({ navLeft }) {
+  const user = JSON.parse(localStorage.getItem("auth"));
   const nav = useNavigate();
   //style untuk setiap menu sidebar
   //merubah warna saat di click
   const [Clicked, setClicked] = useState("");
+
+  const akunnav = () => {
+    console.log(user);
+    if (user) {
+      nav("/profile");
+    } else {
+      alert("Maaf Anda belum login, silahkan login dulu");
+      return nav("/login");
+    }
+  };
+
   const handleClick = (e) => {
     setClicked(e.currentTarget.id);
   };
@@ -28,7 +41,16 @@ export default function Sidebar() {
 
   return (
     <>
-      <Flex className="flexSidebarTerluarG">
+      <Flex
+        className="flexSidebarTerluarG"
+        display={{
+          xl: "flex",
+          lg: "flex",
+          md: "flex",
+          sm: navLeft == "minus" || navLeft == "" ? "none" : "flex",
+          base: navLeft == "minus" || navLeft == "" ? "none" : "flex",
+        }}
+      >
         <Flex w={"100%"} h={"123px"} padding={"25px 10px"}>
           <Image src={logo} />
         </Flex>
@@ -80,6 +102,7 @@ export default function Sidebar() {
           gap={"10px"}
           onClick={(e) => {
             handleClick(e);
+            akunnav();
           }}
           bg={Clicked == "akun" ? "#ECFFF4" : "white"}
           color={Clicked == "akun" ? "#199950" : "black"}

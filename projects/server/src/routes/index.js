@@ -9,6 +9,7 @@ const cityRoutes = require("./city");
 const cartRoutes = require("./cart");
 const orderDetailRoutes = require("./orderDetail");
 const orderRoutes = require("./order");
+const branchRoutes = require("./branch");
 
 module.exports = {
   userRoutes,
@@ -22,4 +23,5 @@ module.exports = {
   cartRoutes,
   orderDetailRoutes,
   orderRoutes,
+  branchRoutes,
 };

@@ -7,6 +7,8 @@ const cors = require("cors");
 const mailer = require("../lib/mailer");
 const dotenv = require("dotenv");
 dotenv.config();
+const url_avatar = process.env.avatar_url;
+const url_bg = process.env.bg_url;
 
 const userController = {
   register: async (req, res) => {
@@ -98,8 +100,23 @@ const userController = {
     }
   },
 
+  getAllRoleAdmin: async (req, res) => {
+    try {
+      const user = await db.User.findAll({
+        where: {
+          role: {
+            [Op.or]: ["ADMIN", "SUPER ADMIN"],
+          },
+        },
+      });
+      res.status(200).send({ message: "list Admin", data: user });
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  },
+
   getUser: async (req, res) => {
-    console.log("ini coba");
+    // console.log("ini coba");
     try {
       const { getall } = req.query;
       const user = await db.User.findOne({
@@ -242,6 +259,82 @@ const userController = {
       res.status(500).send({
         message: err.message,
       });
+    }
+  },
+
+  uploadAvatar: async (req, res) => {
+    try {
+      const { filename } = req.file;
+      await db.User.update(
+        {
+          avatar_url: url_avatar + filename,
+          bg_url: url_bg + filename,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+
+      await db.User.findOne({
+        where: {
+          id: req.params.id,
+        },
+      }).then((result) => res.send(result));
+    } catch (err) {
+      return res.status(500).send({ message: err.message });
+    }
+  },
+
+  editUser: async (req, res) => {
+    try {
+      const { user_name, email, gender, birth_date } = req.body;
+      await db.User.update(
+        {
+          user_name,
+          email,
+          gender,
+          birth_date,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      ).then((result) =>
+        res.status(200).send({
+          message: "Perubahan Data Berhasil",
+          data: result.dataValues,
+        })
+      );
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  changePass: async (req, res) => {
+    try {
+      const { password } = req.body;
+      const hashpass = await bcrypt.hash(password, 10);
+
+      db.User.update(
+        {
+          password: hashpass,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      ).then((result) =>
+        res.status(200).send({
+          message: "Password berhasil diganti",
+          data: res.dataValues,
+        })
+      );
+    } catch (error) {
+      res.status(500).send({ message: error.message });
     }
   },
 };
