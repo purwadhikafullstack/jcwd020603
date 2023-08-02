@@ -70,7 +70,7 @@ export default function AdminBranch() {
 
   useEffect(() => {
     fetchAll();
-  }, []);
+  }, [dtBranch]);
 
 
   const hadleDelete = async (branch_id, user_id, user_name, branch_name) => {

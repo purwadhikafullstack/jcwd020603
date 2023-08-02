@@ -20,7 +20,7 @@ const branchController = {
           {
             model: db.Branch,
             as: "Branch",
-            attributes: ["branch_name", "branch_address", "district", "city", "province"],
+            attributes: ["branch_name", "branch_address", "district", "city_id", "province" ],
           },
         ],
       });
@@ -38,7 +38,8 @@ const branchController = {
           [Op.or] : [{branch_name : getAll},{branch_address : getAll}]
         }
       })
-      return res.status(200).send({message : "Data ditemukan", haveBranch})
+       res.status(200).send({message : "Data ditemukan", Data : haveBranch})
+       return haveBranch
       
     } catch (error) {
       res.status(500).send({message : error.message})
@@ -49,9 +50,9 @@ const branchController = {
   addBranchAdmin : async (req, res) => {
     try {
 
-    const {user_name, email, password, phone_number, branch_name, branch_address, district, city, province} = req.body
+    const {user_name, email, password, phone_number, branch_name, branch_address, district, city_id, province} = req.body
     const hashedPass =  await bcrypt.hash(password, 10) 
-    const newBranch = await db.Branch.create({branch_name, branch_address, district, city, province})
+    const newBranch = await db.Branch.create({branch_name, branch_address, district, city_id, province})
      const newAdmin = await db.User.create({user_name, email, role : "ADMIN", password : hashedPass, phone_number, branch_id : newBranch.id})
      return res.status(200).send({message : "Data Admin dan Cabang berhasil ditambahkan", Data : newBranch, newAdmin})
       
