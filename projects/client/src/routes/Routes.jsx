@@ -8,14 +8,18 @@ import VerifyPage from "../pages/VerifyPage";
 import Dashboard from "../pages/Dashboard";
 import LandingPage from "../pages/LandingPage";
 import ProductPage from "../pages/ProductPage";
-import LandingPage from "../pages/LandingPage";
 import SAProductPage from "../pages/SAdminProductPage";
+import ProfilePage from "../pages/ProfilePage";
+import ChangePass from "../components/ChangePass";
+import AdminBranch from "../components/AdminBranch";
+import DashboardBranch from "../pages/DashboardBranch";
+import AddAdminBranch from "../components/AdminBranchAddModal";
 
 const routes = [
   <Route
     path="/"
     element={
-      <ProtectedPage needLogin={true} guestOnly={true} userOnly={true}>
+      <ProtectedPage needLogin={true} guestOnly={true}>
         <LandingPage />
       </ProtectedPage>
     }
@@ -24,7 +28,7 @@ const routes = [
   <Route
     path="/dashboard"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage needLogin={true} guestOnly={true} adminOnly={true}>
         <Dashboard />
       </ProtectedPage>
     }
@@ -33,7 +37,7 @@ const routes = [
   <Route
     path="/login"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage>
         <LoginPage />
       </ProtectedPage>
     }
@@ -42,7 +46,7 @@ const routes = [
   <Route
     path="/register"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage>
         <RegisterPage />
       </ProtectedPage>
     }
@@ -51,8 +55,26 @@ const routes = [
   <Route
     path="/verify/:token"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage>
         <VerifyPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/product"
+    element={
+      <ProtectedPage guestOnly={true}>
+        <ProductPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/sa-product"
+    element={
+      <ProtectedPage guestOnly={true}>
+        <SAProductPage />
       </ProtectedPage>
     }
   ></Route>,
@@ -67,21 +89,35 @@ const routes = [
   ></Route>,
 
   <Route
-    path="/dummy"
+    path="/not-authority"
     element={
       <ProtectedPage>
-        <Dummy />
+        <NotFound />
       </ProtectedPage>
     }
   ></Route>,
 
-  <Route path="" element={<LandingPage />}></Route>,
-  <Route path="/product" element={<ProductPage />}></Route>,
-  <Route path="/sa-product" element={<SAProductPage />}></Route>,
+  // <Route
+  //   path="/dummy"
+  //   element={
+  //     <ProtectedPage>
+  //       <Dummy />
+  //     </ProtectedPage>
+  //   }
+  // ></Route>,
+
+  // <Route path="/" element={<LandingPage />}></Route>,
+  // <Route path="/product" element={<ProductPage />}></Route>,
+  // <Route path="/sa-product" element={<SAProductPage />}></Route>,
   // <Route path="/home" element={<Home />}></Route>,
   // <Route path="/homeadmin" element={<HomeAdmin />}></Route>,
   // <Route path="/" element={<Dummy />}></Route>,
+  // <Route path="/dashboard" element={<Dashboard />}></Route>,
   // <Route path="/login" element={<LoginPage />}></Route>,
+  <Route path="/profile" element={<ProfilePage />}></Route>,
+  <Route path="/cpass" element={<ChangePass />}></Route>,
+  <Route path="/ab" element={<DashboardBranch />}></Route>,
+  <Route path="/ab-add" element={<AddAdminBranch />}></Route>,
   // <Route path="/register" element={<RegisterPage />}></Route>,
   // <Route path="/verify/:token" element={<VerifyPage />}></Route>,
   // <Route path="/*" element={<NotFound />}></Route>,

@@ -107,6 +107,11 @@ db.StockHistory.belongsTo(db.Stock, {
   as: "Stock",
 });
 
+db.User.belongsTo(db.Branch, {
+  foreignKey : "branch_id",
+  as : "Branch"
+})
+
 db.City.belongsTo(db.Province, {
   foreignKey: "province_id",
   as: "Province",

@@ -81,8 +81,8 @@ export default function DashboardSidebar({ navLeft }) {
           base: navLeft == "minus" || navLeft == "" ? "none" : "flex",
         }}
       >
-        <Flex h={"15%"} w={"100%"}>
-          <Image src={logo} borderBottom={"1px solid #E2DADA"}></Image>
+        <Flex className="flex-logo-sidebarR">
+          <Image src={logo} h={"70%"}></Image>
         </Flex>
 
         <DashboardSidebarItem></DashboardSidebarItem>
@@ -115,13 +115,12 @@ export default function DashboardSidebar({ navLeft }) {
                 >
                   Verify
                 </MenuItem>
-                <MenuItem onClick={() => {}}>Log out</MenuItem>
+                <MenuItem onClick={logout}>Log out</MenuItem>
               </MenuList>
             </Menu>
           </Flex>
         </Flex>
       </Box>
-      {/* </Flex> */}
     </>
   );
 }

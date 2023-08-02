@@ -16,9 +16,10 @@ const app = express();
 // })
 // );
 const routes = require("./routes");
+const { route } = require("./routes/branch");
 app.use(cors());
 app.use(express.json());
-app.use(verify);
+// app.use(verify);
 // const { verify } = require("crypto");
 // db.sequelize.sync({ alter: true });
 
@@ -27,9 +28,13 @@ app.use(verify);
 // ===========================
 // NOTE : Add your routes here
 app.use("/user", routes.userRoutes);
+app.use("/city", routes.cityRoutes)
+app.use("/province", routes.provinceRoutes)
+app.use("/branch", routes.branchRoutes);
 app.use("/address", routes.addressRoutesB);
 app.use("/category", routes.categoryRoutesB);
 app.use("/stock", routes.stockRoutesB);
+app.use("/avatar", express.static(`${__dirname}/public/Avatar`));
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

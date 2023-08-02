@@ -13,13 +13,10 @@ export default function DashboardNavbar({ toggleSidebar }) {
           w={"100%"}
           h={"100%"}
           alignItems={"center"}
-          justifyContent={"space-between"}
+          justifyContent={"end"}
           pl={"5%"}
           pr={"5%"}
         >
-          <Flex w={"25%"} h={"100%"}>
-            <Image src={logo} w={"100%"} h={"100%"}></Image>
-          </Flex>
           <Flex
             w={"10%"}
             h={"100%"}

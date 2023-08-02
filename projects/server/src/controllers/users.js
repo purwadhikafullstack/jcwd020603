@@ -7,6 +7,8 @@ const cors = require("cors");
 const mailer = require("../lib/mailer");
 const dotenv = require("dotenv");
 dotenv.config();
+const url_avatar = process.env.avatar_url;
+const url_bg = process.env.bg_url;
 
 const userController = {
   register: async (req, res) => {
@@ -43,24 +45,50 @@ const userController = {
           user.dataValues.password
         );
 
-        console.log(user.dataValues);
+        // console.log(user.dataValues);
         if (cekPass) {
           const payload = user.dataValues.id;
           const generateToken = nanoid();
           // console.log(payload);
 
-          const token = await db.Token.create({
-            token: generateToken,
-            payload: JSON.stringify(payload),
-            expired: moment().add(1, "days").format(),
-            valid: true,
-            status: "LOGIN",
+          const cektok = await db.Token.findOne({
+            where: {
+              payload: JSON.stringify({ id: user.dataValues.id }),
+              status: "LOGIN",
+            },
           });
-          return res.status(200).send({
-            message: "Login Berhasil",
-            token: token.dataValues.token,
-            value: user,
-          });
+          console.log(cektok);
+          if (cektok) {
+            const token = await db.Token.update(
+              {
+                token: generateToken,
+                expired: moment().add(1, "days").format(),
+              },
+              {
+                where: {
+                  id: cektok.dataValues.id,
+                },
+              }
+            );
+            return res.status(200).send({
+              message: "Login Berhasil",
+              token: generateToken,
+              value: user,
+            });
+          } else {
+            const token = await db.Token.create({
+              token: generateToken,
+              payload: JSON.stringify({ id: payload }),
+              expired: moment().add(1, "days").format(),
+              valid: true,
+              status: "LOGIN",
+            });
+            return res.status(200).send({
+              message: "Login Berhasil",
+              token: generateToken,
+              value: user,
+            });
+          }
         } else {
           res.status(500).send({ message: "Pssword Salah" });
         }
@@ -72,8 +100,23 @@ const userController = {
     }
   },
 
+  getAllRoleAdmin: async (req, res) => {
+    try {
+      const user = await db.User.findAll({
+        where: {
+          role: {
+            [Op.or]: ["ADMIN", "SUPER ADMIN"],
+          },
+        },
+      });
+      res.status(200).send({ message: "list Admin", data: user });
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  },
+
   getUser: async (req, res) => {
-    console.log("ini coba");
+    // console.log("ini coba");
     try {
       const { getall } = req.query;
       const user = await db.User.findOne({
@@ -93,20 +136,28 @@ const userController = {
       const { token } = req.query;
       const findToken = await db.Token.findOne({
         where: {
-          token,
-          expired: {
-            [Op.gte]: moment().format(),
-          },
-          valid: true,
+          [Op.and]: [
+            { token },
+
+            {
+              expired: {
+                [Op.gt]: moment().format(),
+                [Op.lte]: moment().add(1, "d").format(),
+              },
+            },
+            { valid: true },
+          ],
         },
       });
+
+      console.log(findToken);
 
       if (!findToken) {
         throw new Error("token expired");
       }
       const user = await db.User.findOne({
         where: {
-          id: JSON.parse(findToken.dataValues.payload).id,
+          id: JSON.parse(findToken?.dataValues?.payload).id,
         },
       });
       delete user.dataValues.password;
@@ -206,6 +257,82 @@ const userController = {
       res.status(500).send({
         message: err.message,
       });
+    }
+  },
+
+  uploadAvatar: async (req, res) => {
+    try {
+      const { filename } = req.file;
+      await db.User.update(
+        {
+          avatar_url: url_avatar + filename,
+          bg_url: url_bg + filename,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+
+      await db.User.findOne({
+        where: {
+          id: req.params.id,
+        },
+      }).then((result) => res.send(result));
+    } catch (err) {
+      return res.status(500).send({ message: err.message });
+    }
+  },
+
+  editUser: async (req, res) => {
+    try {
+      const { user_name, email, gender, birth_date } = req.body;
+      await db.User.update(
+        {
+          user_name,
+          email,
+          gender,
+          birth_date,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      ).then((result) =>
+        res.status(200).send({
+          message: "Perubahan Data Berhasil",
+          data: result.dataValues,
+        })
+      );
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  changePass: async (req, res) => {
+    try {
+      const { password } = req.body;
+      const hashpass = await bcrypt.hash(password, 10);
+
+      db.User.update(
+        {
+          password: hashpass,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      ).then((result) =>
+        res.status(200).send({
+          message: "Password berhasil diganti",
+          data: res.dataValues,
+        })
+      );
+    } catch (error) {
+      res.status(500).send({ message: error.message });
     }
   },
 };

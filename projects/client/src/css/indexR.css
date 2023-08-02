@@ -39,11 +39,11 @@
   padding: 5px;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 550px) {
   .dash-content-highlight {
     height: 100%;
     padding: 5px;
-    width: 60%;
+    width: 50%;
   }
 }
 
@@ -106,8 +106,24 @@
   }
 }
 
-.flex-item-sidebarR {
+.flex-bungkus-item-sidebarR {
+  height: 50%;
+  width: 100%;
+  flex-direction: column;
+  border-top: 1px solid #e2dada;
+  border-bottom: 1px solid #e2dada;
+  gap: 5%;
+}
+.flex-logo-sidebarR {
   height: 15%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 2%;
+}
+
+.flex-item-sidebarR {
+  height: 30%;
   width: 100%;
   justify-content: center;
   transition: 1s;
@@ -116,23 +132,24 @@
   cursor: pointer;
 }
 .flex-item-sidebarR:hover {
-  background: #53db8ede;
+  background: rgb(113, 243, 123);
 }
 
 .box-sidebarR {
-  padding: 3%;
   font-weight: bolder;
+  font-size: large;
   height: 100%;
   width: 70%;
+  display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .flex1R {
-  margin-left: 8%;
+  margin-left: 12%;
   width: 100%;
   max-width: 1160px;
   height: 100vh;
+  box-shadow: black;
 
   @media (max-width: 767px) {
     margin-left: 0%;
@@ -140,4 +157,28 @@
     max-width: 767px;
     height: 100vh;
   }
+}
+
+/* untuk table */
+
+.custom-table {
+  border-collapse: separate;
+  border-spacing: 0 10px; /* Adjust the spacing value as needed */
+}
+
+.table-row {
+  border-radius: 20px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  padding: 5px;
+  background: whitesmoke;
+  color: black;
+  /* font-weight: bold; */
+}
+
+.table-row:hover {
+  transform: scale(
+    1.05
+  ); /* Adjust the scale value as needed for the hover effect */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow value as needed */
+  background: #c6f6d5;
 }
