@@ -50,6 +50,14 @@ const stockControllerB = {
                 "price",
                 "photo_product_url",
                 "desc",
+                "category_id",
+              ],
+              include: [
+                {
+                  model: db.Category,
+                  as: "Category",
+                  attributes: ["id", "category_name"],
+                },
               ],
             },
           ],
@@ -57,6 +65,11 @@ const stockControllerB = {
             [Op.or]: [
               { "$Product.product_name$": { [Op.like]: `%${search_query}%` } },
               { "$Product.desc$": { [Op.like]: `%${search_query}%` } },
+              {
+                "$Product.Category.category_name$": {
+                  [Op.like]: `%${search_query}%`,
+                },
+              },
             ],
           },
         });

@@ -1,6 +1,6 @@
 import { setUserSelector } from "./setUserSelector";
-import searchReducer from "./searchReducer";
 import { combineReducers } from "redux";
+import searchReducer from "./searchReducer";
 import userReducer from "./auth";
 import addressReducer from "./reducerAddress";
 

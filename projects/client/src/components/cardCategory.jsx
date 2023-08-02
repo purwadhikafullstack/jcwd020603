@@ -7,10 +7,11 @@ import { useEffect } from "react";
 export function CardCategory(props) {
   const navigate = useNavigate();
 
-  const { photo_category_url } = props;
+  const { photo_category_url, category_name } = props;
 
   const handleClick = () => {
-    navigate("/product", { state: { category_name: props.category_name } });
+    navigate("/product", { state: { category_name: category_name } });
+    props.setSelectedCategory(category_name);
   };
 
   useEffect(() => {
@@ -19,7 +20,11 @@ export function CardCategory(props) {
 
   return (
     <>
-      <Flex className="cardCategoryB" onClick={handleClick}>
+      <Flex
+        className="cardCategoryB"
+        defaultValue={props.category_name}
+        onClick={handleClick}
+      >
         <Center flex="1">
           <Image id="categoryImageB" src={photo_category_url} />
         </Center>

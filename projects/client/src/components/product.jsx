@@ -11,7 +11,7 @@ export default function Product() {
   const location = useLocation();
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
-
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [productSearchResults, setProductSearchResults] = useState([]);
 
   const performSearch = (searchTerm) => {
@@ -51,16 +51,27 @@ export default function Product() {
 
   const combinedSearchResults = [...searchResults, ...productSearchResults];
 
+  const filterProductsByCategory = () => {
+    if (selectedCategory === "") {
+      return combinedSearchResults;
+    } else {
+      return combinedSearchResults.filter(
+        (product) => product.Product.category_name === selectedCategory
+      );
+    }
+  };
+
   return (
     <>
       <Flex id="baseContainerB">
         <SearchBar
           onSearch={performSearch}
           productSearchResults={productSearchResults}
+          setSelectedCategory={setSelectedCategory}
         />
         <Flex id="headB" paddingTop={"20px"}></Flex>
         <Grid id="productB">
-          {combinedSearchResults.map((val, idx) => (
+          {filterProductsByCategory().map((val, idx) => (
             <CardProduct
               key={val.Product.id}
               url={val.Product.photo_product_url}

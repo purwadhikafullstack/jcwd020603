@@ -18,7 +18,7 @@ const categoryController = {
   },
   getById: async (req, res) => {
     try {
-      const category = await db.db.Category.findOne({
+      const category = await db.Category.findOne({
         where: {
           id: req.params.id,
         },
