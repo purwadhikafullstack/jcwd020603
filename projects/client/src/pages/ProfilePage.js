@@ -3,11 +3,13 @@ import DashboardNavbar from "../components/DashboardNavbar";
 import { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import "../css/indexR.css";
+import "../css/profileR.css"
 import DashboardContent from "../components/DashboardContent";
-import Profile from "../components/profile";
 import Sidebar from "../components/sidebar";
 import Footer from "../components/footer";
+import Profile from "../components/ProfileUser";
 
+// Profile
 export default function ProfilePage() {
   const [navLeft, setNavLeft] = useState("minus");
 
