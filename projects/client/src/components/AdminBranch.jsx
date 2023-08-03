@@ -46,59 +46,38 @@ import {FaPeopleGroup} from "react-icons/fa6"
 import {RiDeleteBin6Fill} from "react-icons/ri"
 import {BsFillPersonPlusFill} from "react-icons/bs"
 import AddAdminBranch from "./AdminBranchAddModal";
+import EditAdminBranch from "./AdminBranchEditModal";
+import ModalKonfirmasiDeletAdmin from "./modal-konfirmasi-deleteAdminBranch";
 
 
 
 export default function AdminBranch() {
   const toast = useToast()
   const {isOpen, onOpen, onClose} = useDisclosure()
+  const { isOpen : isOpenEdit, onOpen : onOpenEdit, onClose : onCloseEdit} = useDisclosure()
+  const { isOpen : isOpenDel, onOpen : onOpenDel, onClose : onCloseDel} = useDisclosure()
   const [dtBranch, setDtBranch] = useState([]);
 
   // ambil data
   const fetchAll = async () => {
     try {
-      const branch = await api.get("/branch/all-branch").then((res) => {
-        console.log(res.data.Data);
+      const token = JSON.parse(localStorage.getItem("auth"))
+      const branch = await api.get("/branch/all-branch", {headers : {Authorization : `Bearer ${token}`}}).then((res) => {
         setDtBranch(res.data.Data);
       });
     } catch (error) {
       console.log(error.message);
     }
   };
-  // const mapBranch = dtBranch.Data;
-  console.log(dtBranch);
 
   useEffect(() => {
     fetchAll();
-  }, [dtBranch]);
+  }, []);
 
 
-  const hadleDelete = async (branch_id, user_id, user_name, branch_name) => {
-    const confirmMessage = `Anda akan menghapus Admin : ${user_name} dan Branch : ${branch_name}`
+ 
 
-    if(window.confirm(confirmMessage)){
-      await api.delete("/branch/", {data : {branch_id, user_id}})
-      .then((res) => {
-         toast({
-          title: "Admin dan Cabang berhasil hapus",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        })
-       fetchAll()
-      })
-      .catch ((error) => {
-        console.log(error);
-      })
-    } else {
-      console.log("nggak jadi ni yeee");
-    }
-}
-
-// useEffect (() => {
-//   fetchAll()
-// }, [hadleDelete()])
-
+const [number, setNumber] = useState(0)
 
 
   return (
@@ -171,9 +150,10 @@ export default function AdminBranch() {
             </Flex>
             <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
               <Select placeholder="Pilih Lokasi Cabang" bg={"white"}>
-                <option value="bandung">Bandung</option>
-                <option value="sukabumi">Sukabumi</option>
-                <option value="batam">Batam</option>
+                {dtBranch.map((val) => (
+                  <option value={val.Branch.branch_name}>{val.Branch.City?.city_name}</option>
+                ))}
+                
               </Select>
               <InputGroup>
                 <Input placeholder="search" bg={"white"}></Input>
@@ -212,14 +192,15 @@ export default function AdminBranch() {
                   <Td>{val.phone_number}</Td>
                   <Td>{val.Branch.branch_name}</Td>
                   <Td>{val.Branch.branch_address}</Td>
-                  <Td>{val.Branch.city} - {val.Branch.province}</Td>
+                  <Td>{val.Branch.City?.city_name} - {val.Branch.province}</Td>
                   <Td alignItems={"center"} position={"center"}>
                      <Flex flexDir={"row"} w={"100%"} h={"100%"} gap={"15px"}>
-                     <Button bgColor={"#9d9c45"} w={"100%"} cursor={"pointer"} ><BiEdit/></Button>
+                     <Button bgColor={"#9d9c45"} w={"100%"} cursor={"pointer"} 
+                     onClick={()=>{onOpenEdit()
+                      setNumber(index)}} ><BiEdit/></Button>
                      <Button bgColor={"red.500"} w={"100%"} cursor={"pointer"}
-                     onClick={()=> {
-                        hadleDelete(val.branch_id, val.id, val.user_name, val.Branch.branch_name)
-                     }}><RiDeleteBin6Fill width={"100%"}/></Button>
+                     onClick={()=> {onOpenDel()
+                      setNumber(index)}}><RiDeleteBin6Fill width={"100%"}/></Button>
                      </Flex>
                   </Td>
                 </Tr>
@@ -232,7 +213,21 @@ export default function AdminBranch() {
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay/>
         <ModalContent maxW={"700px"} w={"100%"} borderRadius={"20px"} >
-          <AddAdminBranch isOpen={isOpen} onClose={onClose}  />
+          <AddAdminBranch isOpen={isOpen} onClose={onClose} fetchAll = {fetchAll}  />
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isOpenEdit} onClose={onCloseEdit} isCentered>
+        <ModalOverlay/>
+        <ModalContent maxW={"700px"} w={"100%"} borderRadius={"20px"} >
+          <EditAdminBranch isOpen={isOpenEdit} onClose={onCloseEdit} fetchAll = {fetchAll} dtBranch ={dtBranch} number={number} />
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isOpenDel} onClose={onCloseDel} isCentered>
+        <ModalOverlay/>
+        <ModalContent maxW={"700px"} w={"100%"} borderRadius={"20px"} >
+          <ModalKonfirmasiDeletAdmin isOpen={isOpenDel} onClose={onCloseDel} fetchAll = {fetchAll} dtBranch ={dtBranch} number={number} />
         </ModalContent>
       </Modal>
     </>
