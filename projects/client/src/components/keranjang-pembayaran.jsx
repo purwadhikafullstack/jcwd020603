@@ -1,4 +1,5 @@
 import { Flex, useToast } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 export default function RincianPembayaran(props) {
   console.log(props.cost);
@@ -13,6 +14,12 @@ export default function RincianPembayaran(props) {
   const subtotal = props.totalBelanja.length
     ? props.totalBelanja.reduce((a, b) => a + b).toLocaleString("id-ID")
     : 0;
+  const totalPembayaran = (Number(subtotal) + Number(shippingCost)) * 1000;
+  //setPembayaran
+  useEffect(() => {
+    props.setPembayaran(totalPembayaran);
+  }, [totalPembayaran]);
+
   return (
     <>
       <Flex
@@ -66,11 +73,7 @@ export default function RincianPembayaran(props) {
           <Flex w={"100%"} justifyContent={"space-between"} fontSize={"16px"}>
             <Flex fontWeight={"600"}>Total Pembayaran</Flex>
             <Flex fontWeight={"600"}>
-              Rp{" "}
-              {(
-                (Number(subtotal) + Number(shippingCost)) *
-                1000
-              ).toLocaleString("id-ID")}
+              Rp {totalPembayaran.toLocaleString("id-ID")}
             </Flex>
           </Flex>
           <Flex w={"100%"} fontSize={"16px"}>

@@ -15,9 +15,9 @@ export default function ContentPesanan() {
       setAllOrders(res.data.result);
     });
   };
-  // useEffect(() => {
-  //   getOrders();
-  // }, []);
+  useEffect(() => {
+    getOrders();
+  }, []);
   return (
     <>
       <Box>
@@ -156,6 +156,7 @@ export default function ContentPesanan() {
             ) : (
               <>
                 <Center
+                  maxW={"910px"}
                   w={"100%"}
                   h={"60vh"}
                   color={"#2a960c"}

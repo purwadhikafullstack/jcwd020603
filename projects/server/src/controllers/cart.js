@@ -9,7 +9,25 @@ const cartController = {
           stock_id: req.params.id,
           user_id: req.user.id,
         },
+        include: [
+          {
+            model: db.Stock,
+            as: "Stock",
+            include: [
+              {
+                model: db.Discount,
+                as: "Discount",
+              },
+            ],
+          },
+        ],
       });
+      if (check.Stock.Discount.nominal == 50) {
+        return res.status(200).send({
+          message: "Hanya dapat membeli 1 produk buy 1 get 1",
+          status: "warning",
+        });
+      }
       req.check = check;
       next();
     } catch (err) {
@@ -39,6 +57,7 @@ const cartController = {
         await trans.commit();
         return res.send({
           message: "jumlah produk berhasil ditambahkan",
+          status: "success",
         });
       } else {
         db.Cart.create({
@@ -50,6 +69,7 @@ const cartController = {
         await trans.commit();
         return res.send({
           message: "Produk berhasil ditambahkan",
+          status: "success",
         });
       }
     } catch (err) {
@@ -61,7 +81,7 @@ const cartController = {
   },
   getAllCart: async (req, res) => {
     try {
-      const get = await db.Cart.findAll({
+      const get = await db.Cart.findAndCountAll({
         where: {
           user_id: req.user.id,
         },
@@ -104,7 +124,7 @@ const cartController = {
           },
         ],
       });
-      return res.send({ message: "OK", result: get });
+      return res.send({ message: "OK", result: get.rows, total: get.count });
     } catch (err) {
       res.status(500).send({
         message: err.message,

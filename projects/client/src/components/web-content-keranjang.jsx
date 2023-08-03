@@ -89,6 +89,19 @@ export default function WebKeranjang(props) {
   }, [selectedItems]);
   //menyimpan biaya pengiriman
   const [cost, setCost] = useState({});
+  //menyimpan harga total pembayaran
+  const [pembayaran, setPembayaran] = useState(0);
+  //post orders
+  const postOrder = async () => {
+    localStorage.setItem("selectedItems", JSON.stringify(selectedItems));
+    localStorage.setItem("cost", JSON.stringify(cost));
+    await api.post("/order", {
+      selectedItems,
+      total: pembayaran,
+      status: "Menunggu Pembayaran",
+    });
+    alert("berhasil");
+  };
 
   return (
     <>
@@ -215,7 +228,11 @@ export default function WebKeranjang(props) {
                 setCost={setCost}
                 cost={cost}
               />
-              <RincianPembayaran totalBelanja={totalBelanja} cost={cost} />
+              <RincianPembayaran
+                totalBelanja={totalBelanja}
+                cost={cost}
+                setPembayaran={setPembayaran}
+              />
             </Flex>
             <Center
               w={"90%"}
@@ -228,6 +245,7 @@ export default function WebKeranjang(props) {
               letterSpacing={"1px"}
               boxShadow={"0px -4px 10px rgb(0,0,0,0.3)"}
               onClick={() => {
+                postOrder();
                 nav("/payment");
               }}
             >

@@ -4,19 +4,17 @@ import {
   Icon,
   Center,
   Image,
-  Modal,
-  ModalOverlay,
-  ModalContent,
   useDisclosure,
 } from "@chakra-ui/react";
 import { BiHome, BiCategory, BiFoodMenu, BiUserCircle } from "react-icons/bi";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import logo from "../assets/logo/horizontal.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../api/api";
 // import ModalProduct from "./modal-product";
 
-export default function Sidebar() {
+export default function Sidebar(props) {
   const nav = useNavigate();
   //style untuk setiap menu sidebar
   //merubah warna saat di click
@@ -24,7 +22,26 @@ export default function Sidebar() {
   const handleClick = (e) => {
     setClicked(e.currentTarget.id);
   };
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  console.log(props.prodCart);
+
+  //get jumlah keranjang
+  const [countAll, setCountAll] = useState(0);
+  const getAll = async () => {
+    const token = JSON.parse(localStorage.getItem("auth"));
+    await api
+      .get("/cart", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setCountAll(res.data.total);
+        console.log(res.data.result);
+      });
+  };
+  useEffect(() => {
+    getAll();
+  }, []);
 
   return (
     <>
@@ -66,7 +83,7 @@ export default function Sidebar() {
           gap={"10px"}
           onClick={(e) => {
             handleClick(e);
-            onOpen();
+            nav("/orders");
           }}
           bg={Clicked == "pesanan" ? "#ECFFF4" : "white"}
           color={Clicked == "pesanan" ? "#199950" : "black"}
@@ -104,7 +121,7 @@ export default function Sidebar() {
               <Icon as={MdOutlineShoppingCart} fontSize={"28px"} />
               Keranjang
             </Flex>
-            <Center className="jumlahOrderSidebarG">1</Center>
+            <Center className="jumlahOrderSidebarG">{countAll}</Center>
           </Flex>
         </Flex>
       </Flex>

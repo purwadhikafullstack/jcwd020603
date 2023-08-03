@@ -50,7 +50,7 @@ export default function CartPage() {
           <Flex maxWidth={"1212px"} w={"100%"}>
             <Flex>
               {windowWidth > 750 ? (
-                <Sidebar prodCart={prodCart} getAll={getAll} />
+                <Sidebar prodCart={prodCart} />
               ) : (
                 <SidebarMini />
               )}

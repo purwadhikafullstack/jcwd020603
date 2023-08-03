@@ -36,7 +36,7 @@ app.use("/addressG", routes.addressRoutesG);
 app.use("/city", routes.cityRoutes);
 app.use("/province", routes.provinceRoutes);
 app.use("/cart", routes.cartRoutes);
-app.use("/order-details", routes.orderDetailRoutes);
+app.use("/order-detail", routes.orderDetailRoutes);
 app.use("/order", routes.orderRoutes);
 app.use("/product", routes.productRoutesB);
 

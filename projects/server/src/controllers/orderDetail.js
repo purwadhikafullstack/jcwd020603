@@ -3,9 +3,10 @@ const db = require("../models");
 const orderDetailController = {
   getAll: async (req, res) => {
     try {
+      const { id } = req.query;
       const get = await db.OrderDetail.findAll({
         where: {
-          order_id: req.params.id,
+          order_id: id,
         },
         include: [
           {
@@ -14,14 +15,20 @@ const orderDetailController = {
             attributes: ["date", "total", "status", "order_number"],
           },
           {
-            model: db.Product,
-            as: "Product",
-            attributes: [
-              "product_name",
-              "price",
-              "photo_product_url",
-              "desc",
-              "weight",
+            model: db.Stock,
+            as: "Stock",
+            include: [
+              {
+                model: db.Product,
+                as: "Product",
+                attributes: [
+                  "product_name",
+                  "price",
+                  "photo_product_url",
+                  "desc",
+                  "weight",
+                ],
+              },
             ],
           },
         ],

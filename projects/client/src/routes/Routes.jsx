@@ -15,6 +15,7 @@ import OrderListPage from "../pages/OrderListPage";
 import SuperAdminCategoryPage from "../pages/Super-Admin-Category-Page";
 import SuperAdminProductPage from "../pages/Super-Admin-Product-Page";
 import AdminStockPage from "../pages/Admin-Stock-Page";
+import PaymentPage from "../pages/PaymentPage";
 
 const routes = [
   <Route
@@ -97,6 +98,7 @@ const routes = [
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
   <Route path="/orders" element={<OrderListPage />}></Route>,
+  <Route path="/payment" element={<PaymentPage />}></Route>,
 ];
 
 export default routes;
