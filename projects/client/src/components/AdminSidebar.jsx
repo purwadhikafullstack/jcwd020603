@@ -15,8 +15,10 @@ import { BsDot, BsFillPersonBadgeFill } from "react-icons/bs";
 import { TbReportAnalytics } from "react-icons/tb";
 import { useState } from "react";
 import "../css/indexG.css";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminSidebar() {
+  const nav = useNavigate()
   //merubah warna saat di click
   const [Clicked, setClicked] = useState("");
   const handleClick = (e) => {
@@ -95,7 +97,10 @@ export default function AdminSidebar() {
           <Flex
             id="karyawan"
             className="adminMenuStyleG"
-            onClick={(e) => handleClick(e)}
+            onClick={(e) => {
+              handleClick(e)
+              nav("/adminbranch")
+            }}
             bg={Clicked == "karyawan" ? "#FFF4DD" : "white"}
             color={Clicked == "karyawan" ? "#FFAE0D" : "gray"}
           >

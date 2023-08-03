@@ -24,7 +24,7 @@ export default function AddAdminBranch(props){
             password : "",
             phone_number : "",
             branch_name : "",
-            branch_address : "",
+            address : "",
             district : "",
             city_id : "",
             province : "",
@@ -51,7 +51,7 @@ export default function AddAdminBranch(props){
           "Invalid. Write like this +628xxxxxxxxxx or 08xxxxxxxxxx"
         ),
     branch_name : Yup.string().required("Gagal disimpan.. kolom ini tidak boleh kosong"),
-    branch_address : Yup.string().required("Gagal disimpan.. kolom ini tidak boleh kosong"),
+    address : Yup.string().required("Gagal disimpan.. kolom ini tidak boleh kosong"),
     district : Yup.string().required("Gagal disimpan.. kolom ini tidak boleh kosong"),
     city_id : Yup.string().required("Gagal disimpan.. kolom ini tidak boleh kosong"),
     province : Yup.string().required("Gagal disimpan.. kolom ini tidak boleh kosong")
@@ -60,8 +60,8 @@ export default function AddAdminBranch(props){
         onSubmit: async () => {
             try {
                 console.log("masuk dlu");
-              const { user_name, email, password, phone_number, branch_name, branch_address, district, city_id, province } = formik.values;
-              const newBranchAdmin = { user_name, email, password, phone_number, branch_name, branch_address, district, city_id, province };
+              const { user_name, email, password, phone_number, branch_name, address, district, city_id, province } = formik.values;
+              const newBranchAdmin = { user_name, email, password, phone_number, branch_name, address, district, city_id, province };
       
               const cekMail = await api
                 .get("/user/", { params: { getall: newBranchAdmin.email } ||{ getall: newBranchAdmin.user_name } })
@@ -105,6 +105,7 @@ export default function AddAdminBranch(props){
                   });
                   
                 });
+                props.fetchAll()
                 return props.onClose()
               }
             } catch (err) {
@@ -241,7 +242,7 @@ export default function AddAdminBranch(props){
                         <FormControl>
                             <FormLabel>Alamat Cabang</FormLabel>
                             {/* <Input transition={"1s"}  _hover={{borderColor : "#9d9c45", boxShadow : "dark-lg"}} ></Input> */}
-                            <Textarea onChange={inputHandler} name="" id="branch_address" cols="30" rows="2" resize={"none"} size={"sm"} transition={"1s"} _hover={{borderColor : "#9d9c45", boxShadow : "dark-lg"}}></Textarea>
+                            <Textarea onChange={inputHandler} name="" id="address" cols="30" rows="2" resize={"none"} size={"sm"} transition={"1s"} _hover={{borderColor : "#9d9c45", boxShadow : "dark-lg"}}></Textarea>
                             <Flex
                                 display={formik.errors.branch_address ? "flex" : "none"}
                                 color={"red"}

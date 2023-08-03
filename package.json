@@ -21,6 +21,7 @@
     "projects/*"
   ],
   "dependencies": {
-    "@chakra-ui/icons": "^2.1.0"
+    "@chakra-ui/icons": "^2.1.0",
+    "opencage-api-client": "^1.0.2"
   }
 }
