@@ -155,34 +155,34 @@
   font-size: 12px;
   text-align: center;
 }
-
+/* 
 #carouselB {
-  /* padding-top: 20px; */
   width: 100%;
   max-width: 910px;
 }
+  */
 .cardCarouselB {
-  /* background: red; */
+  height: 280px;
 
   @media (max-width: 600px) {
     height: 200px;
   }
 
   @media (min-width: 601px) and (max-width: 900px) {
-    height: 220px;
+    height: 250px;
   }
 }
 
-#imageCarousel {
+/* #imageCarousel {
   width: 100%;
   max-width: 910px;
   object-fit: cover;
   height: fit-content;
-}
-
-/* img {
-  object-fit: cover;
 } */
+
+img {
+  object-fit: cover;
+}
 
 .cardCategoryB {
   margin: 1px;
@@ -332,6 +332,7 @@
 
 .adminCategoryB {
   max-width: 910px;
+  height: 91vh;
   width: 100%;
   padding: 30px;
   row-gap: 20px;
