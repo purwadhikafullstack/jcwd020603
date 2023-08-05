@@ -21,18 +21,16 @@ export default function ProfileVeriPass() {
       console.log(verifcek);
 
       if (!verifcek) {
+        toast({
+          title: "Silahkan cek email Anda untuk link verifikasi",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
         await api
           .get("/user/send-email-verify", {
             params: { email: email },
-          })
-          .then((res) => {
-            return toast({
-              title: "Silahkan cek email Anda untuk link verifikasi",
-              status: "success",
-              duration: 3000,
-              isClosable: true,
-            });
-          });
+          }) 
       } else {
         return toast({
           title: "Akun Anda sudah terverifikasi",
@@ -61,7 +59,7 @@ export default function ProfileVeriPass() {
       >
         <Button
           onClick={() => {
-            nav("/cpass");
+            nav("/change-pass");
           }}
           bgColor={"#118925"}
           color={"white"}

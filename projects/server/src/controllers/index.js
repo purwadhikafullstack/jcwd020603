@@ -10,6 +10,7 @@ const cartController = require("./cart");
 const orderDetailController = require("./orderDetail");
 const orderController = require("./orders");
 const branchController = require("./branch");
+const tokenController = require("./token")
 
 module.exports = {
   userController,
@@ -24,4 +25,5 @@ module.exports = {
   orderDetailController,
   orderController,
   branchController,
+  tokenController
 };

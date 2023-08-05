@@ -18,6 +18,7 @@ import OrderListPage from "../pages/OrderListPage";
 import SuperAdminCategoryPage from "../pages/Super-Admin-Category-Page";
 import SuperAdminProductPage from "../pages/Super-Admin-Product-Page";
 import AdminStockPage from "../pages/Admin-Stock-Page";
+import ResetPass from "../components/ResetPass";
 
 const routes = [
   <Route
@@ -66,6 +67,26 @@ const routes = [
   ></Route>,
 
   <Route
+  path="/forgot-password/:token"
+  element={
+    <ProtectedPage>
+      <ResetPass />
+    </ProtectedPage>
+  }
+></Route>,
+
+<Route
+path="/change-pass"
+element={
+  <ProtectedPage needLogin={true}>
+    <ChangePass />
+  </ProtectedPage>
+}
+></Route>,
+
+
+
+  <Route
     path="/product"
     element={
       <ProtectedPage guestOnly={true}>
@@ -112,7 +133,6 @@ const routes = [
   <Route path="/a-stock" element={<AdminStockPage />}></Route>,
   <Route path="/sa-category" element={<SuperAdminCategoryPage />}></Route>,
   <Route path="/profile" element={<ProfilePage />}></Route>,
-  <Route path="/cpass" element={<ChangePass />}></Route>,
   <Route path="/ab" element={<DashboardBranch />}></Route>,
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
