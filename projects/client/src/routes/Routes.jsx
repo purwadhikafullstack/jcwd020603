@@ -18,6 +18,7 @@ import OrderListPage from "../pages/OrderListPage";
 import SuperAdminCategoryPage from "../pages/Super-Admin-Category-Page";
 import SuperAdminProductPage from "../pages/Super-Admin-Product-Page";
 import AdminStockPage from "../pages/Admin-Stock-Page";
+import StockHistoryPage from "../pages/Stock-History-Page";
 
 const routes = [
   <Route
@@ -77,7 +78,7 @@ const routes = [
   <Route
     path="/sa-product"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage adminOnly={true}>
         <SuperAdminProductPage />
       </ProtectedPage>
     }
@@ -110,6 +111,7 @@ const routes = [
     }
   ></Route>,
   <Route path="/a-stock" element={<AdminStockPage />}></Route>,
+  <Route path="/stockhistory" element={<StockHistoryPage />}></Route>,
   <Route path="/sa-category" element={<SuperAdminCategoryPage />}></Route>,
   <Route path="/profile" element={<ProfilePage />}></Route>,
   <Route path="/cpass" element={<ChangePass />}></Route>,
@@ -117,7 +119,6 @@ const routes = [
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
   <Route path="/orders" element={<OrderListPage />}></Route>,
-
 ];
 
 export default routes;
