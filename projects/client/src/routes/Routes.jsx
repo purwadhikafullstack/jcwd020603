@@ -18,6 +18,7 @@ import OrderListPage from "../pages/OrderListPage";
 import SuperAdminCategoryPage from "../pages/Super-Admin-Category-Page";
 import SuperAdminProductPage from "../pages/Super-Admin-Product-Page";
 import AdminStockPage from "../pages/Admin-Stock-Page";
+import StockHistoryPage from "../pages/Stock-History-Page";
 import ResetPass from "../components/ResetPass";
 
 const routes = [
@@ -98,7 +99,7 @@ element={
   <Route
     path="/sa-product"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage adminOnly={true}>
         <SuperAdminProductPage />
       </ProtectedPage>
     }
@@ -131,13 +132,13 @@ element={
     }
   ></Route>,
   <Route path="/a-stock" element={<AdminStockPage />}></Route>,
+  <Route path="/stockhistory" element={<StockHistoryPage />}></Route>,
   <Route path="/sa-category" element={<SuperAdminCategoryPage />}></Route>,
   <Route path="/profile" element={<ProfilePage />}></Route>,
   <Route path="/ab" element={<DashboardBranch />}></Route>,
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
   <Route path="/orders" element={<OrderListPage />}></Route>,
-
 ];
 
 export default routes;
