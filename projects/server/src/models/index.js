@@ -93,9 +93,9 @@ db.OrderDetail.belongsTo(db.Order, {
   as: "Order",
 });
 
-db.OrderDetail.belongsTo(db.Product, {
-  foreignKey: "product_id",
-  as: "Product",
+db.OrderDetail.belongsTo(db.Stock, {
+  foreignKey: "stock_id",
+  as: "Stock",
 });
 
 db.ShippingMethod.belongsTo(db.Order, {

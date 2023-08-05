@@ -3,7 +3,7 @@ import DashboardNavbar from "../components/DashboardNavbar";
 import { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import "../css/indexR.css";
-import "../css/profileR.css"
+// import "../css/profileR.css"
 import DashboardContent from "../components/DashboardContent";
 import Sidebar from "../components/sidebar";
 import Footer from "../components/footer";

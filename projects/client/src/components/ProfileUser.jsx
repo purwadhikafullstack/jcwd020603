@@ -24,9 +24,8 @@ import { HiMiniPencilSquare } from "react-icons/hi2";
 import { Icon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import ProfileFotoAlamat from "./profileFotoAlamat";
+import ProfileFotoAlamat from "./profileFotoAlamat"
 import ProfileData from "./profileData";
-
 
 
 export default function Profile() {
@@ -80,7 +79,6 @@ export default function Profile() {
       >
         <Flex
           pt={"100px"}
-          // ml={"250px"}
           spacing={4}
           w={"100%"}
           maxW={"900px"}
@@ -90,10 +88,8 @@ export default function Profile() {
           my={8}
           flexDir={"row"}
           gap={"5%"}
-          // bgColor={"yellow.100"}
         >
-          <ProfileFotoAlamat />
-
+         <ProfileFotoAlamat/>
           <ProfileData />
         </Flex>
       </Flex>

@@ -7,6 +7,8 @@ module.exports = {
   openCage: async (input) => {
     try {
       const { address, district, city, province, latitude, longitude } = input;
+      console.log(input);
+      console.log(address, district, city, province, latitude, longitude);
       return await axios.get("https://api.opencagedata.com/geocode/v1/json", {
         params: {
           q:

@@ -68,7 +68,6 @@ export default function ProfileData() {
         console.log(dtUser);
         console.log(cekuser.user_name);
         console.log(userSelector.user_name);
-        console.log(user_name);
 
         if (!cekuser) {
           let updated;
@@ -93,17 +92,7 @@ export default function ProfileData() {
 
           setEdit(true);
         
-        } else if (cekuser && (cekuser.email != userSelector.email || cekuser.user_name != userSelector.user_name)){
-           
-          return   toast({
-            title: "Email / Username sudah terdaftar, silahkan gunakan username / email yang lain",
-            status: "warning",
-            duration: 3000,
-            isClosable: true,
-          });
-
-
-        } else {
+         } else {
 
          return   toast({
                   title: "Email / Username sudah terdaftar, silahkan gunakan username / email yang lain",
