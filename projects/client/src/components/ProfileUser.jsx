@@ -80,7 +80,7 @@ export default function Profile() {
       >
         <Flex
           pt={"100px"}
-          ml={"250px"}
+          // ml={"250px"}
           spacing={4}
           w={"100%"}
           maxW={"900px"}

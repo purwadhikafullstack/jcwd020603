@@ -43,7 +43,7 @@ export default function Verify() {
         console.log(result.data);
         dispatch({
           type: "login",
-          payload: result.data,
+            payload: result.data,
         });
         toast({
           title: "Selamat.. verifikasi akun kamu berhasil.",
