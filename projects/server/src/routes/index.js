@@ -10,6 +10,7 @@ const cartRoutes = require("./cart");
 const orderDetailRoutes = require("./orderDetail");
 const orderRoutes = require("./order");
 const branchRoutes = require("./branch");
+const tokenRoutes = require("./token")
 
 module.exports = {
   userRoutes,
@@ -24,4 +25,5 @@ module.exports = {
   orderDetailRoutes,
   orderRoutes,
   branchRoutes,
+  tokenRoutes
 };

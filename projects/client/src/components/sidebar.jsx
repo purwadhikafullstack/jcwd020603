@@ -8,6 +8,7 @@ import {
   ModalOverlay,
   ModalContent,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { BiHome, BiCategory, BiFoodMenu, BiUserCircle } from "react-icons/bi";
 import { MdOutlineShoppingCart } from "react-icons/md";
@@ -15,11 +16,13 @@ import logo from "../assets/logo/horizontal.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { warning } from "framer-motion";
 // import ModalProduct from "./modal-product";
 
 export default function Sidebar({ navLeft }) {
   const user = JSON.parse(localStorage.getItem("auth"));
   const nav = useNavigate();
+  const toast = useToast()
   //style untuk setiap menu sidebar
   //merubah warna saat di click
   const [Clicked, setClicked] = useState("");
@@ -29,7 +32,12 @@ export default function Sidebar({ navLeft }) {
     if (user) {
       nav("/profile");
     } else {
-      alert("Maaf Anda belum login, silahkan login dulu");
+      toast({
+        title : "Maaf Anda belum login, silahkan login dulu",
+        status : "warning",
+        duration : 3000,
+        isClosable : true
+      })
       return nav("/login");
     }
   };

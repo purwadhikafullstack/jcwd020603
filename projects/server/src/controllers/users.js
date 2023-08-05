@@ -262,6 +262,49 @@ const userController = {
     }
   },
 
+  resetPassLogin : async (req, res) => {
+    try {
+      const { token } = req.query;
+      const {password} = req.body
+      const { id } = req.user;
+
+      await db.User.update(
+        {
+          password: password,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+
+      await db.Token.update(
+        {
+          valid: false,
+        },
+        {
+          where: {
+            token: token,
+            status: "FORGOT-PASSWORD",
+          },
+        }
+      );
+
+      await db.User.findOne({
+        where: {
+          id: id,
+        },
+      }).then((result) => {
+        res.send(result);
+      });
+    } catch (err) {
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
   uploadAvatar: async (req, res) => {
     try {
       const { filename } = req.file;
@@ -315,10 +358,99 @@ const userController = {
 
   changePass: async (req, res) => {
     try {
-      const { password } = req.body;
+      const { password, old_password } = req.body;
+      const hashpass = await bcrypt.hash(password, 10);
+      const user = await db.User.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
+      if (user) {
+        const cekPass = await bcrypt.compare(
+          old_password,
+          user.dataValues.password
+        );
+
+        console.log(cekPass, "ini cekpass");
+        if (cekPass) {
+          await db.User.update(
+            {
+              password: hashpass,
+            },
+            {
+              where: {
+                id: req.params.id,
+              },
+            }
+          ).then((result) =>
+            res.status(200).send({
+              message: "Password berhasil diganti",
+              data: res.dataValues,
+            })
+          );
+        } else {
+          res.status(500).send({ message: "Password Salah" });
+        }
+      } else {
+        res.status(404).send({ message: "User tidak ditemukan" });
+      }
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  resetPassMail: async (req, res) => {
+    try {
+      const { email } = req.query;
+      const user = await db.User.findOne({
+        where: {
+          email: email,
+        },
+      });
+
+      if (user.dataValues) {
+        await db.Token.update(
+          {
+            valid: false,
+          },
+          {
+            where: {
+              payload: JSON.stringify({ id: user.dataValues.id }),
+              status: "FORGOT-PASSWORD",
+            },
+          }
+        );
+        const payload = {
+          id: user.dataValues.id,
+        };
+        const generateToken = nanoid();
+        const tokens = await db.Token.create({
+          token: generateToken,
+          expired: moment().add(1, "days").format(),
+          status: "FORGOT-PASSWORD",
+          payload: JSON.stringify(payload),
+        });
+
+        await mailer({
+          subject: "RESET PASSWORD",
+          to: user.dataValues.email,
+          html: `<h1>Please click the following link to Reset Your Password:</h1>
+                    <a href="${
+                      process.env.url_forgot_password + tokens.token
+                    }">Klik disini</a>`,
+        });
+      }
+    } catch (err) {
+      res.status(500).send({ message: err.message });
+    }
+  },
+
+  resetPass: async (req, res) => {
+    try {
+      const { password, token} = req.body;
       const hashpass = await bcrypt.hash(password, 10);
 
-      db.User.update(
+      await db.User.update(
         {
           password: hashpass,
         },
@@ -327,12 +459,22 @@ const userController = {
             id: req.params.id,
           },
         }
-      ).then((result) =>
+      )
+      
+      await db.Token.update({
+        valid : false
+      },
+      {
+        where : {
+          token : token,
+          status : "FORGOT-PASSWORD"
+        }
+      })
         res.status(200).send({
           message: "Password berhasil diganti",
           data: res.dataValues,
         })
-      );
+    
     } catch (error) {
       res.status(500).send({ message: error.message });
     }

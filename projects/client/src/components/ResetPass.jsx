@@ -29,18 +29,17 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
-export default function ChangePass() {
+export default function ResetPass() {
   const userSelector = useSelector((state) => state.auth);
   const location = useLocation();
   const toast = useToast();
   const nav = useNavigate();
   const dispatch = useDispatch();
   const [seepass, setSeepass] = useState(false);
-  // YupPassword(Yup);
   const formik = useFormik({
     initialValues: {
       password: "",
-      old_password: "",
+      token: ""
     },
 
     validationSchema: Yup.object().shape({
@@ -54,58 +53,87 @@ export default function ChangePass() {
       password2: Yup.string()
         .required("Required..!")
         .oneOf([Yup.ref("password"), null], "Password tidak sama"),
-
-      old_password: Yup.string().required("Required..!"),
     }),
 
     onSubmit: async () => {
-      try {
-        const { password, old_password } = formik.values;
-        const account = { password, old_password };
+      if (userSelector.id){
 
-        await api
-          .patch("/user/change-pass/" + userSelector.id, account)
-          .then((res) => {
-            toast({
-              title: "Ganti Password Berhasil",
-              status: "success",
-              duration: 3000,
-              isClosable: true,
+        try {
+          const {pathname} = location
+          console.log(pathname);
+          const token = pathname.split("/")[2]
+          console.log(token);
+          const { password } = formik.values;
+          const account = { password, token };
+  
+          await api
+            .patch("/user/reset-pass/" + userSelector.id, account)
+            .then((res) => {
+              console.log(res.data);
+              dispatch({
+                type : "login",
+                payload : res.data
+              })
+              toast({
+                title: "Ganti Password Berhasil",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+              });
+              nav("/");
             });
-            nav("/");
+        } catch (err) {
+          toast({
+            title: `Maaf link ini telah expired, tekan "forgot-password" unutk mendapatkan link baru`,
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
           });
-      } catch (err) {
-        toast({
-          title: "Old Password salah",
-          status: "warning",
-          duration: 3000,
-          isClosable: true,
-        });
-        console.log(err);
+          console.log(err);
+        }
+
+      } else {
+        try {
+          const {pathname} = location
+          console.log(pathname);
+          const token = pathname.split("/")[2]
+          console.log(token);
+          const { password } = formik.values;
+          const account = { password };
+  
+          await api
+            .patch("/user/reset-pass-login/", account)
+            .then((res) => {
+              console.log(res.data);
+              dispatch({
+                type : "login",
+                payload : res.data
+              })
+              toast({
+                title: "Ganti Password Berhasil",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+              });
+              nav("/");
+            });
+        } catch (err) {
+          toast({
+            title: `(ini B)Maaf link ini telah expired, tekan "forgot-password" unutk mendapatkan link baru`,
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
+          });
+          console.log(err);
+        }
       }
-    },
+    }
   });
 
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
     console.log(formik.values);
-  }
-
-  const respass = async () => {
-    const email = userSelector.email
-    try {
-      toast({
-        title: "Silahkan cek email Anda untuk link reset password",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      })
-      await api.get("/user/send-email-respass", {params : {email : email}})
-    } catch (error) {
-      console.log(error);
-    }
-    
   }
 
   return (
@@ -161,43 +189,7 @@ export default function ChangePass() {
             <Flex
               flexDir={"column"}
               gap={10}>
-              <FormControl>
-                <FormLabel>Password Lama</FormLabel>
-                <InputGroup>
-                  <Input
-                    id="old_password"
-                    type={seepass ? "text" : "password"}
-                    color={"black"}
-                    fontWeight={"bolder"}
-                    _hover={{ borderColor: "#199950" }}
-                    onChange={inputHandler}
-                  />
-                  <InputRightElement>
-                    <Icon
-                      as={seepass ? AiFillEye : AiFillEyeInvisible}
-                      onClick={() => {
-                        setSeepass(!seepass);
-                      }}></Icon>
-                  </InputRightElement>
-                </InputGroup>
-                <Flex
-                  display={formik.errors.old_password ? "flex" : "none"}
-                  color={"red"}
-                  fontSize={"10px"}>
-                  {formik.errors.old_password}
-                </Flex>
-                <Flex
-                  w={"100%"}
-                  h={"10%"}
-                  justifyContent={"right"}
-                  cursor={"pointer"}
-                  color={"green"}
-                  mt={"2%"}
-                  fontWeight={"bold"}
-                  onClick={respass}>
-                  Forgot Password ?
-                </Flex>
-              </FormControl>
+              
 
               <FormControl>
                 <FormLabel>Password Baru</FormLabel>
