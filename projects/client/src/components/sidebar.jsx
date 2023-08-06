@@ -38,7 +38,7 @@ export default function Sidebar({ navLeft }) {
         duration : 3000,
         isClosable : true
       })
-      return nav("/login");
+       nav("/login");
     }
   };
 

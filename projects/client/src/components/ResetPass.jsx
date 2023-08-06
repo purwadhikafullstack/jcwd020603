@@ -56,13 +56,12 @@ export default function ResetPass() {
     }),
 
     onSubmit: async () => {
+      
       if (userSelector.id){
-
         try {
           const {pathname} = location
-          console.log(pathname);
+          console.log(pathname, "atas");
           const token = pathname.split("/")[2]
-          console.log(token);
           const { password } = formik.values;
           const account = { password, token };
   
@@ -84,7 +83,7 @@ export default function ResetPass() {
             });
         } catch (err) {
           toast({
-            title: `Maaf link ini telah expired, tekan "forgot-password" unutk mendapatkan link baru`,
+            title: `Maaf link ini telah expired, tekan "forgot-password" untuk mendapatkan link baru`,
             status: "warning",
             duration: 3000,
             isClosable: true,
@@ -93,21 +92,18 @@ export default function ResetPass() {
         }
 
       } else {
+        const {pathname} = location
+        const token = pathname.split("/")[2]
+        const { password } = formik.values;
+        const account = { password};
         try {
-          const {pathname} = location
-          console.log(pathname);
-          const token = pathname.split("/")[2]
-          console.log(token);
-          const { password } = formik.values;
-          const account = { password };
-  
           await api
-            .patch("/user/reset-pass-login/", account)
-            .then((res) => {
-              console.log(res.data);
+            .patch("user/reset-pass-login?token="+ token , account)
+            .then((result) => {
+              console.log(result.data);
               dispatch({
                 type : "login",
-                payload : res.data
+                payload : result.data
               })
               toast({
                 title: "Ganti Password Berhasil",
@@ -115,11 +111,11 @@ export default function ResetPass() {
                 duration: 3000,
                 isClosable: true,
               });
-              nav("/");
+              nav("/login");
             });
         } catch (err) {
           toast({
-            title: `(ini B)Maaf link ini telah expired, tekan "forgot-password" unutk mendapatkan link baru`,
+            title: `Maaf link ini telah expired, tekan "forgot-password" untuk mendapatkan link baru`,
             status: "warning",
             duration: 3000,
             isClosable: true,
@@ -133,7 +129,7 @@ export default function ResetPass() {
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
+    // console.log(formik.values);
   }
 
   return (
@@ -151,11 +147,9 @@ export default function ResetPass() {
         className="logo_samping">
         <Image
           src={logo2}
-          w={"90%"}
-          h={"60%"}
-          className="logo_samping"
-          p={4}></Image>
-      </Box>
+          className="logo_samping" >
+          </Image>
+          </Box>
       <Flex
         spacing={8}
         h={"100vh"}
@@ -164,9 +158,10 @@ export default function ResetPass() {
         maxW={"400px"}
         py={12}
         px={2}
-        bgColor={"white"}
+        justifyContent={"center"}
         alignItems={"center"}>
         <Box
+        
           rounded={"lg"}
           p={8}
           h={"auto"}
@@ -179,7 +174,7 @@ export default function ResetPass() {
             w={"100%"}
             h={"40%"}
             className="logo_atas"></Image>
-          <Stack spacing={4}>
+          <Stack spacing={4} mt={"20px"}>
             <Heading
               fontSize={30}
               textAlign={"center"}>
