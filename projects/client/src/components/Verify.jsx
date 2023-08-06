@@ -38,22 +38,35 @@ export default function Verify() {
   const verify = async () => {
     try {
       const { pathname } = location;
+      console.log(pathname);
       const token = pathname.split("/")[2];
-      await api.patch("user/verify?token=" + token, null).then((result) => {
-        console.log(result.data);
-        dispatch({
-          type: "login",
-            payload: result.data,
-        });
+      console.log(userSelector.verification);
+
+      if (userSelector.verification == false){
+        await api.patch("user/verify?token=" + token, null).then((result) => {
+          console.log(result.data);
+          dispatch({
+            type: "login",
+              payload: result.data,
+          });
+          toast({
+            title: "Selamat.. verifikasi akun kamu berhasil.",
+            status: "success",
+            duration: "3000",
+            isClosable: true,
+          });
+  
+          nav("/");
+        })
+      } else {
         toast({
-          title: "Selamat.. verifikasi akun kamu berhasil.",
-          status: "success",
+          title: "Verifikasi gagal.. Akun ini sudah terverifikasi",
+          status: "error",
           duration: "3000",
           isClosable: true,
         });
-
         nav("/");
-      });
+      }
     } catch (err) {
       console.log(err.message);
       toast({
@@ -64,6 +77,7 @@ export default function Verify() {
       });
       nav("/");
     }
+      
   };
 
   return (
