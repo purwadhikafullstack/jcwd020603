@@ -37,7 +37,7 @@ export default function EditAdminBranch(props) {
       user_name: props.dtBranch[props.number].user_name,
       email: props.dtBranch[props.number].email,
       role: "ADMIN",
-      // password: "",
+      password: "",
       phone_number: props.dtBranch[props.number].phone_number,
       branch_name: props.dtBranch[props.number].Branch.branch_name,
       address: props.dtBranch[props.number].Branch.branch_address,
@@ -54,13 +54,13 @@ export default function EditAdminBranch(props) {
       email: Yup.string()
         .required("Gagal disimpan.. kolom ini tidak boleh kosong")
         .email("Invalid. Write like this example@mail.com"),
-      // password: Yup.string()
-      //   .required("Gagal disimpan.. kolom ini tidak boleh kosong")
-      //   .min(8, "Your Password too short.")
-      //   .matches(
-      //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*$/,
-      //     "Password should including an uppercase letter, symbol, number"
-      //   ),
+      password: Yup.string()
+        .required("Gagal disimpan.. kolom ini tidak boleh kosong")
+        .min(8, "Your Password too short.")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*$/,
+          "Password should including an uppercase letter, symbol, number"
+        ),
       phone_number: Yup.string()
         .required("Gagal disimpan.. kolom ini tidak boleh kosong")
         .max(15, "More then maximun characters")
@@ -147,17 +147,15 @@ export default function EditAdminBranch(props) {
         console.log(cekBranch);
         console.log(cekMail);
 
-        if (cekMail || cekBranch) {
+        if (cekMail.user_name  || cekMail.email) {
           return toast({
             title:
-              "Email / Username / nama cabang / alamat cabang sudah digunakan, silahkan gunakan selain itu",
+              "Email / Username sudah digunakan, silahkan gunakan selain itu",
             status: "warning",
             duration: 3000,
             isClosable: true,
           });
         } else {
-          // const {branch_id} = props.dtBranch[props.number]
-          // console.log(newBranchAdmin);
           console.log(props.dtBranch[props.number].branch_id);
           await api.patch("/branch/", newBranchAdmin).then((res) => {
             return toast({
@@ -266,7 +264,7 @@ export default function EditAdminBranch(props) {
                   {formik.errors.email}
                 </Flex>
               </FormControl>
-              {/* <FormControl>
+              <FormControl>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
                   <Input
@@ -291,7 +289,7 @@ export default function EditAdminBranch(props) {
                   fontSize={"10px"}>
                   {formik.errors.password}
                 </Flex>
-              </FormControl> */}
+              </FormControl>
               <FormControl>
                 <FormLabel>Nomor Handphone</FormLabel>
                 <Input

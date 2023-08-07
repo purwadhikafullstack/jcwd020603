@@ -106,7 +106,7 @@ element={
   ></Route>,
 
   <Route
-    path="/adminbranch"
+    path="/admin-branch"
     element={
       <ProtectedPage guestOnly={true}>
         <DashboardBranch />
@@ -135,7 +135,7 @@ element={
   <Route path="/stockhistory" element={<StockHistoryPage />}></Route>,
   <Route path="/sa-category" element={<SuperAdminCategoryPage />}></Route>,
   <Route path="/profile" element={<ProfilePage />}></Route>,
-  <Route path="/ab" element={<DashboardBranch />}></Route>,
+  // <Route path="/ab" element={<DashboardBranch />}></Route>,
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
   <Route path="/orders" element={<OrderListPage />}></Route>,
