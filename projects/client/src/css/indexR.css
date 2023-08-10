@@ -164,6 +164,8 @@
 .custom-table {
   border-collapse: separate;
   border-spacing: 0 10px; /* Adjust the spacing value as needed */
+  width: 100%;
+  max-width: 850px;
 }
 
 .table-row {
