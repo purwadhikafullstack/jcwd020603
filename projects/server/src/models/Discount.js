@@ -4,6 +4,10 @@ module.exports = (sequelize, Sequelize) => {
     valid_start: Sequelize.DATE,
     valid_to: Sequelize.DATE,
     nominal: Sequelize.INTEGER,
-  });
+  },
+  {
+    paranoid : true
+  }
+  );
   return Discount;
 };
