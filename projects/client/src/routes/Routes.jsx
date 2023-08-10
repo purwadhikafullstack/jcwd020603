@@ -23,6 +23,7 @@ import StockHistoryPage from "../pages/Stock-History-Page";
 import ResetPass from "../components/ResetPass";
 import DiscountAddModal from "../components/DiscountAddModal";
 import DiscountAddProductModal from "../components/DiscountAddProductModal";
+import VoucherPage from "../pages/VoucherPage";
 
 const routes = [
   <Route
@@ -140,6 +141,7 @@ element={
   <Route path="/profile" element={<ProfilePage />}></Route>,
   <Route path="/ab" element={<DashboardBranch />}></Route>,
   <Route path="/dis" element={<DiscountPage />}></Route>,
+  <Route path="/vocer" element={<VoucherPage />}></Route>,
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
   <Route path="/orders" element={<OrderListPage />}></Route>,

@@ -41,7 +41,8 @@ app.use("/province", routes.provinceRoutes);
 app.use("/cart", routes.cartRoutes);
 app.use("/order-details", routes.orderDetailRoutes);
 app.use("/order", routes.orderRoutes);
-app.use("/discount", routes.discountRoutes)
+app.use("/discount", routes.discountRoutes);
+app.use("/voucher", routes.voucerRoutes)
 app.use("/product", routes.productRoutesB);
 app.use("/avatar", express.static(`${__dirname}/public/Avatar`));
 

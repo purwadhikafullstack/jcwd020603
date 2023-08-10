@@ -12,6 +12,7 @@ const orderRoutes = require("./order");
 const branchRoutes = require("./branch");
 const tokenRoutes = require("./token")
 const discountRoutes = require("./discount")
+const voucerRoutes = require("./voucher")
 
 module.exports = {
   userRoutes,
@@ -27,5 +28,6 @@ module.exports = {
   orderRoutes,
   branchRoutes,
   tokenRoutes,
-  discountRoutes
+  discountRoutes,
+  voucerRoutes
 };
