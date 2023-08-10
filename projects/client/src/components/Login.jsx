@@ -55,7 +55,6 @@ export default function Login() {
           type: "login",
           payload: res.data.value,
         });
-        console.log(res.data.value);
 
         toast({
           title: "Selamat Datang di Sahabat Sembako",

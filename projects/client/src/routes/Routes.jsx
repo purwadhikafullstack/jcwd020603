@@ -18,8 +18,11 @@ import OrderListPage from "../pages/OrderListPage";
 import SuperAdminCategoryPage from "../pages/Super-Admin-Category-Page";
 import SuperAdminProductPage from "../pages/Super-Admin-Product-Page";
 import AdminStockPage from "../pages/Admin-Stock-Page";
+import DiscountPage from "../pages/DiscountPage";
 import StockHistoryPage from "../pages/Stock-History-Page";
 import ResetPass from "../components/ResetPass";
+import DiscountAddModal from "../components/DiscountAddModal";
+import DiscountAddProductModal from "../components/DiscountAddProductModal";
 
 const routes = [
   <Route
@@ -135,10 +138,14 @@ element={
   <Route path="/stockhistory" element={<StockHistoryPage />}></Route>,
   <Route path="/sa-category" element={<SuperAdminCategoryPage />}></Route>,
   <Route path="/profile" element={<ProfilePage />}></Route>,
-  // <Route path="/ab" element={<DashboardBranch />}></Route>,
+  <Route path="/ab" element={<DashboardBranch />}></Route>,
+  <Route path="/dis" element={<DiscountPage />}></Route>,
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
   <Route path="/orders" element={<OrderListPage />}></Route>,
+  <Route path="/disadd" element={<DiscountAddModal />}></Route>,
+  <Route path="/disaprod" element={<DiscountAddProductModal/>}></Route>,
+
 ];
 
 export default routes;
