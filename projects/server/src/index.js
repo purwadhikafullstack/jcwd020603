@@ -28,6 +28,7 @@ app.use(express.json());
 // NOTE : Add your routes here
 app.use("/categoryImg", express.static(`${__dirname}/public/categoryImg`));
 app.use("/productImg", express.static(`${__dirname}/public/productImg`));
+app.use("/paymentImg", express.static(`${__dirname}/public/paymentImg`));
 app.use("/user", routes.userRoutes);
 app.use("/address", routes.addressRoutesB);
 app.use("/category", routes.categoryRoutesB);
@@ -39,6 +40,7 @@ app.use("/cart", routes.cartRoutes);
 app.use("/order-detail", routes.orderDetailRoutes);
 app.use("/order", routes.orderRoutes);
 app.use("/product", routes.productRoutesB);
+app.use("/voucher", routes.voucherRoutes);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

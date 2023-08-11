@@ -28,7 +28,7 @@ export default function Sidebar(props) {
   const [countAll, setCountAll] = useState(0);
   const getAll = async () => {
     const token = JSON.parse(localStorage.getItem("auth"));
-    await api
+    await api()
       .get("/cart", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -41,7 +41,7 @@ export default function Sidebar(props) {
   };
   useEffect(() => {
     getAll();
-  }, []);
+  }, [countAll]);
 
   return (
     <>
@@ -121,7 +121,12 @@ export default function Sidebar(props) {
               <Icon as={MdOutlineShoppingCart} fontSize={"28px"} />
               Keranjang
             </Flex>
-            <Center className="jumlahOrderSidebarG">{countAll}</Center>
+            <Center
+              className="jumlahOrderSidebarG"
+              display={countAll == 0 ? "none" : "center"}
+            >
+              {countAll}
+            </Center>
           </Flex>
         </Flex>
       </Flex>

@@ -1,11 +1,13 @@
 import {
   Box,
+  Button,
   Center,
   Checkbox,
   Flex,
   Icon,
   Stack,
   useAccordion,
+  useToast,
 } from "@chakra-ui/react";
 import NavbarKeranjang from "./navbar-keranjang";
 import KeranjangList from "./keranjang-list-produk";
@@ -62,14 +64,9 @@ export default function WebKeranjang(props) {
   };
   console.log(inputCost);
   const getCost = async () => {
-    const token = JSON.parse(localStorage.getItem("auth"));
     try {
-      await api
-        .post("/cart/cost", inputCost, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+      await api()
+        .post("/cart/cost", inputCost)
         .then((res) => {
           setShipCost(res.data.data[0].costs);
           console.log(res.data.data[0].costs);
@@ -91,16 +88,44 @@ export default function WebKeranjang(props) {
   const [cost, setCost] = useState({});
   //menyimpan harga total pembayaran
   const [pembayaran, setPembayaran] = useState(0);
+  //input voucher potongan harga
+  const [getVoucher, setGetVoucher] = useState({});
+  //kurangin limit voucher
+  const updateLimit = async () => {
+    try {
+      const update = await api().patch(
+        `/voucher/${getVoucher?.id}?limit=${getVoucher.limit}`
+      );
+      console.log(update.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   //post orders
+  const toast = useToast();
   const postOrder = async () => {
+    setIsLoading(true);
     localStorage.setItem("selectedItems", JSON.stringify(selectedItems));
-    localStorage.setItem("cost", JSON.stringify(cost));
-    await api.post("/order", {
-      selectedItems,
-      total: pembayaran,
-      status: "Menunggu Pembayaran",
-    });
-    alert("berhasil");
+    try {
+      const insert = await api().post("/order", {
+        selectedItems,
+        total: pembayaran,
+        status: "Menunggu Pembayaran",
+        shipping_cost: cost.cost[0]?.value,
+        address_id: addressSelector.id,
+        discount_voucher: getVoucher.nominal,
+      });
+      setIsLoading(false);
+      toast({
+        title: insert.data.message,
+        status: "warning",
+        position: "top",
+        duration: 3000,
+      });
+      return nav("/payment");
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   return (
@@ -208,7 +233,11 @@ export default function WebKeranjang(props) {
                 </Flex>
               </Flex>
             </Flex>
-            <VoucherPromo />
+            <VoucherPromo
+              totalBelanja={totalBelanja}
+              getVoucher={getVoucher}
+              setGetVoucher={setGetVoucher}
+            />
           </Flex>
           <Flex
             w={"50%"}
@@ -232,9 +261,10 @@ export default function WebKeranjang(props) {
                 totalBelanja={totalBelanja}
                 cost={cost}
                 setPembayaran={setPembayaran}
+                getVoucher={getVoucher}
               />
             </Flex>
-            <Center
+            <Button
               w={"90%"}
               padding={"5px"}
               bg={"#2A960C"}
@@ -244,13 +274,14 @@ export default function WebKeranjang(props) {
               borderRadius={"10px"}
               letterSpacing={"1px"}
               boxShadow={"0px -4px 10px rgb(0,0,0,0.3)"}
+              isLoading={isLoading}
               onClick={() => {
+                updateLimit();
                 postOrder();
-                nav("/payment");
               }}
             >
               PESAN SEKARANG
-            </Center>
+            </Button>
           </Flex>
         </Flex>
       </Flex>

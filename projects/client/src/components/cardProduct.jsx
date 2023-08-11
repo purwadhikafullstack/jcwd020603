@@ -51,6 +51,10 @@ export function CardProduct(props) {
     discountedPrice: "",
   });
   const getProdVal = (val, idx) => {
+    const newDiscount = discount || 0;
+    const newDiscountedPrice = newDiscount
+      ? price - (price * newDiscount) / 100
+      : 0;
     setProdVal({
       ...prodVal,
       id: id,
@@ -60,8 +64,8 @@ export function CardProduct(props) {
       product_name: product_name,
       desc: desc,
       weight: weight,
-      discount: discount,
-      discountedPrice: discountedPrice,
+      discount: newDiscount,
+      discountedPrice: newDiscountedPrice,
     });
   };
   useEffect(() => {

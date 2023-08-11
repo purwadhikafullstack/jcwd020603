@@ -63,7 +63,7 @@ export default function SuperAdminProductList() {
 
   const fetchData = async () => {
     try {
-      const response = await api.get("/product");
+      const response = await api().get("/product");
       setProduct(response.data);
     } catch (error) {
       console.error(error);

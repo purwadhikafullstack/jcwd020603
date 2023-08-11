@@ -61,7 +61,7 @@ export default function AdminStockList() {
 
   const fetchData = async () => {
     try {
-      const response = await api.get("/stock");
+      const response = await api().get("/stock");
       setStocks(response.data);
     } catch (error) {
       console.error(error);

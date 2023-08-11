@@ -26,7 +26,7 @@ export default function Category() {
   };
 
   useEffect(() => {
-    api
+    api()
       .get("/category")
       .then((response) => {
         setCategories(response.data);
@@ -35,7 +35,7 @@ export default function Category() {
         console.error(error);
       });
 
-    api
+    api()
       .get("/stock")
       .then((response) => {
         setStocks(response.data);

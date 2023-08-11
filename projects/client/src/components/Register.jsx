@@ -67,7 +67,7 @@ export default function Register() {
         const { user_name, email, password, phone_number } = formik.values;
         const account = { user_name, email, password, phone_number };
 
-        const cekMail = await api
+        const cekMail = await api()
           .get("/user/", { params: { getall: account.email } })
           .then((res) => {
             console.log(res.data.email);
@@ -85,15 +85,17 @@ export default function Register() {
             isClosable: true,
           });
         } else {
-          await api.post("/user/reg", account).then((res) => {
-            toast({
-              title: "Register berhasil",
-              status: "success",
-              duration: 3000,
-              isClosable: true,
+          await api()
+            .post("/user/reg", account)
+            .then((res) => {
+              toast({
+                title: "Register berhasil",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+              });
+              nav("/login");
             });
-            nav("/login");
-          });
         }
       } catch (err) {
         console.log(err);

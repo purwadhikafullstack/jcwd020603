@@ -13,13 +13,8 @@ export default function CartPage() {
   // function get all cart
   const [prodCart, setProdCart] = useState([]);
   const getAll = async () => {
-    const token = JSON.parse(localStorage.getItem("auth"));
-    await api
-      .get("/cart", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    await api()
+      .get("/cart")
       .then((res) => {
         setProdCart(res.data.result);
         console.log(res.data.result);

@@ -23,7 +23,7 @@ export default function ModalKonfirmasiPesanan(props) {
             bg={" #f7d1d5"}
             color={"red"}
             onClick={() => {
-              nav("/order-detail");
+              props.cancelOrder();
             }}
           >
             YA

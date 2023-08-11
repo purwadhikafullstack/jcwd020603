@@ -39,21 +39,23 @@ export default function Verify() {
     try {
       const { pathname } = location;
       const token = pathname.split("/")[2];
-      await api.patch("user/verify?token=" + token, null).then((result) => {
-        console.log(result.data);
-        dispatch({
-          type: "login",
-          payload: result.data,
-        });
-        toast({
-          title: "Selamat.. verifikasi akun kamu berhasil.",
-          status: "success",
-          duration: "3000",
-          isClosable: true,
-        });
+      await api()
+        .patch("user/verify?token=" + token, null)
+        .then((result) => {
+          console.log(result.data);
+          dispatch({
+            type: "login",
+            payload: result.data,
+          });
+          toast({
+            title: "Selamat.. verifikasi akun kamu berhasil.",
+            status: "success",
+            duration: "3000",
+            isClosable: true,
+          });
 
-        nav("/");
-      });
+          nav("/");
+        });
     } catch (err) {
       console.log(err.message);
       toast({

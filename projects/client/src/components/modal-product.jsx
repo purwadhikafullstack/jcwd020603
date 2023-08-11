@@ -42,8 +42,8 @@ export default function ModalProduct(props) {
   const toast = useToast();
   const updateAdd = async () => {
     try {
-      const update = await api.post(
-        `/cart/${prodVal.id}?discounted_price=${prodVal.discountedPrice}`,
+      const update = await api().post(
+        `/cart/${prodVal?.id}?discounted_price=${prodVal?.discountedPrice}`,
         prodVal
       );
       toast({
@@ -54,6 +54,7 @@ export default function ModalProduct(props) {
       });
     } catch (err) {
       const res = err.response;
+      console.log(err);
       toast({
         title: res.data.message,
         status: "error",

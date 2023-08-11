@@ -15,7 +15,7 @@ export function DeleteCategory(props) {
   const toast = useToast();
   console.log(props);
   const deleteCategory = async () => {
-    await api.delete("/category/v3/" + props.id);
+    await api().delete("/category/v3/" + props.id);
     toast({
       title: "Category Deleted",
       status: "success",

@@ -2,6 +2,7 @@ const db = require("../models");
 
 const orderDetailController = {
   getAll: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
       const { id } = req.query;
       const get = await db.OrderDetail.findAll({
@@ -29,15 +30,22 @@ const orderDetailController = {
                   "weight",
                 ],
               },
+              {
+                model: db.Discount,
+                as: "Discount",
+                attributes: ["title", "valid_start", "valid_to", "nominal"],
+              },
             ],
           },
         ],
       });
+      await trans.commit();
       return res.status(200).send({
         message: "OK",
         result: get,
       });
     } catch (err) {
+      await trans.rollback();
       res.status(500).send({
         message: err.message,
       });

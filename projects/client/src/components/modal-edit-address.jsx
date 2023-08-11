@@ -13,30 +13,40 @@ import { RxCross2 } from "react-icons/rx";
 import { api } from "../api/api";
 
 export default function ModalEditAddress(props) {
+  const [selectedProvince, setSelectedProvince] = useState(props.val.province);
+  const [selectedCity, setSelectedCity] = useState(`${props.val.city_id}`);
+  const [selectedType, setSelectedType] = useState();
+
   //get all city dan province
   const [allProvince, setAllProvince] = useState([]);
   const fetchProvince = async () => {
     try {
-      await api.get("/province").then((res) => {
-        console.log(res.data.result);
-        setAllProvince(res.data.result);
-      });
+      await api()
+        .get("/province")
+        .then((res) => {
+          console.log(res.data.result);
+          setAllProvince(res.data.result);
+        });
     } catch (err) {
       console.log(err.message);
     }
   };
   useEffect(() => {
     fetchProvince();
+    fetchCity();
     console.log(props.val);
   }, []);
   const [allCity, setAllCity] = useState([]);
-  const [provinceId, setProvinceId] = useState("");
+  const [provinceId, setProvinceId] = useState(props.val.province);
   const fetchCity = async () => {
     try {
-      await api.get(`/city/${provinceId}`).then((res) => {
-        console.log(res.data.result);
-        setAllCity(res.data.result);
-      });
+      console.log(provinceId);
+      await api()
+        .get(`/city/${provinceId}`)
+        .then((res) => {
+          console.log(res.data.result);
+          setAllCity(res.data.result);
+        });
     } catch (err) {
       console.log(err.message);
     }
@@ -48,9 +58,8 @@ export default function ModalEditAddress(props) {
   const [address, setAddress] = useState({
     address: "",
     district: "",
-    city: "",
+    city_id: "",
     province: "",
-    user_id: 1,
     address_name: "",
     address_phone: "",
   });
@@ -65,7 +74,7 @@ export default function ModalEditAddress(props) {
   const [primary, setPrimary] = useState(props.val.is_primary);
   const updatePrimary = async () => {
     if (!props.val.is_primary && primary) {
-      await api.patch(`/addressG/primary/${props.val.id}`);
+      await api().patch(`/addressG/primary/${props.val.id}`);
     }
   };
   useEffect(() => {
@@ -75,17 +84,19 @@ export default function ModalEditAddress(props) {
   const toast = useToast();
   const editAddress = async () => {
     setIsLoading(true);
-    await api.patch(`/addressG/${props.val.id}`, address).then((res) => {
-      setIsLoading(false);
-      props.getAddress();
-      props.onClose();
-      toast({
-        title: res.data.message,
-        status: "success",
-        position: "top",
-        duration: 3000,
+    await api()
+      .patch(`/addressG/${props.val.id}`, address)
+      .then((res) => {
+        setIsLoading(false);
+        props.getAddress();
+        props.onClose();
+        toast({
+          title: res.data.message,
+          status: "success",
+          position: "top",
+          duration: 3000,
+        });
       });
-    });
   };
   //loading button
   const [isLoading, setIsLoading] = useState(false);
@@ -121,13 +132,14 @@ export default function ModalEditAddress(props) {
               w={"50%"}
               placeholder="Provinsi Anda"
               id="province"
-              defaultValue={props.val.province}
+              value={selectedProvince}
               onChange={(e) => {
                 const { value } = e.target;
-                const selectedProvince = allProvince.find(
+                const cuaks = allProvince.find(
                   (province) => province.province === value
                 );
-                setProvinceId(selectedProvince.id);
+                setProvinceId(cuaks.province_id);
+                setSelectedProvince(value);
                 inputHandler(e);
               }}
             >
@@ -138,12 +150,16 @@ export default function ModalEditAddress(props) {
             <Select
               w={"50%"}
               placeholder="Kota/Kabupaten Anda"
-              id="city"
-              onChange={inputHandler}
-              defaultValue={props.val.city_name}
+              id="city_id"
+              onChange={(e) => {
+                inputHandler(e);
+                setSelectedCity(e.target.value);
+                console.log(`${selectedCity}`);
+              }}
+              value={`${selectedCity}`}
             >
               {allCity.map((val) => (
-                <option value={val.city_name}>
+                <option value={val.city_id}>
                   {val.type} {val.city_name}
                 </option>
               ))}

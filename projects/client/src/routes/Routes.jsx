@@ -16,6 +16,9 @@ import SuperAdminCategoryPage from "../pages/Super-Admin-Category-Page";
 import SuperAdminProductPage from "../pages/Super-Admin-Product-Page";
 import AdminStockPage from "../pages/Admin-Stock-Page";
 import PaymentPage from "../pages/PaymentPage";
+import OrderDetailPage from "../pages/OrderDetailPage";
+import AdminOrderPage from "../pages/AdminOrderPage";
+import AdminOrderDetailPage from "../pages/AdminOrderDetailPage";
 
 const routes = [
   <Route
@@ -97,8 +100,14 @@ const routes = [
   <Route path="/*" element={<NotFound />}></Route>,
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
+  <Route path="/orders/:order_number" element={<OrderDetailPage />}></Route>,
   <Route path="/orders" element={<OrderListPage />}></Route>,
   <Route path="/payment" element={<PaymentPage />}></Route>,
+  <Route
+    path="/admin/orders/:order_number"
+    element={<AdminOrderDetailPage />}
+  ></Route>,
+  <Route path="/admin/orders" element={<AdminOrderPage />}></Route>,
 ];
 
 export default routes;

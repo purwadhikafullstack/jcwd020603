@@ -242,6 +242,7 @@ th {
   background: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
   overflow: scroll;
+  font-size: 14px;
 }
 .tableRowG::-webkit-scrollbar {
   display: none;

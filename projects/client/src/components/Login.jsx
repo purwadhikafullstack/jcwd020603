@@ -46,7 +46,7 @@ export default function Login() {
   const login = async () => {
     toast.closeAll();
 
-    await api
+    await api()
       .post("/user/auth", user)
       .then((res) => {
         console.log(res.data);

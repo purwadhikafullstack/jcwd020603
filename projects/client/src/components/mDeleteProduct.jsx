@@ -15,7 +15,7 @@ export function DeleteProduct(props) {
   const toast = useToast();
   console.log(props);
   const deleteProduct = async () => {
-    await api.delete("/product/v3/" + props.id);
+    await api().delete("/product/v3/" + props.id);
     toast({
       title: "Product Deleted",
       status: "success",

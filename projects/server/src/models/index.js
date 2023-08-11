@@ -144,4 +144,15 @@ db.User.belongsTo(db.Branch, {
   foreignKey: "branch_id",
   as: "Branch",
 });
+
+db.Order.belongsTo(db.Address, {
+  foreignKey: "address_id",
+  as: "Address",
+});
+
+db.Order.hasMany(db.OrderDetail, {
+  foreignKey: "order_id",
+  as: "Order",
+});
+
 module.exports = db;

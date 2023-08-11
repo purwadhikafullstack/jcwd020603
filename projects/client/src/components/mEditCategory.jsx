@@ -52,9 +52,11 @@ export function EditCategory(props) {
 
     try {
       console.log(formData);
-      await api.patch("/category/v2/" + props.id, formData).then((result) => {
-        console.log(result.data);
-      });
+      await api()
+        .patch("/category/v2/" + props.id, formData)
+        .then((result) => {
+          console.log(result.data);
+        });
       alert("Posting success");
       setSelectedFile(null);
       setCategory("");

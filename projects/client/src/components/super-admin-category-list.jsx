@@ -44,7 +44,7 @@ export default function SuperAdminCategoryList() {
 
   const fetchDataCategory = async () => {
     try {
-      const response = await api.get("/category");
+      const response = await api().get("/category");
       setAddCategory(response.data);
     } catch (error) {
       console.error(error);
@@ -66,7 +66,7 @@ export default function SuperAdminCategoryList() {
 
   const fetchData = async () => {
     try {
-      const response = await api.get("/category");
+      const response = await api().get("/category");
       setCategories(response.data);
     } catch (error) {
       console.error(error);
