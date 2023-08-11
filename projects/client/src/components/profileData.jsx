@@ -54,12 +54,12 @@ export default function ProfileData() {
     }),
 
     onSubmit: async () => {
-      try {       
-         const { user_name, email, gender, birth_date } = formik.values;
+      try {
+        const { user_name, email, gender, birth_date } = formik.values;
         const dtUser = { user_name, email, gender, birth_date };
 
         let cekuser;
-        await api
+        await api()
           .get("/user/", {
             params: { getall: dtUser.email } && { getall: dtUser.user_name },
           })
@@ -71,7 +71,7 @@ export default function ProfileData() {
 
         if (!cekuser) {
           let updated;
-          await api
+          await api()
             .patch("user/" + userSelector.id, dtUser)
             .then((res) => (updated = res.data));
 
@@ -91,30 +91,26 @@ export default function ProfileData() {
           });
 
           setEdit(true);
-        
-         } else {
-
-         return   toast({
-                  title: "Email / Username sudah terdaftar, silahkan gunakan username / email yang lain",
-                  status: "warning",
-                  duration: 3000,
-                  isClosable: true,
-                });
+        } else {
+          return toast({
+            title:
+              "Email / Username sudah terdaftar, silahkan gunakan username / email yang lain",
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
+          });
         }
-
       } catch (error) {
-          console.log(error);
-        }
+        console.log(error);
       }
-      })
-
+    },
+  });
 
   const inputHandler = (e) => {
     const { value, id } = e.target;
     formik.setFieldValue(id, value);
     console.log(formik.values);
   };
-
 
   return (
     <>

@@ -27,10 +27,9 @@ export default function ProfileVeriPass() {
           duration: 3000,
           isClosable: true,
         });
-        await api
-          .get("/user/send-email-verify", {
-            params: { email: email },
-          }) 
+        await api().get("/user/send-email-verify", {
+          params: { email: email },
+        });
       } else {
         return toast({
           title: "Akun Anda sudah terverifikasi",

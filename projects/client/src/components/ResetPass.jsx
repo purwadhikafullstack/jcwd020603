@@ -39,7 +39,7 @@ export default function ResetPass() {
   const formik = useFormik({
     initialValues: {
       password: "",
-      token: ""
+      token: "",
     },
 
     validationSchema: Yup.object().shape({
@@ -56,23 +56,22 @@ export default function ResetPass() {
     }),
 
     onSubmit: async () => {
-      
-      if (userSelector.id){
+      if (userSelector.id) {
         try {
-          const {pathname} = location
+          const { pathname } = location;
           console.log(pathname, "atas");
-          const token = pathname.split("/")[2]
+          const token = pathname.split("/")[2];
           const { password } = formik.values;
           const account = { password, token };
-  
-          await api
+
+          await api()
             .patch("/user/reset-pass/" + userSelector.id, account)
             .then((res) => {
               console.log(res.data);
               dispatch({
-                type : "login",
-                payload : res.data
-              })
+                type: "login",
+                payload: res.data,
+              });
               toast({
                 title: "Ganti Password Berhasil",
                 status: "success",
@@ -90,21 +89,20 @@ export default function ResetPass() {
           });
           console.log(err);
         }
-
       } else {
-        const {pathname} = location
-        const token = pathname.split("/")[2]
+        const { pathname } = location;
+        const token = pathname.split("/")[2];
         const { password } = formik.values;
-        const account = { password};
+        const account = { password };
         try {
-          await api
-            .patch("user/reset-pass-login?token="+ token , account)
+          await api()
+            .patch("user/reset-pass-login?token=" + token, account)
             .then((result) => {
               console.log(result.data);
               dispatch({
-                type : "login",
-                payload : result.data
-              })
+                type: "login",
+                payload: result.data,
+              });
               toast({
                 title: "Ganti Password Berhasil",
                 status: "success",
@@ -123,7 +121,7 @@ export default function ResetPass() {
           console.log(err);
         }
       }
-    }
+    },
   });
 
   function inputHandler(event) {
@@ -138,18 +136,17 @@ export default function ResetPass() {
       justify={"center"}
       bgColor={"white"}
       alignItems={"center"}
-      justifyContent={"center"}>
+      justifyContent={"center"}
+    >
       <Box
         w={"22%"}
         h={"100vh"}
         justifyContent={"center"}
         alignItems={"center"}
-        className="logo_samping">
-        <Image
-          src={logo2}
-          className="logo_samping" >
-          </Image>
-          </Box>
+        className="logo_samping"
+      >
+        <Image src={logo2} className="logo_samping"></Image>
+      </Box>
       <Flex
         spacing={8}
         h={"100vh"}
@@ -159,33 +156,24 @@ export default function ResetPass() {
         py={12}
         px={2}
         justifyContent={"center"}
-        alignItems={"center"}>
+        alignItems={"center"}
+      >
         <Box
-        
           rounded={"lg"}
           p={8}
           h={"auto"}
           display={"flex"}
           flexDir={"column"}
           columnGap={"20%"}
-          justifyContent={"space-between"}>
-          <Image
-            src={logo}
-            w={"100%"}
-            h={"40%"}
-            className="logo_atas"></Image>
+          justifyContent={"space-between"}
+        >
+          <Image src={logo} w={"100%"} h={"40%"} className="logo_atas"></Image>
           <Stack spacing={4} mt={"20px"}>
-            <Heading
-              fontSize={30}
-              textAlign={"center"}>
+            <Heading fontSize={30} textAlign={"center"}>
               Ganti Password
             </Heading>
 
-            <Flex
-              flexDir={"column"}
-              gap={10}>
-              
-
+            <Flex flexDir={"column"} gap={10}>
               <FormControl>
                 <FormLabel>Password Baru</FormLabel>
                 <InputGroup>
@@ -202,13 +190,15 @@ export default function ResetPass() {
                       as={seepass ? AiFillEye : AiFillEyeInvisible}
                       onClick={() => {
                         setSeepass(!seepass);
-                      }}></Icon>
+                      }}
+                    ></Icon>
                   </InputRightElement>
                 </InputGroup>
                 <Flex
                   display={formik.errors.password ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.password}
                 </Flex>
               </FormControl>
@@ -229,13 +219,15 @@ export default function ResetPass() {
                       as={seepass ? AiFillEye : AiFillEyeInvisible}
                       onClick={() => {
                         setSeepass(!seepass);
-                      }}></Icon>
+                      }}
+                    ></Icon>
                   </InputRightElement>
                 </InputGroup>
                 <Flex
                   display={formik.errors.password2 ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.password2}
                 </Flex>
               </FormControl>
@@ -248,7 +240,8 @@ export default function ResetPass() {
                 }}
                 fontWeight={"bolder"}
                 fontSize={20}
-                onClick={formik.handleSubmit}>
+                onClick={formik.handleSubmit}
+              >
                 Simpan
               </Button>
             </Flex>

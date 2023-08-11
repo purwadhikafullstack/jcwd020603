@@ -5,97 +5,42 @@ const moment = require("moment");
 const { query } = require("express");
 const stockControllerB = {
   getAllStock: async (req, res) => {
-    const {branDis} = req.query
-    console.log(req.query, "ini");
-    if(req.query ) {
-      try {
-        const get = await db.Stock.findAll({
-          where : {
-           [Op.or] : [{branch_id : branDis}, {discount_id : branDis}]
+    try {
+      const get = await db.Stock.findAll({
+        include: [
+          {
+            model: db.Product,
+            as: "Product",
+            attributes: [
+              "product_name",
+              "price",
+              "photo_product_url",
+              "category_id",
+              "desc",
+              "weight",
+            ],
+            include: [
+              {
+                model: db.Category,
+                as: "Category",
+                attributes: ["category_name"],
+              },
+            ],
           },
-          include: [
-            {
-              model: db.Product,
-              as: "Product",
-              attributes: [
-                "product_name",
-                "price",
-                "photo_product_url",
-                "category_id",
-                "desc",
-                "weight",
-              ],
-              include: [
-                {
-                  model: db.Category,
-                  as: "Category",
-                  attributes: ["category_name"],
-                },
-              ],
-            },
-            {
-              model: db.Discount,
-              as: "Discount",
-              attributes: ["nominal", "title", "valid_start", "valid_to"],
-            },
-          ],
-        });
-        res.send(get);
-      } catch (err) {
-        res.status(500).send({
-          message: err.message,
-        });
-      }
-
-    } else {
-
-      try {
-        const get = await db.Stock.findAll({
-          
-          include: [
-            {
-              model: db.Product,
-              as: "Product",
-              attributes: [
-                "product_name",
-                "price",
-                "photo_product_url",
-                "category_id",
-                "desc",
-                "weight",
-              ],
-              include: [
-                {
-                  model: db.Category,
-                  as: "Category",
-                  attributes: ["category_name"],
-                },
-              ],
-            },
-            {
-              model: db.Discount,
-              as: "Discount",
-              attributes: ["nominal", "title", "valid_start", "valid_to"],
-            },
-          ],
-        });
-        res.send(get);
-      } catch (err) {
-        res.status(500).send({
-          message: err.message,
-        });
-      }
-      
+          {
+            model: db.Discount,
+            as: "Discount",
+            attributes: ["nominal", "title", "valid_start", "valid_to"],
+          },
+        ],
+      });
+      res.send(get);
+    } catch (err) {
+      res.status(500).send({
+        message: err.message,
+      });
     }
-
-   
   },
-
-
-
-
-
-
   searchStock: async (req, res) => {
     try {
       const { search_query } = req.query;

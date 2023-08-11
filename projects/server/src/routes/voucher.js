@@ -1,10 +1,13 @@
-const express = require("express")
-const router = express.Router()
-const voucerController = require("../controllers").voucerController
+const express = require("express");
+const router = express.Router();
+const voucherController = require("../controllers").voucherController;
+const roleController = require("../middleware/checkRole");
 
+router.get("/", voucherController.getAllVoucher);
+router.patch("/:id", roleController.checkUser, voucherController.updateLimit);
+router.get("/", voucherController.getAll);
+router.post("/", voucherController.addVoucher);
+router.patch("/", voucherController.updateVoucher);
+router.delete("/", voucherController.deleteVoucher);
 
-router.get("/", voucerController.getAll)
-router.post("/", voucerController.addVoucher)
-router.patch("/", voucerController.updateVoucher)
-router.delete("/", voucerController.deleteVoucher)
-module.exports = router
+module.exports = router;

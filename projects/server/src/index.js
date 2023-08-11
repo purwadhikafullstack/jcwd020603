@@ -29,6 +29,7 @@ app.use(express.json());
 // NOTE : Add your routes here
 app.use("/categoryImg", express.static(`${__dirname}/public/categoryImg`));
 app.use("/productImg", express.static(`${__dirname}/public/productImg`));
+app.use("/paymentImg", express.static(`${__dirname}/public/paymentImg`));
 app.use("/user", routes.userRoutes);
 app.use("/branch", routes.branchRoutes);
 app.use("/token", routes.tokenRoutes);
@@ -39,11 +40,11 @@ app.use("/addressG", routes.addressRoutesG);
 app.use("/city", routes.cityRoutes);
 app.use("/province", routes.provinceRoutes);
 app.use("/cart", routes.cartRoutes);
-app.use("/order-details", routes.orderDetailRoutes);
+app.use("/order-detail", routes.orderDetailRoutes);
 app.use("/order", routes.orderRoutes);
 app.use("/discount", routes.discountRoutes);
-app.use("/voucher", routes.voucerRoutes)
 app.use("/product", routes.productRoutesB);
+app.use("/voucher", routes.voucherRoutes);
 app.use("/avatar", express.static(`${__dirname}/public/Avatar`));
 
 app.get("/api", (req, res) => {

@@ -11,7 +11,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import "../css/adminBranchR.css";
-import "../css/discount-voucher.css"
+import "../css/discount-voucher.css";
 import { api } from "../api/api";
 import { useState } from "react";
 import { useFormik } from "formik";
@@ -25,8 +25,17 @@ export default function VoucherAddUpdateModal(props) {
   const userSelector = useSelector((state) => state.auth);
   const toast = useToast();
   const { dtVocer, fetchAll, numberIdx, isEdit } = props;
-  const { title, valid_start, valid_to, nominal, id, voucher_code, minimal_order, limit, desc } =
-    dtVocer[numberIdx];
+  const {
+    title,
+    valid_start,
+    valid_to,
+    nominal,
+    id,
+    voucher_code,
+    minimal_order,
+    limit,
+    desc,
+  } = dtVocer[numberIdx];
   const valid_startConvert = moment(valid_start).format("YYYY-MM-DD");
   const valid_toConvert = moment(valid_to).format("YYYY-MM-DD");
   YupPassword(Yup);
@@ -43,13 +52,21 @@ export default function VoucherAddUpdateModal(props) {
     },
 
     validationSchema: Yup.object().shape({
-      title: Yup.string().required("Gagal disimpan.. kolom ini tidak boleh kosong"),
+      title: Yup.string().required(
+        "Gagal disimpan.. kolom ini tidak boleh kosong"
+      ),
       voucher_code: Yup.string(),
       valid_start: Yup.string(),
-      valid_to: Yup.string().required("Gagal disimpan.. kolom ini tidak boleh kosong"),
-      nominal: Yup.string().required("Gagal disimpan.. kolom ini tidak boleh kosong"),
+      valid_to: Yup.string().required(
+        "Gagal disimpan.. kolom ini tidak boleh kosong"
+      ),
+      nominal: Yup.string().required(
+        "Gagal disimpan.. kolom ini tidak boleh kosong"
+      ),
       minimal_order: Yup.string(),
-      limit: Yup.string().required("Gagal disimpan.. kolom ini tidak boleh kosong"),
+      limit: Yup.string().required(
+        "Gagal disimpan.. kolom ini tidak boleh kosong"
+      ),
       desc: Yup.string(),
     }),
 
@@ -68,7 +85,7 @@ export default function VoucherAddUpdateModal(props) {
             desc,
           } = formik.values;
           const dataEditVoucher = {
-            id : dtVocer[numberIdx].id,
+            id: dtVocer[numberIdx].id,
             title,
             voucher_code,
             valid_start,
@@ -78,9 +95,11 @@ export default function VoucherAddUpdateModal(props) {
             limit,
             desc,
           };
-          await api.patch("/voucher", dataEditVoucher).then((result) => {
-            console.log(result.data);
-          });
+          await api()
+            .patch("/voucher", dataEditVoucher)
+            .then((result) => {
+              console.log(result.data);
+            });
           toast({
             title: "Data diskon berhasil diubah",
             status: "success",
@@ -115,9 +134,11 @@ export default function VoucherAddUpdateModal(props) {
             limit,
             desc,
           };
-          await api.post("/voucher", dataInputVoucher).then((result) => {
-            console.log(result.data);
-          });
+          await api()
+            .post("/voucher", dataInputVoucher)
+            .then((result) => {
+              console.log(result.data);
+            });
           toast({
             title: "Data diskon berhasil ditambahkan",
             status: "success",
@@ -146,11 +167,13 @@ export default function VoucherAddUpdateModal(props) {
         <Flex className="flex2R-addbranch">
           <Flex className="flex3R-addbranch">
             <Flex className="flex3R-input_user-addbranch">
-              <Box className="flex3R-input-box-addbranch">{ isEdit == true ? "Edit Voucher" : "Tambah Voucher" }</Box>
+              <Box className="flex3R-input-box-addbranch">
+                {isEdit == true ? "Edit Voucher" : "Tambah Voucher"}
+              </Box>
               <FormControl>
                 <Flex className="flex-input1-disvoc">
                   <Flex className="flex-input2-disvoc">
-                    <Flex  className="flex-input3-disvoc">
+                    <Flex className="flex-input3-disvoc">
                       <FormLabel>Judul</FormLabel>
                       <Input
                         defaultValue={isEdit ? title : ""}
@@ -162,7 +185,8 @@ export default function VoucherAddUpdateModal(props) {
                         _hover={{
                           borderColor: "#9d9c45",
                           boxShadow: "dark-lg",
-                        }}></Input>
+                        }}
+                      ></Input>
                     </Flex>
 
                     <Flex className="flex-input3-disvoc">
@@ -177,21 +201,23 @@ export default function VoucherAddUpdateModal(props) {
                         _hover={{
                           borderColor: "#9d9c45",
                           boxShadow: "dark-lg",
-                        }}></Input>
+                        }}
+                      ></Input>
                     </Flex>
                   </Flex>
                   <Flex
                     display={formik.errors.title ? "flex" : "none"}
                     color={"red"}
-                    fontSize={"10px"}>
+                    fontSize={"10px"}
+                  >
                     {formik.errors.title}
                   </Flex>
                 </Flex>
               </FormControl>
 
               <FormControl>
-                <Flex  className="flex-input1-disvoc">
-                  <Flex  className="flex-input2-disvoc">
+                <Flex className="flex-input1-disvoc">
+                  <Flex className="flex-input2-disvoc">
                     <Flex className="flex-input3-disvoc">
                       <FormLabel>Tanggal Mulai</FormLabel>
                       <Input
@@ -204,7 +230,8 @@ export default function VoucherAddUpdateModal(props) {
                         _hover={{
                           borderColor: "#9d9c45",
                           boxShadow: "dark-lg",
-                        }}></Input>
+                        }}
+                      ></Input>
                     </Flex>
                     <Flex className="flex-input3-disvoc">
                       <FormLabel>Tanggal Akhir</FormLabel>
@@ -218,14 +245,16 @@ export default function VoucherAddUpdateModal(props) {
                         _hover={{
                           borderColor: "#9d9c45",
                           boxShadow: "dark-lg",
-                        }}></Input>
+                        }}
+                      ></Input>
                     </Flex>
                   </Flex>
                   <Flex
                     display={formik.errors.valid_to ? "flex" : "none"}
                     color={"red"}
                     fontSize={"10px"}
-                    h={"10%"}>
+                    h={"10%"}
+                  >
                     {formik.errors.valid_to}
                   </Flex>
                 </Flex>
@@ -246,10 +275,12 @@ export default function VoucherAddUpdateModal(props) {
                           _hover={{
                             borderColor: "#9d9c45",
                             boxShadow: "dark-lg",
-                          }}></Input>
+                          }}
+                        ></Input>
                         <InputLeftElement
                           bgColor={"#9d9c45"}
-                          borderLeftRadius={"10px"}>
+                          borderLeftRadius={"10px"}
+                        >
                           <FaRupiahSign />
                         </InputLeftElement>
                       </InputGroup>
@@ -267,10 +298,12 @@ export default function VoucherAddUpdateModal(props) {
                           _hover={{
                             borderColor: "#9d9c45",
                             boxShadow: "dark-lg",
-                          }}></Input>
+                          }}
+                        ></Input>
                         <InputLeftElement
                           bgColor={"#9d9c45"}
-                          borderLeftRadius={"10px"}>
+                          borderLeftRadius={"10px"}
+                        >
                           <FaRupiahSign />
                         </InputLeftElement>
                       </InputGroup>
@@ -279,7 +312,8 @@ export default function VoucherAddUpdateModal(props) {
                   <Flex
                     display={formik.errors.nominal ? "flex" : "none"}
                     color={"red"}
-                    fontSize={"10px"}>
+                    fontSize={"10px"}
+                  >
                     {formik.errors.nominal}
                   </Flex>
                 </Flex>
@@ -299,7 +333,8 @@ export default function VoucherAddUpdateModal(props) {
                         _hover={{
                           borderColor: "#9d9c45",
                           boxShadow: "dark-lg",
-                        }}></Input>
+                        }}
+                      ></Input>
                     </Flex>
 
                     <Flex className="flex-input3-disvoc">
@@ -313,13 +348,15 @@ export default function VoucherAddUpdateModal(props) {
                         _hover={{
                           borderColor: "#9d9c45",
                           boxShadow: "dark-lg",
-                        }}></Input>
+                        }}
+                      ></Input>
                     </Flex>
                   </Flex>
                   <Flex
                     display={formik.errors.limit ? "flex" : "none"}
                     color={"red"}
-                    fontSize={"10px"}>
+                    fontSize={"10px"}
+                  >
                     {formik.errors.limit}
                   </Flex>
                 </Flex>
@@ -327,9 +364,7 @@ export default function VoucherAddUpdateModal(props) {
             </Flex>
           </Flex>
 
-          <Flex
-            justifyContent={"center"}
-            mt={"50px"}>
+          <Flex justifyContent={"center"} mt={"50px"}>
             <Button
               onClick={formik.handleSubmit}
               m={"20px"}
@@ -340,7 +375,8 @@ export default function VoucherAddUpdateModal(props) {
               fontWeight={"bolder"}
               _hover={{
                 bgGradient: "linear(to-l, #9d9c45, #f0ee93 )",
-              }}>
+              }}
+            >
               Simpan
             </Button>
           </Flex>

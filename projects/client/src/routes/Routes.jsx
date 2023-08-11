@@ -9,15 +9,17 @@ import LandingPage from "../pages/LandingPage";
 import ProductPage from "../pages/ProductPage";
 import ProfilePage from "../pages/ProfilePage";
 import ChangePass from "../components/ChangePass";
-import AdminBranch from "../components/AdminBranch";
 import DashboardBranch from "../pages/DashboardBranch";
-import AddAdminBranch from "../components/AdminBranchAddModal";
 import CartPage from "../pages/CartPage";
 import AddressListPage from "../pages/AddressListPage";
 import OrderListPage from "../pages/OrderListPage";
 import SuperAdminCategoryPage from "../pages/Super-Admin-Category-Page";
 import SuperAdminProductPage from "../pages/Super-Admin-Product-Page";
 import AdminStockPage from "../pages/Admin-Stock-Page";
+import PaymentPage from "../pages/PaymentPage";
+import OrderDetailPage from "../pages/OrderDetailPage";
+import AdminOrderPage from "../pages/AdminOrderPage";
+import AdminOrderDetailPage from "../pages/AdminOrderDetailPage";
 import DiscountPage from "../pages/DiscountPage";
 import StockHistoryPage from "../pages/Stock-History-Page";
 import ResetPass from "../components/ResetPass";
@@ -72,24 +74,22 @@ const routes = [
   ></Route>,
 
   <Route
-  path="/forgot-password/:token"
-  element={
-    <ProtectedPage>
-      <ResetPass />
-    </ProtectedPage>
-  }
-></Route>,
+    path="/forgot-password/:token"
+    element={
+      <ProtectedPage>
+        <ResetPass />
+      </ProtectedPage>
+    }
+  ></Route>,
 
-<Route
-path="/change-pass"
-element={
-  <ProtectedPage needLogin={true}>
-    <ChangePass />
-  </ProtectedPage>
-}
-></Route>,
-
-
+  <Route
+    path="/change-pass"
+    element={
+      <ProtectedPage needLogin={true}>
+        <ChangePass />
+      </ProtectedPage>
+    }
+  ></Route>,
 
   <Route
     path="/product"
@@ -144,10 +144,16 @@ element={
   <Route path="/vocer" element={<VoucherPage />}></Route>,
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
+  <Route path="/orders/:order_number" element={<OrderDetailPage />}></Route>,
   <Route path="/orders" element={<OrderListPage />}></Route>,
+  <Route path="/payment" element={<PaymentPage />}></Route>,
+  <Route
+    path="/admin/orders/:order_number"
+    element={<AdminOrderDetailPage />}
+  ></Route>,
+  <Route path="/admin/orders" element={<AdminOrderPage />}></Route>,
   <Route path="/disadd" element={<DiscountAddModal />}></Route>,
-  <Route path="/disaprod" element={<DiscountAddProductModal/>}></Route>,
-
+  <Route path="/disaprod" element={<DiscountAddProductModal />}></Route>,
 ];
 
 export default routes;

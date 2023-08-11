@@ -41,7 +41,7 @@ export default function LandingPage() {
   const getAddress = async () => {
     try {
       console.log(latlong);
-      const response = await api.get(
+      const response = await api().get(
         `/address?latitude=${latlong.latitude}&longitude=${latlong.longitude}`
       );
       console.log(response.data);

@@ -28,7 +28,7 @@ import {
   ModalOverlay,
   ModalContent,
   ModalBody,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { RiShoppingBag3Fill } from "react-icons/ri";
 import { BsFillBoxSeamFill, BsFillBagCheckFill } from "react-icons/bs";
@@ -40,31 +40,41 @@ import "../css/indexG.css";
 import "../css/indexR.css";
 import { api } from "../api/api";
 import { useEffect, useState } from "react";
-import {BiEdit } from "react-icons/bi"
-import {FaStore} from "react-icons/fa"
-import {FaPeopleGroup} from "react-icons/fa6"
-import {RiDeleteBin6Fill} from "react-icons/ri"
-import {BsFillPersonPlusFill} from "react-icons/bs"
+import { BiEdit } from "react-icons/bi";
+import { FaStore } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { RiDeleteBin6Fill } from "react-icons/ri";
+import { BsFillPersonPlusFill } from "react-icons/bs";
 import AddAdminBranch from "./AdminBranchAddModal";
 import EditAdminBranch from "./AdminBranchEditModal";
 import ModalKonfirmasiDeletAdmin from "./modal-konfirmasi-deleteAdminBranch";
 
-
-
 export default function AdminBranch() {
-  const toast = useToast()
-  const {isOpen, onOpen, onClose} = useDisclosure()
-  const { isOpen : isOpenEdit, onOpen : onOpenEdit, onClose : onCloseEdit} = useDisclosure()
-  const { isOpen : isOpenDel, onOpen : onOpenDel, onClose : onCloseDel} = useDisclosure()
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenEdit,
+    onOpen: onOpenEdit,
+    onClose: onCloseEdit,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDel,
+    onOpen: onOpenDel,
+    onClose: onCloseDel,
+  } = useDisclosure();
   const [dtBranch, setDtBranch] = useState([]);
 
   // ambil data
   const fetchAll = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem("auth"))
-      const branch = await api.get("/branch/all-branch", {headers : {Authorization : `Bearer ${token}`}}).then((res) => {
-        setDtBranch(res.data.Data);
-      });
+      const token = JSON.parse(localStorage.getItem("auth"));
+      const branch = await api()
+        .get("/branch/all-branch", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setDtBranch(res.data.Data);
+        });
     } catch (error) {
       console.log(error.message);
     }
@@ -74,11 +84,7 @@ export default function AdminBranch() {
     fetchAll();
   }, []);
 
-
- 
-
-const [number, setNumber] = useState(0)
-
+  const [number, setNumber] = useState(0);
 
   return (
     <>
@@ -103,11 +109,7 @@ const [number, setNumber] = useState(0)
         <Grid className="gridMenuG" flexDir={"row"}>
           <Flex className="menuTotalG">
             <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#fdefce"}>
-              <Icon
-                as={FaPeopleGroup}
-                fontSize={"30px"}
-                color={"#ffb21c"}
-              />
+              <Icon as={FaPeopleGroup} fontSize={"30px"} color={"#ffb21c"} />
             </Center>
             <Flex flexDir={"column"}>
               <Flex fontSize={"24px"} fontWeight={"extrabold"}>
@@ -121,11 +123,7 @@ const [number, setNumber] = useState(0)
 
           <Flex className="menuTotalG">
             <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#cbe4fb"}>
-              <Icon
-                as={FaStore}
-                fontSize={"30px"}
-                color={"#007bfe"}
-              />
+              <Icon as={FaStore} fontSize={"30px"} color={"#007bfe"} />
             </Center>
             <Flex flexDir={"column"}>
               <Flex fontSize={"24px"} fontWeight={"extrabold"}>
@@ -145,15 +143,27 @@ const [number, setNumber] = useState(0)
             justifyContent={"space-between"}
           >
             <Flex flexDir={"column"} gap={"5%"} fontSize={15}>
-              Data Cabang dan Karyawan 
-              <Button h={"30px"} bgColor={"#9d9c45"} gap={"10px"} cursor={"pointer"} onClick={() => {onOpen()}}><BsFillPersonPlusFill/>Tambah</Button>
+              Data Cabang dan Karyawan
+              <Button
+                h={"30px"}
+                bgColor={"#9d9c45"}
+                gap={"10px"}
+                cursor={"pointer"}
+                onClick={() => {
+                  onOpen();
+                }}
+              >
+                <BsFillPersonPlusFill />
+                Tambah
+              </Button>
             </Flex>
             <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
               <Select placeholder="Pilih Lokasi Cabang" bg={"white"}>
                 {dtBranch.map((val) => (
-                  <option value={val.Branch.branch_name}>{val.Branch.City?.city_name}</option>
+                  <option value={val.Branch.branch_name}>
+                    {val.Branch.City?.city_name}
+                  </option>
                 ))}
-                
               </Select>
               <InputGroup>
                 <Input placeholder="search" bg={"white"}></Input>
@@ -169,7 +179,13 @@ const [number, setNumber] = useState(0)
 
           {/* <TableContainer w={"100%"}> */}
           {/* <Box><Button>Tambah Data</Button></Box> */}
-          <Table size="sm" w={"100%"} variant="simple" className="custom-table" maxW={"850px"}>
+          <Table
+            size="sm"
+            w={"100%"}
+            variant="simple"
+            className="custom-table"
+            maxW={"850px"}
+          >
             <Thead w={"100%"} bg={"#ffb21c"} fontSize={"12px"}>
               <Tr>
                 <Th>No</Th>
@@ -192,16 +208,34 @@ const [number, setNumber] = useState(0)
                   <Td>{val.phone_number}</Td>
                   <Td>{val.Branch.branch_name}</Td>
                   <Td>{val.Branch.branch_address}</Td>
-                  <Td>{val.Branch.City?.city_name} - {val.Branch.province}</Td>
+                  <Td>
+                    {val.Branch.City?.city_name} - {val.Branch.province}
+                  </Td>
                   <Td alignItems={"center"} position={"center"}>
-                     <Flex flexDir={"row"} w={"100%"} h={"100%"} gap={"15px"}>
-                     <Button bgColor={"#9d9c45"} w={"100%"} cursor={"pointer"} 
-                     onClick={()=>{onOpenEdit()
-                      setNumber(index)}} ><BiEdit/></Button>
-                     <Button bgColor={"red.500"} w={"100%"} cursor={"pointer"}
-                     onClick={()=> {onOpenDel()
-                      setNumber(index)}}><RiDeleteBin6Fill width={"100%"}/></Button>
-                     </Flex>
+                    <Flex flexDir={"row"} w={"100%"} h={"100%"} gap={"15px"}>
+                      <Button
+                        bgColor={"#9d9c45"}
+                        w={"100%"}
+                        cursor={"pointer"}
+                        onClick={() => {
+                          onOpenEdit();
+                          setNumber(index);
+                        }}
+                      >
+                        <BiEdit />
+                      </Button>
+                      <Button
+                        bgColor={"red.500"}
+                        w={"100%"}
+                        cursor={"pointer"}
+                        onClick={() => {
+                          onOpenDel();
+                          setNumber(index);
+                        }}
+                      >
+                        <RiDeleteBin6Fill width={"100%"} />
+                      </Button>
+                    </Flex>
                   </Td>
                 </Tr>
               ))}
@@ -211,23 +245,39 @@ const [number, setNumber] = useState(0)
       </Flex>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay/>
-        <ModalContent maxW={"700px"} w={"100%"} borderRadius={"20px"} >
-          <AddAdminBranch isOpen={isOpen} onClose={onClose} fetchAll = {fetchAll}  />
+        <ModalOverlay />
+        <ModalContent maxW={"700px"} w={"100%"} borderRadius={"20px"}>
+          <AddAdminBranch
+            isOpen={isOpen}
+            onClose={onClose}
+            fetchAll={fetchAll}
+          />
         </ModalContent>
       </Modal>
 
       <Modal isOpen={isOpenEdit} onClose={onCloseEdit} isCentered>
-        <ModalOverlay/>
-        <ModalContent maxW={"700px"} w={"100%"} borderRadius={"20px"} >
-          <EditAdminBranch isOpen={isOpenEdit} onClose={onCloseEdit} fetchAll = {fetchAll} dtBranch ={dtBranch} number={number} />
+        <ModalOverlay />
+        <ModalContent maxW={"700px"} w={"100%"} borderRadius={"20px"}>
+          <EditAdminBranch
+            isOpen={isOpenEdit}
+            onClose={onCloseEdit}
+            fetchAll={fetchAll}
+            dtBranch={dtBranch}
+            number={number}
+          />
         </ModalContent>
       </Modal>
 
       <Modal isOpen={isOpenDel} onClose={onCloseDel} isCentered>
-        <ModalOverlay/>
-        <ModalContent maxW={"700px"} w={"100%"} borderRadius={"20px"} >
-          <ModalKonfirmasiDeletAdmin isOpen={isOpenDel} onClose={onCloseDel} fetchAll = {fetchAll} dtBranch ={dtBranch} number={number} />
+        <ModalOverlay />
+        <ModalContent maxW={"700px"} w={"100%"} borderRadius={"20px"}>
+          <ModalKonfirmasiDeletAdmin
+            isOpen={isOpenDel}
+            onClose={onCloseDel}
+            fetchAll={fetchAll}
+            dtBranch={dtBranch}
+            number={number}
+          />
         </ModalContent>
       </Modal>
     </>

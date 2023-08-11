@@ -47,7 +47,7 @@ export default function AddressCard({
   const deleteAddress = async () => {
     try {
       const token = JSON.parse(localStorage.getItem("auth"));
-      await api
+      await api()
         .delete(`/addressG/${val.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -35,7 +35,7 @@ export default function ProfileFotoAlamat() {
     const formData = new FormData();
     formData.append("Avatar", selectedFile);
     let avatar;
-    await api
+    await api()
       .patch("/user/avatar/" + userSelector.id, formData)
       .then((res) => (avatar = res.data));
 

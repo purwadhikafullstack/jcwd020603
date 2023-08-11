@@ -35,8 +35,8 @@ import DiscountAddProductModal from "./DiscountAddProductModal";
 import { useSelector } from "react-redux";
 
 export default function DiscountAddModal(props) {
-  const userSelector = useSelector((state) => state.auth)
-  const branch_id = useSelector.branch_id
+  const userSelector = useSelector((state) => state.auth);
+  const branch_id = useSelector.branch_id;
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [dtStock, setDtStock] = useState([]);
@@ -50,7 +50,7 @@ export default function DiscountAddModal(props) {
       valid_to: "",
       nominal: "",
       branch_id: userSelector.branch_id,
-      product_id : ""
+      product_id: "",
     },
 
     validationSchema: Yup.object().shape({
@@ -67,23 +67,31 @@ export default function DiscountAddModal(props) {
     }),
 
     onSubmit: async () => {
-
       try {
-      const {title, valid_start, valid_to, nominal, branch_id, product_id} = formik.values
-      const dataDiscount = {title, valid_start, valid_to, nominal, branch_id, product_id : [...selectedId]}
-      await api.post("/discount", dataDiscount).then((result) => {
-        console.log(result.data);
-      })
-      toast({
-        title: "Data diskon berhasil ditambahkan",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+        const { title, valid_start, valid_to, nominal, branch_id, product_id } =
+          formik.values;
+        const dataDiscount = {
+          title,
+          valid_start,
+          valid_to,
+          nominal,
+          branch_id,
+          product_id: [...selectedId],
+        };
+        await api()
+          .post("/discount", dataDiscount)
+          .then((result) => {
+            console.log(result.data);
+          });
+        toast({
+          title: "Data diskon berhasil ditambahkan",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
 
-      props.fetchAll()
-      props.onClose()
-      
+        props.fetchAll();
+        props.onClose();
       } catch (err) {
         console.log(err);
       }
@@ -97,10 +105,12 @@ export default function DiscountAddModal(props) {
   }
 
   const getStock = async () => {
-    const getData = await api.get("/stock/", {params : {branch_id : userSelector.branch_id}}).then((res) => {
-      console.log(res.data);
-      setDtStock(res.data);
-    });
+    const getData = await api()
+      .get("/stock/", { params: { branch_id: userSelector.branch_id } })
+      .then((res) => {
+        console.log(res.data);
+        setDtStock(res.data);
+      });
   };
 
   console.log(userSelector);
@@ -109,17 +119,15 @@ export default function DiscountAddModal(props) {
   console.log(selectedId);
 
   useEffect(() => {
-    getStock()
-  }, [])
+    getStock();
+  }, []);
 
   return (
     <>
       <Flex>
         <Flex className="flex2R-addbranch">
           <Flex className="flex3R-addbranch">
-            <Flex
-              className="flex3R-input_user-addbranch"
-              gap={"20px"}>
+            <Flex className="flex3R-input_user-addbranch" gap={"20px"}>
               <Box className="flex3R-input-box-addbranch">Tambah Discount</Box>
               <FormControl>
                 <FormLabel>Judul</FormLabel>
@@ -131,21 +139,22 @@ export default function DiscountAddModal(props) {
                   _hover={{
                     borderColor: "#9d9c45",
                     boxShadow: "dark-lg",
-                  }}></Input>
+                  }}
+                ></Input>
                 <Flex
                   display={formik.errors.title ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.title}
                 </Flex>
               </FormControl>
               <FormControl
                 display={"flex"}
                 flexDir={"row"}
-                justifyContent={"space-between"}>
-                <Flex
-                  flexDir={"column"}
-                  w={"45%"}>
+                justifyContent={"space-between"}
+              >
+                <Flex flexDir={"column"} w={"45%"}>
                   <FormLabel>Tanggal Mulai</FormLabel>
                   <Input
                     onChange={inputHandler}
@@ -155,11 +164,10 @@ export default function DiscountAddModal(props) {
                     _hover={{
                       borderColor: "#9d9c45",
                       boxShadow: "dark-lg",
-                    }}></Input>
+                    }}
+                  ></Input>
                 </Flex>
-                <Flex
-                  flexDir={"column"}
-                  w={"45%"}>
+                <Flex flexDir={"column"} w={"45%"}>
                   <FormLabel>Tanggal Akhir</FormLabel>
                   <Input
                     onChange={inputHandler}
@@ -169,13 +177,19 @@ export default function DiscountAddModal(props) {
                     _hover={{
                       borderColor: "#9d9c45",
                       boxShadow: "dark-lg",
-                    }}></Input>
+                    }}
+                  ></Input>
                 </Flex>
                 <Flex
-                  display={formik.errors.valid_start && formik.errors.valid_to ? "flex" : "none"}
+                  display={
+                    formik.errors.valid_start && formik.errors.valid_to
+                      ? "flex"
+                      : "none"
+                  }
                   color={"red"}
-                  fontSize={"10px"}>
-                  {formik.errors.valid_to }
+                  fontSize={"10px"}
+                >
+                  {formik.errors.valid_to}
                 </Flex>
               </FormControl>
               <FormControl>
@@ -189,17 +203,20 @@ export default function DiscountAddModal(props) {
                     _hover={{
                       borderColor: "#9d9c45",
                       boxShadow: "dark-lg",
-                    }}></Input>
+                    }}
+                  ></Input>
                   <InputRightElement
                     bgColor={"#9d9c45"}
-                    borderRightRadius={"10px"}>
+                    borderRightRadius={"10px"}
+                  >
                     <FaPercentage />
                   </InputRightElement>
                 </InputGroup>
                 <Flex
                   display={formik.errors.nominal ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.nominal}
                 </Flex>
               </FormControl>
@@ -209,15 +226,17 @@ export default function DiscountAddModal(props) {
                   display={"flex"}
                   flexDir={"row"}
                   gap={"20px"}
-                  alignItems={"center"}>
+                  alignItems={"center"}
+                >
                   Pilih Produk
                   <Button
                     bgColor={"#9d9c45"}
                     size={"sm"}
                     onClick={() => {
-                      getStock()
+                      getStock();
                       onOpen();
-                    }}>
+                    }}
+                  >
                     <AiOutlineAppstoreAdd />
                   </Button>
                 </FormLabel>
@@ -232,9 +251,10 @@ export default function DiscountAddModal(props) {
                   _hover={{
                     borderColor: "#9d9c45",
                     boxShadow: "dark-lg",
-                  }}>
-                    {selectedProducts.map((val) => (
-                      <Flex
+                  }}
+                >
+                  {selectedProducts.map((val) => (
+                    <Flex
                       // key={val.id}
                       w={"45%"}
                       h={"10%"}
@@ -246,33 +266,35 @@ export default function DiscountAddModal(props) {
                       _hover={{
                         borderColor: "#9d9c45",
                         boxShadow: "dark-lg",
-                      }}>
+                      }}
+                    >
                       <Icon
                         as={AiOutlineCloseCircle}
-                        cursor={"pointer"} ml={"10px"}></Icon>
+                        cursor={"pointer"}
+                        ml={"10px"}
+                      ></Icon>
                       <Image
                         src={val.Product.photo_product_url}
                         w={"20%"}
                         h={"100%"}
-                        p={1}></Image>
+                        p={1}
+                      ></Image>
                       {val.Product.product_name}
                     </Flex>
-
-                    ))}
+                  ))}
                 </Flex>
                 <Flex
                   display={formik.errors.phone_number ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.phone_number}
                 </Flex>
               </FormControl>
             </Flex>
           </Flex>
 
-          <Flex
-            justifyContent={"center"}
-            mt={"50px"}>
+          <Flex justifyContent={"center"} mt={"50px"}>
             <Button
               onClick={formik.handleSubmit}
               m={"20px"}
@@ -283,22 +305,17 @@ export default function DiscountAddModal(props) {
               fontWeight={"bolder"}
               _hover={{
                 bgGradient: "linear(to-l, #9d9c45, #f0ee93 )",
-              }}>
+              }}
+            >
               Simpan
             </Button>
           </Flex>
         </Flex>
       </Flex>
 
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent
-          maxW={"500px"}
-          w={"100%"}
-          borderRadius={"20px"}>
+        <ModalContent maxW={"500px"} w={"100%"} borderRadius={"20px"}>
           <DiscountAddProductModal
             isOpen={isOpen}
             onClose={onClose}
@@ -306,7 +323,7 @@ export default function DiscountAddModal(props) {
             setSelectedProducts={setSelectedProducts}
             selectedId={selectedId}
             setSelectedId={setSelectedId}
-            dtStock = {dtStock}
+            dtStock={dtStock}
           />
         </ModalContent>
       </Modal>

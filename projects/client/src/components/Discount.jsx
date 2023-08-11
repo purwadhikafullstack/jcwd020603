@@ -57,7 +57,7 @@ import ModalKonfirmasiDeletDiscount from "./modal-konfirmasi-deleteDiscount";
 export default function Discount() {
   const userSelector = useSelector((state) => state.auth);
   const roleOfUSer = userSelector.role;
-  const [activeDis, setActiveDis] = ([])
+  const [activeDis, setActiveDis] = [];
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure(); //state untuk pengaturan modal add
   const {
@@ -65,15 +65,17 @@ export default function Discount() {
     onOpen: onOpenDel,
     onClose: onCloseDel,
   } = useDisclosure();
-  const [dtDis, setDtDis] = useState([]);// state untuk menyimpan data discount
+  const [dtDis, setDtDis] = useState([]); // state untuk menyimpan data discount
   const [isEdit, setIsEdit] = useState(false); //state untuk menentukan modal tambah atau edit
 
   // ambil data discount
   const fetchAll = async () => {
     try {
-      const discount = await api.get("/discount/all").then((res) => {
-        setDtDis(res.data.data);
-      });
+      const discount = await api()
+        .get("/discount/all")
+        .then((res) => {
+          setDtDis(res.data.data);
+        });
     } catch (error) {
       console.log(error.message);
     }
@@ -107,22 +109,15 @@ export default function Discount() {
         rowGap={"20px"}
         marginTop={"60px"}
         borderTopLeftRadius={"20px"}
-        bg={"#FFF7E7"}>
-        <Flex
-          fontSize={"26px"}
-          fontWeight={"700"}>
+        bg={"#FFF7E7"}
+      >
+        <Flex fontSize={"26px"} fontWeight={"700"}>
           Pengaturan Diskon
         </Flex>
 
-        <Grid
-          className="gridMenuG"
-          flexDir={"row"}>
+        <Grid className="gridMenuG" flexDir={"row"}>
           <Flex className="menuTotalG">
-            <Center
-              w={"60px"}
-              h={"60px"}
-              borderRadius={"50%"}
-              bg={"#fdefce"}>
+            <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#fdefce"}>
               <Icon
                 as={TbShoppingCartDiscount}
                 fontSize={"30px"}
@@ -130,57 +125,37 @@ export default function Discount() {
               />
             </Center>
             <Flex flexDir={"column"}>
-              <Flex
-                fontSize={"24px"}
-                fontWeight={"extrabold"}>
+              <Flex fontSize={"24px"} fontWeight={"extrabold"}>
                 {dtDis.length}
               </Flex>
-              <Flex
-                color={"grey"}
-                fontWeight={"semibold"}>
+              <Flex color={"grey"} fontWeight={"semibold"}>
                 Total Diskon
               </Flex>
             </Flex>
           </Flex>
 
           <Flex className="menuTotalG">
-            <Center
-              w={"60px"}
-              h={"60px"}
-              borderRadius={"50%"}
-              bg={"#cbe4fb"}>
-              <Icon
-                as={FaStore}
-                fontSize={"30px"}
-                color={"#007bfe"}
-              />
+            <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#cbe4fb"}>
+              <Icon as={FaStore} fontSize={"30px"} color={"#007bfe"} />
             </Center>
             <Flex flexDir={"column"}>
-              <Flex
-                fontSize={"24px"}
-                fontWeight={"extrabold"}>
+              <Flex fontSize={"24px"} fontWeight={"extrabold"}>
                 {userSelector.branch_id}
               </Flex>
-              <Flex
-                color={"grey"}
-                fontWeight={"semibold"}>
+              <Flex color={"grey"} fontWeight={"semibold"}>
                 Cabang ID
               </Flex>
             </Flex>
           </Flex>
         </Grid>
-        <Flex
-          flexDir={"column"}
-          rowGap={"10px"}>
+        <Flex flexDir={"column"} rowGap={"10px"}>
           <Flex
             fontSize={"24px"}
             fontWeight={"700"}
             paddingBottom={"20px"}
-            justifyContent={"space-between"}>
-            <Flex
-              flexDir={"column"}
-              gap={"5%"}
-              fontSize={15}>
+            justifyContent={"space-between"}
+          >
+            <Flex flexDir={"column"} gap={"5%"} fontSize={15}>
               Data Diskon
               <Button
                 h={"30px"}
@@ -188,27 +163,22 @@ export default function Discount() {
                 gap={"10px"}
                 cursor={"pointer"}
                 onClick={() => {
-                  setIsEdit(false)
+                  setIsEdit(false);
                   onOpen();
-                  
-                }}>
+                }}
+              >
                 <BsFillPersonPlusFill />
                 Tambah
               </Button>
             </Flex>
-            <Flex
-              maxW={"400px"}
-              w={"100%"}
-              gap={"10px"}>
+            <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
               <Select
                 placeholder="Pilih Lokasi Cabang"
                 bg={"white"}
-                display={() => (roleOfUSer == "SUPER ADMIN" ? "flex" : "none")}>
-              </Select>
+                display={() => (roleOfUSer == "SUPER ADMIN" ? "flex" : "none")}
+              ></Select>
               <InputGroup>
-                <Input
-                  placeholder="search"
-                  bg={"white"}></Input>
+                <Input placeholder="search" bg={"white"}></Input>
                 <InputRightElement
                   as={BiSearch}
                   w={"30px"}
@@ -224,11 +194,9 @@ export default function Discount() {
             w={"100%"}
             variant="simple"
             className="custom-table"
-            maxW={"850px"}>
-            <Thead
-              w={"100%"}
-              bg={"#ffb21c"}
-              fontSize={"12px"}>
+            maxW={"850px"}
+          >
+            <Thead w={"100%"} bg={"#ffb21c"} fontSize={"12px"}>
               <Tr>
                 <Th>No</Th>
                 <Th>Status</Th>
@@ -242,27 +210,19 @@ export default function Discount() {
 
             <Tbody fontSize={"10px"}>
               {dtDis.map((val, index) => (
-                <Tr
-                  key={val.id}
-                  className="table-row">
+                <Tr key={val.id} className="table-row">
                   <Td>{index + 1}</Td>
                   <Td>
                     {activeCheck(val.valid_start, val.valid_to)
-                      ? "Aktif" 
+                      ? "Aktif"
                       : "OFF"}
                   </Td>
                   <Td>{val.title}</Td>
                   <Td>{val.valid_start.split("T")[0]}</Td>
                   <Td>{val.valid_to.split("T")[0]}</Td>
                   <Td>{val.nominal}</Td>
-                  <Td
-                    alignItems={"center"}
-                    position={"center"}>
-                    <Flex
-                      flexDir={"row"}
-                      w={"100%"}
-                      h={"100%"}
-                      gap={"15px"}>
+                  <Td alignItems={"center"} position={"center"}>
+                    <Flex flexDir={"row"} w={"100%"} h={"100%"} gap={"15px"}>
                       <Button
                         bgColor={"#9d9c45"}
                         w={"100%"}
@@ -271,7 +231,8 @@ export default function Discount() {
                           setNumberIdx(index);
                           setIsEdit(true);
                           onOpen();
-                        }}>
+                        }}
+                      >
                         <BiEdit />
                       </Button>
                       <Button
@@ -281,7 +242,8 @@ export default function Discount() {
                         onClick={() => {
                           onOpenDel();
                           setNumberIdx(index);
-                        }}>
+                        }}
+                      >
                         <RiDeleteBin6Fill width={"100%"} />
                       </Button>
                     </Flex>
@@ -293,15 +255,9 @@ export default function Discount() {
         </Flex>
       </Flex>
 
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent
-          maxW={"500px"}
-          w={"100%"}
-          borderRadius={"20px"}>
+        <ModalContent maxW={"500px"} w={"100%"} borderRadius={"20px"}>
           <DiscountAddModal
             isOpen={isOpen}
             onClose={onClose}
@@ -322,9 +278,15 @@ export default function Discount() {
       </Modal> */}
 
       <Modal isOpen={isOpenDel} onClose={onCloseDel} isCentered>
-        <ModalOverlay/>
-        <ModalContent maxW={"500px"} w={"100%"} borderRadius={"20px"} >
-          <ModalKonfirmasiDeletDiscount isOpen={isOpenDel} onClose={onCloseDel} fetchAll = {fetchAll} dtDis ={dtDis}  numberIdx={numberIdx} />
+        <ModalOverlay />
+        <ModalContent maxW={"500px"} w={"100%"} borderRadius={"20px"}>
+          <ModalKonfirmasiDeletDiscount
+            isOpen={isOpenDel}
+            onClose={onCloseDel}
+            fetchAll={fetchAll}
+            dtDis={dtDis}
+            numberIdx={numberIdx}
+          />
         </ModalContent>
       </Modal>
     </>

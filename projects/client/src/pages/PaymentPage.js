@@ -15,8 +15,7 @@ export default function PaymentPage() {
             w={"100%"}
             borderRight={"1px solid lightgrey"}
           >
-            {windowWidth > 750 ? <Sidebar /> : <SidebarMini />}
-
+            <Flex>{windowWidth > 750 ? <Sidebar /> : <SidebarMini />}</Flex>
             <Flex w={"100%"}>
               <ContentPembayaran />
             </Flex>

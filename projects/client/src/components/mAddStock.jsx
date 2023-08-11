@@ -38,9 +38,11 @@ export function AddStock(props) {
     }
     console.log(stock);
     try {
-      await api.post("/stock/v1", stock).then((result) => {
-        console.log(result.data);
-      });
+      await api()
+        .post("/stock/v1", stock)
+        .then((result) => {
+          console.log(result.data);
+        });
       alert("Posting success");
       props.onClose();
     } catch (error) {
@@ -56,7 +58,7 @@ export function AddStock(props) {
 
   const [product, setProduct] = useState([]);
   useEffect(() => {
-    api
+    api()
       .get("/product")
       .then((response) => {
         setProduct(response.data);

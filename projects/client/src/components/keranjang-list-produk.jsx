@@ -27,7 +27,7 @@ export default function KeranjangList(props) {
   //function update qty
   const updateQty = async (qty) => {
     try {
-      await api
+      await api()
         .patch(
           `/cart/`,
           { qty },
@@ -49,7 +49,7 @@ export default function KeranjangList(props) {
 
   // function kalau qty nya 0 dia ilang
   const delCart = async (stock_id) => {
-    await api.delete("/cart", {
+    await api().delete("/cart", {
       params: {
         stock_id: stock_id,
       },
@@ -110,7 +110,7 @@ export default function KeranjangList(props) {
           >
             {!props.discounted_price ? (
               <Flex alignItems={"center"}>
-                <Flex fontWeight={"500"} fontSize={"12px"}>
+                <Flex fontSize={"12px"} fontWeight={"700"} color={"#F25F0C"}>
                   Rp. {Product.price.toLocaleString("id-ID")}
                 </Flex>
               </Flex>

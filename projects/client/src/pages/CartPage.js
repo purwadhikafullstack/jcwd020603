@@ -13,13 +13,8 @@ export default function CartPage() {
   // function get all cart
   const [prodCart, setProdCart] = useState([]);
   const getAll = async () => {
-    const token = JSON.parse(localStorage.getItem("auth"));
-    await api
-      .get("/cart", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    await api()
+      .get("/cart")
       .then((res) => {
         setProdCart(res.data.result);
         console.log(res.data.result);
@@ -50,7 +45,7 @@ export default function CartPage() {
           <Flex maxWidth={"1212px"} w={"100%"}>
             <Flex>
               {windowWidth > 750 ? (
-                <Sidebar prodCart={prodCart} getAll={getAll} />
+                <Sidebar prodCart={prodCart} />
               ) : (
                 <SidebarMini />
               )}

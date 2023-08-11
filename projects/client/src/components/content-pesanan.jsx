@@ -10,14 +10,17 @@ export default function ContentPesanan() {
   //get all order user
   const [allOrders, setAllOrders] = useState([]);
   const getOrders = async () => {
-    await api.get("/order").then((res) => {
-      console.log(res.data.result);
-      setAllOrders(res.data.result);
-    });
+    await api()
+      .get("/order")
+      .then((res) => {
+        console.log(res.data.result);
+        setAllOrders(res.data.result);
+      });
   };
-  // useEffect(() => {
-  //   getOrders();
-  // }, []);
+
+  useEffect(() => {
+    getOrders();
+  }, []);
   return (
     <>
       <Box>
@@ -71,7 +74,8 @@ export default function ContentPesanan() {
           </Flex>
           <Flex padding={"20px"} w={"100%"} flexDir={"column"} rowGap={"20px"}>
             {allOrders.length ? (
-              allOrders.map((val) => {
+              allOrders.map((val, idx) => {
+                let zIndexCounter = val.Order.length;
                 return (
                   <>
                     <Flex
@@ -80,7 +84,7 @@ export default function ContentPesanan() {
                       border={"1px solid lightgrey"}
                       flexDir={"column"}
                       onClick={() => {
-                        nav("/orders/:TRX");
+                        nav(`/orders/${val.order_number}`);
                       }}
                     >
                       <Flex
@@ -104,15 +108,34 @@ export default function ContentPesanan() {
                       >
                         <Flex justifyContent={"space-between"} w={"100%"}>
                           <Flex h={"50px"}>
-                            <Flex
-                              w={"50px"}
-                              h={"50px"}
-                              bg={"red"}
-                              position={"absolute"}
-                              zIndex={3}
-                              borderRadius={"10px"}
-                            ></Flex>
-                            <Flex
+                            {Array.isArray(val.Order) &&
+                              val.Order.map((val, idx) => {
+                                const marginLeft = idx * 30;
+                                const zIndex = zIndexCounter--;
+                                console.log(val.Order);
+                                return (
+                                  <>
+                                    <Flex
+                                      w={"50px"}
+                                      h={"50px"}
+                                      position={"absolute"}
+                                      marginLeft={`${marginLeft}px`}
+                                      zIndex={zIndex}
+                                      borderRadius={"10px"}
+                                    >
+                                      <Image
+                                        src={
+                                          val.Stock.Product?.photo_product_url
+                                        }
+                                        borderRadius={"10px"}
+                                        border={"2px solid white"}
+                                      />
+                                    </Flex>
+                                  </>
+                                );
+                              })}
+
+                            {/* <Flex
                               w={"50px"}
                               h={"50px"}
                               bg={"green"}
@@ -129,14 +152,14 @@ export default function ContentPesanan() {
                               marginLeft={"60px"}
                               zIndex={1}
                               borderRadius={"10px"}
-                            ></Flex>
+                            ></Flex> */}
                           </Flex>
                           <Flex
                             alignItems={"center"}
                             fontSize={"12px"}
                             color={"#767676"}
                           >
-                            Lihat 5 Produk
+                            Lihat {val.Order.length} Produk
                           </Flex>
                         </Flex>
                         <Flex justifyContent={"space-between"} w={"100%"}>
@@ -145,7 +168,9 @@ export default function ContentPesanan() {
                           </Flex>
                           <Flex flexDir={"column"} fontSize={"14px"}>
                             Total belanja
-                            <Flex fontWeight={"500"}>Rp 199.000</Flex>
+                            <Flex fontWeight={"500"}>
+                              Rp {val.total.toLocaleString("id-ID")}
+                            </Flex>
                           </Flex>
                         </Flex>
                       </Flex>
@@ -156,6 +181,7 @@ export default function ContentPesanan() {
             ) : (
               <>
                 <Center
+                  maxW={"910px"}
                   w={"100%"}
                   h={"60vh"}
                   color={"#2a960c"}

@@ -4,25 +4,23 @@ import {
   Icon,
   Center,
   Image,
-  Modal,
-  ModalOverlay,
-  ModalContent,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { BiHome, BiCategory, BiFoodMenu, BiUserCircle } from "react-icons/bi";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import logo from "../assets/logo/horizontal.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { warning } from "framer-motion";
+import { api } from "../api/api";
 // import ModalProduct from "./modal-product";
 
-export default function Sidebar({ navLeft }) {
+export default function Sidebar(props) {
   const user = JSON.parse(localStorage.getItem("auth"));
   const nav = useNavigate();
-  const toast = useToast()
+  const toast = useToast();
   //style untuk setiap menu sidebar
   //merubah warna saat di click
   const [Clicked, setClicked] = useState("");
@@ -33,19 +31,38 @@ export default function Sidebar({ navLeft }) {
       nav("/profile");
     } else {
       toast({
-        title : "Maaf Anda belum login, silahkan login dulu",
-        status : "warning",
-        duration : 3000,
-        isClosable : true
-      })
-       nav("/login");
+        title: "Maaf Anda belum login, silahkan login dulu",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      nav("/login");
     }
   };
 
   const handleClick = (e) => {
     setClicked(e.currentTarget.id);
   };
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  console.log(props.prodCart);
+
+  //get jumlah keranjang
+  const [countAll, setCountAll] = useState(0);
+  const getAll = async () => {
+    const token = JSON.parse(localStorage.getItem("auth"));
+    await api()
+      .get("/cart", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setCountAll(res.data.total);
+        console.log(res.data.result);
+      });
+  };
+  useEffect(() => {
+    getAll();
+  }, [countAll]);
 
   return (
     <>
@@ -55,8 +72,9 @@ export default function Sidebar({ navLeft }) {
           xl: "flex",
           lg: "flex",
           md: "flex",
-          sm: navLeft == "minus" || navLeft == "" ? "none" : "flex",
-          base: navLeft == "minus" || navLeft == "" ? "none" : "flex",
+          sm: props.navLeft == "minus" || props.navLeft == "" ? "none" : "flex",
+          base:
+            props.navLeft == "minus" || props.navLeft == "" ? "none" : "flex",
         }}
       >
         <Flex w={"100%"} h={"123px"} padding={"25px 10px"}>
@@ -96,7 +114,7 @@ export default function Sidebar({ navLeft }) {
           gap={"10px"}
           onClick={(e) => {
             handleClick(e);
-            onOpen();
+            nav("/orders");
           }}
           bg={Clicked == "pesanan" ? "#ECFFF4" : "white"}
           color={Clicked == "pesanan" ? "#199950" : "black"}
@@ -135,7 +153,12 @@ export default function Sidebar({ navLeft }) {
               <Icon as={MdOutlineShoppingCart} fontSize={"28px"} />
               Keranjang
             </Flex>
-            <Center className="jumlahOrderSidebarG">1</Center>
+            <Center
+              className="jumlahOrderSidebarG"
+              display={countAll == 0 ? "none" : "center"}
+            >
+              {countAll}
+            </Center>
           </Flex>
         </Flex>
       </Flex>

@@ -1,5 +1,6 @@
 const { default: axios } = require("axios");
 const db = require("../models");
+const { Op } = require("sequelize");
 
 const cityController = {
   addCityData: async (req, res) => {
@@ -20,7 +21,10 @@ const cityController = {
     try {
       const result = await db.City.findAll({
         where: {
-          province_id: req.params.id,
+          [Op.or]: [
+            { province_id: req.params.id },
+            { province: req.params.id },
+          ],
         },
       });
       res.status(200).send({

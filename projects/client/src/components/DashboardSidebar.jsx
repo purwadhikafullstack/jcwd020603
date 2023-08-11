@@ -44,7 +44,7 @@ export default function DashboardSidebar({ navLeft }) {
       const verifcek = userSelector.verification;
       console.log(verifcek);
       if (!verifcek) {
-        await api
+        await api()
           .get("/user/send-email-verify", {
             params: { email: email },
           })

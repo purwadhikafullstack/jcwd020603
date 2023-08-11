@@ -11,6 +11,9 @@ module.exports = (sequelize, Sequelize) => {
       "Dibatalkan"
     ),
     order_number: Sequelize.STRING,
+    order_transfer_url: Sequelize.STRING,
+    shipping_cost: Sequelize.INTEGER,
+    discount_voucher: Sequelize.INTEGER,
   });
   return Order;
 };

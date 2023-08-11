@@ -15,7 +15,7 @@ export function DeleteStock(props) {
   const toast = useToast();
   console.log(props);
   const deleteStock = async () => {
-    await api.delete("/stock/v3/" + props.id);
+    await api().delete("/stock/v3/" + props.id);
     toast({
       title: "Stock Deleted",
       status: "success",

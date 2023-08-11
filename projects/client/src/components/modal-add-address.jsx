@@ -17,10 +17,12 @@ export default function ModalAddAddress(props) {
   const [allProvince, setAllProvince] = useState([]);
   const fetchProvince = async () => {
     try {
-      await api.get("/province").then((res) => {
-        console.log(res.data.result);
-        setAllProvince(res.data.result);
-      });
+      await api()
+        .get("/province")
+        .then((res) => {
+          console.log(res.data.result);
+          setAllProvince(res.data.result);
+        });
     } catch (err) {
       console.log(err.message);
     }
@@ -32,10 +34,12 @@ export default function ModalAddAddress(props) {
   const [provinceId, setProvinceId] = useState("");
   const fetchCity = async () => {
     try {
-      await api.get(`/city/${provinceId}`).then((res) => {
-        console.log(res.data.result);
-        setAllCity(res.data.result);
-      });
+      await api()
+        .get(`/city/${provinceId}`)
+        .then((res) => {
+          console.log(res.data.result);
+          setAllCity(res.data.result);
+        });
     } catch (err) {
       console.log(err.message);
     }
@@ -62,15 +66,17 @@ export default function ModalAddAddress(props) {
   const toast = useToast(); //post address ke database
   const postAddress = async () => {
     const token = JSON.parse(localStorage.getItem("auth"));
-    await api.post("/addressG", address).then((res) => {
-      props.getAddress();
-      toast({
-        title: res.data.message,
-        status: "success",
-        position: "top",
-        duration: 3000,
+    await api()
+      .post("/addressG", address)
+      .then((res) => {
+        props.getAddress();
+        toast({
+          title: res.data.message,
+          status: "success",
+          position: "top",
+          duration: 3000,
+        });
       });
-    });
   };
   return (
     <>

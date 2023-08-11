@@ -5,7 +5,7 @@ const moment = require("moment");
 const checkRole = (allowedRoles) => async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    console.log(token);
+    console.log(token, "INI TOKEN");
     const findToken = await db.Token.findOne({
       where: {
         [Op.and]: [
@@ -20,7 +20,6 @@ const checkRole = (allowedRoles) => async (req, res, next) => {
         ],
       },
     });
-
     if (!findToken) {
       throw new Error("token expired");
     }
