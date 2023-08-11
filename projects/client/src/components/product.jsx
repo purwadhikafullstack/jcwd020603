@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { api } from "../api/api";
 import { CardProduct } from "./cardProduct";
 import { useLocation } from "react-router-dom";
+import { CardCategory } from "./cardCategory";
 
 export default function Product() {
   const searchResults = useSelector((state) => state.search);
@@ -12,10 +13,12 @@ export default function Product() {
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
 
+  const category_name = location.state?.category_name;
+
   const [productSearchResults, setProductSearchResults] = useState([]);
 
   const performSearch = (searchTerm) => {
-    api
+    api()
       .get("/stock/search", {
         params: {
           search_query: searchTerm,
@@ -29,8 +32,24 @@ export default function Product() {
       });
   };
 
+  const getCategory = async () => {
+    console.log(category_name);
+    await api()
+      .get("/stock/s-category", { params: { category_name } })
+      .then((response) => {
+        setProductSearchResults(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   useEffect(() => {
-    api
+    getCategory();
+  }, [category_name]);
+
+  useEffect(() => {
+    api()
       .get("/category")
       .then((response) => {
         setCategories(response.data);
@@ -39,7 +58,7 @@ export default function Product() {
         console.error(error);
       });
 
-    api
+    api()
       .get("/stock")
       .then((response) => {
         setStocks(response.data);
@@ -49,7 +68,11 @@ export default function Product() {
       });
   }, []);
 
-  const combinedSearchResults = [...searchResults, ...productSearchResults];
+  const combinedSearchResults = [...productSearchResults];
+
+  console.log(category_name);
+  console.log(searchResults);
+  console.log(productSearchResults);
 
   return (
     <>
@@ -59,15 +82,29 @@ export default function Product() {
           productSearchResults={productSearchResults}
         />
         <Flex id="headB" paddingTop={"20px"}></Flex>
+        <Flex id="bgCategoryB" paddingBottom={"20px"}>
+          <Flex id="categoryB">
+            {categories.map((val) => (
+              <CardCategory
+                key={val.id}
+                photo_category_url={val.photo_category_url}
+                category_name={val.category_name}
+              />
+            ))}
+          </Flex>
+        </Flex>
         <Grid id="productB">
           {combinedSearchResults.map((val, idx) => (
             <CardProduct
               key={val.Product.id}
-              url={val.Product.photo_product_url}
-              product_name={val.Product.product_name}
-              price={val.Product.price}
-              desc={val.Product.desc}
-              discount={val.discount}
+              id={val.product_id}
+              url={val.Product?.photo_product_url}
+              product_name={val.Product?.product_name}
+              price={val.Product?.price}
+              desc={val.Product?.desc}
+              discount={val.Discount?.nominal}
+              weight={val.Product?.weight}
+              stock_id={val.id}
             />
           ))}
         </Grid>

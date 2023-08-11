@@ -49,7 +49,7 @@ export default function AdminStockList() {
   console.log(stocks);
 
   useEffect(() => {
-    api
+    api()
       .get("/stock")
       .then((response) => {
         setStocks(response.data);

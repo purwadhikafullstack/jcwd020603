@@ -68,6 +68,7 @@ export default function Category() {
           <Flex id="categoryB">
             {categories.map((val) => (
               <CardCategory
+                key={val.id}
                 photo_category_url={val.photo_category_url}
                 category_name={val.category_name}
               />

@@ -19,6 +19,13 @@ const stockControllerB = {
               "desc",
               "weight",
             ],
+            include: [
+              {
+                model: db.Category,
+                as: "Category",
+                attributes: ["category_name"],
+              },
+            ],
           },
           {
             model: db.Discount,
@@ -34,7 +41,6 @@ const stockControllerB = {
       });
     }
   },
-
   searchStock: async (req, res) => {
     try {
       const { search_query } = req.query;
@@ -50,6 +56,14 @@ const stockControllerB = {
                 "price",
                 "photo_product_url",
                 "desc",
+                "category_id",
+              ],
+              include: [
+                {
+                  model: db.Category,
+                  as: "Category",
+                  attributes: ["id", "category_name"],
+                },
               ],
             },
           ],
@@ -57,6 +71,11 @@ const stockControllerB = {
             [Op.or]: [
               { "$Product.product_name$": { [Op.like]: `%${search_query}%` } },
               { "$Product.desc$": { [Op.like]: `%${search_query}%` } },
+              {
+                "$Product.Category.category_name$": {
+                  [Op.like]: `%${search_query}%`,
+                },
+              },
             ],
           },
         });
@@ -178,6 +197,67 @@ const stockControllerB = {
       });
     }
   },
-};
 
+  getAllStockByCategory: async (req, res) => {
+    try {
+      const { category_name } = req.query;
+      console.log(req.query);
+      const get = await db.Stock.findAll({
+        include: [
+          {
+            model: db.Product,
+            as: "Product",
+            attributes: [
+              "product_name",
+              "price",
+              "photo_product_url",
+              "category_id",
+              "desc",
+              "weight",
+            ],
+            include: [
+              {
+                model: db.Category,
+                as: "Category",
+                attributes: ["category_name"],
+                where: {
+                  category_name: category_name,
+                },
+              },
+            ],
+          },
+          {
+            model: db.Discount,
+            as: "Discount",
+            attributes: ["nominal", "title", "valid_start", "valid_to"],
+          },
+        ],
+      });
+      const filteredData = get.filter((item) => {
+        return item.Product?.Category?.category_name === category_name;
+      });
+      res.send(filteredData);
+    } catch (err) {
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  getStockByCategory: async (req, res) => {
+    try {
+      const product = await db.Product.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
+      return res.send(product);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+};
 module.exports = stockControllerB;

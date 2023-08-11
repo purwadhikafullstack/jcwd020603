@@ -55,7 +55,6 @@ export default function Login() {
           type: "login",
           payload: res.data.value,
         });
-        console.log(res.data.value);
 
         toast({
           title: "Selamat Datang di Sahabat Sembako",
@@ -83,6 +82,35 @@ export default function Login() {
           isClosable: true,
         });
       });
+  };
+
+  const respass = async () => {
+    const email = user.email;
+
+    if (email) {
+      toast({
+        title: "Silahkan cek email Anda untuk link reset password",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      try {
+        await api()
+          .get("/user/send-email-respass", { params: { email: email } })
+          .then((res) => {
+            console.log(res.message);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      toast({
+        title: "Masukkan alamat Email Anda",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -180,7 +208,9 @@ export default function Login() {
                 justify={"space-between"}
               >
                 {/* <Checkbox fontWeight={"bolder"}>Remember me</Checkbox> */}
-                <Link fontWeight={"bolder"}>Forgot password?</Link>
+                <Link fontWeight={"bolder"} onClick={respass}>
+                  Forgot password?
+                </Link>
               </Stack>
               <Button
                 bg={"#199950"}

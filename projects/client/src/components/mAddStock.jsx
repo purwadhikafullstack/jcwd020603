@@ -58,7 +58,7 @@ export function AddStock(props) {
 
   const [product, setProduct] = useState([]);
   useEffect(() => {
-    api
+    api()
       .get("/product")
       .then((response) => {
         setProduct(response.data);

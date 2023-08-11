@@ -54,7 +54,7 @@ export default function SuperAdminCategoryList() {
   const [categories, setCategories] = useState([]);
   console.log(categories);
   useEffect(() => {
-    api
+    api()
       .get("/category")
       .then((response) => {
         setCategories(response.data);

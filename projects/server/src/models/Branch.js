@@ -6,6 +6,9 @@ module.exports = (sequelize, Sequelize) => {
     province: Sequelize.STRING,
     longitude: Sequelize.STRING,
     latitude: Sequelize.STRING,
+  },
+  {
+    paranoid : true
   });
   return Branch;
 };

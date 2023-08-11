@@ -62,10 +62,10 @@ export default function LandingPage() {
 
   return (
     <>
-      {windowWidth > 600 ? (
+      {windowWidth > 850 ? (
         <Center>
           <Flex maxWidth={"1160px"} w={"100%"}>
-            <Flex>{windowWidth > 750 ? <Sidebar /> : <SidebarMini />}</Flex>
+            <Flex>{windowWidth > 850 ? <Sidebar /> : <SidebarMini />}</Flex>
             <Flex flexDir={"column"}>
               <TopBar
                 address={address}

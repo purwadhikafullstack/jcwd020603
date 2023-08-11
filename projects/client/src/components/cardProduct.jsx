@@ -34,7 +34,7 @@ export function CardProduct(props) {
   // useEffect(() => {
   //   console.log(props.stocks);
   // }, []);
-  console.log(props);
+  // console.log(props);
 
   //get product value
   const [prodVal, setProdVal] = useState({
@@ -69,7 +69,7 @@ export function CardProduct(props) {
     });
   };
   useEffect(() => {
-    console.log(prodVal);
+    // console.log(prodVal);
   }, [prodVal]);
 
   return (

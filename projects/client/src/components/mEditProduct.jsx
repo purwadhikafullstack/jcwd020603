@@ -92,7 +92,7 @@ export function EditProduct(props) {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    api
+    api()
       .get("/category/")
       .then((response) => {
         setCategories(response.data);

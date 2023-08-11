@@ -61,7 +61,7 @@ export function EditStock(props) {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    api
+    api()
       .get("/category/")
       .then((response) => {
         setCategories(response.data);
@@ -73,7 +73,7 @@ export function EditStock(props) {
 
   const [product, setProduct] = useState([]);
   useEffect(() => {
-    api
+    api()
       .get("/product")
       .then((response) => {
         setProduct(response.data);
