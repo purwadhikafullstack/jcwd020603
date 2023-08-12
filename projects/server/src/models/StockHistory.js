@@ -3,6 +3,8 @@ module.exports = (sequelize, Sequelize) => {
     status: Sequelize.ENUM("INCREMENT", "DECREMENT"),
     status_quantity: Sequelize.INTEGER,
     feature: Sequelize.STRING,
+    quantity_before: Sequelize.INTEGER,
+    quantity_after: Sequelize.INTEGER,
   });
   return StockHistory;
 };

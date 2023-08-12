@@ -22,15 +22,15 @@ import { api } from "../api/api";
 import { useEffect, useState } from "react";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { AiOutlinePlus } from "react-icons/ai";
-import { SATableProduct } from "./sATableProduct";
+import { SATableStockHistory } from "./SATableStockHistory";
 import { AddProduct } from "./mAddProduct";
 
 export default function StockHistoryList() {
   const windowWidth = window.innerWidth;
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [addCategory, setAddCategory] = useState(null);
   const tableHeadRef = useRef(null);
   const tableRowRef = useRef(null);
+
   const handleTableHeadScroll = (e) => {
     if (tableRowRef.current) {
       tableRowRef.current.scrollLeft = e.target.scrollLeft;
@@ -42,19 +42,18 @@ export default function StockHistoryList() {
     }
   };
 
-  const [addProduct, setAddProduct] = useState(null);
-  const [product, setProduct] = useState([]);
-  console.log(product);
+  const [stockHistory, setStockHistory] = useState([]);
+  console.log(stockHistory);
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("auth"));
     api
-      .get("/product", {
+      .get("/stock/stockhistory", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setProduct(response.data);
+        setStockHistory(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -63,8 +62,8 @@ export default function StockHistoryList() {
 
   const fetchData = async () => {
     try {
-      const response = await api.get("/product");
-      setProduct(response.data);
+      const response = await api.get("/stock/stockhistory");
+      setStockHistory(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -132,32 +131,35 @@ export default function StockHistoryList() {
                         </Flex>
                       </Flex>
                     </Th>
-                    <Th className="thProductB">qty </Th>
+                    <Th className="thProductB">Difference </Th>
                     <Th className="thProductB">Stock After </Th>
                     <Th className="thProductB">Features</Th>
-                    <Th textAlign={"center"}>Action</Th>
+                    {/* <Th textAlign={"center"}>Action</Th> */}
                   </Tr>
                 </Thead>
-                {/* <Tbody
+                <Tbody
                   className="tableRowG"
                   ref={tableRowRef}
                   onScroll={handleTableRowScroll}
                 >
-                  {product.map((product, idx) => (
-                    <SATableProduct
-                      key={product.id}
+                  {stockHistory.map((stockHistory, idx) => (
+                    <SATableStockHistory
+                      key={stockHistory.id}
                       idx={idx}
-                      product={product}
-                      url={product.photo_product_url}
-                      product_name={product.product_name}
-                      price={product.price}
-                      desc={product.desc}
-                      weight={product.weight}
-                      category={product.category_id}
+                      stockHistory={stockHistory}
+                      url={stockHistory.Stock?.Product?.photo_product_url}
+                      product_name={stockHistory.Stock?.Product?.product_name}
+                      category={stockHistory.Stock?.Product?.category_id}
+                      status={stockHistory.status}
+                      status_quantity={stockHistory.status_quantity}
+                      feature={stockHistory.feature}
+                      stock={stockHistory.stock_id}
+                      before={stockHistory.quantity_before}
+                      after={stockHistory.quantity_after}
                       fetchData={fetchData}
                     />
                   ))}
-                </Tbody> */}
+                </Tbody>
               </Table>
             </TableContainer>
           </Stack>

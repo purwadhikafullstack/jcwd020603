@@ -38,9 +38,6 @@ const productController = {
       const sortBy = req.query.sortBy || "productName";
       const sortDir = req.query.sortDir || "ASC";
 
-      console.log(req.query.sortBy);
-      console.log(req.query.sortDir);
-
       const search = req.query.search_query || "";
       const product = await db.Product.findAll({
         where: {
@@ -66,8 +63,7 @@ const productController = {
     try {
       const { product_name, price, category_id, desc, weight } = req.body;
       const { filename } = req.file;
-      // console.log(req.file);
-      console.log(product_name, price, category_id, desc, weight);
+
       await db.Product.create(
         {
           product_name,
@@ -104,7 +100,6 @@ const productController = {
           id: req.params.id,
         },
       });
-      console.log(produk);
       const prod_nm = product_name
         ? product_name
         : produk.dataValues.product_name;

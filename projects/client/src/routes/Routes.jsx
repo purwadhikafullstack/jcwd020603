@@ -68,24 +68,22 @@ const routes = [
   ></Route>,
 
   <Route
-  path="/forgot-password/:token"
-  element={
-    <ProtectedPage>
-      <ResetPass />
-    </ProtectedPage>
-  }
-></Route>,
+    path="/forgot-password/:token"
+    element={
+      <ProtectedPage>
+        <ResetPass />
+      </ProtectedPage>
+    }
+  ></Route>,
 
-<Route
-path="/change-pass"
-element={
-  <ProtectedPage needLogin={true}>
-    <ChangePass />
-  </ProtectedPage>
-}
-></Route>,
-
-
+  <Route
+    path="/change-pass"
+    element={
+      <ProtectedPage needLogin={true}>
+        <ChangePass />
+      </ProtectedPage>
+    }
+  ></Route>,
 
   <Route
     path="/product"

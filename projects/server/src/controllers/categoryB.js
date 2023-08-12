@@ -37,7 +37,6 @@ const categoryController = {
     try {
       const { category_name } = req.body;
       const { filename } = req.file;
-      console.log(req.file);
 
       await db.Category.create(
         {
@@ -72,7 +71,6 @@ const categoryController = {
           id: req.params.id,
         },
       });
-      // console.log(kategori);
       const cat_nm = category_name
         ? category_name
         : kategori.dataValues.category_name;

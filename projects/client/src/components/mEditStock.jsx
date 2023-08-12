@@ -8,33 +8,35 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  Image,
   Input,
-  Icon,
-  Center,
-  Select,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
-import { useDispatch } from "react-redux";
-import { MdArrowBack, MdOutlineLocationOn } from "react-icons/md";
-import { TbPhotoSearch } from "react-icons/tb";
 import { useState, useRef, useEffect } from "react";
 
 export function EditStock(props) {
   const { selectedOption, setSelectedOption } = useState("");
   const [stock, setStock] = useState({
+    quantity_before: props.stock.quantity_stock,
+    status: "",
     quantity_stock: "",
-    discount: "",
+    status_quantity: "",
   });
-
   console.log(stock);
 
   const inputHandler = (e) => {
     const { id, value } = e.target;
     const tempStock = { ...stock };
     tempStock[id] = value;
+
+    if (tempStock.quantity_before > value) {
+      tempStock.status_quantity = tempStock.quantity_before - value;
+      tempStock.status = "DECREMENT";
+    } else {
+      tempStock.status_quantity = value - tempStock.quantity_before;
+      tempStock.status = "INCREMENT";
+    }
+
     setStock(tempStock);
-    console.log(tempStock);
   };
 
   const editStock = async () => {
@@ -108,14 +110,6 @@ export function EditStock(props) {
                 placeholder="Jumlah Stock"
                 id="quantity_stock"
                 defaultValue={props.stock.quantity_stock}
-                onChange={inputHandler}
-              />
-              <Flex>Diskon</Flex>
-              <Input
-                className="inputAddProduct"
-                placeholder="Diskon"
-                id="discount"
-                defaultValue={props.stock.discount}
                 onChange={inputHandler}
               />
             </Flex>
