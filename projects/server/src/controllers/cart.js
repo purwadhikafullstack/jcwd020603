@@ -9,7 +9,27 @@ const cartController = {
           stock_id: req.params.id,
           user_id: req.user.id,
         },
+        include: [
+          {
+            model: db.Stock,
+            as: "Stock",
+            include: [
+              {
+                model: db.Discount,
+                as: "Discount",
+              },
+            ],
+          },
+        ],
       });
+      if (check) {
+        if (check.Stock.Discount?.nominal == 50) {
+          return res.status(200).send({
+            message: "Hanya dapat membeli 1 produk buy 1 get 1",
+            status: "warning",
+          });
+        }
+      }
       req.check = check;
       next();
     } catch (err) {
@@ -23,6 +43,7 @@ const cartController = {
     try {
       const { qty } = req.body;
       const { discounted_price } = req.query;
+      console.log(discounted_price);
       if (req.check?.dataValues?.id) {
         await db.Cart.update(
           {
@@ -39,29 +60,46 @@ const cartController = {
         await trans.commit();
         return res.send({
           message: "jumlah produk berhasil ditambahkan",
+          status: "success",
         });
       } else {
-        db.Cart.create({
-          qty,
-          stock_id: req.params.id,
-          user_id: req.user.id,
-          discounted_price: parseInt(discounted_price),
-        });
+        await db.Cart.create(
+          {
+            qty,
+            stock_id: req.params.id,
+            user_id: req.user.id,
+            discounted_price: parseInt(discounted_price),
+          },
+          { transaction: trans }
+        );
+        await db.Stock.update(
+          {
+            discounted_price: parseInt(discounted_price),
+          },
+          {
+            where: {
+              id: req.params.id,
+            },
+            transaction: trans,
+          }
+        );
         await trans.commit();
         return res.send({
           message: "Produk berhasil ditambahkan",
+          status: "success",
         });
       }
     } catch (err) {
       await trans.rollback();
       res.status(500).send({
-        message: "Produk gagal ditambahkan",
+        // message: "Produk gagal ditambahkan",
+        message: err.message,
       });
     }
   },
   getAllCart: async (req, res) => {
     try {
-      const get = await db.Cart.findAll({
+      const get = await db.Cart.findAndCountAll({
         where: {
           user_id: req.user.id,
         },
@@ -104,7 +142,7 @@ const cartController = {
           },
         ],
       });
-      return res.send({ message: "OK", result: get });
+      return res.send({ message: "OK", result: get.rows, total: get.count });
     } catch (err) {
       res.status(500).send({
         message: err.message,

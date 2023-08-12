@@ -48,7 +48,7 @@ export default function ContentDaftarAlamat({
   const getAddress = async () => {
     const token = JSON.parse(localStorage.getItem("auth"));
     console.log(token);
-    await api
+    await api()
       .get("/addressG", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -65,7 +65,6 @@ export default function ContentDaftarAlamat({
   //menyipan address yang dipilih
   const dispatch = useDispatch();
   const setAddress = () => {
-    delete Clicked.id;
     delete Clicked.user_id;
     localStorage.setItem("address", JSON.stringify(Clicked));
     dispatch({

@@ -1,7 +1,8 @@
 import { Flex, useToast } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 export default function RincianPembayaran(props) {
-  console.log(props.cost);
+  console.log(props.getVoucher);
   //get biaya pengiriman
   const shippingCost =
     props.cost !== undefined &&
@@ -13,6 +14,20 @@ export default function RincianPembayaran(props) {
   const subtotal = props.totalBelanja.length
     ? props.totalBelanja.reduce((a, b) => a + b).toLocaleString("id-ID")
     : 0;
+  const potongan =
+    props.getVoucher !== undefined &&
+    props.getVoucher !== null &&
+    Object.keys(props.getVoucher).length !== 0
+      ? (props.getVoucher?.nominal).toLocaleString("id-ID")
+      : 0;
+  console.log(subtotal);
+  const totalPembayaran =
+    (Number(subtotal) + Number(shippingCost) - Number(potongan)) * 1000;
+  //setPembayaran
+  useEffect(() => {
+    props.setPembayaran(totalPembayaran);
+  }, [totalPembayaran]);
+
   return (
     <>
       <Flex
@@ -43,34 +58,26 @@ export default function RincianPembayaran(props) {
             <Flex>Subtotal</Flex>
             <Flex fontWeight={"500"}>Rp {subtotal}</Flex>
           </Flex>
-          <Flex
-            w={"100%"}
-            justifyContent={"space-between"}
-            fontSize={"14px"}
-            color={"#2A960C"}
-          >
-            <Flex>Potongan Harga</Flex>
-            <Flex fontWeight={"500"}>Rp 0</Flex>
+          <Flex w={"100%"} justifyContent={"space-between"} fontSize={"14px"}>
+            <Flex>Biaya Pengiriman</Flex>
+            <Flex fontWeight={"500"}>Rp {shippingCost}</Flex>
           </Flex>
           <Flex
             w={"100%"}
             justifyContent={"space-between"}
             fontSize={"14px"}
             borderBottom={"2px solid grey"}
+            color={"#2A960C"}
           >
-            <Flex>Biaya Pengiriman</Flex>
+            <Flex>Potongan Harga</Flex>
             <Flex fontWeight={"500"} paddingBottom={"16px"}>
-              Rp {shippingCost}
+              Rp {potongan.toLocaleString("id-ID")}
             </Flex>
           </Flex>
           <Flex w={"100%"} justifyContent={"space-between"} fontSize={"16px"}>
             <Flex fontWeight={"600"}>Total Pembayaran</Flex>
             <Flex fontWeight={"600"}>
-              Rp{" "}
-              {(
-                (Number(subtotal) + Number(shippingCost)) *
-                1000
-              ).toLocaleString("id-ID")}
+              Rp {totalPembayaran.toLocaleString("id-ID")}
             </Flex>
           </Flex>
           <Flex w={"100%"} fontSize={"16px"}>

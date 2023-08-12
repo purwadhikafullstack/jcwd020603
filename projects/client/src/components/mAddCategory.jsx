@@ -65,9 +65,11 @@ export function AddCategory(props) {
 
     try {
       console.log(formData);
-      await api.post("/category/v1", formData).then((result) => {
-        console.log(result.data);
-      });
+      await api()
+        .post("/category/v1", formData)
+        .then((result) => {
+          console.log(result.data);
+        });
       alert("Posting success");
       setSelectedFile(null);
       setCategory("");

@@ -1,10 +1,52 @@
 import { Center, Flex, Icon, Input } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import { api } from "../api/api";
 
-export default function VoucherPromo() {
-  //klik 'Pakai Kode Voucher'
+export default function VoucherPromo(props) {
+  const { totalBelanja, setGetVoucher } = props;
+  const [inputCode, setInputCode] = useState("");
+  // klik 'Pakai Kode Voucher'
   const [isClicked, setIsClicked] = useState(false);
+  //get all voucher
+  const [voucher, setVoucher] = useState([]);
+  const fetchAll = async () => {
+    const fetch = await api().get("/voucher");
+    setVoucher(fetch.data.result);
+    console.log(fetch.data.result);
+  };
+  useEffect(() => {
+    fetchAll();
+  }, []);
+  //voucher status
+  const [voucherStatus, setVoucherStatus] = useState(null);
+  const [voucherUse, setVoucherUse] = useState({});
+  const handleVoucherStatus = () => {
+    const voucherMatch = voucher.find((val) => val.voucher_code === inputCode);
+    if (voucherMatch) {
+      const total = totalBelanja.length
+        ? totalBelanja.reduce((a, b) => a + b)
+        : 0;
+      const minTransaction = voucherMatch?.minimal_order < total;
+      if (minTransaction && voucherMatch?.limit != 0) {
+        setVoucherStatus("found");
+        setVoucherUse(voucherMatch);
+      } else if (minTransaction && voucherMatch?.limit == 0) {
+        setVoucherStatus("run out");
+        setVoucherUse({});
+      } else if (!minTransaction) {
+        setVoucherStatus("not eligible");
+        setVoucherUse({});
+      }
+    } else {
+      setVoucherStatus("not found");
+      setVoucherUse({});
+    }
+  };
+  useEffect(() => {
+    setGetVoucher(voucherUse);
+  }, [voucherUse]);
+
   return (
     <>
       <Flex
@@ -60,24 +102,25 @@ export default function VoucherPromo() {
                   paddingLeft={"20px"}
                   gap={"10px"}
                 >
-                  <Flex flexDir={"column"}>
-                    GRATISONGKIR
-                    <Flex fontSize={"10px"} fontWeight={"200"}>
-                      Gratis biaya pengiriman!
-                    </Flex>
-                  </Flex>
-                  <Flex flexDir={"column"}>
-                    DISKON10%
-                    <Flex fontSize={"10px"} fontWeight={"200"}>
-                      Potongan Harga 10%!
-                    </Flex>
-                  </Flex>
-                  <Flex flexDir={"column"}>
-                    DISKON20%
-                    <Flex fontSize={"10px"} fontWeight={"200"}>
-                      Potongan Harga 20%!
-                    </Flex>
-                  </Flex>
+                  {voucher.map((val) => {
+                    return (
+                      <>
+                        <Flex flexDir={"column"} alignItems={"start"}>
+                          {val.title}
+                          <Flex fontSize={"10px"} fontWeight={"200"}>
+                            {val.desc}
+                          </Flex>
+                          <Flex fontSize={"10px"} fontWeight={"200"}>
+                            Min Transaksi: Rp{" "}
+                            {val?.minimal_order.toLocaleString("id-ID")}
+                          </Flex>
+                          <Flex fontSize={"10px"} fontWeight={"400"}>
+                            CODE: {val.voucher_code}
+                          </Flex>
+                        </Flex>
+                      </>
+                    );
+                  })}
                 </Flex>
                 <Flex w={"60%"} flexDir={"column"}>
                   <Flex
@@ -88,25 +131,61 @@ export default function VoucherPromo() {
                     <Input
                       className="inputVoucher"
                       placeholder="Kode Promo"
+                      fontSize={"12px"}
+                      onChange={(e) =>
+                        setInputCode(e.target.value.toUpperCase())
+                      }
+                      style={{ textTransform: "uppercase" }}
                     ></Input>
-                    <Center className="tombolPakai">PAKAI</Center>
+                    <Center
+                      className="tombolPakai"
+                      onClick={() => {
+                        handleVoucherStatus();
+                      }}
+                    >
+                      PAKAI
+                    </Center>
                   </Flex>
-                  <Flex
-                    color={"#2A960C"}
-                    fontSize={"10px"}
-                    fontWeight={"500"}
-                    padding={"0px 10px"}
-                  >
-                    Voucher Berhasil Digunakan!
-                  </Flex>
-                  <Flex
-                    color={"red"}
-                    fontSize={"10px"}
-                    fontWeight={"500"}
-                    padding={"0px 10px"}
-                  >
-                    Voucher Tidak Terdaftar
-                  </Flex>
+                  {voucherStatus === "not eligible" && (
+                    <Flex
+                      color={"red"}
+                      fontSize={"10px"}
+                      fontWeight={"500"}
+                      padding={"0px 10px"}
+                    >
+                      Total Transaksi Tidak Memenuhi!
+                    </Flex>
+                  )}
+                  {voucherStatus === "run out" && (
+                    <Flex
+                      color={"red"}
+                      fontSize={"10px"}
+                      fontWeight={"500"}
+                      padding={"0px 10px"}
+                    >
+                      Voucher sudah habis
+                    </Flex>
+                  )}
+                  {voucherStatus == "found" && (
+                    <Flex
+                      color={"#2A960C"}
+                      fontSize={"10px"}
+                      fontWeight={"500"}
+                      padding={"0px 10px"}
+                    >
+                      Voucher Berhasil Digunakan!
+                    </Flex>
+                  )}
+                  {voucherStatus == "not found" && (
+                    <Flex
+                      color={"red"}
+                      fontSize={"10px"}
+                      fontWeight={"500"}
+                      padding={"0px 10px"}
+                    >
+                      Voucher Tidak Terdaftar
+                    </Flex>
+                  )}
                 </Flex>
               </Flex>
             </>

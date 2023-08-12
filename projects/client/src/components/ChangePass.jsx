@@ -63,7 +63,7 @@ export default function ChangePass() {
         const { password, old_password } = formik.values;
         const account = { password, old_password };
 
-        await api
+        await api()
           .patch("/user/change-pass/" + userSelector.id, account)
           .then((res) => {
             toast({
@@ -93,20 +93,19 @@ export default function ChangePass() {
   }
 
   const respass = async () => {
-    const email = userSelector.email
+    const email = userSelector.email;
     try {
       toast({
         title: "Silahkan cek email Anda untuk link reset password",
         status: "success",
         duration: 3000,
         isClosable: true,
-      })
-      await api.get("/user/send-email-respass", {params : {email : email}})
+      });
+      await api().get("/user/send-email-respass", { params: { email: email } });
     } catch (error) {
       console.log(error);
     }
-    
-  }
+  };
 
   return (
     <Flex
@@ -114,19 +113,22 @@ export default function ChangePass() {
       justify={"center"}
       bgColor={"white"}
       alignItems={"center"}
-      justifyContent={"center"}>
+      justifyContent={"center"}
+    >
       <Box
         w={"22%"}
         h={"100vh"}
         justifyContent={"center"}
         alignItems={"center"}
-        className="logo_samping">
+        className="logo_samping"
+      >
         <Image
           src={logo2}
           w={"90%"}
           h={"60%"}
           className="logo_samping"
-          p={4}></Image>
+          p={4}
+        ></Image>
       </Box>
       <Flex
         spacing={8}
@@ -137,7 +139,8 @@ export default function ChangePass() {
         py={12}
         px={2}
         bgColor={"white"}
-        alignItems={"center"}>
+        alignItems={"center"}
+      >
         <Box
           rounded={"lg"}
           p={8}
@@ -145,22 +148,15 @@ export default function ChangePass() {
           display={"flex"}
           flexDir={"column"}
           columnGap={"20%"}
-          justifyContent={"space-between"}>
-          <Image
-            src={logo}
-            w={"100%"}
-            h={"40%"}
-            className="logo_atas"></Image>
+          justifyContent={"space-between"}
+        >
+          <Image src={logo} w={"100%"} h={"40%"} className="logo_atas"></Image>
           <Stack spacing={4}>
-            <Heading
-              fontSize={30}
-              textAlign={"center"}>
+            <Heading fontSize={30} textAlign={"center"}>
               Ganti Password
             </Heading>
 
-            <Flex
-              flexDir={"column"}
-              gap={10}>
+            <Flex flexDir={"column"} gap={10}>
               <FormControl>
                 <FormLabel>Password Lama</FormLabel>
                 <InputGroup>
@@ -177,13 +173,15 @@ export default function ChangePass() {
                       as={seepass ? AiFillEye : AiFillEyeInvisible}
                       onClick={() => {
                         setSeepass(!seepass);
-                      }}></Icon>
+                      }}
+                    ></Icon>
                   </InputRightElement>
                 </InputGroup>
                 <Flex
                   display={formik.errors.old_password ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.old_password}
                 </Flex>
                 <Flex
@@ -194,7 +192,8 @@ export default function ChangePass() {
                   color={"green"}
                   mt={"2%"}
                   fontWeight={"bold"}
-                  onClick={respass}>
+                  onClick={respass}
+                >
                   Forgot Password ?
                 </Flex>
               </FormControl>
@@ -215,13 +214,15 @@ export default function ChangePass() {
                       as={seepass ? AiFillEye : AiFillEyeInvisible}
                       onClick={() => {
                         setSeepass(!seepass);
-                      }}></Icon>
+                      }}
+                    ></Icon>
                   </InputRightElement>
                 </InputGroup>
                 <Flex
                   display={formik.errors.password ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.password}
                 </Flex>
               </FormControl>
@@ -242,13 +243,15 @@ export default function ChangePass() {
                       as={seepass ? AiFillEye : AiFillEyeInvisible}
                       onClick={() => {
                         setSeepass(!seepass);
-                      }}></Icon>
+                      }}
+                    ></Icon>
                   </InputRightElement>
                 </InputGroup>
                 <Flex
                   display={formik.errors.password2 ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.password2}
                 </Flex>
               </FormControl>
@@ -261,7 +264,8 @@ export default function ChangePass() {
                 }}
                 fontWeight={"bolder"}
                 fontSize={20}
-                onClick={formik.handleSubmit}>
+                onClick={formik.handleSubmit}
+              >
                 Simpan
               </Button>
             </Flex>

@@ -23,7 +23,7 @@ export default function LandingPage() {
       console.log(verifcek);
 
       if (!verifcek) {
-        await api
+        await api()
           .get("/user/send-email-verify", {
             params: { email: email },
           })

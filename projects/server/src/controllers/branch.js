@@ -168,6 +168,7 @@ const branchController = {
     } = req.body;
     console.log(req.body);
     const transaction = await db.sequelize.transaction()
+    const hashedPass = await bcrypt.hash(password, 10)
     try {
   
       const branch = await db.User.findOne({
@@ -200,19 +201,11 @@ const branchController = {
         ],
       });
 
-     const u_name = user_name ? user_name : branch.dataValues.user_name;
-     const u_email = email ? email : branch.dataValues.email;
-     const u_phone = phone_number ? phone_number : branch.dataValues.phone_number;
-     const b_branch_name = branch_name ? branch_name : branch.Branch.dataValues.branch_name;
-     const b_branch_address = branch_address ? branch_address : branch.Branch.dataValues.branch_address;
-     const b_district = district ? district : branch.Branch.dataValues.district;
-     const c_id = city_id ? city_id : branch.Branch.dataValues.city_id;
-     const b_province = province ? province : branch.Branch.dataValues.province;
 
       await db.User.update({
         user_name,
         email,
-        // password,
+        password : hashedPass,
         phone_number,
       },
       {

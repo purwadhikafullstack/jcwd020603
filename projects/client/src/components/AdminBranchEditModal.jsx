@@ -32,19 +32,18 @@ export default function EditAdminBranch(props) {
   const [data, setData] = useState({});
   YupPassword(Yup);
   const formik = useFormik({
-  
     initialValues: {
       user_name: props.dtBranch[props.number].user_name,
       email: props.dtBranch[props.number].email,
       role: "ADMIN",
-      // password: "",
+      password: "",
       phone_number: props.dtBranch[props.number].phone_number,
       branch_name: props.dtBranch[props.number].Branch.branch_name,
       address: props.dtBranch[props.number].Branch.branch_address,
       district: props.dtBranch[props.number].Branch.district,
       city_id: props.dtBranch[props.number].Branch.city_id,
       province: props.dtBranch[props.number].Branch.province,
-      branch_id : props.dtBranch[props.number].branch_id
+      branch_id: props.dtBranch[props.number].branch_id,
     },
 
     validationSchema: Yup.object().shape({
@@ -54,13 +53,13 @@ export default function EditAdminBranch(props) {
       email: Yup.string()
         .required("Gagal disimpan.. kolom ini tidak boleh kosong")
         .email("Invalid. Write like this example@mail.com"),
-      // password: Yup.string()
-      //   .required("Gagal disimpan.. kolom ini tidak boleh kosong")
-      //   .min(8, "Your Password too short.")
-      //   .matches(
-      //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*$/,
-      //     "Password should including an uppercase letter, symbol, number"
-      //   ),
+      password: Yup.string()
+        .required("Gagal disimpan.. kolom ini tidak boleh kosong")
+        .min(8, "Your Password too short.")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*$/,
+          "Password should including an uppercase letter, symbol, number"
+        ),
       phone_number: Yup.string()
         .required("Gagal disimpan.. kolom ini tidak boleh kosong")
         .max(15, "More then maximun characters")
@@ -98,7 +97,7 @@ export default function EditAdminBranch(props) {
           district,
           city_id,
           province,
-          branch_id
+          branch_id,
           // user_id
         } = formik.values;
         const newBranchAdmin = {
@@ -111,10 +110,10 @@ export default function EditAdminBranch(props) {
           district,
           city_id,
           province,
-          branch_id: props.dtBranch[props.number].branch_id
+          branch_id: props.dtBranch[props.number].branch_id,
         };
 
-        const cekMail = await api
+        const cekMail = await api()
           .get("/user/", {
             params: { getall: newBranchAdmin.email } || {
               getall: newBranchAdmin.user_name,
@@ -129,7 +128,7 @@ export default function EditAdminBranch(props) {
             }
           });
 
-        const cekBranch = await api
+        const cekBranch = await api()
           .get("/branch/all-by-branch", {
             params: { getAll: newBranchAdmin.branch_name } || {
               getAll: newBranchAdmin.branch_address,
@@ -147,27 +146,27 @@ export default function EditAdminBranch(props) {
         console.log(cekBranch);
         console.log(cekMail);
 
-        if (cekMail || cekBranch) {
+        if (cekMail.user_name || cekMail.email) {
           return toast({
             title:
-              "Email / Username / nama cabang / alamat cabang sudah digunakan, silahkan gunakan selain itu",
+              "Email / Username sudah digunakan, silahkan gunakan selain itu",
             status: "warning",
             duration: 3000,
             isClosable: true,
           });
         } else {
-          // const {branch_id} = props.dtBranch[props.number]
-          // console.log(newBranchAdmin);
           console.log(props.dtBranch[props.number].branch_id);
-          await api.patch("/branch/", newBranchAdmin).then((res) => {
-            return toast({
-              title: "Admin dan Cabang berhasil di edit",
-              status: "success",
-              duration: 3000,
-              isClosable: true,
+          await api()
+            .patch("/branch/", newBranchAdmin)
+            .then((res) => {
+              return toast({
+                title: "Admin dan Cabang berhasil di edit",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+              });
             });
-          });
-          props.fetchAll()
+          props.fetchAll();
           return props.onClose();
         }
       } catch (err) {
@@ -180,10 +179,12 @@ export default function EditAdminBranch(props) {
 
   async function getProv() {
     try {
-      await api.get("/province/").then((res) => {
-        console.log(res.data.result);
-        setProvince(res.data.result);
-      });
+      await api()
+        .get("/province/")
+        .then((res) => {
+          console.log(res.data.result);
+          setProvince(res.data.result);
+        });
     } catch (error) {
       console.log(error);
     }
@@ -198,10 +199,12 @@ export default function EditAdminBranch(props) {
   console.log(provId);
   async function getCity() {
     try {
-      await api.get(`/city/${provId}`).then((res) => {
-        console.log(res.data.result);
-        setCity(res.data.result);
-      });
+      await api()
+        .get(`/city/${provId}`)
+        .then((res) => {
+          console.log(res.data.result);
+          setCity(res.data.result);
+        });
     } catch (error) {
       console.log(error);
     }
@@ -239,18 +242,20 @@ export default function EditAdminBranch(props) {
                   _hover={{
                     borderColor: "#9d9c45",
                     boxShadow: "dark-lg",
-                  }}></Input>
+                  }}
+                ></Input>
                 <Flex
                   display={formik.errors.user_name ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.user_name}
                 </Flex>
               </FormControl>
               <FormControl>
                 <FormLabel>Email</FormLabel>
                 <Input
-                defaultValue={props.dtBranch[props.number]?.email}
+                  defaultValue={props.dtBranch[props.number]?.email}
                   onChange={inputHandler}
                   id="email"
                   type="email"
@@ -258,15 +263,17 @@ export default function EditAdminBranch(props) {
                   _hover={{
                     borderColor: "#9d9c45",
                     boxShadow: "dark-lg",
-                  }}></Input>
+                  }}
+                ></Input>
                 <Flex
                   display={formik.errors.email ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.email}
                 </Flex>
               </FormControl>
-              {/* <FormControl>
+              <FormControl>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
                   <Input
@@ -277,25 +284,28 @@ export default function EditAdminBranch(props) {
                     _hover={{
                       borderColor: "#9d9c45",
                       boxShadow: "dark-lg",
-                    }}></Input>
+                    }}
+                  ></Input>
                   <InputRightElement
                     onClick={() => {
                       setSeePass(!seePass);
-                    }}>
+                    }}
+                  >
                     {seePass ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
                   </InputRightElement>
                 </InputGroup>
                 <Flex
                   display={formik.errors.password ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.password}
                 </Flex>
-              </FormControl> */}
+              </FormControl>
               <FormControl>
                 <FormLabel>Nomor Handphone</FormLabel>
                 <Input
-                defaultValue={props.dtBranch[props.number]?.phone_number}
+                  defaultValue={props.dtBranch[props.number]?.phone_number}
                   onChange={inputHandler}
                   id="phone_number"
                   type="text"
@@ -303,11 +313,13 @@ export default function EditAdminBranch(props) {
                   _hover={{
                     borderColor: "#9d9c45",
                     boxShadow: "dark-lg",
-                  }}></Input>
+                  }}
+                ></Input>
                 <Flex
                   display={formik.errors.phone_number ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.phone_number}
                 </Flex>
               </FormControl>
@@ -318,12 +330,10 @@ export default function EditAdminBranch(props) {
               h={"auto"}
               flexDir={"column"}
               justifyContent={"space-around"}
-              alignItems={"center"}>
+              alignItems={"center"}
+            >
               <Box className="flex3R-box-addbranch"></Box>
-              <Image
-                src={logo}
-                w={"100%"}
-                h={"20%"}></Image>
+              <Image src={logo} w={"100%"} h={"20%"}></Image>
               <Box className="flex3R-box-addbranch"></Box>
             </Flex>
 
@@ -334,18 +344,22 @@ export default function EditAdminBranch(props) {
               <FormControl>
                 <FormLabel>Nama Cabang</FormLabel>
                 <Input
-                defaultValue={props.dtBranch[props.number]?.Branch.branch_name}
+                  defaultValue={
+                    props.dtBranch[props.number]?.Branch.branch_name
+                  }
                   onChange={inputHandler}
                   id="branch_name"
                   transition={"1s"}
                   _hover={{
                     borderColor: "#9d9c45",
                     boxShadow: "dark-lg",
-                  }}></Input>
+                  }}
+                ></Input>
                 <Flex
                   display={formik.errors.branch_name ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.branch_name}
                 </Flex>
               </FormControl>
@@ -353,7 +367,9 @@ export default function EditAdminBranch(props) {
                 <FormLabel>Alamat Cabang</FormLabel>
                 {/* <Input transition={"1s"}  _hover={{borderColor : "#9d9c45", boxShadow : "dark-lg"}} ></Input> */}
                 <Textarea
-                defaultValue={props.dtBranch[props.number]?.Branch.branch_address}
+                  defaultValue={
+                    props.dtBranch[props.number]?.Branch.branch_address
+                  }
                   onChange={inputHandler}
                   name=""
                   id="address"
@@ -365,29 +381,33 @@ export default function EditAdminBranch(props) {
                   _hover={{
                     borderColor: "#9d9c45",
                     boxShadow: "dark-lg",
-                  }}></Textarea>
+                  }}
+                ></Textarea>
                 <Flex
                   display={formik.errors.branch_address ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.branch_address}
                 </Flex>
               </FormControl>
               <FormControl>
                 <FormLabel>Kelurahan</FormLabel>
                 <Input
-                defaultValue={props.dtBranch[props.number]?.Branch.district}
+                  defaultValue={props.dtBranch[props.number]?.Branch.district}
                   onChange={inputHandler}
                   id="district"
                   transition={"1s"}
                   _hover={{
                     borderColor: "#9d9c45",
                     boxShadow: "dark-lg",
-                  }}></Input>
+                  }}
+                ></Input>
                 <Flex
                   display={formik.errors.district ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.district}
                 </Flex>
               </FormControl>
@@ -405,7 +425,8 @@ export default function EditAdminBranch(props) {
                     );
                     setProvId(selectedProv.province_id);
                     inputHandler(event);
-                  }}>
+                  }}
+                >
                   {province.map((val) => (
                     <option value={val.province}>{val.province}</option>
                   ))}
@@ -413,7 +434,8 @@ export default function EditAdminBranch(props) {
                 <Flex
                   display={formik.errors.province ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.province}
                 </Flex>
               </FormControl>
@@ -424,7 +446,8 @@ export default function EditAdminBranch(props) {
                   placeholder="Pilih Kabupaten / Kota"
                   transition={"1s"}
                   _hover={{ borderColor: "#9d9c45", boxShadow: "dark-lg" }}
-                  onChange={inputHandler}>
+                  onChange={inputHandler}
+                >
                   {city.map((val) => (
                     <option value={val.city_id}>{val.city_name}</option>
                   ))}
@@ -433,7 +456,8 @@ export default function EditAdminBranch(props) {
                 <Flex
                   display={formik.errors.city_id ? "flex" : "none"}
                   color={"red"}
-                  fontSize={"10px"}>
+                  fontSize={"10px"}
+                >
                   {formik.errors.city_id}
                 </Flex>
               </FormControl>
@@ -451,7 +475,8 @@ export default function EditAdminBranch(props) {
               fontWeight={"bolder"}
               _hover={{
                 bgGradient: "linear(to-l, #9d9c45, #f0ee93 )",
-              }}>
+              }}
+            >
               Simpan
             </Button>
           </Flex>

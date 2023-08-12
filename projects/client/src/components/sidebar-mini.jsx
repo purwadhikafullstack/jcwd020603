@@ -99,7 +99,7 @@ export default function SidebarMini() {
             <Flex gap={"10px"}>
               <Icon as={MdOutlineShoppingCart} className="miniIconG" />
             </Flex>
-            {/* <Center className="minijumlahOrderSidebarG">1</Center> */}
+            <Center className="minijumlahOrderSidebarG">1</Center>
           </Flex>
         </Flex>
       </Flex>

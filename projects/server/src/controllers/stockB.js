@@ -42,7 +42,6 @@ const stockControllerB = {
       });
     }
   },
-
   searchStock: async (req, res) => {
     try {
       const { search_query } = req.query;

@@ -47,7 +47,7 @@ export default function SuperAdminProductList() {
   console.log(product);
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("auth"));
-    api
+    api()
       .get("/product", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ export default function SuperAdminProductList() {
 
   const fetchData = async () => {
     try {
-      const response = await api.get("/product");
+      const response = await api().get("/product");
       setProduct(response.data);
     } catch (error) {
       console.error(error);

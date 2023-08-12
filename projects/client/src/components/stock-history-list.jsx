@@ -46,7 +46,7 @@ export default function StockHistoryList() {
   console.log(stockHistory);
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("auth"));
-    api
+    api()
       .get("/stock/stockhistory", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -62,7 +62,7 @@ export default function StockHistoryList() {
 
   const fetchData = async () => {
     try {
-      const response = await api.get("/stock/stockhistory");
+      const response = await api().get("/stock/stockhistory");
       setStockHistory(response.data);
     } catch (error) {
       console.error(error);

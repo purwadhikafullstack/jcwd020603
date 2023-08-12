@@ -57,7 +57,7 @@ export default function DashboardSidebarItem() {
           ></Icon>
           <Box className="box-sidebarR">Orders</Box>
         </Flex>
-        <Flex className="flex-item-sidebarR" mb={"10%"}>
+        <Flex className="flex-item-sidebarR" mb={"10%"} onClick={nav("/admin-branch")}>
           <Icon
             p={2}
             as={FaUserSecret}

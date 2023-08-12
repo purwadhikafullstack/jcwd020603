@@ -68,9 +68,11 @@ export function EditProduct(props) {
 
     try {
       console.log(formData);
-      await api.patch("/product/v2/" + props.id, formData).then((result) => {
-        console.log(result.data);
-      });
+      await api()
+        .patch("/product/v2/" + props.id, formData)
+        .then((result) => {
+          console.log(result.data);
+        });
       alert("Posting success");
       setSelectedFile(null);
       setProduct("");
@@ -90,7 +92,7 @@ export function EditProduct(props) {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    api
+    api()
       .get("/category/")
       .then((response) => {
         setCategories(response.data);

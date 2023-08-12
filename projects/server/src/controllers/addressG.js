@@ -85,8 +85,14 @@ const addressController = {
   editAddress: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
-      const { address, district, city, province, address_name, address_phone } =
-        req.body;
+      const {
+        address,
+        district,
+        city_id,
+        province,
+        address_name,
+        address_phone,
+      } = req.body;
       const alamat = await db.Address.findOne({
         where: {
           id: req.params.id,
@@ -94,7 +100,7 @@ const addressController = {
       });
       const ad = address ? address : alamat.dataValues.address;
       const dis = district ? district : alamat.dataValues.district;
-      const ct = city ? city : alamat.dataValues.city;
+      const ct = city_id ? city_id : alamat.dataValues.city;
       const pro = province ? province : alamat.dataValues.province;
       const ad_nm = address_name
         ? address_name
@@ -113,7 +119,7 @@ const addressController = {
         {
           address: ad,
           district: dis,
-          city: ct,
+          city_id: ct,
           province: pro,
           user_id: req.user.id,
           address_name: ad_nm,

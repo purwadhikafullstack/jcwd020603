@@ -42,9 +42,11 @@ export function EditStock(props) {
   const editStock = async () => {
     try {
       console.log(stock);
-      await api.patch("/stock/v2/" + props.id, stock).then((result) => {
-        console.log(result.data);
-      });
+      await api()
+        .patch("/stock/v2/" + props.id, stock)
+        .then((result) => {
+          console.log(result.data);
+        });
       alert("Posting success");
       props.onClose();
     } catch (error) {
@@ -61,7 +63,7 @@ export function EditStock(props) {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    api
+    api()
       .get("/category/")
       .then((response) => {
         setCategories(response.data);
@@ -73,7 +75,7 @@ export function EditStock(props) {
 
   const [product, setProduct] = useState([]);
   useEffect(() => {
-    api
+    api()
       .get("/product")
       .then((response) => {
         setProduct(response.data);

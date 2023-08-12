@@ -21,12 +21,11 @@ import "../css/indexR.css";
 // import { FaMapMarkerAlt } from "react-icons/fa";
 // import { TbCameraPlus } from "react-icons/tb";
 import { HiMiniPencilSquare } from "react-icons/hi2";
-import { Icon } from "@chakra-ui/icons";
+// import { Icon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import ProfileFotoAlamat from "./profileFotoAlamat"
+import ProfileFotoAlamat from "./profileFotoAlamat";
 import ProfileData from "./profileData";
-
 
 export default function Profile() {
   const userSelector = useSelector((state) => state.auth);
@@ -48,9 +47,11 @@ export default function Profile() {
     formData.append("avatar", selectedFile);
     console.log("ini", formData);
     let avatar;
-    await api.post("avatar/" + userSelector.id, selectedFile).then((res) => {
-      avatar = res.data;
-    });
+    await api()
+      .post("avatar/" + userSelector.id, selectedFile)
+      .then((res) => {
+        avatar = res.data;
+      });
     console.log(avatar);
 
     if (avatar) {
@@ -89,7 +90,7 @@ export default function Profile() {
           flexDir={"row"}
           gap={"5%"}
         >
-         <ProfileFotoAlamat/>
+          <ProfileFotoAlamat />
           <ProfileData />
         </Flex>
       </Flex>

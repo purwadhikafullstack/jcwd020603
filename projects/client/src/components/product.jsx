@@ -18,7 +18,7 @@ export default function Product() {
   const [productSearchResults, setProductSearchResults] = useState([]);
 
   const performSearch = (searchTerm) => {
-    api
+    api()
       .get("/stock/search", {
         params: {
           search_query: searchTerm,
@@ -34,7 +34,7 @@ export default function Product() {
 
   const getCategory = async () => {
     console.log(category_name);
-    await api
+    await api()
       .get("/stock/s-category", { params: { category_name } })
       .then((response) => {
         setProductSearchResults(response.data);
@@ -49,7 +49,7 @@ export default function Product() {
   }, [category_name]);
 
   useEffect(() => {
-    api
+    api()
       .get("/category")
       .then((response) => {
         setCategories(response.data);
@@ -58,7 +58,7 @@ export default function Product() {
         console.error(error);
       });
 
-    api
+    api()
       .get("/stock")
       .then((response) => {
         setStocks(response.data);

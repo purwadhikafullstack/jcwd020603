@@ -1,12 +1,16 @@
 import axios from "axios";
-const headers = {
-  ["x-secret-key"]: "sahabatsembako",
-};
-const token = JSON.parse(localStorage.getItem("auth"));
-if (token) {
-  headers.Authorization = `Bearer ${token}`;
+
+export function api() {
+  const headers = {
+    ["x-secret-key"]: "sahabatsembako",
+  };
+  const token = JSON.parse(localStorage.getItem("auth"));
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  const api = axios.create({
+    baseURL: "http://localhost:2000/",
+    headers: headers,
+  });
+  return api;
 }
-export const api = axios.create({
-  baseURL: "http://localhost:2000/",
-  headers: headers,
-});

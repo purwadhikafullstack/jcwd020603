@@ -22,7 +22,7 @@ export function DeleteStock(props) {
 
   const deleteStock = async () => {
     try {
-      await api
+      await api()
         .delete("/stock/v3/" + props.id, { params: stock })
         .then((result) => {
           console.log(result.data);
