@@ -137,7 +137,6 @@ export function AdminTableStock({
                 }}
               >
                 {<RiDeleteBin6Line cursor={"pointer"} />}
-
                 <DeleteStock
                   id={editStock}
                   stock={stock}

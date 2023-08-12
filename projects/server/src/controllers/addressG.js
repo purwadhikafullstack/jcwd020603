@@ -15,7 +15,7 @@ const addressController = {
       } = req.body;
       const coordinate = await openCage(req.body);
       console.log(coordinate.data.results[0].geometry);
-      await db.Address.create(  
+      await db.Address.create(
         {
           address: address,
           district: district,
@@ -24,8 +24,8 @@ const addressController = {
           user_id: req.user.id,
           address_name: address_name,
           address_phone: address_phone,
-            latitude: coordinate.data.results[0].geometry.lat,
-            longitude: coordinate.data.results[0].geometry.lng,
+          latitude: coordinate.data.results[0].geometry.lat,
+          longitude: coordinate.data.results[0].geometry.lng,
         },
         { transaction: trans }
       );
@@ -57,6 +57,7 @@ const addressController = {
       });
     }
   },
+
   getAllAddress: async (req, res) => {
     try {
       const get = await db.Address.findAll({

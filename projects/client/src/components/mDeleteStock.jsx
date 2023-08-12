@@ -10,20 +10,35 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
+import { useState } from "react";
 
 export function DeleteStock(props) {
   const toast = useToast();
   console.log(props);
+  const [stock, setStock] = useState({
+    quantity_before: props.stock.quantity_stock,
+  });
+  console.log("ini stock di FE", stock);
+
   const deleteStock = async () => {
-    await api().delete("/stock/v3/" + props.id);
-    toast({
-      title: "Stock Deleted",
-      status: "success",
-      position: "top-right",
-      duration: 3000,
-      isClosable: false,
-    });
-    props.onClose();
+    try {
+      await api()
+        .delete("/stock/v3/" + props.id, { params: stock })
+        .then((result) => {
+          console.log(result.data);
+        });
+      toast({
+        title: "Stock Deleted",
+        status: "success",
+        position: "top-right",
+        duration: 3000,
+        isClosable: false,
+      });
+      props.onClose();
+    } catch (error) {
+      console.error(error);
+      alert("Deleting Failed");
+    }
   };
 
   return (
