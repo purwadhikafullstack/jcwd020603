@@ -8,7 +8,7 @@ module.exports = {
     try {
       await db.StockHistory.create(
         {
-          stock_id: stok.id,
+          stock_id: stok.dataValues.id,
           quantity_before: input.quantity_before,
           status: input.status,
           status_quantity: input.status_quantity,
