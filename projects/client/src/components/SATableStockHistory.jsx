@@ -52,13 +52,8 @@ export function SATableStockHistory({
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("auth"));
-    api
-      .get("/product", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    api()
+      .get("/product")
       .then((response) => {
         setProducts(response.data);
       })
@@ -66,7 +61,7 @@ export function SATableStockHistory({
         console.error(error);
       });
 
-    api
+    api()
       .get("/category/")
       .then((response) => {
         setCategories(response.data);
