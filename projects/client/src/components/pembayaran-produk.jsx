@@ -1,8 +1,9 @@
 import { Box, Center, Flex, Icon, Image } from "@chakra-ui/react";
 
 export default function PembayaranProduk(props) {
+  console.log(props);
   const fixPrice =
-    props.Stock?.discounted_price == 0
+    props.Stock?.discounted_price == 0 || props.Stock?.discounted_price == null
       ? props.Stock.Product?.price
       : props.Stock?.discounted_price;
   return (

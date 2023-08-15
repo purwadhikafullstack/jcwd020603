@@ -15,10 +15,16 @@ router.patch(
   fileUploader({ destinationFolder: "paymentImg" }).single("paymentImg"),
   orderController.postPaymentImg
 );
+router.patch("/cancel/:id", orderController.cancelOrder);
 router.patch(
-  "/cancel/:id",
+  "/status/:id",
+  roleController.checkAdmin,
+  orderController.changeStatusOrder
+);
+router.patch(
+  "/confirm/:id",
   roleController.checkUser,
-  orderController.cancelOrder
+  orderController.changeStatusOrder
 );
 
 module.exports = router;

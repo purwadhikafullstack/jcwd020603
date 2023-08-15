@@ -1,4 +1,14 @@
-import { Box, Center, Flex, Icon } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Icon,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import NavbarDetailPesanan from "./navbar-detail-pesanan";
 import { FaRegCheckCircle, FaRegClock, FaRegTimesCircle } from "react-icons/fa";
 import PembayaranProduk from "./pembayaran-produk";
@@ -9,8 +19,10 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 import { HiOutlineCheckCircle } from "react-icons/hi";
+import ModalPesananSelesai from "./modal-pesanan-selesai";
 
 export default function ContentDetailPesanan() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const order_number = useParams();
   // get order
   const [orderValue, setOrderValue] = useState();
@@ -61,26 +73,36 @@ export default function ContentDetailPesanan() {
         >
           <Flex className="boxShadow">
             <Flex>Status</Flex>
-            <Flex w={"100%"} flexDir={"column"}>
-              <Flex
-                fontSize={"14px"}
-                alignItems={"center"}
-                gap={"10px"}
-                fontWeight={"500"}
-              >
-                {peraturan?.status == "Dibatalkan" ? (
-                  <Icon as={FaRegTimesCircle} color={"red"} />
-                ) : peraturan?.status == "Pesanan Dikonfirmasi" ? (
-                  <Icon as={FaRegCheckCircle} color={"green"} />
-                ) : (
-                  <Icon as={FaRegClock} color={"yellow.600"} />
-                )}
+            <Flex justifyContent={"space-between"}>
+              <Flex w={"100%"} flexDir={"column"}>
+                <Flex
+                  fontSize={"14px"}
+                  alignItems={"center"}
+                  gap={"10px"}
+                  fontWeight={"500"}
+                >
+                  {peraturan?.status == "Dibatalkan" ? (
+                    <Icon as={FaRegTimesCircle} color={"red"} />
+                  ) : peraturan?.status == "Pesanan Dikonfirmasi" ? (
+                    <Icon as={FaRegCheckCircle} color={"green"} />
+                  ) : (
+                    <Icon as={FaRegClock} color={"yellow.600"} />
+                  )}
 
-                {peraturan?.status}
+                  {peraturan?.status}
+                </Flex>
+                <Flex fontSize={"12px"} paddingLeft={"25px"}>
+                  {moment(peraturan?.updatedAt).format("lll")}
+                </Flex>
               </Flex>
-              <Flex fontSize={"12px"} paddingLeft={"25px"}>
-                {moment(peraturan?.updatedAt).format("lll")}
-              </Flex>
+              <Button
+                colorScheme="green"
+                fontSize={"12px"}
+                display={peraturan?.status == "Dikirim" ? "flex" : "none"}
+                onClick={() => onOpen()}
+              >
+                Konfirmasi Pesanan
+              </Button>
             </Flex>
           </Flex>
           <Flex className="boxShadow">
@@ -122,6 +144,17 @@ export default function ContentDetailPesanan() {
           {peraturan && <DetailPembayaran peraturan={peraturan} />}
         </Flex>
       </Center>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalPesananSelesai
+            isOpen={isOpen}
+            onClose={onClose}
+            peraturan={peraturan}
+            getLatestOrder={getLatestOrder}
+          />
+        </ModalContent>
+      </Modal>
     </>
   );
 }

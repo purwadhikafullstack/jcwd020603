@@ -10,7 +10,6 @@ import SidebarMini from "../components/sidebar-mini";
 
 export default function LandingPage() {
   const windowWidth = window.outerWidth;
-  console.log(windowWidth);
   const [latlong, setLatlong] = useState({
     latitude: "",
     longitude: "",
@@ -59,20 +58,28 @@ export default function LandingPage() {
   }, [latlong]);
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});
+  //menyimpan length cart
+  const [lengthCart, setLengthCart] = useState(0);
 
   return (
     <>
       {windowWidth > 850 ? (
         <Center>
           <Flex maxWidth={"1160px"} w={"100%"}>
-            <Flex>{windowWidth > 850 ? <Sidebar /> : <SidebarMini />}</Flex>
+            <Flex>
+              {windowWidth > 850 ? (
+                <Sidebar setLengthCart={setLengthCart} />
+              ) : (
+                <SidebarMini setLengthCart={setLengthCart} />
+              )}
+            </Flex>
             <Flex flexDir={"column"}>
               <TopBar
                 address={address}
                 selectedAddress={selectedAddress}
                 setSelectedAddress={setSelectedAddress}
               />
-              <Category />
+              <Category lengthCart={lengthCart} />
             </Flex>
           </Flex>
         </Center>
@@ -83,7 +90,7 @@ export default function LandingPage() {
             selectedAddress={selectedAddress}
             setSelectedAddress={setSelectedAddress}
           />
-          <Category />
+          <Category lengthCart={lengthCart} />
           <Footer />
         </>
       )}
