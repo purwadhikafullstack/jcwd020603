@@ -160,9 +160,4 @@ db.Order.hasMany(db.OrderDetail, {
   as: "Order",
 });
 
-db.Order.belongsTo(db.Branch, {
-  foreignKey: "branch_id",
-  as: "Branch",
-});
-
 module.exports = db;
