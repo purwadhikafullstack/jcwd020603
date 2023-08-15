@@ -1,15 +1,26 @@
 const db = require("../models");
 const moment = require("moment");
+const { nanoid } = require("nanoid");
+const { Op, where } = require("sequelize");
 const payment_image = process.env.payment_image;
 
 const orderController = {
   getAll: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
+      const whereClause = {
+        user_id: req.user.id,
+      };
+      const status1 = req.query.status.split(",")[0];
+      const status2 = req.query.status.split(",")[1];
+      if (req.query.status) {
+        whereClause.status = {
+          [Op.or]: [{ [Op.eq]: status1 }, { [Op.eq]: status2 }],
+        };
+      }
+      console.log(whereClause);
       const get = await db.Order.findAll({
-        where: {
-          user_id: req.user.id,
-        },
+        where: whereClause,
         include: [
           {
             model: db.OrderDetail,
@@ -47,45 +58,59 @@ const orderController = {
   getAllAdmin: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
-      const pages = req.query.pages || 0;
-      let where = {};
-      if (req.query.branch_id) {
-        where = { branch_id: req.query.branch_id };
+      const sort = req.query.sort || "createdAt";
+      const order = req.query.order || "DESC";
+      const page = req.query.page - 1 || 0;
+      const search = req.query.search || "";
+      const time = req.query.time || moment();
+      console.log("page", page);
+      let where = {
+        createdAt: {
+          [Op.and]: [
+            {
+              [Op.gte]: moment(time).startOf("month"),
+            },
+            {
+              [Op.lte]: moment(time).endOf("month"),
+            },
+          ],
+        },
+      };
+      if (req.query.search) {
+        where[Op.or] = [
+          { order_number: { [Op.like]: `%${search}%` } },
+          { status: { [Op.like]: `%${search}%` } },
+        ];
       }
+      if (req.query.branch_id) {
+        where.branch_id = req.query.branch_id;
+      }
+      console.log(where);
       const get = await db.Order.findAndCountAll({
         where: where,
         include: [
           {
-            model: db.OrderDetail,
-            as: "Order",
-            require: false,
-            right: true,
-            include: [
-              {
-                model: db.Stock,
-                as: "Stock",
-                include: [
-                  {
-                    model: db.Product,
-                    as: "Product",
-                  },
-                ],
-              },
-            ],
-          },
-          {
             model: db.Address,
             as: "Address",
           },
+          { model: db.User, as: "User" },
         ],
-        limit: 5,
-        offset: 5 * pages,
+        order: [[sort, order]],
+        limit: 3,
+        offset: 3 * page,
+      });
+      const count = await db.Order.count();
+      const filterCount = await db.Order.count({
+        where: { status: { [Op.or]: ["Dibatalkan", "Pesanan Dikonfirmasi"] } },
       });
       await trans.commit();
       return res.status(200).send({
         message: "OK",
         result: get.rows,
-        total: Math.ceil(get.count / 5),
+        total: Math.ceil(get.count / 3),
+        count: count,
+        done: filterCount,
+        undone: count - filterCount,
       });
     } catch (err) {
       await trans.rollback();
@@ -113,6 +138,10 @@ const orderController = {
                 as: "City",
               },
             ],
+          },
+          {
+            model: db.User,
+            as: "User",
           },
         ],
       });
@@ -146,6 +175,10 @@ const orderController = {
               },
             ],
           },
+          {
+            model: db.User,
+            as: "User",
+          },
         ],
       });
       await trans.commit();
@@ -171,17 +204,16 @@ const orderController = {
         address_id,
         discount_voucher,
       } = req.body;
-      console.log(req.body);
       const order = await db.Order.create(
         {
           date: moment().add(15, "minutes"),
           total: total,
           status: status,
           user_id: req.user.id,
-          order_number: `TRX-${moment().format("mmddyyyyhhmmss")}`,
           shipping_cost: shipping_cost,
           address_id,
           discount_voucher: discount_voucher,
+          branch_id: selectedItems[0].Stock?.branch_id,
         },
         { transaction: trans }
       );
@@ -306,6 +338,30 @@ const orderController = {
         check.setDataValue("quantity_stock", newQuantity);
         await check.save({ transaction: trans });
       }
+      await trans.commit();
+      res.status(200).send({
+        message: "OK",
+        result: patch,
+      });
+    } catch (err) {
+      await trans.rollback();
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+  changeStatusOrder: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const patch = await db.Order.update(
+        {
+          status: req.body.status,
+        },
+        {
+          where: { id: req.params.id },
+          transaction: trans,
+        }
+      );
       await trans.commit();
       res.status(200).send({
         message: "OK",

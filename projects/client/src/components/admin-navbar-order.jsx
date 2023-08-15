@@ -9,8 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { HiMenu, HiOutlineLogout } from "react-icons/hi";
 import AdminSidebar from "./admin-sidebar";
+import { useSelector } from "react-redux";
 
 export default function AdminNavbarOrder() {
+  const userSelector = useSelector((state) => state.auth);
   const windowWidth = window.innerWidth;
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
@@ -46,7 +48,7 @@ export default function AdminNavbarOrder() {
           alignItems={"center"}
         >
           <Avatar w={"40px"} h={"40px"} />
-          Gara Suryanegara
+          {userSelector.user_name}
           <Icon as={HiOutlineLogout} fontSize={"25px"} />
         </Flex>
       </Flex>

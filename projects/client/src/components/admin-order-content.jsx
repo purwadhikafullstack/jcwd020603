@@ -35,10 +35,13 @@ import moment from "moment";
 import Pagination from "./pagination";
 import { color } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function AdminOrderList() {
   const windowWidth = window.innerWidth;
+  const userSelector = useSelector((state) => state.auth);
   const nav = useNavigate();
+  const searchRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const tableHeadRef = useRef(null);
   const tableRowRef = useRef(null);
@@ -53,24 +56,36 @@ export default function AdminOrderList() {
     }
   };
   //get all branch order
+  const [shown, setShown] = useState({ page: 1 });
   const [filtering, setFiltering] = useState({
-    page: 1,
-    sort: "",
+    page: shown.page,
+    sort: "createdAt",
     order: "DESC",
     search: "",
+    time: "",
   });
   const [totalPages, setTotalPages] = useState(0);
   const [allBranchOrder, setAllBranchOrder] = useState([]);
-  const [shown, setShown] = useState({ page: 1 });
+  const [countOrder, setCountOrder] = useState(0);
+  const [doneOrder, setDoneOrder] = useState(0);
+  const [undoneOrder, setUndoneOrder] = useState(0);
   const getAllOrders = async () => {
+    const params = { ...filtering };
+    if (userSelector.branch_id !== null) {
+      params.branch_id = userSelector.branch_id;
+    }
     const get = await api().get("/order/admin", {
-      params: { pages: shown.page },
+      params: { ...params },
     });
     setAllBranchOrder(get.data.result);
     setTotalPages(get.data.total);
+    setCountOrder(get.data.count);
+    setDoneOrder(get.data.done);
+    setUndoneOrder(get.data.undone);
   };
   useEffect(() => {
     getAllOrders();
+    getSelector();
   }, []);
   useEffect(() => {
     getAllOrders();
@@ -93,12 +108,12 @@ export default function AdminOrderList() {
       setFiltering({ ...filtering, page: shown.page });
     }
   }, [shown]);
-  //filter pesanan udah selesai
-  const doneOrder = allBranchOrder.filter(
-    (order) =>
-      order.status === "Dibatalkan" || order.status === "Pesanan Dikonfirmasi"
-  );
-  const undoneOrder = allBranchOrder.length - doneOrder.length;
+  //get selector branch
+  const [selector, setSelector] = useState([]);
+  const getSelector = async () => {
+    const get = await api().get("/branch/selector");
+    setSelector(get.data.result);
+  };
 
   return (
     <>
@@ -137,7 +152,7 @@ export default function AdminOrderList() {
               </Center>
               <Flex flexDir={"column"}>
                 <Flex fontSize={"24px"} fontWeight={"extrabold"}>
-                  {allBranchOrder.length}
+                  {countOrder}
                 </Flex>
                 <Flex color={"grey"} fontWeight={"semibold"}>
                   Total Pesanan
@@ -171,7 +186,7 @@ export default function AdminOrderList() {
               </Center>
               <Flex flexDir={"column"}>
                 <Flex fontSize={"24px"} fontWeight={"extrabold"}>
-                  {doneOrder.length}
+                  {doneOrder}
                 </Flex>
                 <Flex color={"grey"} fontWeight={"semibold"}>
                   Pesanan Selesai
@@ -188,18 +203,39 @@ export default function AdminOrderList() {
         >
           <Flex>List Pesanan</Flex>
           <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
-            <Select placeholder="Pilih Lokasi Cabang" bg={"white"}>
-              <option value="bandung">Bandung</option>
-              <option value="sukabumi">Sukabumi</option>
-              <option value="batam">Batam</option>
+            <Input
+              placeholder="Pilih Tanggal"
+              bg={"white"}
+              type="month"
+              onChange={(e) =>
+                setFiltering({ ...filtering, time: e.target.value })
+              }
+            ></Input>
+            <Select
+              placeholder="Pilih Lokasi Cabang"
+              bg={"white"}
+              display={userSelector.role == "ADMIN" ? "none" : "flex"}
+            >
+              {selector.map((val) => {
+                return (
+                  <option value={val.branch_name}>{val.branch_name}</option>
+                );
+              })}
             </Select>
             <InputGroup>
-              <Input placeholder="search" bg={"white"}></Input>
+              <Input placeholder="search" bg={"white"} ref={searchRef}></Input>
               <InputRightElement
                 as={BiSearch}
                 w={"30px"}
                 h={"30px"}
                 padding={"10px 10px 0px 0px"}
+                onClick={() => {
+                  setFiltering({
+                    ...filtering,
+                    search: searchRef.current.value,
+                  });
+                  setShown({ page: 1 });
+                }}
               />
             </InputGroup>
           </Flex>
@@ -221,8 +257,20 @@ export default function AdminOrderList() {
                   <Flex alignItems="center" id="tableNameB">
                     Tanggal{" "}
                     <Flex flexDirection="column">
-                      <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                      <Icon id="descendingB" as={MdArrowBackIosNew} />
+                      <Icon
+                        id="ascendingB"
+                        as={MdArrowBackIosNew}
+                        onClick={() => {
+                          setFiltering({ ...filtering, order: "ASC" });
+                        }}
+                      />
+                      <Icon
+                        id="descendingB"
+                        as={MdArrowBackIosNew}
+                        onClick={() => {
+                          setFiltering({ ...filtering, order: "DESC" });
+                        }}
+                      />
                     </Flex>
                   </Flex>
                 </Th>
@@ -248,10 +296,10 @@ export default function AdminOrderList() {
                       }}
                     >
                       <Td textAlign={"center"}>{val.order_number}</Td>
-                      <Td textAlign={"center"}>{val.Address?.address_name}</Td>
+                      <Td textAlign={"center"}>{val.User?.user_name}</Td>
                       <Td textAlign={"center"}>{val.status}</Td>
                       <Td textAlign={"center"}>
-                        {moment(val.date).format("ll")}
+                        {moment(val.createdAt).format("ll")}
                       </Td>
                       <Td textAlign={"center"}>
                         Rp {val.total?.toLocaleString("id-ID")}

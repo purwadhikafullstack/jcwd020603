@@ -20,6 +20,7 @@ const checkRole = (allowedRoles) => async (req, res, next) => {
         ],
       },
     });
+    console.log(findToken);
     if (!findToken) {
       throw new Error("token expired");
     }

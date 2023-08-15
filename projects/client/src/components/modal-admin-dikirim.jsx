@@ -1,8 +1,12 @@
 import { Button, Flex } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ModalAdminDikirim(props) {
   const nav = useNavigate();
+  useEffect(() => {
+    props.setValueStatus("Diproses");
+  }, []);
 
   return (
     <>
@@ -23,6 +27,7 @@ export default function ModalAdminDikirim(props) {
             bg={" #f7d1d5"}
             color={"red"}
             onClick={() => {
+              props.acceptOrder();
               props.onClose();
             }}
           >
