@@ -25,7 +25,7 @@ export default function NavbarKeranjang() {
           w={"40px"}
           h={"40px"}
           onClick={() => {
-            nav("/home");
+            nav("/");
           }}
         >
           <Icon as={BiArrowBack} fontSize={"24px"} />

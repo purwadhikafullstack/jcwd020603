@@ -107,7 +107,7 @@ const cartController = {
           {
             model: db.Stock,
             as: "Stock",
-            attributes: ["product_id"],
+            attributes: ["product_id", "branch_id"],
             include: [
               {
                 model: db.Product,

@@ -1,9 +1,8 @@
 import { Button, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../api/api";
 
 export default function ModalAdminDitolak(props) {
-  const nav = useNavigate();
-
   return (
     <>
       <Flex padding={"20px"} flexDir={"column"} rowGap={"20px"}>
@@ -23,7 +22,7 @@ export default function ModalAdminDitolak(props) {
             bg={" #f7d1d5"}
             color={"red"}
             onClick={() => {
-              props.onClose();
+              props.cancelOrder();
             }}
           >
             YA

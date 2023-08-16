@@ -40,7 +40,10 @@ export default function AdminSidebar() {
           <Flex
             id="pesanan"
             className="adminMenuStyleG"
-            onClick={(e) => handleClick(e)}
+            onClick={(e) => {
+              handleClick(e);
+              nav("/admin/orders");
+            }}
             bg={Clicked == "pesanan" ? "#FFF4DD" : "white"}
             color={Clicked == "pesanan" ? "#FFAE0D" : "gray"}
           >

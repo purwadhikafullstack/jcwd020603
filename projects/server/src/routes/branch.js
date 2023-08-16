@@ -31,4 +31,10 @@ router.delete(
   branchController.deleteBranchAdmin
 );
 
+router.get(
+  "/selector",
+  roleController.checkSuper,
+  branchController.getSelector
+);
+
 module.exports = router;

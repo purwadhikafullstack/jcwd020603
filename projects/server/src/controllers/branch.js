@@ -230,8 +230,21 @@ const branchController = {
     try {
       const branch = await db.Branch.findAll();
       return res.send(branch);
+    } catch (err) {}
+    console.log(err.message);
+  },
+
+  getSelector: async (req, res) => {
+    // const trans = await db.sequelize.transaction();
+    try {
+      const selector = await db.Branch.findAll();
+      // await trans.commit();
+      res.status(200).send({
+        message: "OK",
+        result: selector,
+      });
     } catch (err) {
-      console.log(err.message);
+      // await trans.rollback();
       res.status(500).send({
         message: err.message,
       });
