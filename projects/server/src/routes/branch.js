@@ -8,6 +8,9 @@ router.get(
   roleController.checkAllAdmin,
   branchController.getAll
 );
+
+router.get("/getbranch", branchController.getAllBranchName);
+
 router.get(
   "/all-by-branch",
   roleController.checkAllAdmin,

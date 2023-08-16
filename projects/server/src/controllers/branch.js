@@ -225,6 +225,15 @@ const branchController = {
       res.status(500).send({ message: error.message });
     }
   },
+
+  getAllBranchName: async (req, res) => {
+    try {
+      const branch = await db.Branch.findAll();
+      return res.send(branch);
+    } catch (err) {}
+    console.log(err.message);
+  },
+
   getSelector: async (req, res) => {
     // const trans = await db.sequelize.transaction();
     try {

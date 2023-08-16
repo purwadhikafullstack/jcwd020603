@@ -7,7 +7,9 @@ const { createStockHistory } = require("../service/stock.service");
 const stockControllerB = {
   getAllStock: async (req, res) => {
     try {
-      const get = await db.Stock.findAll({
+      const { nearestBranch } = req.query;
+
+      let stockQueryOptions = {
         include: [
           {
             model: db.Product,
@@ -34,14 +36,23 @@ const stockControllerB = {
             attributes: ["nominal", "title", "valid_start", "valid_to"],
           },
         ],
-      });
-      res.send(get);
+      };
+
+      if (nearestBranch) {
+        stockQueryOptions.where = {
+          branch_id: nearestBranch,
+        };
+      }
+
+      const stocks = await db.Stock.findAll(stockQueryOptions);
+      res.send(stocks);
     } catch (err) {
       res.status(500).send({
         message: err.message,
       });
     }
   },
+
   searchStock: async (req, res) => {
     try {
       const { search_query } = req.query;
@@ -318,6 +329,7 @@ const stockControllerB = {
             model: db.Stock,
             as: "Stock",
             attributes: ["id", "quantity_stock"],
+            paranoid: false,
             include: [
               {
                 model: db.Product,
