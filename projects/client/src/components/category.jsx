@@ -11,7 +11,8 @@ import { api } from "../api/api";
 import { useDispatch } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
 
-export default function Category() {
+export default function Category({ nearestBranch }) {
+  console.log("ini props", nearestBranch);
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,20 +27,26 @@ export default function Category() {
   };
 
   useEffect(() => {
+    const endpoint = nearestBranch
+      ? `/stock?nearestBranch=${nearestBranch}`
+      : "/stock";
+
     api()
-      .get("/category")
+      .get(endpoint)
       .then((response) => {
-        setCategories(response.data);
+        setStocks(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
+  }, [nearestBranch]);
 
+  useEffect(() => {
     api()
-      .get("/stock")
+      .get("/category")
       .then((response) => {
-        setStocks(response.data);
-        console.log(response.data);
+        setCategories(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -71,6 +78,7 @@ export default function Category() {
                 key={val.id}
                 photo_category_url={val.photo_category_url}
                 category_name={val.category_name}
+                nearestBranch={nearestBranch}
               />
             ))}
           </Flex>

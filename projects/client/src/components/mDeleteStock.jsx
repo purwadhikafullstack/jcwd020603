@@ -18,6 +18,7 @@ export function DeleteStock(props) {
   const [stock, setStock] = useState({
     quantity_before: props.stock.quantity_stock,
   });
+
   console.log("ini stock di FE", stock);
 
   const deleteStock = async () => {

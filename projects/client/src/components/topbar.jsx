@@ -14,8 +14,6 @@ export default function TopBar({
 }) {
   const selectAddress = useSelector((state) => state.address);
   const userSelector = useSelector((state) => state.auth);
-  console.log(selectAddress);
-  console.log(userSelector);
   const nav = useNavigate();
   const getFormattedAddress = () => {
     if (address) {
