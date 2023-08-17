@@ -42,6 +42,8 @@ export function SATableStockHistory({
   before,
   after,
   fetchData,
+  indexOfLastProduct,
+  productsPerPage,
 }) {
   const navigate = useNavigate();
   //   const modalDelete = useDisclosure();
@@ -71,10 +73,6 @@ export function SATableStockHistory({
       });
   }, []);
 
-  // useEffect(() => {
-  //   console.log(url);
-  // }, []);
-
   const getCategoryName = (x) => {
     const category = categories.find((y) => y.id === x);
     return category ? category.category_name : "";
@@ -91,7 +89,7 @@ export function SATableStockHistory({
   return (
     <>
       <Tr id="SACategoryB">
-        <Td>{idx + 1}</Td>
+        <Td>{indexOfLastProduct - productsPerPage + idx + 1}</Td>
         <Td className="SAImgCategoryB">
           <Image src={url} />
         </Td>

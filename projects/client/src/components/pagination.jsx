@@ -20,6 +20,9 @@ export default function Pagination(props) {
       </Center>
     );
   };
+
+  console.log(pages);
+
   return (
     <>
       <Center gap={"5px"}>
@@ -39,9 +42,14 @@ export default function Pagination(props) {
           <>
             {shown.page < Math.ceil(pages.length / 3) && (
               <>
-                {pages.slice(0, 3).map((val) => (
-                  <NumberBox val={val} />
-                ))}
+                {pages
+                  .slice(
+                    shown.page >= 2 ? shown.page - 2 : 0,
+                    shown.page >= 2 ? shown.page + 1 : shown.page + 2
+                  )
+                  .map((val) => (
+                    <NumberBox val={val} />
+                  ))}
               </>
             )}
             {shown.page >= Math.ceil(pages.length / 3) &&

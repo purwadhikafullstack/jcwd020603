@@ -37,6 +37,8 @@ export function SATableProduct({
   desc,
   weight,
   category,
+  indexOfLastProduct,
+  productsPerPage,
   fetchData,
 }) {
   console.log(product);
@@ -71,7 +73,7 @@ export function SATableProduct({
   return (
     <>
       <Tr id="SACategoryB">
-        <Td>{idx + 1}</Td>
+        <Td> {indexOfLastProduct - productsPerPage + idx + 1}</Td>
         <Td className="SAImgCategoryB">
           <Image src={url} />
         </Td>

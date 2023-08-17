@@ -24,12 +24,14 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { AiOutlinePlus } from "react-icons/ai";
 import { SATableStockHistory } from "./SATableStockHistory";
 import { AddProduct } from "./mAddProduct";
+import Pagination from "./pagination";
 
 export default function StockHistoryList() {
   const windowWidth = window.innerWidth;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const tableHeadRef = useRef(null);
   const tableRowRef = useRef(null);
+  const searchRef = useRef(null);
 
   const handleTableHeadScroll = (e) => {
     if (tableRowRef.current) {
@@ -42,32 +44,63 @@ export default function StockHistoryList() {
     }
   };
 
+  //get all category
+  const [shown, setShown] = useState({ page: 1 });
+  const [filtering, setFiltering] = useState({
+    page: shown.page,
+    search: "",
+  });
+  const [totalPages, setTotalPages] = useState(0);
   const [stockHistory, setStockHistory] = useState([]);
-  console.log(stockHistory);
-  useEffect(() => {
+
+  const fetchData = async () => {
+    const params = { ...filtering };
     const token = JSON.parse(localStorage.getItem("auth"));
-    api()
-      .get("/stock/stockhistory", {
+    try {
+      const response = await api().get("/stock/stockhistory", {
+        params: { ...params },
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then((response) => {
-        setStockHistory(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
       });
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await api().get("/stock/stockhistory");
-      setStockHistory(response.data);
+      setStockHistory(response.data.result);
+      setTotalPages(response.data.total);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [filtering]);
+
+  //pagination
+  const [pages, setPages] = useState([]);
+  function pageHandler() {
+    const output = [];
+    for (let i = 1; i <= totalPages; i++) {
+      output.push(i);
+    }
+    setPages(output);
+  }
+  useEffect(() => {
+    pageHandler();
+  }, [stockHistory]);
+
+  useEffect(() => {
+    if (shown.page > 0 && shown.page <= totalPages) {
+      setFiltering({ ...filtering, page: shown.page });
+    }
+  }, [shown]);
+
+  const productsPerPage = 10;
+  const indexOfLastProduct = shown.page * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+
   return (
     <>
       <Box>
@@ -79,12 +112,23 @@ export default function StockHistoryList() {
             <Flex width={"350px"}>Stock History</Flex>
             <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
               <InputGroup>
-                <Input placeholder="search" bg={"white"}></Input>
+                <Input
+                  placeholder="search"
+                  bg={"white"}
+                  ref={searchRef}
+                ></Input>
                 <InputRightElement
                   as={BiSearch}
                   w={"30px"}
                   h={"30px"}
                   padding={"10px 10px 0px 0px"}
+                  onClick={() => {
+                    setFiltering({
+                      ...filtering,
+                      search: searchRef.current.value,
+                    });
+                    setShown({ page: 1 });
+                  }}
                 />
               </InputGroup>
             </Flex>
@@ -156,12 +200,22 @@ export default function StockHistoryList() {
                       stock={stockHistory.stock_id}
                       before={stockHistory.quantity_before}
                       after={stockHistory.quantity_after}
+                      indexOfLastProduct={indexOfLastProduct}
+                      productsPerPage={productsPerPage}
                       fetchData={fetchData}
                     />
                   ))}
                 </Tbody>
               </Table>
             </TableContainer>
+            <Flex justifyContent={"end"}>
+              <Pagination
+                shown={shown}
+                setShown={setShown}
+                totalPages={totalPages}
+                pages={pages}
+              />
+            </Flex>
           </Stack>
         </Flex>
       </Flex>
