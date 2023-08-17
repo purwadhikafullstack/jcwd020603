@@ -9,6 +9,7 @@
     margin-top: 60px;
     border-top-left-radius: 20px;
     background: #FFF7E7;
+
 }
 .flex2R-disvoc {
     font-size: 26px;
@@ -58,4 +59,13 @@
     display: flex;
     flex-direction: column;
     width: 45%;
+}
+
+.flex3R-addEdit-disvoc{
+    width: 40%;
+    color: black    ;
+    flex-direction: column;
+    gap: 20px;
+
+
 }

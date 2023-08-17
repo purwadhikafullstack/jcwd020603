@@ -25,7 +25,8 @@
     "mysql2": "^3.3.3",
     "nodemailer": "^6.9.3",
     "sequelize": "^6.32.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"

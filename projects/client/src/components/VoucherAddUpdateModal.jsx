@@ -166,7 +166,7 @@ export default function VoucherAddUpdateModal(props) {
       <Flex>
         <Flex className="flex2R-addbranch">
           <Flex className="flex3R-addbranch">
-            <Flex className="flex3R-input_user-addbranch">
+            <Flex className="flex3R-input_user-disvoc">
               <Box className="flex3R-input-box-addbranch">
                 {isEdit == true ? "Edit Voucher" : "Tambah Voucher"}
               </Box>

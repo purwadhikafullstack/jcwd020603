@@ -5,6 +5,94 @@ const moment = require("moment");
 const { query } = require("express");
 const { createStockHistory } = require("../service/stock.service");
 const stockControllerB = {
+
+  getAllStockByDiscount : async (req, res) => {
+    const {discount_id} = req.query
+    console.log(req.query, "ini diskon id");
+      try {
+        const getbydiscount = await db.Stock.findAll({
+          where : {
+            discount_id
+          },
+          include: [
+            {
+              model: db.Product,
+              as: "Product",
+              attributes: [
+                "product_name",
+                "price",
+                "photo_product_url",
+                "category_id",
+                "desc",
+                "weight",
+              ],
+              include: [
+                {
+                  model: db.Category,
+                  as: "Category",
+                  attributes: ["category_name"],
+                },
+              ],
+            },
+            {
+              model: db.Discount,
+              as: "Discount",
+              attributes: ["nominal", "title", "valid_start", "valid_to"],
+            },
+          ],
+        });
+        res.status(200).send({message : "Data Stock by discount_id", data : getbydiscount});
+      } catch (err) {
+        res.status(500).send({
+          message: err.message,
+        });
+      }
+  },
+
+  getAllStockByBranch : async (req,res) => {
+    const {branch_id} = req.query
+    console.log(req.query, "ini");
+      try {
+        const getbybranch = await db.Stock.findAll({
+          where : {
+           [Op.or] : [{branch_id : branch_id}]
+          },
+          include: [
+            {
+              model: db.Product,
+              as: "Product",
+              attributes: [
+                "product_name",
+                "price",
+                "photo_product_url",
+                "category_id",
+                "desc",
+                "weight",
+              ],
+              include: [
+                {
+                  model: db.Category,
+                  as: "Category",
+                  attributes: ["category_name"],
+                },
+              ],
+            },
+            {
+              model: db.Discount,
+              as: "Discount",
+              attributes: ["nominal", "title", "valid_start", "valid_to"],
+            },
+          ],
+        });
+        res.status(200).send({message : "Data Stock by branch_id", data : getbybranch});
+      } catch (err) {
+        res.status(500).send({
+          message: err.message,
+        });
+      }
+  },
+
+
   getAllStock: async (req, res) => {
     try {
       const { nearestBranch } = req.query;
