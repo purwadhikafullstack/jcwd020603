@@ -78,7 +78,7 @@ const branchController = {
         city_id,
         province,
       } = req.body;
-      // console.log(req.body);
+      console.log(req.body, "req bodynya admin bbranch");
       const hashedPass = await bcrypt.hash(password, 10);
       const coordinate = await openCage(req.body);
       console.log(coordinate);
@@ -158,7 +158,7 @@ const branchController = {
       password,
       phone_number,
       branch_name,
-      branch_address,
+      address,
       district,
       city_id,
       city_name,
@@ -219,7 +219,7 @@ const branchController = {
 
       await db.Branch.update({
         branch_name,
-        branch_address,
+        branch_address : address,
         district,
         city_id,
         province,

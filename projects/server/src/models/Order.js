@@ -1,3 +1,5 @@
+const moment = require("moment")
+
 module.exports = (sequelize, Sequelize) => {
   const Order = sequelize.define("Orders", {
     date: Sequelize.DATE,
@@ -14,6 +16,22 @@ module.exports = (sequelize, Sequelize) => {
     order_transfer_url: Sequelize.STRING,
     shipping_cost: Sequelize.INTEGER,
     discount_voucher: Sequelize.INTEGER,
-  });
+  },
+  {
+    paranoid: true,
+    hooks: {
+      afterCreate: async (instance, options) => {
+        const order_number = `TRX-${moment().format("DDMMYYYY")}${
+          instance.id
+        }${moment().format("HHmmss")}`;
+
+        await instance.update(
+          { order_number: order_number },
+          { transaction: options.transaction }
+        );
+      },
+    },
+  }
+  );
   return Order;
 };

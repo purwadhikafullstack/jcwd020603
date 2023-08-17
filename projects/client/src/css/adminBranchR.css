@@ -47,8 +47,17 @@
 
 
 .flex3R-input_user-addbranch {
-    width: 100%;
+    width: 40%;
     color: black    ;
+    flex-direction: column;
+    gap: 20px;
+
+
+}
+
+.flex3R-input_user-disvoc {
+    width: 100%;
+    color: black;
     flex-direction: column;
     gap: 20px;
 

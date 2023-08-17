@@ -4,6 +4,8 @@ const stockControllerB = require("../controllers").stockControllerB;
 const roleController = require("../middleware/checkRole");
 
 router.get("/", stockControllerB.getAllStock);
+router.get("/byBranch", stockControllerB.getAllStockByBranch);
+router.get("/byDiscount", stockControllerB.getAllStockByDiscount);
 router.get("/s-category", stockControllerB.getAllStockByCategory);
 router.get("/search", stockControllerB.searchStock);
 router.post("/v1", roleController.checkAdmin, stockControllerB.insertStock);

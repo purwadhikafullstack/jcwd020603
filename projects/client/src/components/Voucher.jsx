@@ -39,6 +39,7 @@ import ModalKonfirmasiDeleteVoucher from "./modal-konfirmasi-deleteVoucher";
 
 export default function Voucher() {
   const userSelector = useSelector((state) => state.auth);
+  console.log(userSelector.branch_id);
   const roleOfUSer = userSelector.role;
   const { isOpen, onOpen, onClose } = useDisclosure(); //state untuk pengaturan modal add
   const {
@@ -53,7 +54,7 @@ export default function Voucher() {
   const fetchAll = async () => {
     try {
       const voucher = await api()
-        .get("/voucher/")
+        .get("/voucher/all")
         .then((res) => {
           console.log(res.data.data);
           setDtVocer(res.data.data);
@@ -62,6 +63,8 @@ export default function Voucher() {
       console.log(error.message);
     }
   };
+
+  console.log(dtVocer);
 
   const activeCheck = (valid_start, valid_to) => {
     const today = moment();
@@ -159,6 +162,7 @@ export default function Voucher() {
                   <Th>Tanggal Akhir</Th>
                   <Th>Nominal</Th>
                   <Th>Minimal order</Th>
+                  <Th>Limit</Th>
                   <Th>Keterangan</Th>
                   <Th>Aksi</Th>
                 </Tr>
@@ -179,6 +183,7 @@ export default function Voucher() {
                     <Td>{val?.valid_to.split("T")[0]}</Td>
                     <Td>{val?.nominal}</Td>
                     <Td>{val?.minimal_order}</Td>
+                    <Td>{val?.limit}</Td>
                     <Td>{val?.desc}</Td>
                     <Td alignItems={"center"} position={"center"}>
                       <Flex flexDir={"row"} w={"100%"} h={"100%"} gap={"15px"}>
