@@ -53,6 +53,64 @@ const stockControllerB = {
     }
   },
 
+  getAllStockAdmin: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const page = req.query.page - 1 || 0;
+      const search = req.query.search || "";
+      let whereClause = {};
+      if (req.query.search) {
+        whereClause[Op.or] = [
+          { product_name: { [Op.like]: `%${search}%` } },
+          { category_name: { [Op.like]: `%${search}%` } },
+        ];
+      }
+      const stockAdmin = await db.Stock.findAndCountAll({
+        where: whereClause,
+        include: [
+          {
+            model: db.Product,
+            as: "Product",
+            attributes: [
+              "product_name",
+              "price",
+              "photo_product_url",
+              "category_id",
+              "desc",
+              "weight",
+            ],
+            include: [
+              {
+                model: db.Category,
+                as: "Category",
+                attributes: ["category_name"],
+              },
+            ],
+          },
+          {
+            model: db.Discount,
+            as: "Discount",
+            attributes: ["nominal", "title", "valid_start", "valid_to"],
+          },
+        ],
+        limit: 10,
+        offset: 10 * page,
+      });
+
+      await trans.commit(); // Move the commit after successful operation
+      return res.status(200).send({
+        message: "OK",
+        result: stockAdmin.rows,
+        total: Math.ceil(stockAdmin.count / 10),
+      });
+    } catch (err) {
+      await trans.rollback(); // Rollback only if an error occurs
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
   searchStock: async (req, res) => {
     try {
       const { search_query } = req.query;
@@ -321,9 +379,21 @@ const stockControllerB = {
       });
     }
   },
+
   getStockHistory: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
-      const get = await db.StockHistory.findAll({
+      const page = req.query.page - 1 || 0;
+      const search = req.query.search || "";
+      let whereClause = {};
+      if (req.query.search) {
+        whereClause[Op.or] = [
+          { product_name: { [Op.like]: `%${search}%` } },
+          { category_name: { [Op.like]: `%${search}%` } },
+        ];
+      }
+      const stockHistory = await db.StockHistory.findAndCountAll({
+        where: whereClause,
         include: [
           {
             model: db.Stock,
@@ -358,9 +428,18 @@ const stockControllerB = {
             ],
           },
         ],
+        limit: 10,
+        offset: 10 * page,
       });
-      res.send(get);
+
+      await trans.commit(); // Move the commit after successful operation
+      return res.status(200).send({
+        message: "OK",
+        result: stockHistory.rows,
+        total: Math.ceil(stockHistory.count / 10),
+      });
     } catch (err) {
+      await trans.rollback(); // Rollback only if an error occurs
       res.status(500).send({
         message: err.message,
       });

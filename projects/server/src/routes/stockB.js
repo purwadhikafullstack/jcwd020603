@@ -4,6 +4,11 @@ const stockControllerB = require("../controllers").stockControllerB;
 const roleController = require("../middleware/checkRole");
 
 router.get("/", stockControllerB.getAllStock);
+router.get(
+  "/admin",
+  roleController.checkAllAdmin,
+  stockControllerB.getAllStockAdmin
+);
 router.get("/s-category", stockControllerB.getAllStockByCategory);
 router.get("/stockhistory", stockControllerB.getStockHistory);
 router.get("/search", stockControllerB.searchStock);

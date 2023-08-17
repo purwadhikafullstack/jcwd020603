@@ -17,12 +17,16 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { EditCategory } from "./mEditCategory";
 import { DeleteCategory, DeleteProduct } from "./mDeleteCategory";
 
-export function SATableCategory({ category, idx, fetchData }) {
+export function SATableCategory({
+  category,
+  idx,
+  fetchData,
+  indexOfLastProduct,
+  productsPerPage,
+}) {
   const modalDelete = useDisclosure();
   const modalEdit = useDisclosure();
-
   const { photo_category_url, id } = category;
-
   const [editCategory, setEditCategory] = useState(null);
 
   useEffect(() => {
@@ -32,7 +36,9 @@ export function SATableCategory({ category, idx, fetchData }) {
   return (
     <>
       <Tr id="SACategoryB" key={category.id}>
-        <Td textAlign={"center"}>{idx + 1}</Td>
+        <Td textAlign={"center"}>
+          {indexOfLastProduct - productsPerPage + idx + 1}
+        </Td>
         <Td className="SAImgCategoryB">
           <Image src={photo_category_url} />
         </Td>
