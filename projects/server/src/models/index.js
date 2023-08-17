@@ -63,6 +63,11 @@ db.User = require("./User")(sequelize, Sequelize);
 db.Token = require("./Token")(sequelize, Sequelize);
 db.Cart = require("./Cart")(sequelize, Sequelize);
 
+db.Order.belongsTo(db.Branch, {
+  foreignKey: "branch_id",
+  as: "Branch",
+});
+
 db.Address.belongsTo(db.User, {
   foreignKey: "user_id",
   as: "User",

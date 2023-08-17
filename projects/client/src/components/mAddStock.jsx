@@ -20,7 +20,6 @@ export function AddStock(props) {
     branch_id: 1,
     product_id: "",
     quantity_stock: "",
-    discount: "",
   });
 
   const inputHandler = (e) => {
@@ -46,7 +45,7 @@ export function AddStock(props) {
       alert("Posting success");
       props.onClose();
     } catch (error) {
-      console.error(error);
+      console.log(error);
       alert("Posting failed");
     }
   };
@@ -102,12 +101,6 @@ export function AddStock(props) {
                 id="branch_id"
                 onChange={inputHandler}
               />
-              <Input
-                className="inputAddProduct"
-                placeholder="Diskon"
-                id="discount"
-                onChange={inputHandler}
-              />
             </Flex>
           </ModalBody>
           <ModalFooter justifyContent="center">
@@ -116,7 +109,7 @@ export function AddStock(props) {
               colorScheme="green"
               onClick={() => {
                 addStock();
-                props.fetchData();
+                // props.fetchData();
               }}
             >
               Save

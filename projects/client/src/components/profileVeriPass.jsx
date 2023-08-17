@@ -9,6 +9,7 @@ export default function ProfileVeriPass() {
   const userSelector = useSelector((state) => state.auth);
   const logout = () => {
     localStorage.removeItem("auth");
+    localStorage.removeItem("address");
     nav("/");
   };
 

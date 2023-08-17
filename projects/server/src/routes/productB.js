@@ -7,6 +7,11 @@ const roleController = require("../middleware/checkRole");
 //get
 
 router.get("/", roleController.checkAllAdmin, productControllerB.getAll);
+router.get(
+  "/admin",
+  roleController.checkAllAdmin,
+  productControllerB.getAllAdmin
+);
 router.post(
   "/v1",
   roleController.checkSuper,

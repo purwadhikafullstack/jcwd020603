@@ -17,8 +17,17 @@ import ModalProduct from "./modal-product";
 
 export function CardProduct(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { url, product_name, price, desc, weight, discount, id, stock_id } =
-    props;
+  const {
+    url,
+    product_name,
+    price,
+    desc,
+    weight,
+    discount,
+    id,
+    stock_id,
+    quantity_stock,
+  } = props;
   const discountedPrice = price - (price * discount) / 100;
 
   const formatCurrency = (amount) => {
@@ -49,6 +58,7 @@ export function CardProduct(props) {
     qty: "",
     discount: "",
     discountedPrice: "",
+    quantity_stock: "",
   });
   const getProdVal = (val, idx) => {
     const newDiscount = discount || 0;
@@ -66,6 +76,7 @@ export function CardProduct(props) {
       weight: weight,
       discount: newDiscount,
       discountedPrice: newDiscountedPrice,
+      quantity_stock: quantity_stock,
     });
   };
   useEffect(() => {
@@ -139,6 +150,7 @@ export function CardProduct(props) {
             onClose={onClose}
             prodVal={prodVal}
             setProdVal={setProdVal}
+            lengthCart={props.lengthCart}
           />
         </DrawerContent>
       </Drawer>

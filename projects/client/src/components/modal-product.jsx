@@ -37,6 +37,16 @@ export default function ModalProduct(props) {
   useEffect(() => {
     insertQty();
   }, [count]);
+  //get jumlah keranjang
+  const [countAll, setCountAll] = useState(0);
+  const getCount = async () => {
+    await api()
+      .get("/cart")
+      .then((res) => {
+        setCountAll(res.data.total);
+        console.log(res.data.result);
+      });
+  };
 
   //function cek update post produk ke cart
   const toast = useToast();
@@ -46,6 +56,7 @@ export default function ModalProduct(props) {
         `/cart/${prodVal?.id}?discounted_price=${prodVal?.discountedPrice}`,
         prodVal
       );
+      getCount();
       toast({
         title: update.data.message,
         status: update.data.status,
@@ -69,8 +80,21 @@ export default function ModalProduct(props) {
     updateAdd();
   };
 
+  //kondisional jumlah stok
+  const [stokValue, setStokValue] = useState("");
+  const stockAmount = () => {
+    const amount = prodVal.quantity_stock;
+    if (amount > 10) {
+      return setStokValue("Stok Tersedia > 10");
+    } else if (amount <= 10 && amount != 0) {
+      return setStokValue(`Stok Tersedia : ${amount}`);
+    } else if (amount <= 0) {
+      return setStokValue("Stok Habis");
+    }
+  };
   useEffect(() => {
     console.log(prodVal);
+    stockAmount();
   }, []);
 
   return (
@@ -93,7 +117,10 @@ export default function ModalProduct(props) {
           <Flex className="flexHargaG">
             {!prodVal.discountedPrice ? (
               <Flex className="styleHargaG">
-                Rp {prodVal.price.toLocaleString("id-ID")}
+                Rp{" "}
+                {prodVal?.price != null
+                  ? prodVal?.price.toLocaleString("id-ID")
+                  : 0}
               </Flex>
             ) : prodVal.discount == 50 ? (
               <Flex flexDir={"column"} rowGap={"5px"}>
@@ -123,12 +150,18 @@ export default function ModalProduct(props) {
             <Flex fontSize={"12px"} color={"#767676"}>
               {prodVal.desc}
             </Flex>
+            <Flex fontSize={"12px"}>{stokValue}</Flex>
           </Flex>
           <Flex className="footerModalG">
             <Icon as={BiHeart} fontSize={"32px"} />
             <Flex justifyContent={"right"}>
               <Icon as={MdOutlineShoppingCart} fontSize={"32px"} />
-              <Center className="redDotCountG">1</Center>
+              <Center
+                className="redDotCountG"
+                display={props.lengthCart == 0 ? "none" : "flex"}
+              >
+                {props.lengthCart}
+              </Center>
             </Flex>
             <Flex className="counterQtyG">
               <Icon
@@ -164,7 +197,16 @@ function useCounter(val, step) {
   const toast = useToast();
   function tambah(prodVal) {
     if (prodVal.discount != 50) {
-      setCount(count + step);
+      if (count < prodVal.quantity_stock) {
+        setCount(count + step);
+      } else {
+        toast({
+          title: "Jumlah produk mencapai batas stok",
+          status: "warning",
+          position: "top",
+          duration: 4000,
+        });
+      }
     } else {
       toast({
         title: "Hanya dapat membeli satu produk promo buy 1 get 1",
@@ -175,8 +217,17 @@ function useCounter(val, step) {
     }
   }
   function kurang(prodVal) {
-    if (count > 1 || prodVal.discount != 50) {
-      setCount(count - step);
+    if (prodVal.discount != 50) {
+      if (count >= 1 && count != 1) {
+        setCount(count - step);
+      } else {
+        toast({
+          title: "Tidak dapat membeli produk kurang dari 1",
+          status: "warning",
+          position: "top",
+          duration: 4000,
+        });
+      }
     } else {
       toast({
         title: "Hanya dapat membeli satu produk promo buy 1 get 1",

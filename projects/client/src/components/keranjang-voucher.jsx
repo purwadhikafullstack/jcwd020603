@@ -27,7 +27,7 @@ export default function VoucherPromo(props) {
       const total = totalBelanja.length
         ? totalBelanja.reduce((a, b) => a + b)
         : 0;
-      const minTransaction = voucherMatch?.minimal_order < total;
+      const minTransaction = voucherMatch?.minimal_order <= total;
       if (minTransaction && voucherMatch?.limit != 0) {
         setVoucherStatus("found");
         setVoucherUse(voucherMatch);

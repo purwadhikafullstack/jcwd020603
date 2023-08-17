@@ -14,6 +14,9 @@ export default function Product() {
   const [stocks, setStocks] = useState([]);
 
   const category_name = location.state?.category_name;
+  const nearestBranch = location.state?.nearestBranch;
+
+  console.log("ini nearestBranch ProductPage", nearestBranch);
 
   const [productSearchResults, setProductSearchResults] = useState([]);
 
@@ -22,6 +25,7 @@ export default function Product() {
       .get("/stock/search", {
         params: {
           search_query: searchTerm,
+          // branch_id:
         },
       })
       .then((response) => {

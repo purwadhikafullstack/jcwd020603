@@ -1,7 +1,30 @@
 const db = require("../models");
-const axios = require("axios");
 const dotenv = require("dotenv");
 dotenv.config();
-const openCage_API_KEY = process.env.openCage_API_KEY;
 
-module.exports = {};
+module.exports = {
+  createStockHistory: async (stok, input) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      await db.StockHistory.create(
+        {
+          stock_id: stok.dataValues.id,
+          quantity_before: input.quantity_before,
+          status: input.status,
+          status_quantity: input.status_quantity,
+          quantity_after: input.quantity_after,
+          feature: input.feature,
+        },
+        {
+          transaction: trans,
+        }
+      );
+      await trans.commit();
+      return true;
+    } catch (err) {
+      console.log(err);
+      await trans.rollback();
+      return false;
+    }
+  },
+};

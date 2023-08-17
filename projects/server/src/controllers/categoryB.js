@@ -16,6 +16,36 @@ const categoryController = {
       });
     }
   },
+
+  getAllAdmin: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const page = req.query.page - 1 || 0;
+      const search = req.query.search || "";
+      let whereClause = {};
+      if (req.query.search) {
+        whereClause[Op.or] = [{ category_name: { [Op.like]: `%${search}%` } }];
+      }
+      const category = await db.Category.findAndCountAll({
+        where: whereClause,
+        limit: 5,
+        offset: 5 * page,
+      });
+      await trans.commit();
+      return res.status(200).send({
+        message: "OK",
+        result: category.rows,
+        total: Math.ceil(category.count / 5),
+      });
+    } catch (err) {
+      await trans.rollback();
+      console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
   getById: async (req, res) => {
     try {
       const category = await db.Category.findOne({
@@ -37,7 +67,6 @@ const categoryController = {
     try {
       const { category_name } = req.body;
       const { filename } = req.file;
-      console.log(req.file);
 
       await db.Category.create(
         {
@@ -72,7 +101,6 @@ const categoryController = {
           id: req.params.id,
         },
       });
-      // console.log(kategori);
       const cat_nm = category_name
         ? category_name
         : kategori.dataValues.category_name;

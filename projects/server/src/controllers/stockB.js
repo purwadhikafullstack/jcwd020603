@@ -3,6 +3,7 @@ const Sequelize = require("sequelize");
 const { Op } = db.Sequelize;
 const moment = require("moment");
 const { query } = require("express");
+const { createStockHistory } = require("../service/stock.service");
 const stockControllerB = {
 
   getAllStockByDiscount : async (req, res) => {
@@ -94,7 +95,9 @@ const stockControllerB = {
 
   getAllStock: async (req, res) => {
     try {
-      const get = await db.Stock.findAll({
+      const { nearestBranch } = req.query;
+
+      let stockQueryOptions = {
         include: [
           {
             model: db.Product,
@@ -121,14 +124,81 @@ const stockControllerB = {
             attributes: ["nominal", "title", "valid_start", "valid_to"],
           },
         ],
-      });
-      res.send(get);
+      };
+
+      if (nearestBranch) {
+        stockQueryOptions.where = {
+          branch_id: nearestBranch,
+        };
+      }
+
+      const stocks = await db.Stock.findAll(stockQueryOptions);
+      res.send(stocks);
     } catch (err) {
       res.status(500).send({
         message: err.message,
       });
     }
   },
+
+  getAllStockAdmin: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const page = req.query.page - 1 || 0;
+      const search = req.query.search || "";
+      let whereClause = {};
+      if (req.query.search) {
+        whereClause[Op.or] = [
+          { product_name: { [Op.like]: `%${search}%` } },
+          { category_name: { [Op.like]: `%${search}%` } },
+        ];
+      }
+      const stockAdmin = await db.Stock.findAndCountAll({
+        where: whereClause,
+        include: [
+          {
+            model: db.Product,
+            as: "Product",
+            attributes: [
+              "product_name",
+              "price",
+              "photo_product_url",
+              "category_id",
+              "desc",
+              "weight",
+            ],
+            include: [
+              {
+                model: db.Category,
+                as: "Category",
+                attributes: ["category_name"],
+              },
+            ],
+          },
+          {
+            model: db.Discount,
+            as: "Discount",
+            attributes: ["nominal", "title", "valid_start", "valid_to"],
+          },
+        ],
+        limit: 10,
+        offset: 10 * page,
+      });
+
+      await trans.commit(); // Move the commit after successful operation
+      return res.status(200).send({
+        message: "OK",
+        result: stockAdmin.rows,
+        total: Math.ceil(stockAdmin.count / 10),
+      });
+    } catch (err) {
+      await trans.rollback(); // Rollback only if an error occurs
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
   searchStock: async (req, res) => {
     try {
       const { search_query } = req.query;
@@ -197,23 +267,36 @@ const stockControllerB = {
   insertStock: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
-      const { quantity_stock, product_id, branch_id, discount } = req.body;
-      console.log(req.body);
-      await db.Stock.create(
+      const { quantity_stock, product_id, branch_id } = req.body;
+      const input = {
+        quantity_before: 0,
+        status: "INCREMENT",
+        status_quantity: quantity_stock,
+        quantity_after: quantity_stock,
+        feature: "ADDED BY ADMIN BRANCH",
+      };
+
+      const stock = await db.Stock.create(
         {
           quantity_stock: parseInt(quantity_stock),
           product_id: parseInt(product_id),
           branch_id: parseInt(branch_id),
-          discount: parseInt(discount),
         },
         {
           transaction: trans,
         }
       );
       await trans.commit();
-      return await db.Stock.findAll().then((result) => {
-        res.send(result);
-      });
+      const isStockHistoryCreated = await createStockHistory(stock, input);
+      if (isStockHistoryCreated) {
+        return await db.Stock.findAll().then((result) => {
+          res.send(result);
+        });
+      } else {
+        return res.status(500).send({
+          message: "Error creating StockHistory.",
+        });
+      }
     } catch (err) {
       console.log(err);
       await trans.rollback();
@@ -226,22 +309,30 @@ const stockControllerB = {
   editStock: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
-      const { quantity_stock, discount } = req.body;
+      const { quantity_stock, status, quantity_before, status_quantity } =
+        req.body;
+
+      const input = {
+        quantity_before,
+        status,
+        status_quantity,
+        quantity_after: quantity_stock,
+        feature: "UPDATED BY ADMIN BRANCH",
+      };
+
       const stok = await db.Stock.findOne({
         where: {
           id: req.params.id,
         },
       });
-      console.log(stok);
+
       const qty_stok = quantity_stock
         ? quantity_stock
         : stok.dataValues.quantity_stock;
-      const disc = discount ? discount : stok.dataValues.discount;
 
-      await db.Stock.update(
+      const stockUpdate = await db.Stock.update(
         {
           quantity_stock: qty_stok,
-          discount: disc,
         },
         {
           where: {
@@ -250,12 +341,20 @@ const stockControllerB = {
           transaction: trans,
         }
       );
+
       await trans.commit();
-      return await db.Stock.findOne({
-        where: {
-          id: req.params.id,
-        },
-      }).then((result) => res.send(result));
+      const isStockHistoryCreated = await createStockHistory(stok, input);
+      if (isStockHistoryCreated) {
+        return await db.Stock.findOne({
+          where: {
+            id: req.params.id,
+          },
+        }).then((result) => res.send(result));
+      } else {
+        return res.status(500).send({
+          message: "Error creating StockHistory.",
+        });
+      }
     } catch (err) {
       console.log(err.message);
       await trans.rollback();
@@ -268,15 +367,37 @@ const stockControllerB = {
   deleteStock: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
-      await db.Stock.destroy({
+      const { quantity_before } = req.query;
+      const input = {
+        quantity_before,
+        status: "DECREMENT",
+        status_quantity: quantity_before,
+        quantity_after: 0,
+        feature: "DELETED BY ADMIN BRANCH",
+      };
+
+      const stok = await db.Stock.findOne({
         where: {
-          //  id: req.params.id
-          //   [Op.eq]: req.params.id
           id: req.params.id,
         },
       });
-      await trans.commit();
-      return await db.Stock.findAll().then((result) => res.send(result));
+
+      const isStockHistoryCreated = await createStockHistory(stok, input);
+      if (isStockHistoryCreated) {
+        await db.Stock.destroy({
+          where: {
+            //  id: req.params.id
+            //   [Op.eq]: req.params.id
+            id: req.params.id,
+          },
+        });
+        await trans.commit();
+        return await db.Stock.findAll().then((result) => res.send(result));
+      } else {
+        return res.status(500).send({
+          message: "Error creating StockHistory.",
+        });
+      }
     } catch (err) {
       console.log(err.message);
       await trans.rollback();
@@ -289,7 +410,6 @@ const stockControllerB = {
   getAllStockByCategory: async (req, res) => {
     try {
       const { category_name } = req.query;
-      console.log(req.query);
       const get = await db.Stock.findAll({
         include: [
           {
@@ -342,6 +462,72 @@ const stockControllerB = {
       return res.send(product);
     } catch (err) {
       console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  getStockHistory: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const page = req.query.page - 1 || 0;
+      const search = req.query.search || "";
+      let whereClause = {};
+      if (req.query.search) {
+        whereClause[Op.or] = [
+          { product_name: { [Op.like]: `%${search}%` } },
+          { category_name: { [Op.like]: `%${search}%` } },
+        ];
+      }
+      const stockHistory = await db.StockHistory.findAndCountAll({
+        where: whereClause,
+        include: [
+          {
+            model: db.Stock,
+            as: "Stock",
+            attributes: ["id", "quantity_stock"],
+            paranoid: false,
+            include: [
+              {
+                model: db.Product,
+                as: "Product",
+                attributes: [
+                  "product_name",
+                  "price",
+                  "photo_product_url",
+                  "category_id",
+                  "desc",
+                  "weight",
+                ],
+                include: [
+                  {
+                    model: db.Category,
+                    as: "Category",
+                    attributes: ["category_name"],
+                  },
+                ],
+              },
+              {
+                model: db.Branch,
+                as: "Branch",
+                attributes: ["id", "branch_name"],
+              },
+            ],
+          },
+        ],
+        limit: 10,
+        offset: 10 * page,
+      });
+
+      await trans.commit(); // Move the commit after successful operation
+      return res.status(200).send({
+        message: "OK",
+        result: stockHistory.rows,
+        total: Math.ceil(stockHistory.count / 10),
+      });
+    } catch (err) {
+      await trans.rollback(); // Rollback only if an error occurs
       res.status(500).send({
         message: err.message,
       });

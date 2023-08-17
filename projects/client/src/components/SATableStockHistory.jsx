@@ -28,33 +28,41 @@ import { EditCategory } from "./mEditCategory";
 import { EditProduct } from "./mEditProduct";
 import { DeleteProduct } from "./mDeleteProduct";
 
-export function SATableProduct({
-  product,
+export function SATableStockHistory({
+  key,
   idx,
+  stockHistory,
   url,
   product_name,
-  price,
-  desc,
-  weight,
   category,
+  status,
+  status_quantity,
+  feature,
+  stock,
+  before,
+  after,
+  fetchData,
   indexOfLastProduct,
   productsPerPage,
-  fetchData,
 }) {
-  console.log(product);
   const navigate = useNavigate();
-  const modalDelete = useDisclosure();
-  const modalEdit = useDisclosure();
+  //   const modalDelete = useDisclosure();
+  //   const modalEdit = useDisclosure();
 
-  const [editProduct, setEditProduct] = useState(null);
-
-  useEffect(() => {
-    console.log(url);
-  }, []);
-
+  //   const [editProduct, setEditProduct] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
+    api()
+      .get("/product")
+      .then((response) => {
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     api()
       .get("/category/")
       .then((response) => {
@@ -69,11 +77,19 @@ export function SATableProduct({
     const category = categories.find((y) => y.id === x);
     return category ? category.category_name : "";
   };
+  const getProductName = (x) => {
+    const product = products.find((y) => y.id === x);
+    return product ? product.category_name : "";
+  };
+  const getProductUrl = (x) => {
+    const url = products.find((y) => y.id === x);
+    return url ? url.photo_product_url : "";
+  };
 
   return (
     <>
       <Tr id="SACategoryB">
-        <Td> {indexOfLastProduct - productsPerPage + idx + 1}</Td>
+        <Td>{indexOfLastProduct - productsPerPage + idx + 1}</Td>
         <Td className="SAImgCategoryB">
           <Image src={url} />
         </Td>
@@ -89,67 +105,28 @@ export function SATableProduct({
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
-            {price}
+            {before}
           </Flex>
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
-            {desc}
+            {status}
           </Flex>
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
-            {weight}
+            {status_quantity}
           </Flex>
         </Td>
-        <Td className="SACategoryActionB" isNumeric>
-          <Stack>
-            <HStack display={"flex"} align={"center"} justifyContent={"center"}>
-              <Button
-                id="buttonAction"
-                colorScheme={"yellow"}
-                w={"50%"}
-                onClick={() => {
-                  modalEdit.onOpen();
-                  setEditProduct(product.id);
-                  fetchData();
-                }}
-              >
-                {<FiEdit cursor={"pointer"} />}
-                <EditProduct
-                  id={editProduct}
-                  product={product}
-                  isOpen={modalEdit.isOpen}
-                  onClose={() => {
-                    modalEdit.onClose();
-                    fetchData();
-                  }}
-                />
-              </Button>
-              <Button
-                id="buttonAction"
-                colorScheme="red"
-                w={"50%"}
-                onClick={() => {
-                  modalDelete.onOpen();
-                  setEditProduct(product.id);
-                  fetchData();
-                }}
-              >
-                {<RiDeleteBin6Line cursor={"pointer"} />}
-
-                <DeleteProduct
-                  id={editProduct}
-                  product={product}
-                  isOpen={modalDelete.isOpen}
-                  onClose={() => {
-                    modalDelete.onClose();
-                    fetchData();
-                  }}
-                />
-              </Button>
-            </HStack>
-          </Stack>
+        <Td className="SACategoryNameB">
+          <Flex alignItems="center" id="tableNameB">
+            {after}
+          </Flex>
+        </Td>
+        <Td className="SACategoryNameB">
+          <Flex alignItems="center" id="tableNameB">
+            {feature}
+          </Flex>
         </Td>
       </Tr>
     </>

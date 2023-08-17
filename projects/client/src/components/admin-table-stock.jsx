@@ -29,6 +29,8 @@ export function AdminTableStock({
   desc,
   weight,
   category,
+  indexOfLastProduct,
+  productsPerPage,
   fetchData,
 }) {
   console.log(stock);
@@ -63,7 +65,7 @@ export function AdminTableStock({
   return (
     <>
       <Tr id="SACategoryB">
-        <Td>{idx + 1}</Td>
+        <Td> {indexOfLastProduct - productsPerPage + idx + 1}</Td>
         <Td className="SAImgCategoryB">
           <Image src={url} />
         </Td>
@@ -137,7 +139,6 @@ export function AdminTableStock({
                 }}
               >
                 {<RiDeleteBin6Line cursor={"pointer"} />}
-
                 <DeleteStock
                   id={editStock}
                   stock={stock}

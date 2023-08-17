@@ -18,7 +18,10 @@ import { api } from "../api/api";
 // import ModalProduct from "./modal-product";
 
 export default function Sidebar(props) {
+  const { setLengthCart, setGetFunction } = props;
   const user = JSON.parse(localStorage.getItem("auth"));
+  const addressSelector = useSelector((state) => state.address);
+  console.log(addressSelector);
   const nav = useNavigate();
   const toast = useToast();
   //style untuk setiap menu sidebar
@@ -43,26 +46,21 @@ export default function Sidebar(props) {
   const handleClick = (e) => {
     setClicked(e.currentTarget.id);
   };
-  console.log(props.prodCart);
-
   //get jumlah keranjang
   const [countAll, setCountAll] = useState(0);
-  const getAll = async () => {
-    const token = JSON.parse(localStorage.getItem("auth"));
+  const getCount = async () => {
     await api()
-      .get("/cart", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get("/cart")
       .then((res) => {
         setCountAll(res.data.total);
+        setLengthCart(res.data.total);
         console.log(res.data.result);
       });
   };
+
   useEffect(() => {
-    getAll();
-  }, [countAll]);
+    getCount();
+  }, []);
 
   return (
     <>
@@ -146,7 +144,16 @@ export default function Sidebar(props) {
             id="keranjang"
             className="menuSidebarCartG"
             onClick={() => {
-              nav("/cart");
+              if (addressSelector && Object.keys(addressSelector).length > 0) {
+                nav("/cart");
+              } else {
+                toast({
+                  title: "Tentukan alamat pengiriman terlebih dahulu",
+                  status: "warning",
+                  duration: 3000,
+                  isClosable: true,
+                });
+              }
             }}
           >
             <Flex gap={"10px"}>

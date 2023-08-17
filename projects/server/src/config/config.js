@@ -9,5 +9,6 @@ module.exports = {
     database: db_database, //"db_sahabat_sembako",
     host: db_host, // "localhost",
     dialect: "mysql",
+    logging: false,
   },
 };

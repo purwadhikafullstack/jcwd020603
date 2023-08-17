@@ -1,15 +1,40 @@
 const express = require("express");
-const  branchController  = require("../controllers").branchController
+const branchController = require("../controllers").branchController;
 const router = express.Router();
-const roleController = require("../middleware/checkRole")
+const roleController = require("../middleware/checkRole");
 
-router.get("/all-branch", roleController.checkAllAdmin, branchController.getAll);
-router.get("/all-by-branch", roleController.checkAllAdmin, branchController.getbyAll);
+router.get(
+  "/all-branch",
+  roleController.checkAllAdmin,
+  branchController.getAll
+);
 
-router.post("/", roleController.checkSuper, branchController.addBranchAdmin)
+router.get("/getbranch", branchController.getAllBranchName);
 
-router.patch("/", roleController.checkSuper, branchController.updateAdminBranch)
+router.get(
+  "/all-by-branch",
+  roleController.checkAllAdmin,
+  branchController.getbyAll
+);
 
-router.delete("/", roleController.checkSuper, branchController.deleteBranchAdmin)
+router.post("/", roleController.checkSuper, branchController.addBranchAdmin);
+
+router.patch(
+  "/",
+  roleController.checkSuper,
+  branchController.updateAdminBranch
+);
+
+router.delete(
+  "/",
+  roleController.checkSuper,
+  branchController.deleteBranchAdmin
+);
+
+router.get(
+  "/selector",
+  roleController.checkSuper,
+  branchController.getSelector
+);
 
 module.exports = router;
