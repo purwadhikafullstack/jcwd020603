@@ -33,17 +33,11 @@ export function AdminTableStock({
   productsPerPage,
   fetchData,
 }) {
-  console.log(stock);
   const navigate = useNavigate();
   const modalDelete = useDisclosure();
   const modalEdit = useDisclosure();
 
   const [editStock, setEditStock] = useState(null);
-
-  useEffect(() => {
-    console.log(url);
-  }, []);
-
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {

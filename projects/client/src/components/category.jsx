@@ -8,11 +8,10 @@ import { CardCategory } from "./cardCategory";
 import { CardCarousel } from "./cardCarousel";
 import { SearchBar } from "./searchBar";
 import { api } from "../api/api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
 
-export default function Category({ nearestBranch, lengthCart }) {
-  console.log("ini props", nearestBranch);
+export default function Category({ lengthCart, nearestBranch }) {
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -67,7 +66,7 @@ export default function Category({ nearestBranch, lengthCart }) {
   return (
     <>
       <Flex id="baseContainerB">
-        <SearchBar onSearch={performSearch} />
+        <SearchBar nearestBranch={nearestBranch} onSearch={performSearch} />
         <Flex id="headB" paddingTop={"20px"}>
           KATEGORI
         </Flex>

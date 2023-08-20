@@ -7,6 +7,7 @@ import TopBar2 from "../components/topbar2";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
 import SidebarMini from "../components/sidebar-mini";
+import { useDispatch } from "react-redux";
 
 export default function LandingPage() {
   const windowWidth = window.outerWidth;
@@ -16,9 +17,9 @@ export default function LandingPage() {
   });
   const getGeoloc = () => {
     const success = (position) => {
-      console.log(position.coords.latitude);
-      console.log(position.coords.longitude);
-      console.log(position);
+      // console.log(position.coords.latitude);
+      // console.log(position.coords.longitude);
+      // console.log(position);
       setLatlong({
         ...latlong,
         latitude: position.coords.latitude,
@@ -39,11 +40,10 @@ export default function LandingPage() {
   const [address, setAddress] = useState("");
   const getAddress = async () => {
     try {
-      console.log(latlong);
+      // console.log(latlong);
       const response = await api().get(
         `/address?latitude=${latlong.latitude}&longitude=${latlong.longitude}`
       );
-      console.log(response.data);
       setAddress(response.data);
     } catch (error) {
       console.log(error);
@@ -54,7 +54,7 @@ export default function LandingPage() {
     if (latlong.latitude) {
       getAddress();
     }
-    console.log(latlong);
+    // console.log(latlong);
   }, [latlong]);
 
   //menyimpan alamat yang dipilih
@@ -113,18 +113,16 @@ export default function LandingPage() {
         branchLat,
         branchLon
       );
-      console.log("ini distance", distance);
 
       if (distance < minDistance) {
         minDistance = distance;
         nearestBranch = branch;
-        console.log("ini nearestBranch", nearestBranch);
       }
     }
     return nearestBranch;
   }
 
-  const [nearestBranch, setNearestBranch] = useState(0);
+  const [nearestBranch, setNearestBranch] = useState();
 
   // Fungsi untuk mencari branch terdekat berdasarkan latitude dan longitude user
   async function findNearestBranchForUser() {
@@ -137,7 +135,7 @@ export default function LandingPage() {
       });
 
       const branches = response.data;
-      console.log("ini branches", branches);
+      // console.log("ini branches", branches);
       const nearestBranch = await findNearestBranch(
         latlong.latitude,
         latlong.longitude,
@@ -154,9 +152,9 @@ export default function LandingPage() {
   findNearestBranchForUser()
     .then(({ nearestBranch, latlong }) => {
       if (nearestBranch) {
-        console.log(`Nearest branch to user: ${nearestBranch.branch_name}`);
-        console.log(`User latitude: ${latlong.latitude}`);
-        console.log(`User longitude: ${latlong.longitude}`);
+        // console.log(`Nearest branch to user: ${nearestBranch.branch_name}`);
+        // console.log(`User latitude: ${latlong.latitude}`);
+        // console.log(`User longitude: ${latlong.longitude}`);
         setNearestBranch(nearestBranch.id);
       } else {
         console.log("No branches found.");
@@ -165,8 +163,12 @@ export default function LandingPage() {
     .catch((error) => {
       console.error("Error:", error);
     });
-  console.log(nearestBranch);
-  useEffect(() => {}, []);
+
+  useEffect(() => {
+    if (nearestBranch) {
+      localStorage.setItem("nearestBranch", JSON.stringify(nearestBranch));
+    }
+  }, [nearestBranch]);
 
   return (
     <>

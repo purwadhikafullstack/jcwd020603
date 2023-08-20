@@ -58,15 +58,23 @@ const stockControllerB = {
     try {
       const page = req.query.page - 1 || 0;
       const search = req.query.search || "";
+      const branch_id = req.query.branch_id;
       let whereClause = {};
       if (req.query.search) {
         whereClause[Op.or] = [
-          { product_name: { [Op.like]: `%${search}%` } },
-          { category_name: { [Op.like]: `%${search}%` } },
+          { "$Product.product_name$": { [Op.like]: `%${search}%` } },
+          { "$Product.desc$": { [Op.like]: `%${search}%` } },
+          {
+            "$Product.Category.category_name$": {
+              [Op.like]: `%${search}%`,
+            },
+          },
         ];
       }
+      if (req.query.branch_id) {
+        whereClause.branch_id = req.query.branch_id;
+      }
       const stockAdmin = await db.Stock.findAndCountAll({
-        where: whereClause,
         include: [
           {
             model: db.Product,
@@ -93,15 +101,16 @@ const stockControllerB = {
             attributes: ["nominal", "title", "valid_start", "valid_to"],
           },
         ],
-        limit: 10,
-        offset: 10 * page,
+        where: whereClause,
+        limit: 8,
+        offset: 8 * page,
       });
 
       await trans.commit(); // Move the commit after successful operation
       return res.status(200).send({
         message: "OK",
         result: stockAdmin.rows,
-        total: Math.ceil(stockAdmin.count / 10),
+        total: Math.ceil(stockAdmin.count / 8),
       });
     } catch (err) {
       await trans.rollback(); // Rollback only if an error occurs
@@ -113,7 +122,9 @@ const stockControllerB = {
 
   searchStock: async (req, res) => {
     try {
-      const { search_query } = req.query;
+      const { search_query, branch_id } = req.query;
+      console.log("s", search_query);
+      console.log(branch_id);
 
       if (search_query) {
         const stocks = await db.Stock.findAll({
@@ -137,7 +148,9 @@ const stockControllerB = {
               ],
             },
           ],
+
           where: {
+            branch_id: branch_id,
             [Op.or]: [
               { "$Product.product_name$": { [Op.like]: `%${search_query}%` } },
               { "$Product.desc$": { [Op.like]: `%${search_query}%` } },
@@ -153,6 +166,9 @@ const stockControllerB = {
         res.send(stocks);
       } else {
         const stocks = await db.Stock.findAll({
+          where: {
+            branch_id: branch_id,
+          },
           include: [
             {
               model: db.Product,
@@ -321,8 +337,11 @@ const stockControllerB = {
 
   getAllStockByCategory: async (req, res) => {
     try {
-      const { category_name } = req.query;
+      const { category_name, branch_id } = req.query;
       const get = await db.Stock.findAll({
+        where: {
+          branch_id: branch_id,
+        },
         include: [
           {
             model: db.Product,
@@ -385,13 +404,27 @@ const stockControllerB = {
     try {
       const page = req.query.page - 1 || 0;
       const search = req.query.search || "";
+      const branch_id = req.query.branch_id;
       let whereClause = {};
       if (req.query.search) {
         whereClause[Op.or] = [
-          { product_name: { [Op.like]: `%${search}%` } },
-          { category_name: { [Op.like]: `%${search}%` } },
+          { "$Stock.Product.product_name$": { [Op.like]: `%${search}%` } },
+          { "$Stock.Product.desc$": { [Op.like]: `%${search}%` } },
+          {
+            "$Stock.Product.Category.category_name$": {
+              [Op.like]: `%${search}%`,
+            },
+          },
         ];
       }
+      if (req.query.branch_id) {
+        whereClause[Op.and] = [
+          {
+            "$Stock.branch_id$": req.query.branch_id,
+          },
+        ];
+      }
+      console.log("whereClause", whereClause);
       const stockHistory = await db.StockHistory.findAndCountAll({
         where: whereClause,
         include: [
@@ -428,8 +461,9 @@ const stockControllerB = {
             ],
           },
         ],
-        limit: 10,
-        offset: 10 * page,
+        where: whereClause,
+        limit: 8,
+        offset: 8 * page,
       });
 
       await trans.commit(); // Move the commit after successful operation

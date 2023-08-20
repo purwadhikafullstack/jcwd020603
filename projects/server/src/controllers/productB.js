@@ -29,14 +29,14 @@ const productController = {
       }
       const product = await db.Product.findAndCountAll({
         where: whereClause,
-        limit: 5,
-        offset: 5 * page,
+        limit: 8,
+        offset: 8 * page,
       });
       await trans.commit();
       return res.status(200).send({
         message: "OK",
         result: product.rows,
-        total: Math.ceil(product.count / 5),
+        total: Math.ceil(product.count / 8),
       });
     } catch (err) {
       await trans.rollback();

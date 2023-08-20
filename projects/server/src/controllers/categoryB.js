@@ -28,14 +28,14 @@ const categoryController = {
       }
       const category = await db.Category.findAndCountAll({
         where: whereClause,
-        limit: 5,
-        offset: 5 * page,
+        limit: 8,
+        offset: 8 * page,
       });
       await trans.commit();
       return res.status(200).send({
         message: "OK",
         result: category.rows,
-        total: Math.ceil(category.count / 5),
+        total: Math.ceil(category.count / 8),
       });
     } catch (err) {
       await trans.rollback();
