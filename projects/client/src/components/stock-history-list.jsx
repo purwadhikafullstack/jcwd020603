@@ -13,7 +13,7 @@ import {
   Th,
   useDisclosure,
   Tbody,
-  Button,
+  Select,
 } from "@chakra-ui/react";
 import AdminNavbarOrder from "./admin-navbar-order";
 import { BiSearch, BiSolidChevronDown, BiSolidChevronUp } from "react-icons/bi";
@@ -25,6 +25,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { SATableStockHistory } from "./SATableStockHistory";
 import { AddProduct } from "./mAddProduct";
 import Pagination from "./pagination";
+import { useSelector } from "react-redux";
 
 export default function StockHistoryList() {
   const windowWidth = window.innerWidth;
@@ -32,6 +33,7 @@ export default function StockHistoryList() {
   const tableHeadRef = useRef(null);
   const tableRowRef = useRef(null);
   const searchRef = useRef(null);
+  const userSelector = useSelector((state) => state.auth);
 
   const handleTableHeadScroll = (e) => {
     if (tableRowRef.current) {
@@ -44,11 +46,12 @@ export default function StockHistoryList() {
     }
   };
 
-  //get all category
+  //get all stockHistory
   const [shown, setShown] = useState({ page: 1 });
   const [filtering, setFiltering] = useState({
     page: shown.page,
     search: "",
+    branch_id: "",
   });
   const [totalPages, setTotalPages] = useState(0);
   const [stockHistory, setStockHistory] = useState([]);
@@ -56,6 +59,9 @@ export default function StockHistoryList() {
   const fetchData = async () => {
     const params = { ...filtering };
     const token = JSON.parse(localStorage.getItem("auth"));
+    if (userSelector.branch_id) {
+      params.branch_id = userSelector.branch_id;
+    }
     try {
       const response = await api().get("/stock/stockhistory", {
         params: { ...params },
@@ -72,6 +78,7 @@ export default function StockHistoryList() {
 
   useEffect(() => {
     fetchData();
+    getSelector();
   }, []);
 
   useEffect(() => {
@@ -97,9 +104,16 @@ export default function StockHistoryList() {
     }
   }, [shown]);
 
-  const productsPerPage = 10;
+  const productsPerPage = 8;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+
+  //get selector branch
+  const [selector, setSelector] = useState([]);
+  const getSelector = async () => {
+    const get = await api().get("/branch/selector");
+    setSelector(get.data.result);
+  };
 
   return (
     <>
@@ -108,10 +122,16 @@ export default function StockHistoryList() {
       </Box>
       <Flex className="adminCategoryB">
         <Flex flexDir={"column"} rowGap={"10px"}>
-          <Flex className="adminCategory2B">
-            <Flex width={"350px"}>Stock History</Flex>
-            <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
-              <InputGroup>
+          <Flex
+            fontSize={"24px"}
+            fontWeight={"700"}
+            paddingBottom={"20px"}
+            flexDir={"column"}
+            rowGap={"10px"}
+          >
+            <Flex justifyContent={"space-between"} w={"100%"}>
+              <Flex>Stock History</Flex>
+              <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
                   placeholder="search"
                   bg={"white"}
@@ -131,6 +151,63 @@ export default function StockHistoryList() {
                   }}
                 />
               </InputGroup>
+            </Flex>
+
+            <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
+              <Input
+                placeholder="Pilih Tanggal"
+                bg={"white"}
+                type="date"
+                value={filtering.time}
+                maxW={"200px"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, time: e.target.value });
+                  setShown({ page: 1 });
+                }}
+              ></Input>
+              -
+              <Input
+                placeholder="Pilih Tanggal"
+                bg={"white"}
+                type="date"
+                maxW={"200px"}
+                value={filtering.time2}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, time2: e.target.value });
+                  setShown({ page: 1 });
+                }}
+              ></Input>
+              <Select
+                placeholder="Semua Cabang"
+                bg={"white"}
+                display={userSelector.role == "ADMIN" ? "none" : "flex"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, branch_id: e.target.value });
+                }}
+              >
+                {selector.map((val) => {
+                  return <option value={val.id}>{val.branch_name}</option>;
+                })}
+              </Select>
+            </Flex>
+            <Flex
+              maxW={"65px"}
+              fontSize={"12px"}
+              _hover={{ cursor: "pointer", color: "lightgrey" }}
+              onClick={() => {
+                setFiltering({
+                  page: 1,
+                  order: "DESC",
+                  search: "",
+                  time: "",
+                  time2: "",
+                  status: "",
+                  branch_id: userSelector.branch_id || "",
+                });
+                setShown({ page: 1 });
+              }}
+            >
+              Reset Filter
             </Flex>
           </Flex>
           <Stack>

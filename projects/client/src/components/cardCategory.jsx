@@ -10,7 +10,7 @@ export function CardCategory(props) {
   const { photo_category_url, nearestBranch } = props;
 
   const handleClick = () => {
-    navigate("/product", {
+    navigate(`/product`, {
       state: {
         category_name: props.category_name,
         nearestBranch: props.nearestBranch,

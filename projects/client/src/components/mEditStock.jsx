@@ -21,7 +21,6 @@ export function EditStock(props) {
     quantity_stock: "",
     status_quantity: "",
   });
-  console.log(stock);
 
   const inputHandler = (e) => {
     const { id, value } = e.target;

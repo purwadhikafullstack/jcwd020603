@@ -103,7 +103,7 @@ export default function SuperAdminCategoryList() {
     }
   }, [shown]);
 
-  const productsPerPage = 5;
+  const productsPerPage = 8;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
