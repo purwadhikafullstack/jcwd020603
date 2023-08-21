@@ -3,7 +3,11 @@ import {
   Flex,
   Icon,
   Image,
+  Modal,
+  ModalContent,
+  ModalOverlay,
   assignRef,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -15,10 +19,13 @@ import {
 } from "react-icons/bi";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { api } from "../api/api";
+import ModalAlamatPengiriman from "./modal-alamat-pengiriman";
 
 export default function ModalProduct(props) {
-  const { prodVal, setProdVal, checked, setChecked } = props;
+  const { prodVal, setProdVal, checked, setChecked, selectedAddress } = props;
   const [count, tambah, kurang] = useCounter(1, 1);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   // insert qty ke prodVal
   const insertQty = () => {
     const check = prodVal.discount;
@@ -154,7 +161,24 @@ export default function ModalProduct(props) {
           </Flex>
           <Flex className="footerModalG">
             <Icon as={BiHeart} fontSize={"32px"} />
-            <Flex justifyContent={"right"}>
+            <Flex
+              justifyContent={"right"}
+              onClick={() => {
+                if (
+                  selectedAddress &&
+                  Object.keys(selectedAddress).length > 0
+                ) {
+                  onOpen();
+                } else {
+                  toast({
+                    title: "Tentukan alamat pengiriman terlebih dahulu",
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                  });
+                }
+              }}
+            >
               <Icon as={MdOutlineShoppingCart} fontSize={"32px"} />
               <Center
                 className="redDotCountG"
@@ -188,6 +212,16 @@ export default function ModalProduct(props) {
           </Flex>
         </Flex>
       </Center>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalAlamatPengiriman
+            onClose={onClose}
+            isOpen={isOpen}
+            selectedAddress={selectedAddress}
+          />
+        </ModalContent>
+      </Modal>
     </>
   );
 }

@@ -21,50 +21,81 @@ export default function CartPage() {
       });
   };
   //function getItem dan dispatch address
-  const dispatch = useDispatch();
-  const getAddress = () => {
-    try {
-      const alamat = JSON.parse(localStorage.getItem("address"));
-      dispatch({
-        type: "address",
-        payload: alamat,
-      });
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
+  // const dispatch = useDispatch();
+  // const getAddress = () => {
+  //   try {
+  //     const alamat = JSON.parse(localStorage.getItem("address"));
+  //     dispatch({
+  //       type: "address",
+  //       payload: alamat,
+  //     });
+  //   } catch (err) {
+  //     console.log(err.message);
+  //   }
+  // };
 
   useEffect(() => {
     getAll();
-    getAddress();
+    // getAddress();
   }, []);
   return (
     <>
       {windowWidth > 600 ? (
         <Center>
-          <Flex maxWidth={"1212px"} w={"100%"}>
-            <Flex>
-              {windowWidth > 750 ? (
+          <Flex maxW={"1160px"} w={"100%"}>
+            {windowWidth >= 750 ? (
+              <Flex>
                 <Sidebar prodCart={prodCart} />
-              ) : (
-                <SidebarMini />
-              )}
-            </Flex>
-            <Flex>
-              {windowWidth > 700 ? (
-                <WebKeranjang prodCart={prodCart} getAll={getAll} />
-              ) : (
-                <ContentKeranjang prodCart={prodCart} getAll={getAll} />
-              )}
-            </Flex>
+              </Flex>
+            ) : (
+              <Flex>
+                <SidebarMini prodCart={prodCart} />
+              </Flex>
+            )}
+            {windowWidth >= 700 ? (
+              <WebKeranjang prodCart={prodCart} getAll={getAll} />
+            ) : (
+              <ContentKeranjang />
+            )}
           </Flex>
         </Center>
       ) : (
         <>
           <ContentKeranjang prodCart={prodCart} getAll={getAll} />
-          <Footer />
+          <Footer prodCart={prodCart} />
         </>
       )}
     </>
+    // <>
+    //   {windowWidth > 600 ? (
+    //     <Center>
+    //       <Flex maxWidth={"1160px"} w={"100%"}>
+    //         <Flex>
+    //           {windowWidth > 750 ? (
+    //             <Sidebar prodCart={prodCart} />
+    //           ) : (
+    //             <SidebarMini />
+    //           )}
+    //         </Flex>
+    //         <Flex maxW={"910px"} bg={"blue"}>
+    //           {windowWidth > 700 ? (
+    //             <Flex maxWidth={"910px"} bg={"red"}>
+    //               <WebKeranjang prodCart={prodCart} getAll={getAll} />
+    //             </Flex>
+    //           ) : (
+    //             <Flex>
+    //               <ContentKeranjang prodCart={prodCart} getAll={getAll} />
+    //             </Flex>
+    //           )}
+    //         </Flex>
+    //       </Flex>
+    //     </Center>
+    //   ) : (
+    //     <>
+    //       <ContentKeranjang prodCart={prodCart} getAll={getAll} />
+    //       <Footer />
+    //     </>
+    //   )}
+    // </>
   );
 }

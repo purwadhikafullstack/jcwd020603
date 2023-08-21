@@ -24,15 +24,11 @@ import { SlOptionsVertical } from "react-icons/sl";
 import NavbarDaftarAlamat from "./navbar-daftar-alamat";
 import ModalAddAddress from "./modal-add-address";
 import { api } from "../api/api";
-import ModalEditAddress from "./modal-edit-address";
 import AddressCard from "./address-card";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-export default function ContentDaftarAlamat({
-  selectedAddress,
-  setSelectedAddress,
-}) {
+export default function ContentDaftarAlamat() {
   const nav = useNavigate();
   //click radio untuk pilih alamt
   const [Clicked, setClicked] = useState({});
@@ -46,14 +42,8 @@ export default function ContentDaftarAlamat({
   //getAll address
   const [allAddress, setAllAddress] = useState([]);
   const getAddress = async () => {
-    const token = JSON.parse(localStorage.getItem("auth"));
-    console.log(token);
     await api()
-      .get("/addressG", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get("/addressG")
       .then((res) => {
         console.log(res.data.result);
         setAllAddress(res.data.result);
@@ -63,15 +53,19 @@ export default function ContentDaftarAlamat({
     getAddress();
   }, []);
   //menyipan address yang dipilih
-  const dispatch = useDispatch();
-  const setAddress = () => {
-    delete Clicked.user_id;
-    localStorage.setItem("address", JSON.stringify(Clicked));
-    dispatch({
-      type: "address",
-      payload: Clicked,
-    });
+  const setAddress = async () => {
+    const find = await api().patch(`/addressG/current/${Clicked.id}`);
+    console.log(find.data);
   };
+  // const dispatch = useDispatch();
+  // const setAddress = () => {
+  //   delete Clicked.user_id;
+  //   localStorage.setItem("address", JSON.stringify(Clicked));
+  //   dispatch({
+  //     type: "address",
+  //     payload: Clicked,
+  //   });
+  // };
   return (
     <>
       <Box>
@@ -97,8 +91,6 @@ export default function ContentDaftarAlamat({
                   getAddress={getAddress}
                   Clicked={Clicked}
                   setClicked={setClicked}
-                  selectedAddress={selectedAddress}
-                  setSelectedAddress={setSelectedAddress}
                 />
               );
             })}

@@ -10,6 +10,7 @@ module.exports = (sequelize, Sequelize) => {
       address_name: Sequelize.STRING,
       address_phone: Sequelize.STRING,
       is_primary: { type: Sequelize.BOOLEAN, defaultValue: false },
+      current_address: { type: Sequelize.BOOLEAN, defaultValue: false },
     },
     {
       paranoid: true,

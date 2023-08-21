@@ -26,6 +26,7 @@ import ResetPass from "../components/ResetPass";
 import DiscountAddModal from "../components/DiscountAddModal";
 import DiscountAddProductModal from "../components/DiscountAddProductModal";
 import VoucherPage from "../pages/VoucherPage";
+import InvoicePage from "../pages/InvoicePage";
 
 const routes = [
   <Route
@@ -146,6 +147,7 @@ const routes = [
   <Route path="/address" element={<AddressListPage />}></Route>,
   <Route path="/orders/:order_number" element={<OrderDetailPage />}></Route>,
   <Route path="/orders" element={<OrderListPage />}></Route>,
+  <Route path="/payment/:order_number" element={<PaymentPage />}></Route>,
   <Route path="/payment" element={<PaymentPage />}></Route>,
   <Route
     path="/admin/orders/:order_number"
@@ -154,6 +156,7 @@ const routes = [
   <Route path="/admin/orders" element={<AdminOrderPage />}></Route>,
   <Route path="/disadd" element={<DiscountAddModal />}></Route>,
   <Route path="/disaprod" element={<DiscountAddProductModal />}></Route>,
+  <Route path="/invoice/:order_number" element={<InvoicePage />}></Route>,
 ];
 
 export default routes;

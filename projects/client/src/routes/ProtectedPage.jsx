@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/SVG/2.svg";
+import Loading from "../components/loading";
 
 export default function ProtectedPage({
   children,
@@ -46,25 +47,5 @@ export default function ProtectedPage({
     }, 1000);
   }, [userSelector]);
 
-  return (
-    <>
-      {loading ? (
-        <Center
-          h={"100vh"}
-          maxW={"100vw"}
-          w={"100%"}
-          display={"flex"}
-          flexDir={"row"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Flex w={"30%"} h={"30%"} justifyContent={"center"} p={4}>
-            <Image src={logo} />
-          </Flex>
-        </Center>
-      ) : (
-        children
-      )}
-    </>
-  );
+  return <>{loading ? <Loading /> : children}</>;
 }

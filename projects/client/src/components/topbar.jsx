@@ -7,14 +7,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-export default function TopBar({
-  address,
-  selectedAddress,
-  setSelectedAddress,
-}) {
-  const selectAddress = useSelector((state) => state.address);
+export default function TopBar({ address, selectedAddress }) {
   const userSelector = useSelector((state) => state.auth);
-  console.log(selectAddress);
+  console.log(selectedAddress.address);
   console.log(userSelector);
   const nav = useNavigate();
   const getFormattedAddress = () => {
@@ -38,10 +33,17 @@ export default function TopBar({
             <Icon id="iconLocationB" as={MdLocationPin} />
             <Flex id="alamatTopBarB">
               {address ? (
-                <>
-                  <Flex>alamat anda</Flex>
-                  <Flex>{getFormattedAddress()}</Flex>
-                </>
+                selectedAddress.address ? (
+                  <>
+                    <Flex>alamat anda</Flex>
+                    <Flex>{selectedAddress.address}</Flex>
+                  </>
+                ) : (
+                  <>
+                    <Flex>alamat anda</Flex>
+                    <Flex>{getFormattedAddress()}</Flex>
+                  </>
+                )
               ) : (
                 <>
                   <Flex>Alamat belum dipilih</Flex>

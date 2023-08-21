@@ -1,4 +1,4 @@
-import { Flex, Center, Image, Icon } from "@chakra-ui/react";
+import { Flex, Center, Image, Icon, Input } from "@chakra-ui/react";
 import "../css/indexB.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -43,7 +43,7 @@ export function SearchBar(props) {
           type="text"
           placeholder="Mau Belanja Apa?"
           value={searchTerm}
-          style={{ width: "100%" }}
+          style={{ width: "100%", border: "none", outline: "none" }}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Icon

@@ -180,7 +180,6 @@ export default function Login() {
                 _hover={{ borderColor: "#199950" }}
               />
             </FormControl>
-
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
               <InputGroup>
@@ -236,7 +235,7 @@ export default function Login() {
             color={"black"}
             fontWeight={"bolder"}
           >
-            Don't have an acoount?{" "}
+            Don't have an account?{" "}
             <Link
               color={"#199950"}
               ml={"1%"}

@@ -226,16 +226,16 @@ const branchController = {
     }
   },
   getSelector: async (req, res) => {
-    // const trans = await db.sequelize.transaction();
+    const trans = await db.sequelize.transaction();
     try {
       const selector = await db.Branch.findAll();
-      // await trans.commit();
+      await trans.commit();
       res.status(200).send({
         message: "OK",
         result: selector,
       });
     } catch (err) {
-      // await trans.rollback();
+      await trans.rollback();
       res.status(500).send({
         message: err.message,
       });

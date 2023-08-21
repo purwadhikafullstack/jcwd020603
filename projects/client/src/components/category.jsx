@@ -100,6 +100,7 @@ export default function Category(props) {
               quantity_stock={val.quantity_stock}
               stock_id={val.id}
               lengthCart={props.lengthCart}
+              selectedAddress={props.selectedAddress}
             />
           ))}
         </Grid>

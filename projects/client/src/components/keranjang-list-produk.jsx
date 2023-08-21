@@ -175,13 +175,7 @@ export default function KeranjangList(props) {
                         updateQty(props.prodCart[props.index].qty - 1);
                       }
                     } else {
-                      toast({
-                        title:
-                          "Hanya dapat membeli satu produk promo buy 1 get 1",
-                        status: "error",
-                        position: "top",
-                        duration: 4000,
-                      });
+                      onOpen();
                     }
                   }}
                 />

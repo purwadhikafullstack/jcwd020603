@@ -58,6 +58,19 @@ export default function LandingPage() {
   }, [latlong]);
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});
+  const getSelectedAddress = async () => {
+    const primary = await api().get("/addressG/primary");
+    const selected = await api().get("/addressG/current");
+    if (selected.data.result) {
+      setSelectedAddress(selected.data.result);
+    } else {
+      setSelectedAddress(primary.data.result);
+    }
+  };
+  useEffect(() => {
+    getSelectedAddress();
+  }, []);
+  console.log(selectedAddress);
   //menyimpan length cart
   const [lengthCart, setLengthCart] = useState(0);
 
@@ -74,12 +87,11 @@ export default function LandingPage() {
               )}
             </Flex>
             <Flex flexDir={"column"}>
-              <TopBar
-                address={address}
+              <TopBar address={address} selectedAddress={selectedAddress} />
+              <Category
+                lengthCart={lengthCart}
                 selectedAddress={selectedAddress}
-                setSelectedAddress={setSelectedAddress}
               />
-              <Category lengthCart={lengthCart} />
             </Flex>
           </Flex>
         </Center>
@@ -90,8 +102,8 @@ export default function LandingPage() {
             selectedAddress={selectedAddress}
             setSelectedAddress={setSelectedAddress}
           />
-          <Category lengthCart={lengthCart} />
-          <Footer />
+          <Category lengthCart={lengthCart} selectedAddress={selectedAddress} />
+          <Footer lengthCart={lengthCart} />
         </>
       )}
     </>
