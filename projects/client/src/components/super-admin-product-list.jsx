@@ -24,13 +24,18 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { AiOutlinePlus } from "react-icons/ai";
 import { SATableProduct } from "./sATableProduct";
 import { AddProduct } from "./mAddProduct";
+import Pagination from "./pagination";
+import { useSelector } from "react-redux";
 
 export default function SuperAdminProductList() {
   const windowWidth = window.innerWidth;
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [addCategory, setAddCategory] = useState(null);
+  const [addProduct, setAddProduct] = useState(null);
   const tableHeadRef = useRef(null);
   const tableRowRef = useRef(null);
+  const searchRef = useRef(null);
+  const userSelector = useSelector((state) => state.auth);
+
   const handleTableHeadScroll = (e) => {
     if (tableRowRef.current) {
       tableRowRef.current.scrollLeft = e.target.scrollLeft;
@@ -42,33 +47,64 @@ export default function SuperAdminProductList() {
     }
   };
 
-  const [addProduct, setAddProduct] = useState(null);
+  //get all product
+  const [shown, setShown] = useState({ page: 1 });
+  const [filtering, setFiltering] = useState({
+    page: shown.page,
+    search: "",
+  });
+
+  const [totalPages, setTotalPages] = useState(0);
   const [product, setProduct] = useState([]);
-  console.log(product);
-  useEffect(() => {
+
+  const fetchData = async () => {
+    const params = { ...filtering };
     const token = JSON.parse(localStorage.getItem("auth"));
-    api()
-      .get("/product", {
+    try {
+      const response = await api().get("/product/admin", {
+        params: { ...params },
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then((response) => {
-        setProduct(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
       });
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await api().get("/product");
-      setProduct(response.data);
+      setProduct(response.data.result);
+      setTotalPages(response.data.total);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [filtering]);
+
+  //pagination
+  const [pages, setPages] = useState([]);
+  function pageHandler() {
+    const output = [];
+    for (let i = 1; i <= totalPages; i++) {
+      output.push(i);
+    }
+    setPages(output);
+  }
+  useEffect(() => {
+    pageHandler();
+  }, [product]);
+
+  useEffect(() => {
+    if (shown.page > 0 && shown.page <= totalPages) {
+      setFiltering({ ...filtering, page: shown.page });
+    }
+  }, [shown]);
+
+  const productsPerPage = 8;
+  const indexOfLastProduct = shown.page * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+
   return (
     <>
       <Box>
@@ -80,15 +116,30 @@ export default function SuperAdminProductList() {
             <Flex width={"350px"}>Daftar Produk</Flex>
             <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
               <InputGroup>
-                <Input placeholder="search" bg={"white"}></Input>
+                <Input
+                  placeholder="search"
+                  bg={"white"}
+                  ref={searchRef}
+                ></Input>
                 <InputRightElement
                   as={BiSearch}
                   w={"30px"}
                   h={"30px"}
                   padding={"10px 10px 0px 0px"}
+                  onClick={() => {
+                    setFiltering({
+                      ...filtering,
+                      search: searchRef.current.value,
+                    });
+                    setShown({ page: 1 });
+                  }}
                 />
               </InputGroup>
-              <Button onClick={onOpen} colorScheme={"yellow"}>
+              <Button
+                onClick={onOpen}
+                colorScheme={"yellow"}
+                display={userSelector.role == "ADMIN" ? "none" : "flex"}
+              >
                 {<Icon as={AiOutlinePlus} fontSize={"28px"} />}
                 <AddProduct id={addProduct} isOpen={isOpen} onClose={onClose} />
               </Button>
@@ -156,12 +207,22 @@ export default function SuperAdminProductList() {
                       desc={product.desc}
                       weight={product.weight}
                       category={product.category_id}
+                      indexOfLastProduct={indexOfLastProduct}
+                      productsPerPage={productsPerPage}
                       fetchData={fetchData}
                     />
                   ))}
                 </Tbody>
               </Table>
             </TableContainer>
+            <Flex justifyContent={"end"}>
+              <Pagination
+                shown={shown}
+                setShown={setShown}
+                totalPages={totalPages}
+                pages={pages}
+              />
+            </Flex>
           </Stack>
         </Flex>
       </Flex>

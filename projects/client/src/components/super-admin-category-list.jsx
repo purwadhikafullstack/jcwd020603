@@ -24,6 +24,8 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { AiOutlinePlus } from "react-icons/ai";
 import { SATableCategory } from "./sATableCategory";
 import { AddCategory } from "./mAddCategory";
+import Pagination from "./pagination";
+import { useSelector } from "react-redux";
 
 export default function SuperAdminCategoryList() {
   const windowWidth = window.innerWidth;
@@ -31,6 +33,9 @@ export default function SuperAdminCategoryList() {
   const [addCategory, setAddCategory] = useState(null);
   const tableHeadRef = useRef(null);
   const tableRowRef = useRef(null);
+  const searchRef = useRef(null);
+  const userSelector = useSelector((state) => state.auth);
+
   const handleTableHeadScroll = (e) => {
     if (tableRowRef.current) {
       tableRowRef.current.scrollLeft = e.target.scrollLeft;
@@ -44,34 +49,65 @@ export default function SuperAdminCategoryList() {
 
   const fetchDataCategory = async () => {
     try {
-      const response = await api().get("/category");
+      const response = await api().get("/category/admin");
       setAddCategory(response.data);
     } catch (error) {
       console.error(error);
     }
   };
 
+  //get all category
+  const [shown, setShown] = useState({ page: 1 });
+  const [filtering, setFiltering] = useState({
+    page: shown.page,
+    search: "",
+  });
+  const [totalPages, setTotalPages] = useState(0);
   const [categories, setCategories] = useState([]);
-  console.log(categories);
-  useEffect(() => {
-    api()
-      .get("/category")
-      .then((response) => {
-        setCategories(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
   const fetchData = async () => {
+    const params = { ...filtering };
     try {
-      const response = await api().get("/category");
-      setCategories(response.data);
+      const response = await api().get("/category/admin", {
+        params: { ...params },
+      });
+      setCategories(response.data.result);
+      setTotalPages(response.data.total);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [filtering]);
+
+  //pagination
+  const [pages, setPages] = useState([]);
+  function pageHandler() {
+    const output = [];
+    for (let i = 1; i <= totalPages; i++) {
+      output.push(i);
+    }
+    setPages(output);
+  }
+  useEffect(() => {
+    pageHandler();
+  }, [categories]);
+
+  useEffect(() => {
+    if (shown.page > 0 && shown.page <= totalPages) {
+      setFiltering({ ...filtering, page: shown.page });
+    }
+  }, [shown]);
+
+  const productsPerPage = 8;
+  const indexOfLastProduct = shown.page * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
   return (
     <>
@@ -84,15 +120,27 @@ export default function SuperAdminCategoryList() {
             <Flex width={"350px"}>Daftar Kategori</Flex>
             <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
               <InputGroup>
-                <Input placeholder="search" bg={"white"}></Input>
+                <Input
+                  placeholder="search"
+                  bg={"white"}
+                  ref={searchRef}
+                ></Input>
                 <InputRightElement
                   as={BiSearch}
                   w={"30px"}
                   h={"30px"}
                   padding={"10px 10px 0px 0px"}
+                  onClick={() => {
+                    setFiltering({
+                      ...filtering,
+                      search: searchRef.current.value,
+                    });
+                    setShown({ page: 1 });
+                  }}
                 />
               </InputGroup>
               <Button
+                display={userSelector.role == "ADMIN" ? "none" : "flex"}
                 onClick={() => {
                   onOpen();
                   setAddCategory();
@@ -112,6 +160,7 @@ export default function SuperAdminCategoryList() {
               </Button>
             </Flex>
           </Flex>
+
           <Stack>
             <TableContainer
               id="containerTableB"
@@ -129,10 +178,6 @@ export default function SuperAdminCategoryList() {
                     <Th>
                       <Flex alignItems="center" id="tableNameB">
                         Category Name{" "}
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
                       </Flex>
                     </Th>
                     <Th textAlign={"center"}>Action</Th>
@@ -148,12 +193,22 @@ export default function SuperAdminCategoryList() {
                       key={category.id}
                       idx={idx}
                       category={category}
+                      indexOfLastProduct={indexOfLastProduct}
+                      productsPerPage={productsPerPage}
                       fetchData={fetchData}
                     />
                   ))}
                 </Tbody>
               </Table>
             </TableContainer>
+            <Flex justifyContent={"end"}>
+              <Pagination
+                shown={shown}
+                setShown={setShown}
+                totalPages={totalPages}
+                pages={pages}
+              />
+            </Flex>
           </Stack>
         </Flex>
       </Flex>

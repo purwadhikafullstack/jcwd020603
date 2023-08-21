@@ -14,11 +14,9 @@ import { useState } from "react";
 
 export function DeleteStock(props) {
   const toast = useToast();
-  console.log(props);
   const [stock, setStock] = useState({
     quantity_before: props.stock.quantity_stock,
   });
-  console.log("ini stock di FE", stock);
 
   const deleteStock = async () => {
     try {

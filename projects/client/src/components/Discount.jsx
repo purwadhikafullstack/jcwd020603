@@ -89,6 +89,7 @@ export default function Discount() {
   };
 
   console.log(dtDis);
+  
   useEffect(() => {
     fetchAll();
   }, []);

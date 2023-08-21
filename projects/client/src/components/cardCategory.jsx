@@ -7,15 +7,16 @@ import { useEffect } from "react";
 export function CardCategory(props) {
   const navigate = useNavigate();
 
-  const { photo_category_url } = props;
+  const { photo_category_url, nearestBranch } = props;
 
   const handleClick = () => {
-    navigate("/product", { state: { category_name: props.category_name } });
+    navigate(`/product`, {
+      state: {
+        category_name: props.category_name,
+        nearestBranch: props.nearestBranch,
+      },
+    });
   };
-
-  useEffect(() => {
-    console.log(props.photo_category_url);
-  }, []);
 
   return (
     <>

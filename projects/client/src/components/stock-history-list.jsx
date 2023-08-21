@@ -13,7 +13,7 @@ import {
   Th,
   useDisclosure,
   Tbody,
-  Button,
+  Select,
 } from "@chakra-ui/react";
 import AdminNavbarOrder from "./admin-navbar-order";
 import { BiSearch, BiSolidChevronDown, BiSolidChevronUp } from "react-icons/bi";
@@ -24,12 +24,16 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { AiOutlinePlus } from "react-icons/ai";
 import { SATableStockHistory } from "./SATableStockHistory";
 import { AddProduct } from "./mAddProduct";
+import Pagination from "./pagination";
+import { useSelector } from "react-redux";
 
 export default function StockHistoryList() {
   const windowWidth = window.innerWidth;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const tableHeadRef = useRef(null);
   const tableRowRef = useRef(null);
+  const searchRef = useRef(null);
+  const userSelector = useSelector((state) => state.auth);
 
   const handleTableHeadScroll = (e) => {
     if (tableRowRef.current) {
@@ -42,32 +46,75 @@ export default function StockHistoryList() {
     }
   };
 
+  //get all stockHistory
+  const [shown, setShown] = useState({ page: 1 });
+  const [filtering, setFiltering] = useState({
+    page: shown.page,
+    search: "",
+    branch_id: "",
+  });
+  const [totalPages, setTotalPages] = useState(0);
   const [stockHistory, setStockHistory] = useState([]);
-  console.log(stockHistory);
-  useEffect(() => {
+
+  const fetchData = async () => {
+    const params = { ...filtering };
     const token = JSON.parse(localStorage.getItem("auth"));
-    api()
-      .get("/stock/stockhistory", {
+    if (userSelector.branch_id) {
+      params.branch_id = userSelector.branch_id;
+    }
+    try {
+      const response = await api().get("/stock/stockhistory", {
+        params: { ...params },
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then((response) => {
-        setStockHistory(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
       });
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await api().get("/stock/stockhistory");
-      setStockHistory(response.data);
+      setStockHistory(response.data.result);
+      setTotalPages(response.data.total);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+    getSelector();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [filtering]);
+
+  //pagination
+  const [pages, setPages] = useState([]);
+  function pageHandler() {
+    const output = [];
+    for (let i = 1; i <= totalPages; i++) {
+      output.push(i);
+    }
+    setPages(output);
+  }
+  useEffect(() => {
+    pageHandler();
+  }, [stockHistory]);
+
+  useEffect(() => {
+    if (shown.page > 0 && shown.page <= totalPages) {
+      setFiltering({ ...filtering, page: shown.page });
+    }
+  }, [shown]);
+
+  const productsPerPage = 6;
+  const indexOfLastProduct = shown.page * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+
+  //get selector branch
+  const [selector, setSelector] = useState([]);
+  const getSelector = async () => {
+    const get = await api().get("/branch/selector");
+    setSelector(get.data.result);
+  };
+
   return (
     <>
       <Box>
@@ -75,18 +122,92 @@ export default function StockHistoryList() {
       </Box>
       <Flex className="adminCategoryB">
         <Flex flexDir={"column"} rowGap={"10px"}>
-          <Flex className="adminCategory2B">
-            <Flex width={"350px"}>Stock History</Flex>
-            <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
-              <InputGroup>
-                <Input placeholder="search" bg={"white"}></Input>
+          <Flex
+            fontSize={"24px"}
+            fontWeight={"700"}
+            paddingBottom={"20px"}
+            flexDir={"column"}
+            rowGap={"10px"}
+          >
+            <Flex justifyContent={"space-between"} w={"100%"}>
+              <Flex>Stock History</Flex>
+              <InputGroup maxW={"300px"} w={"100%"}>
+                <Input
+                  placeholder="search"
+                  bg={"white"}
+                  ref={searchRef}
+                ></Input>
                 <InputRightElement
                   as={BiSearch}
                   w={"30px"}
                   h={"30px"}
                   padding={"10px 10px 0px 0px"}
+                  onClick={() => {
+                    setFiltering({
+                      ...filtering,
+                      search: searchRef.current.value,
+                    });
+                    setShown({ page: 1 });
+                  }}
                 />
               </InputGroup>
+            </Flex>
+
+            <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
+              <Input
+                placeholder="Pilih Tanggal"
+                bg={"white"}
+                type="date"
+                value={filtering.time}
+                maxW={"200px"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, time: e.target.value });
+                  setShown({ page: 1 });
+                }}
+              ></Input>
+              -
+              <Input
+                placeholder="Pilih Tanggal"
+                bg={"white"}
+                type="date"
+                maxW={"200px"}
+                value={filtering.time2}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, time2: e.target.value });
+                  setShown({ page: 1 });
+                }}
+              ></Input>
+              <Select
+                placeholder="Semua Cabang"
+                bg={"white"}
+                display={userSelector.role == "ADMIN" ? "none" : "flex"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, branch_id: e.target.value });
+                }}
+              >
+                {selector.map((val) => {
+                  return <option value={val.id}>{val.branch_name}</option>;
+                })}
+              </Select>
+            </Flex>
+            <Flex
+              maxW={"65px"}
+              fontSize={"12px"}
+              _hover={{ cursor: "pointer", color: "lightgrey" }}
+              onClick={() => {
+                setFiltering({
+                  page: 1,
+                  order: "DESC",
+                  search: "",
+                  time: "",
+                  time2: "",
+                  status: "",
+                  branch_id: userSelector.branch_id || "",
+                });
+                setShown({ page: 1 });
+              }}
+            >
+              Reset Filter
             </Flex>
           </Flex>
           <Stack>
@@ -156,12 +277,22 @@ export default function StockHistoryList() {
                       stock={stockHistory.stock_id}
                       before={stockHistory.quantity_before}
                       after={stockHistory.quantity_after}
+                      indexOfLastProduct={indexOfLastProduct}
+                      productsPerPage={productsPerPage}
                       fetchData={fetchData}
                     />
                   ))}
                 </Tbody>
               </Table>
             </TableContainer>
+            <Flex justifyContent={"end"}>
+              <Pagination
+                shown={shown}
+                setShown={setShown}
+                totalPages={totalPages}
+                pages={pages}
+              />
+            </Flex>
           </Stack>
         </Flex>
       </Flex>

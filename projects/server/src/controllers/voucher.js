@@ -45,10 +45,12 @@ const voucherController = {
       });
     }
   },
+
+
   getAll: async (req, res) => {
     try {
-      const fetchVoucer = await db.Voucher.findAll();
-      res.status(200).send({ message: "Ini data voucher", data: fetchVoucer });
+      const fetchVoucher = await db.Voucher.findAll();
+      res.status(200).send({ message: "Ini data voucher", data: fetchVoucher });
     } catch (error) {
       res.status(500).send({ message: error.message });
     }

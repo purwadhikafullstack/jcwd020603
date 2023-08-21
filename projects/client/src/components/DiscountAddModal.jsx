@@ -163,26 +163,29 @@ export default function DiscountAddModal(props) {
     console.log(formik.values);
   }
 
-  // console.log(userSelector.id);
+  console.log(userSelector.id);
+  console.log(userSelector.branch_id);
   const getStock = async () => {
     const getData = await api()
-      .get("/stock/", { params: { branDis: userSelector.branch_id } })
+      .get("/stock/byBranch", { params: { branch_id: userSelector.branch_id } })
       .then((res) => {
         console.log(res.data);
-        setDtStock(res.data);
+        setDtStock(res.data.data);
       });
   };
-
   const getStockByDiscount = async () => {
     const stockByDiscount = await api()
-      .get("/stock/", { params: { branDis: id } })
+      .get("/stock/byDiscount", { params: { discount_id: id } })
       .then((result) => {
         console.log(result.data);
         if (isEdit == true) {
-          setSelectedProducts(result.data);
+          setSelectedProducts(result.data.data);
         }
+       
       });
   };
+
+  
 
   console.log(userSelector);
   console.log(userSelector.branch_id);
@@ -192,7 +195,7 @@ export default function DiscountAddModal(props) {
 
   useEffect(() => {
     getStock();
-    getStockByDiscount();
+    getStockByDiscount()
   }, []);
 
   return (
@@ -200,7 +203,7 @@ export default function DiscountAddModal(props) {
       <Flex>
         <Flex className="flex2R-addbranch">
           <Flex className="flex3R-addbranch">
-            <Flex className="flex3R-input_user-addbranch" gap={"20px"}>
+            <Flex className="flex3R-input_user-disvoc" gap={"20px"}>
               <Box className="flex3R-input-box-addbranch">Tambah Discount</Box>
               <FormControl>
                 <FormLabel>Judul</FormLabel>
@@ -334,7 +337,7 @@ export default function DiscountAddModal(props) {
                     boxShadow: "dark-lg",
                   }}
                 >
-                  {selectedProducts.map((val) => (
+                  {selectedProducts?.map((val) => (
                     <Flex
                       key={val?.id}
                       w={"45%"}

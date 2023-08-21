@@ -8,10 +8,10 @@ import { CardCategory } from "./cardCategory";
 import { CardCarousel } from "./cardCarousel";
 import { SearchBar } from "./searchBar";
 import { api } from "../api/api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
 
-export default function Category(props) {
+export default function Category({ lengthCart, nearestBranch }) {
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,20 +26,26 @@ export default function Category(props) {
   };
 
   useEffect(() => {
+    const endpoint = nearestBranch
+      ? `/stock?nearestBranch=${nearestBranch}`
+      : "/stock";
+
     api()
-      .get("/category")
+      .get(endpoint)
       .then((response) => {
-        setCategories(response.data);
+        setStocks(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
+  }, [nearestBranch]);
 
+  useEffect(() => {
     api()
-      .get("/stock")
+      .get("/category")
       .then((response) => {
-        setStocks(response.data);
-        console.log(response.data);
+        setCategories(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -60,7 +66,7 @@ export default function Category(props) {
   return (
     <>
       <Flex id="baseContainerB">
-        <SearchBar onSearch={performSearch} />
+        <SearchBar nearestBranch={nearestBranch} onSearch={performSearch} />
         <Flex id="headB" paddingTop={"20px"}>
           KATEGORI
         </Flex>
@@ -71,6 +77,7 @@ export default function Category(props) {
                 key={val.id}
                 photo_category_url={val.photo_category_url}
                 category_name={val.category_name}
+                nearestBranch={nearestBranch}
               />
             ))}
           </Flex>
@@ -101,6 +108,7 @@ export default function Category(props) {
               stock_id={val.id}
               lengthCart={props.lengthCart}
               selectedAddress={props.selectedAddress}
+
             />
           ))}
         </Grid>

@@ -13,6 +13,7 @@ const voucherController = require("./voucher");
 const branchController = require("./branch");
 const tokenController = require("./token");
 const discountController = require("./discount");
+const salesReportController =  require("./salesReport")
 
 module.exports = {
   userController,
@@ -30,4 +31,5 @@ module.exports = {
   branchController,
   tokenController,
   discountController,
+  salesReportController
 };

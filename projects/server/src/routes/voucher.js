@@ -5,9 +5,9 @@ const roleController = require("../middleware/checkRole");
 
 router.get("/", voucherController.getAllVoucher);
 router.patch("/:id", roleController.checkUser, voucherController.updateLimit);
-router.get("/", voucherController.getAll);
-router.post("/", voucherController.addVoucher);
-router.patch("/", voucherController.updateVoucher);
-router.delete("/", voucherController.deleteVoucher);
+router.get("/all", voucherController.getAll);
+router.post("/", roleController.checkAdmin, voucherController.addVoucher);
+router.patch("/", roleController.checkAdmin, voucherController.updateVoucher);
+router.delete("/", roleController.checkAdmin, voucherController.deleteVoucher);
 
 module.exports = router;

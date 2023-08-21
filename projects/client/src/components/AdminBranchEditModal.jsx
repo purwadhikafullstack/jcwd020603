@@ -37,13 +37,13 @@ export default function EditAdminBranch(props) {
       email: props.dtBranch[props.number].email,
       role: "ADMIN",
       password: "",
-      phone_number: props.dtBranch[props.number].phone_number,
-      branch_name: props.dtBranch[props.number].Branch.branch_name,
-      address: props.dtBranch[props.number].Branch.branch_address,
-      district: props.dtBranch[props.number].Branch.district,
-      city_id: props.dtBranch[props.number].Branch.city_id,
-      province: props.dtBranch[props.number].Branch.province,
-      branch_id: props.dtBranch[props.number].branch_id,
+      phone_number: props?.dtBranch[props?.number]?.phone_number,
+      branch_name: props?.dtBranch[props?.number]?.Branch?.branch_name,
+      address: props?.dtBranch[props?.number]?.Branch?.branch_address,
+      district: props?.dtBranch[props?.number]?.Branch?.district,
+      city_id: props?.dtBranch[props?.number]?.Branch?.city_id,
+      province: props?.dtBranch[props?.number]?.Branch?.province,
+      branch_id: props?.dtBranch[props?.number]?.branch_id,
     },
 
     validationSchema: Yup.object().shape({
@@ -110,7 +110,7 @@ export default function EditAdminBranch(props) {
           district,
           city_id,
           province,
-          branch_id: props.dtBranch[props.number].branch_id,
+          branch_id: props?.dtBranch[props?.number]?.branch_id,
         };
 
         const cekMail = await api()
@@ -130,8 +130,8 @@ export default function EditAdminBranch(props) {
 
         const cekBranch = await api()
           .get("/branch/all-by-branch", {
-            params: { getAll: newBranchAdmin.branch_name } || {
-              getAll: newBranchAdmin.branch_address,
+            params: { getAll: newBranchAdmin?.branch_name } || {
+              getAll: newBranchAdmin?.branch_address,
             },
           })
           .then((res) => {
@@ -155,7 +155,7 @@ export default function EditAdminBranch(props) {
             isClosable: true,
           });
         } else {
-          console.log(props.dtBranch[props.number].branch_id);
+          console.log(props?.dtBranch[props?.number]?.branch_id);
           await api()
             .patch("/branch/", newBranchAdmin)
             .then((res) => {
@@ -235,7 +235,7 @@ export default function EditAdminBranch(props) {
                 <FormLabel>Nama</FormLabel>
                 <Input
                   onChange={inputHandler}
-                  defaultValue={props.dtBranch[props.number]?.user_name}
+                  defaultValue={props?.dtBranch[props?.number]?.user_name}
                   id="user_name"
                   type="text"
                   transition={"1s"}
@@ -255,7 +255,7 @@ export default function EditAdminBranch(props) {
               <FormControl>
                 <FormLabel>Email</FormLabel>
                 <Input
-                  defaultValue={props.dtBranch[props.number]?.email}
+                  defaultValue={props?.dtBranch[props?.number]?.email}
                   onChange={inputHandler}
                   id="email"
                   type="email"
@@ -305,7 +305,7 @@ export default function EditAdminBranch(props) {
               <FormControl>
                 <FormLabel>Nomor Handphone</FormLabel>
                 <Input
-                  defaultValue={props.dtBranch[props.number]?.phone_number}
+                  defaultValue={props?.dtBranch[props?.number]?.phone_number}
                   onChange={inputHandler}
                   id="phone_number"
                   type="text"
@@ -345,7 +345,7 @@ export default function EditAdminBranch(props) {
                 <FormLabel>Nama Cabang</FormLabel>
                 <Input
                   defaultValue={
-                    props.dtBranch[props.number]?.Branch.branch_name
+                    props?.dtBranch[props?.number]?.Branch?.branch_name
                   }
                   onChange={inputHandler}
                   id="branch_name"
@@ -368,10 +368,9 @@ export default function EditAdminBranch(props) {
                 {/* <Input transition={"1s"}  _hover={{borderColor : "#9d9c45", boxShadow : "dark-lg"}} ></Input> */}
                 <Textarea
                   defaultValue={
-                    props.dtBranch[props.number]?.Branch.branch_address
+                    props?.dtBranch[props?.number]?.Branch?.branch_address
                   }
                   onChange={inputHandler}
-                  name=""
                   id="address"
                   cols="30"
                   rows="2"
@@ -394,7 +393,7 @@ export default function EditAdminBranch(props) {
               <FormControl>
                 <FormLabel>Kelurahan</FormLabel>
                 <Input
-                  defaultValue={props.dtBranch[props.number]?.Branch.district}
+                  defaultValue={props?.dtBranch[props?.number]?.Branch?.district}
                   onChange={inputHandler}
                   id="district"
                   transition={"1s"}
@@ -428,7 +427,7 @@ export default function EditAdminBranch(props) {
                   }}
                 >
                   {province.map((val) => (
-                    <option value={val.province}>{val.province}</option>
+                    <option value={val?.province}>{val?.province}</option>
                   ))}
                 </Select>
                 <Flex
@@ -449,7 +448,7 @@ export default function EditAdminBranch(props) {
                   onChange={inputHandler}
                 >
                   {city.map((val) => (
-                    <option value={val.city_id}>{val.city_name}</option>
+                    <option value={val?.city_id}>{val?.city_name}</option>
                   ))}
                 </Select>
 

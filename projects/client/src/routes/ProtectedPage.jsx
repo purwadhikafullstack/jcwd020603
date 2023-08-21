@@ -24,17 +24,17 @@ export default function ProtectedPage({
   console.log(user.role);
 
   useEffect(() => {
-    if (guestOnly && user.role) {
+    if (user && guestOnly && user.role) {
       if (user.role == "USER") {
         return nav("/");
       } else {
         return nav("/dashboard");
       }
-    } else if (needLogin && !user.role) {
+    } else if (user && needLogin && !user.role) {
       return nav("/");
     } else if (
+      user &&
       needLogin &&
-      adminOnly &&
       (user.role != "ADMIN" || user.role != "SUPER ADMIN")
     ) {
       return nav("/");

@@ -29,19 +29,15 @@ export function AdminTableStock({
   desc,
   weight,
   category,
+  indexOfLastProduct,
+  productsPerPage,
   fetchData,
 }) {
-  console.log(stock);
   const navigate = useNavigate();
   const modalDelete = useDisclosure();
   const modalEdit = useDisclosure();
 
   const [editStock, setEditStock] = useState(null);
-
-  useEffect(() => {
-    console.log(url);
-  }, []);
-
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -63,7 +59,7 @@ export function AdminTableStock({
   return (
     <>
       <Tr id="SACategoryB">
-        <Td>{idx + 1}</Td>
+        <Td> {indexOfLastProduct - productsPerPage + idx + 1}</Td>
         <Td className="SAImgCategoryB">
           <Image src={url} />
         </Td>

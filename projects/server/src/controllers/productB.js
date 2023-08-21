@@ -17,6 +17,36 @@ const productController = {
       });
     }
   },
+
+  getAllAdmin: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const page = req.query.page - 1 || 0;
+      const search = req.query.search || "";
+      let whereClause = {};
+      if (req.query.search) {
+        whereClause[Op.or] = [{ product_name: { [Op.like]: `%${search}%` } }];
+      }
+      const product = await db.Product.findAndCountAll({
+        where: whereClause,
+        limit: 8,
+        offset: 8 * page,
+      });
+      await trans.commit();
+      return res.status(200).send({
+        message: "OK",
+        result: product.rows,
+        total: Math.ceil(product.count / 8),
+      });
+    } catch (err) {
+      await trans.rollback();
+      console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
   getById: async (req, res) => {
     try {
       const product = await db.Product.findOne({

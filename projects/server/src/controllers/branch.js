@@ -72,7 +72,7 @@ const branchController = {
         city_id,
         province,
       } = req.body;
-      // console.log(req.body);
+      console.log(req.body, "req bodynya admin bbranch");
       const hashedPass = await bcrypt.hash(password, 10);
       const coordinate = await openCage(req.body);
       console.log(coordinate);
@@ -149,7 +149,7 @@ const branchController = {
       password,
       phone_number,
       branch_name,
-      branch_address,
+      address,
       district,
       city_id,
       city_name,
@@ -218,13 +218,37 @@ const branchController = {
         transaction
       );
 
-      await transaction.commit();
-      res.status(200).send({ message: "Admin dan Branch berhasil di edit" });
+      await db.Branch.update({
+        branch_name,
+        branch_address : address,
+        district,
+        city_id,
+        province,
+      },
+      {
+        where : {
+          id : branch_id
+        }
+      },
+      transaction
+      )
+
+      await transaction.commit()
+      res.status(200).send({message : "Admin dan Branch berhasil di edit"})
     } catch (error) {
       await transaction.rollback();
       res.status(500).send({ message: error.message });
     }
   },
+
+  getAllBranchName: async (req, res) => {
+    try {
+      const branch = await db.Branch.findAll();
+      return res.send(branch);
+    } catch (err) {}
+    console.log(err.message);
+  },
+
   getSelector: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {

@@ -27,6 +27,8 @@ import DiscountAddModal from "../components/DiscountAddModal";
 import DiscountAddProductModal from "../components/DiscountAddProductModal";
 import VoucherPage from "../pages/VoucherPage";
 import InvoicePage from "../pages/InvoicePage";
+import SalesReportPage from "../pages/SalesReportPage";
+import ChartSalesReportTransactions from "../components/Chart-SalesReport-transaction";
 
 const routes = [
   <Route
@@ -93,27 +95,9 @@ const routes = [
   ></Route>,
 
   <Route
-    path="/product"
-    element={
-      <ProtectedPage guestOnly={true}>
-        <ProductPage />
-      </ProtectedPage>
-    }
-  ></Route>,
-
-  <Route
-    path="/sa-product"
-    element={
-      <ProtectedPage adminOnly={true}>
-        <SuperAdminProductPage />
-      </ProtectedPage>
-    }
-  ></Route>,
-
-  <Route
     path="/admin-branch"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage>
         <DashboardBranch />
       </ProtectedPage>
     }
@@ -136,13 +120,57 @@ const routes = [
       </ProtectedPage>
     }
   ></Route>,
-  <Route path="/a-stock" element={<AdminStockPage />}></Route>,
-  <Route path="/stockhistory" element={<StockHistoryPage />}></Route>,
-  <Route path="/sa-category" element={<SuperAdminCategoryPage />}></Route>,
+
+  <Route
+    path="/product"
+    element={
+      <ProtectedPage guestOnly={true}>
+        <ProductPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/sa-product"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <SuperAdminProductPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/a-stock"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <AdminStockPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/stockhistory"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <StockHistoryPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/sa-category"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <SuperAdminCategoryPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
   <Route path="/profile" element={<ProfilePage />}></Route>,
   <Route path="/ab" element={<DashboardBranch />}></Route>,
   <Route path="/dis" element={<DiscountPage />}></Route>,
   <Route path="/vocer" element={<VoucherPage />}></Route>,
+  <Route path="/sales-report" element={<SalesReportPage />}></Route>,
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
   <Route path="/orders/:order_number" element={<OrderDetailPage />}></Route>,

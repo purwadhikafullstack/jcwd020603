@@ -21,6 +21,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import "../css/adminBranchR.css";
+import "../css/discount-voucher.css";
 import logo from "../assets/SVG/4.svg";
 import AddUser from "./AdminBranchAddModal-user";
 import AddBranch from "./AdminBranchAddModal-branch";
@@ -96,10 +97,7 @@ export default function DiscountAddProductModal(props) {
       <Flex>
         <Flex className="flex2R-addbranch">
           <Flex className="flex3R-addbranch">
-            <Flex
-              className="flex3R-input_user-addbranch"
-              gap={"20px"}
-              p={10}>
+            <Flex className="flex3R-input_user-disvoc">
               <Box className="flex3R-input-box-addbranch">
                 Daftar Produk Branch : {branch_id}
               </Box>
@@ -115,7 +113,7 @@ export default function DiscountAddProductModal(props) {
             </Thead>
 
             <Tbody fontSize={"10px"}>
-              {dtStock.map((val, index) => (
+              {dtStock?.map((val, index) => (
                 <Tr key={val?.id} className="table-row">
                   <Td><Checkbox
                   colorScheme="green"

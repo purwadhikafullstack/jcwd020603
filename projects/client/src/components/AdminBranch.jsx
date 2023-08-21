@@ -80,6 +80,8 @@ export default function AdminBranch() {
     }
   };
 
+  console.log(dtBranch);
+
   useEffect(() => {
     fetchAll();
   }, []);
@@ -103,7 +105,7 @@ export default function AdminBranch() {
         bg={"#FFF7E7"}
       >
         <Flex fontSize={"26px"} fontWeight={"700"}>
-          Admin Branch Management
+          Pengaturan Admin Cabang
         </Flex>
 
         <Grid className="gridMenuG" flexDir={"row"}>
@@ -130,7 +132,7 @@ export default function AdminBranch() {
                 {dtBranch.length}
               </Flex>
               <Flex color={"grey"} fontWeight={"semibold"}>
-                Total Branch
+                Total Cabang
               </Flex>
             </Flex>
           </Flex>
@@ -159,9 +161,9 @@ export default function AdminBranch() {
             </Flex>
             <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
               <Select placeholder="Pilih Lokasi Cabang" bg={"white"}>
-                {dtBranch.map((val) => (
-                  <option value={val.Branch.branch_name}>
-                    {val.Branch.City?.city_name}
+                {dtBranch?.map((val) => (
+                  <option value={val?.Branch?.branch_name}>
+                    {val?.Branch?.City?.city_name}
                   </option>
                 ))}
               </Select>
@@ -200,16 +202,16 @@ export default function AdminBranch() {
             </Thead>
 
             <Tbody fontSize={"10px"}>
-              {dtBranch.map((val, index) => (
-                <Tr key={val.id} className="table-row">
+              {dtBranch?.map((val, index) => (
+                <Tr key={val?.id} className="table-row">
                   <Td>{index + 1}</Td>
-                  <Td>{val.user_name}</Td>
-                  <Td>{val.email}</Td>
-                  <Td>{val.phone_number}</Td>
-                  <Td>{val.Branch.branch_name}</Td>
-                  <Td>{val.Branch.branch_address}</Td>
+                  <Td>{val?.user_name}</Td>
+                  <Td>{val?.email}</Td>
+                  <Td>{val?.phone_number}</Td>
+                  <Td>{val?.Branch?.branch_name}</Td>
+                  <Td>{val?.Branch?.branch_address}</Td>
                   <Td>
-                    {val.Branch.City?.city_name} - {val.Branch.province}
+                    {val?.Branch?.City?.city_name} - {val?.Branch?.province}
                   </Td>
                   <Td alignItems={"center"} position={"center"}>
                     <Flex flexDir={"row"} w={"100%"} h={"100%"} gap={"15px"}>

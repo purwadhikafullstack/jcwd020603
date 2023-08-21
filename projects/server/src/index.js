@@ -46,6 +46,7 @@ app.use("/order", routes.orderRoutes);
 app.use("/discount", routes.discountRoutes);
 app.use("/product", routes.productRoutesB);
 app.use("/voucher", routes.voucherRoutes);
+app.use("/sales-report", routes.salesReportRoutes);
 app.use("/avatar", express.static(`${__dirname}/public/Avatar`));
 
 // import konfigurasi cron job
