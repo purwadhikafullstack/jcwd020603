@@ -165,9 +165,9 @@ export default function LandingPage() {
   findNearestBranchForUser()
     .then(({ nearestBranch, latlong }) => {
       if (nearestBranch) {
-        // console.log(`Nearest branch to user: ${nearestBranch.branch_name}`);
-        // console.log(`User latitude: ${latlong.latitude}`);
-        // console.log(`User longitude: ${latlong.longitude}`);
+        console.log(`Nearest branch to user: ${nearestBranch.branch_name}`);
+        console.log(`User latitude: ${latlong.latitude}`);
+        console.log(`User longitude: ${latlong.longitude}`);
         setNearestBranch(nearestBranch.id);
       } else {
         console.log("No branches found.");
@@ -182,6 +182,7 @@ export default function LandingPage() {
       localStorage.setItem("nearestBranch", JSON.stringify(nearestBranch));
     }
   }, [nearestBranch]);
+  console.log(nearestBranch);
 
   return (
     <>
@@ -212,7 +213,11 @@ export default function LandingPage() {
             selectedAddress={selectedAddress}
             setSelectedAddress={setSelectedAddress}
           />
-          <Category lengthCart={lengthCart} selectedAddress={selectedAddress} nearestBranch={nearestBranch}/>
+          <Category
+            lengthCart={lengthCart}
+            selectedAddress={selectedAddress}
+            nearestBranch={nearestBranch}
+          />
           <Footer lengthCart={lengthCart} />
         </>
       )}
