@@ -106,7 +106,9 @@ export default function Category({ lengthCart, nearestBranch }) {
               weight={val.Product?.weight}
               quantity_stock={val.quantity_stock}
               stock_id={val.id}
-              lengthCart={lengthCart}
+              lengthCart={props.lengthCart}
+              selectedAddress={props.selectedAddress}
+
             />
           ))}
         </Grid>

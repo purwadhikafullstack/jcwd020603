@@ -18,6 +18,7 @@ import { api } from "../api/api";
 import ModalAdminDikirim from "./modal-admin-dikirim";
 import ModalAdminDitolak from "./modal-admin-ditolak";
 import { useSelector } from "react-redux";
+import AdminNavbar from "./AdminNavbar";
 
 export default function AdminOrderDetail() {
   const order_number = useParams();
@@ -98,7 +99,7 @@ export default function AdminOrderDetail() {
   return (
     <>
       <Box position={"sticky"}>
-        <AdminNavbarOrder />
+        <AdminNavbar />
       </Box>
       <Flex
         w={"100%"}

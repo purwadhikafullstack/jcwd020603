@@ -68,22 +68,25 @@ export default function VoucherPromo(props) {
             </Flex>
           </Flex>
           {!isClicked ? (
-            <Flex
-              h={"30px"}
-              bg={"#EAF4E7"}
-              color={"#2A960C"}
-              fontSize={"10px"}
-              fontWeight={"600"}
-              alignItems={"center"}
-              padding={"10px"}
-              letterSpacing={"2px"}
-              borderRadius={"5px"}
-              onClick={() => {
-                setIsClicked(true);
-              }}
-            >
-              PAKAI KODE VOUCHER / PROMO
-            </Flex>
+            <>
+              <Flex
+                w={"100%"}
+                h={"30px"}
+                bg={"#EAF4E7"}
+                color={"#2A960C"}
+                fontSize={"10px"}
+                fontWeight={"600"}
+                alignItems={"center"}
+                padding={"10px"}
+                letterSpacing={"2px"}
+                borderRadius={"5px"}
+                onClick={() => {
+                  setIsClicked(true);
+                }}
+              >
+                PAKAI KODE VOUCHER / PROMO
+              </Flex>
+            </>
           ) : (
             <>
               <Flex className="voucherFontRes">

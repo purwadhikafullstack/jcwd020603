@@ -62,28 +62,33 @@ const orderController = {
       const order = req.query.order || "DESC";
       const page = req.query.page - 1 || 0;
       const search = req.query.search || "";
-      const time = req.query.time || moment();
+      const time = req.query.time || null;
+      const time2 = req.query.time2 || null;
+      const status = req.query.status || "";
+      const branch_id = req.query.branch_id;
       console.log("page", page);
-      let where = {
-        createdAt: {
+      let where = {};
+      if (time && time2) {
+        where.createdAt = {
           [Op.and]: [
             {
-              [Op.gte]: moment(time).startOf("month"),
+              [Op.gte]: moment(time).startOf("date"),
             },
             {
-              [Op.lte]: moment(time).endOf("month"),
+              [Op.lte]: moment(time2).endOf("date"),
             },
           ],
-        },
-      };
-      if (req.query.search) {
-        where[Op.or] = [
-          { order_number: { [Op.like]: `%${search}%` } },
-          { status: { [Op.like]: `%${search}%` } },
-        ];
+        };
       }
-      if (req.query.branch_id) {
+
+      if (search) {
+        where[Op.or] = [{ order_number: { [Op.like]: `%${search}%` } }];
+      }
+      if (branch_id) {
         where.branch_id = req.query.branch_id;
+      }
+      if (status) {
+        where.status = { [Op.like]: `%${status}%` };
       }
       console.log(where);
       const get = await db.Order.findAndCountAll({
@@ -96,18 +101,30 @@ const orderController = {
           { model: db.User, as: "User" },
         ],
         order: [[sort, order]],
-        limit: 3,
-        offset: 3 * page,
+        limit: 5,
+        offset: 5 * page,
       });
-      const count = await db.Order.count();
+      const whereClause = {};
+      if (branch_id) {
+        whereClause.branch_id = req.query.branch_id;
+      }
+      const count = await db.Order.count({
+        where: whereClause,
+      });
+      const whereFilter = {
+        status: { [Op.or]: ["Dibatalkan", "Pesanan Dikonfirmasi"] },
+      };
+      if (branch_id) {
+        whereFilter.branch_id = req.query.branch_id;
+      }
       const filterCount = await db.Order.count({
-        where: { status: { [Op.or]: ["Dibatalkan", "Pesanan Dikonfirmasi"] } },
+        where: whereFilter,
       });
       await trans.commit();
       return res.status(200).send({
         message: "OK",
         result: get.rows,
-        total: Math.ceil(get.count / 3),
+        total: Math.ceil(get.count / 5),
         count: count,
         done: filterCount,
         undone: count - filterCount,
@@ -122,10 +139,15 @@ const orderController = {
   getByOrderId: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
+      const whereClause = {
+        user_id: req.user.id,
+      };
+      if (req.query.order_number) {
+        whereClause.order_number = req.query.order_number;
+      }
+
       const order = await db.Order.findAll({
-        where: {
-          user_id: req.user.id,
-        },
+        where: whereClause,
         limit: 1,
         order: [["createdAt", "DESC"]],
         include: [
@@ -178,6 +200,22 @@ const orderController = {
           {
             model: db.User,
             as: "User",
+          },
+          {
+            model: db.OrderDetail,
+            as: "Order",
+            include: [
+              {
+                model: db.Stock,
+                as: "Stock",
+                include: [
+                  {
+                    model: db.Product,
+                    as: "Product",
+                  },
+                ],
+              },
+            ],
           },
         ],
       });
@@ -254,7 +292,7 @@ const orderController = {
       });
     } catch (err) {
       await trans.rollback();
-      res.status(500).send({
+      return res.status(500).send({
         message: err.message,
       });
     }
@@ -302,6 +340,7 @@ const orderController = {
     const trans = await db.sequelize.transaction();
     try {
       const { orderDetVal } = req.body;
+      let whereClause;
       const patch = await db.Order.update(
         {
           status: "Dibatalkan",
@@ -319,6 +358,7 @@ const orderController = {
             id: item.stock_id,
           },
         });
+        console.log("checkcok", check);
         const arrStockHistory = [
           {
             status: "INCREMENT",
@@ -333,8 +373,10 @@ const orderController = {
         const post = await db.StockHistory.bulkCreate(arrStockHistory, {
           transaction: trans,
         });
-        console.log(post);
-        const newQuantity = check.dataValues.quantity_stock + item.quantity;
+        console.log("check", check.dataValues.quantity_stock);
+        console.log("item", item.quantity);
+        const newQuantity = check.dataValues.quantity_stock;
+        console.log("newQuantity", newQuantity);
         check.setDataValue("quantity_stock", newQuantity);
         await check.save({ transaction: trans });
       }
@@ -350,6 +392,90 @@ const orderController = {
       });
     }
   },
+  cancelOrderAutomatically: async () => {
+    const trans = await db.sequelize.transaction();
+    console.log("udah jalan");
+    try {
+      const currentTime = moment().utc();
+      const findOrder = await db.Order.findOne({
+        where: {
+          status: "Menunggu Pembayaran",
+          date: { [Op.lte]: currentTime },
+        },
+        include: [
+          {
+            model: db.OrderDetail,
+            as: "Order",
+            require: false,
+            include: [
+              {
+                model: db.Stock,
+                as: "Stock",
+                include: [
+                  {
+                    model: db.Product,
+                    as: "Product",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+      console.log("findOrder", findOrder);
+      console.log("Waktu Sekarang:", currentTime);
+      console.log("Tanggal Pesanan:", findOrder.date);
+      if (findOrder) {
+        const patch = await db.Order.update(
+          {
+            status: "Dibatalkan",
+          },
+          {
+            where: {
+              id: findOrder.id,
+            },
+            transaction: trans,
+          }
+        );
+        console.log(patch);
+        if (patch[0] === 1) {
+          for (const item of findOrder?.Order) {
+            const check = await db.Stock.findOne({
+              where: {
+                id: item.stock_id,
+              },
+            });
+            const arrStockHistory = [
+              {
+                status: "INCREMENT",
+                status_quantity: item.quantity,
+                feature: "Pembatalan Pesanan",
+                stock_id: item.stock_id,
+                quantity_before: check.quantity_stock,
+                quantity_after: (check.quantity_stock += item.quantity),
+              },
+            ];
+            const post = await db.StockHistory.bulkCreate(arrStockHistory, {
+              transaction: trans,
+            });
+            console.log("post", post);
+            const newQuantity = check.dataValues.quantity_stock;
+            console.log("newQuantity", newQuantity);
+            check.setDataValue("quantity_stock", newQuantity);
+            await check.save({ transaction: trans });
+          }
+        } else {
+          return console.log("gagal mengupdate");
+        }
+      } else {
+        return console.log("tidak ada order yang menunggu pembayaran");
+      }
+      await trans.commit();
+    } catch (err) {
+      await trans.rollback();
+      console.error("Error in cancelOrderAutomatically:", err.message);
+    }
+  },
   changeStatusOrder: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
@@ -362,6 +488,7 @@ const orderController = {
           transaction: trans,
         }
       );
+      console.log("ini cancel order otomatis");
       await trans.commit();
       res.status(200).send({
         message: "OK",

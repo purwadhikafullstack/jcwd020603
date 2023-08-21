@@ -151,6 +151,7 @@ export function CardProduct(props) {
             prodVal={prodVal}
             setProdVal={setProdVal}
             lengthCart={props.lengthCart}
+            selectedAddress={props.selectedAddress}
           />
         </DrawerContent>
       </Drawer>

@@ -1,10 +1,9 @@
-import { Flex } from "@chakra-ui/react";
+import { Center, Flex, Spinner } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-export default function DaftarAlamat() {
+export default function DaftarAlamat({ selectedAddress, isLoading2 }) {
   const nav = useNavigate();
-  const addressSelector = useSelector((state) => state.address);
   return (
     <>
       <Flex
@@ -43,18 +42,27 @@ export default function DaftarAlamat() {
             rowGap={"10px"}
             padding={"16px"}
           >
-            <Flex w={"100%"} fontSize={"12px"} fontWeight={"500"}>
-              {addressSelector.address_name} | {addressSelector.address_phone}
-            </Flex>
-            <Flex w={"100%"} fontSize={"12px"} flexDir={"column"}>
-              <Flex>
-                {addressSelector.address}, {addressSelector.district}
-              </Flex>
-              <Flex>
-                {addressSelector.City?.city_name},{" "}
-                {addressSelector.City?.postal_code}
-              </Flex>
-            </Flex>
+            {isLoading2 ? (
+              <Center>
+                <Spinner />
+              </Center>
+            ) : (
+              <>
+                <Flex w={"100%"} fontSize={"12px"} fontWeight={"500"}>
+                  {selectedAddress.address_name} |{" "}
+                  {selectedAddress.address_phone}
+                </Flex>
+                <Flex w={"100%"} fontSize={"12px"} flexDir={"column"}>
+                  <Flex>
+                    {selectedAddress.address}, {selectedAddress.district}
+                  </Flex>
+                  <Flex>
+                    {selectedAddress.City?.city_name},{" "}
+                    {selectedAddress.City?.postal_code}
+                  </Flex>
+                </Flex>
+              </>
+            )}
           </Flex>
         </Flex>
       </Flex>

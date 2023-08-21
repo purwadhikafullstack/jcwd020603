@@ -17,11 +17,12 @@ import DetailPengiriman from "./detail-info-pengiriman";
 import { api } from "../api/api";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { HiOutlineCheckCircle } from "react-icons/hi";
 import ModalPesananSelesai from "./modal-pesanan-selesai";
 
 export default function ContentDetailPesanan() {
+  const nav = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const order_number = useParams();
   // get order
@@ -116,6 +117,23 @@ export default function ContentDetailPesanan() {
               <Flex w={"100%"} justifyContent={"space-between"}>
                 <Flex>Order Number:</Flex>
                 <Flex>{peraturan?.order_number}</Flex>
+              </Flex>
+              <Flex w={"100%"} justifyContent={"right"}>
+                <Button
+                  colorScheme="green"
+                  fontSize={"12px"}
+                  h={"25px"}
+                  display={
+                    peraturan?.status == "Pesanan Dikonfirmasi"
+                      ? "flex"
+                      : "none"
+                  }
+                  onClick={() => {
+                    nav(`/invoice/${peraturan?.order_number}`);
+                  }}
+                >
+                  Faktur Pembelian
+                </Button>
               </Flex>
               <Flex w={"100%"} justifyContent={"space-between"}>
                 <Flex>Tanggal & Waktu Pemesanan:</Flex>

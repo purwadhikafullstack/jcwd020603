@@ -44,8 +44,7 @@
 
 /* sidebar-mini.css */
 .miniflexSidebarTerluarG {
-  max-width: 88px;
-  min-width: 68px;
+  max-width: 58px;
   width: 100%;
   height: 100vh;
   border-right: 1px solid lightgrey;
@@ -106,7 +105,7 @@
   z-index: 1;
   position: absolute;
   bottom: 70px;
-  left: 40px;
+  left: 50px;
 }
 
 /* Sidebar. CSS */
@@ -303,6 +302,7 @@ th {
   width: 100%;
   padding: 80px 20px 20px;
   gap: 20px;
+  background: red;
 }
 
 /* content-pembayaran.css */

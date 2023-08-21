@@ -36,6 +36,7 @@ import Pagination from "./pagination";
 import { color } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import AdminNavbar from "./AdminNavbar";
 
 export default function AdminOrderList() {
   const windowWidth = window.innerWidth;
@@ -63,6 +64,9 @@ export default function AdminOrderList() {
     order: "DESC",
     search: "",
     time: "",
+    time2: "",
+    status: "",
+    branch_id: "",
   });
   const [totalPages, setTotalPages] = useState(0);
   const [allBranchOrder, setAllBranchOrder] = useState([]);
@@ -114,11 +118,20 @@ export default function AdminOrderList() {
     const get = await api().get("/branch/selector");
     setSelector(get.data.result);
   };
+  //selector status
+  const SelectorStatus = [
+    { value: "Menunggu Pembayaran" },
+    { value: "Menunggu Konfirmasi Pembayaran" },
+    { value: "Diproses" },
+    { value: "Dikirim" },
+    { value: "Pesanan Dikonfirmasi" },
+    { value: "Dibatalkan" },
+  ];
 
   return (
     <>
       <Box>
-        <AdminNavbarOrder onOpen={onOpen} />
+        <AdminNavbar onOpen={onOpen} />
       </Box>
       <Flex
         maxW={"910px"}
@@ -199,30 +212,12 @@ export default function AdminOrderList() {
           fontSize={"24px"}
           fontWeight={"700"}
           paddingBottom={"20px"}
-          justifyContent={"space-between"}
+          flexDir={"column"}
+          rowGap={"10px"}
         >
-          <Flex>List Pesanan</Flex>
-          <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
-            <Input
-              placeholder="Pilih Tanggal"
-              bg={"white"}
-              type="month"
-              onChange={(e) =>
-                setFiltering({ ...filtering, time: e.target.value })
-              }
-            ></Input>
-            <Select
-              placeholder="Pilih Lokasi Cabang"
-              bg={"white"}
-              display={userSelector.role == "ADMIN" ? "none" : "flex"}
-            >
-              {selector.map((val) => {
-                return (
-                  <option value={val.branch_name}>{val.branch_name}</option>
-                );
-              })}
-            </Select>
-            <InputGroup>
+          <Flex justifyContent={"space-between"} w={"100%"}>
+            <Flex>List Pesanan</Flex>
+            <InputGroup maxW={"300px"} w={"100%"}>
               <Input placeholder="search" bg={"white"} ref={searchRef}></Input>
               <InputRightElement
                 as={BiSearch}
@@ -238,6 +233,74 @@ export default function AdminOrderList() {
                 }}
               />
             </InputGroup>
+          </Flex>
+          <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
+            <Input
+              placeholder="Pilih Tanggal"
+              bg={"white"}
+              type="date"
+              value={filtering.time}
+              maxW={"200px"}
+              onChange={(e) => {
+                setFiltering({ ...filtering, time: e.target.value });
+                setShown({ page: 1 });
+              }}
+            ></Input>
+            -
+            <Input
+              placeholder="Pilih Tanggal"
+              bg={"white"}
+              type="date"
+              maxW={"200px"}
+              value={filtering.time2}
+              onChange={(e) => {
+                setFiltering({ ...filtering, time2: e.target.value });
+                setShown({ page: 1 });
+              }}
+            ></Input>
+            <Select
+              placeholder="Semua Cabang"
+              bg={"white"}
+              display={userSelector.role == "ADMIN" ? "none" : "flex"}
+              onChange={(e) => {
+                setFiltering({ ...filtering, branch_id: e.target.value });
+              }}
+            >
+              {selector.map((val) => {
+                return <option value={val.id}>{val.branch_name}</option>;
+              })}
+            </Select>
+            <Select
+              placeholder="Pilih Status"
+              bg={"white"}
+              fontSize={"14px"}
+              onChange={(e) =>
+                setFiltering({ ...filtering, status: e.target.value })
+              }
+            >
+              {SelectorStatus.map((val) => {
+                return <option value={val.value}>{val.value}</option>;
+              })}
+            </Select>
+          </Flex>
+          <Flex
+            maxW={"65px"}
+            fontSize={"12px"}
+            _hover={{ cursor: "pointer", color: "lightgrey" }}
+            onClick={() => {
+              setFiltering({
+                page: 1,
+                order: "DESC",
+                search: "",
+                time: "",
+                time2: "",
+                status: "",
+                branch_id: userSelector.branch_id || "",
+              });
+              setShown({ page: 1 });
+            }}
+          >
+            Reset Filter
           </Flex>
         </Flex>
         <TableContainer id="containerTableB" justifyContent={"space-between"}>
