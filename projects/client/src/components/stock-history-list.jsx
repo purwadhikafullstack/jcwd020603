@@ -104,7 +104,7 @@ export default function StockHistoryList() {
     }
   }, [shown]);
 
-  const productsPerPage = 8;
+  const productsPerPage = 6;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 

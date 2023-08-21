@@ -25,6 +25,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { SATableCategory } from "./sATableCategory";
 import { AddCategory } from "./mAddCategory";
 import Pagination from "./pagination";
+import { useSelector } from "react-redux";
 
 export default function SuperAdminCategoryList() {
   const windowWidth = window.innerWidth;
@@ -33,6 +34,7 @@ export default function SuperAdminCategoryList() {
   const tableHeadRef = useRef(null);
   const tableRowRef = useRef(null);
   const searchRef = useRef(null);
+  const userSelector = useSelector((state) => state.auth);
 
   const handleTableHeadScroll = (e) => {
     if (tableRowRef.current) {
@@ -138,6 +140,7 @@ export default function SuperAdminCategoryList() {
                 />
               </InputGroup>
               <Button
+                display={userSelector.role == "ADMIN" ? "none" : "flex"}
                 onClick={() => {
                   onOpen();
                   setAddCategory();
@@ -157,6 +160,7 @@ export default function SuperAdminCategoryList() {
               </Button>
             </Flex>
           </Flex>
+
           <Stack>
             <TableContainer
               id="containerTableB"

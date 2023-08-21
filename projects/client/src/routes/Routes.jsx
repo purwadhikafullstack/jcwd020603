@@ -132,7 +132,7 @@ const routes = [
   <Route
     path="/sa-product"
     element={
-      <ProtectedPage adminOnly={true}>
+      <ProtectedPage needLogin={true} adminOnly={true}>
         <SuperAdminProductPage />
       </ProtectedPage>
     }
@@ -146,6 +146,7 @@ const routes = [
       </ProtectedPage>
     }
   ></Route>,
+
   <Route
     path="/stockhistory"
     element={
@@ -154,6 +155,7 @@ const routes = [
       </ProtectedPage>
     }
   ></Route>,
+
   <Route
     path="/sa-category"
     element={
@@ -162,6 +164,7 @@ const routes = [
       </ProtectedPage>
     }
   ></Route>,
+
   <Route path="/profile" element={<ProfilePage />}></Route>,
   <Route path="/ab" element={<DashboardBranch />}></Route>,
   <Route path="/dis" element={<DiscountPage />}></Route>,
