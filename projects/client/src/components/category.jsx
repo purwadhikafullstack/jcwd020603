@@ -11,7 +11,11 @@ import { api } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
 
-export default function Category({ lengthCart, nearestBranch }) {
+export default function Category({
+  lengthCart,
+  nearestBranch,
+  selectedAddress,
+}) {
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -106,9 +110,8 @@ export default function Category({ lengthCart, nearestBranch }) {
               weight={val.Product?.weight}
               quantity_stock={val.quantity_stock}
               stock_id={val.id}
-              lengthCart={props.lengthCart}
-              selectedAddress={props.selectedAddress}
-
+              lengthCart={lengthCart}
+              selectedAddress={selectedAddress}
             />
           ))}
         </Grid>

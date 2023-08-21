@@ -40,7 +40,7 @@ export function SearchBar(props) {
   return (
     <>
       <Flex id="searchBarB">
-        <Input
+        <input
           type="text"
           placeholder="Mau Belanja Apa?"
           value={searchTerm}
