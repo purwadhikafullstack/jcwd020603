@@ -25,6 +25,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { SATableProduct } from "./sATableProduct";
 import { AddProduct } from "./mAddProduct";
 import Pagination from "./pagination";
+import { useSelector } from "react-redux";
 
 export default function SuperAdminProductList() {
   const windowWidth = window.innerWidth;
@@ -33,6 +34,7 @@ export default function SuperAdminProductList() {
   const tableHeadRef = useRef(null);
   const tableRowRef = useRef(null);
   const searchRef = useRef(null);
+  const userSelector = useSelector((state) => state.auth);
 
   const handleTableHeadScroll = (e) => {
     if (tableRowRef.current) {
@@ -133,7 +135,11 @@ export default function SuperAdminProductList() {
                   }}
                 />
               </InputGroup>
-              <Button onClick={onOpen} colorScheme={"yellow"}>
+              <Button
+                onClick={onOpen}
+                colorScheme={"yellow"}
+                display={userSelector.role == "ADMIN" ? "none" : "flex"}
+              >
                 {<Icon as={AiOutlinePlus} fontSize={"28px"} />}
                 <AddProduct id={addProduct} isOpen={isOpen} onClose={onClose} />
               </Button>

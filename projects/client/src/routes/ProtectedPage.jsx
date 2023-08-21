@@ -29,7 +29,7 @@ export default function ProtectedPage({
       } else {
         return nav("/dashboard");
       }
-    } else if (needLogin && !user.role) {
+    } else if (user && needLogin && !user.role) {
       return nav("/");
     } else if (
       needLogin &&

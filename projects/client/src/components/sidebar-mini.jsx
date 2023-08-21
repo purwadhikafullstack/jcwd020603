@@ -52,6 +52,7 @@ export default function SidebarMini() {
           gap={"10px"}
           onClick={(e) => {
             handleClick(e);
+            nav("/product");
           }}
           bg={Clicked == "kategori" ? "#ECFFF4" : "white"}
           color={Clicked == "kategori" ? "#199950" : "black"}

@@ -50,6 +50,7 @@ export default function Footer() {
               color={Clicked == "kategori" ? "#118925" : "black"}
               onClick={(e) => {
                 handleClick(e);
+                nav("/product");
               }}
             >
               <Icon as={BiCategory} fontSize={"24px"} />
