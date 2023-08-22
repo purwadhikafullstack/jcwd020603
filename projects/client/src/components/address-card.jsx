@@ -95,6 +95,7 @@ export default function AddressCard({
         }}
       >
         <Icon
+          _hover={{ cursor: "pointer" }}
           as={Clicked.id == val.id ? BiRadioCircleMarked : BiRadioCircle}
           fontSize={"40px"}
           color={"#2A960C"}

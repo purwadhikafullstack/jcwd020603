@@ -11,15 +11,11 @@ import { api } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
 
-export default function Category({
-  lengthCart,
-  nearestBranch,
-  selectedAddress,
-}) {
+export default function Category({ lengthCart, selectedAddress }) {
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
   const dispatch = useDispatch();
 
   const performSearch = (searchTerm) => {

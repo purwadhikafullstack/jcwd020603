@@ -273,7 +273,7 @@ const orderController = {
           {
             status: "DECREMENT",
             status_quantity: item.qty,
-            feature: "Pemesanan Konsumen",
+            feature: "Ordered by Consument",
             stock_id: item.stock_id,
             quantity_before: check.quantity_stock,
             quantity_after: check.quantity_stock - item.qty,
@@ -363,7 +363,7 @@ const orderController = {
           {
             status: "INCREMENT",
             status_quantity: item.quantity,
-            feature: "Pembatalan Pesanan",
+            feature: "Cancelled Order",
             stock_id: item.stock_id,
             quantity_before: check.quantity_stock,
             quantity_after: (check.quantity_stock += item.quantity),
@@ -449,7 +449,7 @@ const orderController = {
               {
                 status: "INCREMENT",
                 status_quantity: item.quantity,
-                feature: "Pembatalan Pesanan",
+                feature: "Cancelled Order",
                 stock_id: item.stock_id,
                 quantity_before: check.quantity_stock,
                 quantity_after: (check.quantity_stock += item.quantity),
