@@ -41,16 +41,11 @@ export function SATableProduct({
   productsPerPage,
   fetchData,
 }) {
-  console.log(product);
   const navigate = useNavigate();
   const modalDelete = useDisclosure();
   const modalEdit = useDisclosure();
 
   const [editProduct, setEditProduct] = useState(null);
-
-  useEffect(() => {
-    console.log(url);
-  }, []);
 
   const [categories, setCategories] = useState([]);
 

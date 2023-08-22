@@ -14,6 +14,7 @@ import {
   useDisclosure,
   Tbody,
   Button,
+  Select,
 } from "@chakra-ui/react";
 import AdminNavbarOrder from "./admin-navbar-order";
 import { BiSearch, BiSolidChevronDown, BiSolidChevronUp } from "react-icons/bi";
@@ -105,7 +106,7 @@ export default function SuperAdminCategoryList() {
     }
   }, [shown]);
 
-  const productsPerPage = 8;
+  const productsPerPage = 6;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
@@ -160,7 +161,6 @@ export default function SuperAdminCategoryList() {
               </Button>
             </Flex>
           </Flex>
-
           <Stack>
             <TableContainer
               id="containerTableB"

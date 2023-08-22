@@ -16,6 +16,7 @@ import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { EditStock } from "./mEditStock";
 import { DeleteStock } from "./mDeleteStock";
+import moment from "moment";
 
 export function AdminTableStock({
   key,
@@ -31,6 +32,7 @@ export function AdminTableStock({
   category,
   indexOfLastProduct,
   productsPerPage,
+  createdAt,
   fetchData,
 }) {
   const navigate = useNavigate();
@@ -95,7 +97,7 @@ export function AdminTableStock({
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
-            {discount}
+            {moment(createdAt).format("LLL")}
           </Flex>
         </Td>
         <Td className="SACategoryActionB" isNumeric>

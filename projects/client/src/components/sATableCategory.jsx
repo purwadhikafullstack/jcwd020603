@@ -29,10 +29,6 @@ export function SATableCategory({
   const { photo_category_url, id } = category;
   const [editCategory, setEditCategory] = useState(null);
 
-  useEffect(() => {
-    console.log(photo_category_url);
-  }, []);
-
   return (
     <>
       <Tr id="SACategoryB" key={category.id}>

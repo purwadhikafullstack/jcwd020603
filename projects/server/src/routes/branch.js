@@ -37,4 +37,7 @@ router.get(
   branchController.getSelector
 );
 
+router.get("/selector-category", branchController.getSelectorCategory);
+router.get("/selector-feature", branchController.getSelectorFeature);
+
 module.exports = router;

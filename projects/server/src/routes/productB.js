@@ -30,4 +30,10 @@ router.delete(
   productControllerB.deleteProduct
 );
 
+router.get(
+  "/selector",
+  roleController.checkAllAdmin,
+  productControllerB.getSelector
+);
+
 module.exports = router;

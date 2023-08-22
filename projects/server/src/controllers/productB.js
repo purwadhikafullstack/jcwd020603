@@ -23,9 +23,13 @@ const productController = {
     try {
       const page = req.query.page - 1 || 0;
       const search = req.query.search || "";
+      const category_id = req.query.category_id;
       let whereClause = {};
       if (req.query.search) {
         whereClause[Op.or] = [{ product_name: { [Op.like]: `%${search}%` } }];
+      }
+      if (req.query.category_id) {
+        whereClause.category_id = req.query.category_id;
       }
       const product = await db.Product.findAndCountAll({
         where: whereClause,
@@ -41,6 +45,23 @@ const productController = {
     } catch (err) {
       await trans.rollback();
       console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  getSelector: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const selector = await db.Product.findAll();
+      await trans.commit();
+      res.status(200).send({
+        message: "OK",
+        result: selector,
+      });
+    } catch (err) {
+      await trans.rollback();
       res.status(500).send({
         message: err.message,
       });
