@@ -21,12 +21,23 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { api } from "../api/api";
 import ModalAlamatPengiriman from "./modal-alamat-pengiriman";
 import { useFetchCart } from "../hooks/useFetchCart";
+import ModalNearestBranch from "./modal-nearest-branch";
 
 export default function ModalProduct(props) {
   const { prodVal, setProdVal, checked, setChecked, selectedAddress } = props;
+  const nearestBranch = localStorage.getItem("nearestBranch");
   const [count, tambah, kurang] = useCounter(1, 1);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { countAll, fetch } = useFetchCart();
+  const {
+    isOpen: isOpenModal1,
+    onOpen: onOpenModal1,
+    onClose: onCloseModal1,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenModal2,
+    onOpen: onOpenModal2,
+    onClose: onCloseModal2,
+  } = useDisclosure();
+  const { fetch } = useFetchCart();
 
   // insert qty ke prodVal
   const insertQty = () => {
@@ -76,7 +87,7 @@ export default function ModalProduct(props) {
       const res = err.response;
       console.log(err);
       toast({
-        title: res.data.message,
+        title: "Login terlebih dahulu untuk menambahkan produk",
         status: "error",
         position: "top",
         duration: 3000,
@@ -170,7 +181,7 @@ export default function ModalProduct(props) {
                   selectedAddress &&
                   Object.keys(selectedAddress).length > 0
                 ) {
-                  onOpen();
+                  onOpenModal1();
                 } else {
                   toast({
                     title: "Tentukan alamat pengiriman terlebih dahulu",
@@ -205,8 +216,12 @@ export default function ModalProduct(props) {
             <Center
               className="tombolAddtoCart"
               onClick={() => {
-                addToCart();
-                props.onClose();
+                if (nearestBranch == null || !nearestBranch) {
+                  onOpenModal2();
+                } else {
+                  addToCart();
+                  props.onClose();
+                }
               }}
             >
               Tambah Ke Keranjang
@@ -214,12 +229,22 @@ export default function ModalProduct(props) {
           </Flex>
         </Flex>
       </Center>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpenModal1} onClose={onCloseModal1} isCentered>
         <ModalOverlay />
         <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
           <ModalAlamatPengiriman
-            onClose={onClose}
-            isOpen={isOpen}
+            onClose={onCloseModal1}
+            isOpen={isOpenModal1}
+            selectedAddress={selectedAddress}
+          />
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpenModal2} onClose={onCloseModal2} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalNearestBranch
+            onClose={onCloseModal2}
+            isOpen={isOpenModal2}
             selectedAddress={selectedAddress}
           />
         </ModalContent>

@@ -108,6 +108,7 @@ export default function ContentDaftarAlamat() {
               bg={"#EBF5E9"}
               color={"#2A960C"}
               onClick={onOpenModal1}
+              _hover={{ cursor: "pointer" }}
             >
               <Flex fontSize={"18px"} fontWeight={"500"} letterSpacing={"1px"}>
                 TAMBAH ALAMAT PENGIRIMAN
@@ -130,6 +131,7 @@ export default function ContentDaftarAlamat() {
               setAddress();
               nav("/");
             }}
+            _hover={{ cursor: "pointer" }}
           >
             PILIH ALAMAT PENGIRIMAN
           </Center>

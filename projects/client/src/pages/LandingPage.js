@@ -1,4 +1,12 @@
-import { Box, Center, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import Category from "../components/category";
 import Footer from "../components/footer";
 import Sidebar from "../components/sidebar";
@@ -8,9 +16,12 @@ import { useEffect, useState } from "react";
 import { api } from "../api/api";
 import SidebarMini from "../components/sidebar-mini";
 import { useDispatch } from "react-redux";
+import ModalNearestBranch from "../components/modal-nearest-branch";
 
 export default function LandingPage() {
   const windowWidth = window.outerWidth;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isLoaded, setIsLoaded] = useState(false);
   const [latlong, setLatlong] = useState({
     latitude: "",
     longitude: "",
@@ -117,6 +128,9 @@ export default function LandingPage() {
     });
   }
 
+  const [nearestBranch, setNearestBranch] = useState("");
+  const [branchName, setBranchName] = useState("");
+  const [minDistance, setMinDistance] = useState("");
   // Fungsi untuk mencari cabang terdekat
   async function findNearestBranch(userLat, userLon, branches) {
     let nearestBranch = null;
@@ -138,17 +152,15 @@ export default function LandingPage() {
         nearestBranch = branch;
       }
     }
+    setMinDistance(minDistance);
     return nearestBranch;
   }
-
-  const [nearestBranch, setNearestBranch] = useState();
-  const [branchName, setBranchName] = useState();
+  console.log("minmin", minDistance);
 
   // Fungsi untuk mencari branch terdekat berdasarkan latitude dan longitude user
   async function findNearestBranchForUser() {
     try {
       const latlong = await getGeoloc2();
-
       const token = JSON.parse(localStorage.getItem("auth"));
       const response = await api().get("/branch/getbranch", {
         headers: { Authorization: `Bearer ${token}` },
@@ -186,8 +198,14 @@ export default function LandingPage() {
     });
 
   useEffect(() => {
-    if (nearestBranch) {
-      localStorage.setItem("nearestBranch", JSON.stringify(nearestBranch));
+    if (nearestBranch && minDistance < 65) {
+      return localStorage.setItem(
+        "nearestBranch",
+        JSON.stringify(nearestBranch)
+      );
+    } else if (nearestBranch && minDistance > 65) {
+      localStorage.removeItem("nearestBranch");
+      return onOpen();
     }
   }, [nearestBranch]);
   console.log(nearestBranch);
@@ -207,14 +225,16 @@ export default function LandingPage() {
             </Flex>
             <Flex flexDir={"column"}>
               <TopBar
+                setIsLoaded={setIsLoaded}
+                isLoaded={isLoaded}
                 address={address}
                 selectedAddress={selectedAddress}
                 branchName={branchName}
+                minDistance={minDistance}
               />
               <Category
                 lengthCart={lengthCart}
                 selectedAddress={selectedAddress}
-                nearestBranch={nearestBranch}
               />
             </Flex>
           </Flex>
@@ -226,15 +246,18 @@ export default function LandingPage() {
             selectedAddress={selectedAddress}
             setSelectedAddress={setSelectedAddress}
             branchName={branchName}
+            minDistance={minDistance}
           />
-          <Category
-            lengthCart={lengthCart}
-            selectedAddress={selectedAddress}
-            nearestBranch={nearestBranch}
-          />
+          <Category lengthCart={lengthCart} selectedAddress={selectedAddress} />
           <Footer lengthCart={lengthCart} />
         </>
       )}
+      <Modal isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalNearestBranch onClose={onClose} />
+        </ModalContent>
+      </Modal>
     </>
   );
 }

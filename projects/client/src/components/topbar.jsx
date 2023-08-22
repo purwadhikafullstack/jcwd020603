@@ -1,4 +1,4 @@
-import { Flex, Icon } from "@chakra-ui/react";
+import { Flex, Icon, Skeleton, SkeletonText } from "@chakra-ui/react";
 import { MdLocationPin } from "react-icons/md";
 import logo from "../assets/logo/vertical.png";
 
@@ -7,18 +7,34 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-export default function TopBar({ address, selectedAddress, branchName }) {
+export default function TopBar({
+  address,
+  selectedAddress,
+  branchName,
+  isLoaded,
+  setIsLoaded,
+  minDistance,
+}) {
   const userSelector = useSelector((state) => state.auth);
-  console.log(selectedAddress.address);
-  console.log(userSelector);
+  console.log(branchName);
+  console.log(selectedAddress);
   const nav = useNavigate();
+  const [district, setDistrict] = useState("");
   const getFormattedAddress = () => {
     if (address) {
       const splitAddress = address.split(",");
-      return splitAddress.length > 0 ? splitAddress[1].trim() : "";
+      setDistrict(splitAddress.length > 0 ? splitAddress[1].trim() : "");
     }
-    return "";
   };
+  useEffect(() => {
+    getFormattedAddress();
+  }, [address]);
+  console.log(district);
+  useEffect(() => {
+    if (district) {
+      setIsLoaded(true);
+    }
+  }, [district]);
 
   return (
     <>
@@ -31,26 +47,31 @@ export default function TopBar({ address, selectedAddress, branchName }) {
             onClick={() => nav("/address")}
           >
             <Icon id="iconLocationB" as={MdLocationPin} />
-            <Flex id="alamatTopBarB">
-              {address ? (
-                selectedAddress.address ? (
-                  <>
-                    <Flex>alamat anda : {selectedAddress.address}</Flex>
-                    <Flex>Toko terdekat : {branchName}</Flex>
-                  </>
+            <Skeleton height={"30px"} isLoaded={isLoaded}>
+              <Flex id="alamatTopBarB">
+                {address ? (
+                  selectedAddress?.address != null ? (
+                    <>
+                      <Flex>Alamat Anda : {selectedAddress?.address}</Flex>
+                      <Flex>
+                        Toko Terdekat :{" "}
+                        {minDistance < 65 ? branchName : "Tidak Tersedia"}
+                      </Flex>
+                    </>
+                  ) : (
+                    <>
+                      <Flex>alamat anda</Flex>
+                      <Flex>{district}</Flex>
+                    </>
+                  )
                 ) : (
                   <>
-                    <Flex>alamat anda</Flex>
-                    <Flex>{getFormattedAddress()}</Flex>
+                    <Flex>Alamat belum dipilih</Flex>
+                    <Flex>Mulai atur alamat pengiriman</Flex>
                   </>
-                )
-              ) : (
-                <>
-                  <Flex>Alamat belum dipilih</Flex>
-                  <Flex>Mulai atur alamat pengiriman</Flex>
-                </>
-              )}
-            </Flex>
+                )}
+              </Flex>
+            </Skeleton>
           </Flex>
         </Flex>
       </Flex>

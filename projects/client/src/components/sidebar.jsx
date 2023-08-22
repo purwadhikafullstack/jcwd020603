@@ -20,6 +20,7 @@ import { warning } from "framer-motion";
 import { api } from "../api/api";
 import ModalAlamatPengiriman from "./modal-alamat-pengiriman";
 import { useFetchCart } from "../hooks/useFetchCart";
+import ModalNearestBranch from "./modal-nearest-branch";
 
 // import ModalProduct from "./modal-product";
 
@@ -27,7 +28,17 @@ export default function Sidebar(props) {
   const { setLengthCart, setGetFunction, prodCart } = props;
   const user = JSON.parse(localStorage.getItem("auth"));
   const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  console.log("sidebar", nearestBranch);
+  const {
+    isOpen: isOpenModal1,
+    onOpen: onOpenModal1,
+    onClose: onCloseModal1,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenModal2,
+    onOpen: onOpenModal2,
+    onClose: onCloseModal2,
+  } = useDisclosure();
   const nav = useNavigate();
   const toast = useToast();
   const { countAll } = useFetchCart();
@@ -162,15 +173,22 @@ export default function Sidebar(props) {
             id="keranjang"
             className="menuSidebarCartG"
             onClick={() => {
-              if (selectedAddress && Object.keys(selectedAddress).length > 0) {
-                onOpen();
+              if (nearestBranch == null || !nearestBranch) {
+                onOpenModal2();
               } else {
-                toast({
-                  title: "Tentukan alamat pengiriman terlebih dahulu",
-                  status: "warning",
-                  duration: 3000,
-                  isClosable: true,
-                });
+                if (
+                  selectedAddress &&
+                  Object.keys(selectedAddress).length > 0
+                ) {
+                  onOpenModal1();
+                } else {
+                  toast({
+                    title: "Tentukan alamat pengiriman terlebih dahulu",
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                  });
+                }
               }
             }}
           >
@@ -187,12 +205,22 @@ export default function Sidebar(props) {
           </Flex>
         </Flex>
       </Flex>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpenModal1} onClose={onCloseModal1} isCentered>
         <ModalOverlay />
         <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
           <ModalAlamatPengiriman
-            onClose={onClose}
-            isOpen={isOpen}
+            onClose={onCloseModal1}
+            isOpen={isOpenModal1}
+            selectedAddress={selectedAddress}
+          />
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpenModal2} onClose={onCloseModal2} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalNearestBranch
+            onClose={onCloseModal2}
+            isOpen={isOpenModal2}
             selectedAddress={selectedAddress}
           />
         </ModalContent>

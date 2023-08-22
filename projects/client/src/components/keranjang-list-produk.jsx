@@ -17,11 +17,13 @@ import { BiMinus, BiPlus, BiTrash } from "react-icons/bi";
 import { GoTrash } from "react-icons/go";
 import { api } from "../api/api";
 import ModalKonfirmasiProduk from "./modal-konfirmasi-produk";
+import { useFetchCart } from "../hooks/useFetchCart";
 
 export default function KeranjangList(props) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { Product, Discount } = props.Stock;
+  const { fetch } = useFetchCart();
   useEffect(() => {
     console.log(props.prodCart);
   }, []);
@@ -56,7 +58,7 @@ export default function KeranjangList(props) {
         stock_id: stock_id,
       },
     });
-    props.getAll();
+    await fetch();
   };
 
   //checklist logic
@@ -109,7 +111,7 @@ export default function KeranjangList(props) {
             <Flex w={"25px"} h={"25px"} onClick={onOpen}>
               <Icon
                 as={GoTrash}
-                fontSize={"24px"}
+                fontSize={"20px"}
                 color={"lightgrey"}
                 _hover={{ color: "grey", cursor: "pointer" }}
               />
