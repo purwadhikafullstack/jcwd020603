@@ -83,6 +83,7 @@ export default function VoucherPromo(props) {
                 onClick={() => {
                   setIsClicked(true);
                 }}
+                _hover={{ cursor: "pointer" }}
               >
                 PAKAI KODE VOUCHER / PROMO
               </Flex>
@@ -142,6 +143,7 @@ export default function VoucherPromo(props) {
                     ></Input>
                     <Center
                       className="tombolPakai"
+                      _hover={{ cursor: "pointer" }}
                       onClick={() => {
                         handleVoucherStatus();
                       }}

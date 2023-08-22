@@ -86,7 +86,7 @@ export default function SidebarMini() {
         </Flex>
         <Flex
           w={"100%"}
-          h={"200px"}
+          h={"100px"}
           alignItems={"end"}
           justifyContent={"center"}
         >

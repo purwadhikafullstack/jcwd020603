@@ -24,7 +24,13 @@ import { api } from "../api/api";
 import ModalKonfirmasiAlamat from "./modal-konfirmasi-alamat";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function AddressCard({ val, getAddress, Clicked, setClicked }) {
+export default function AddressCard({
+  val,
+  getAddress,
+  Clicked,
+  setClicked,
+  selectedAddress,
+}) {
   const {
     isOpen: isOpenModal1,
     onOpen: onOpenModal1,
@@ -37,16 +43,11 @@ export default function AddressCard({ val, getAddress, Clicked, setClicked }) {
   } = useDisclosure();
   const address = useSelector((state) => state.address);
   console.log(address);
-  // Check if address.id exists in localStorage
-  const isAddressActiveInLocalStorage = localStorage.getItem("address")
-    ? JSON.parse(localStorage.getItem("address")).id === val.id
-    : false;
   // Check if the current address is clicked
   const isAddressClicked = Clicked.id == val.id;
 
   // Determine if BiRadioCircleMarked should be active
-  const isBiRadioCircleMarkedActive =
-    isAddressActiveInLocalStorage || isAddressClicked;
+  const isBiRadioCircleMarkedActive = isAddressClicked;
 
   //function delete address
   const toast = useToast();
@@ -74,20 +75,6 @@ export default function AddressCard({ val, getAddress, Clicked, setClicked }) {
       });
     }
   };
-  //function dispatch address
-  // const dispatch = useDispatch();
-  // const addressReducer = () => {
-  //   if (isAddressClicked) {
-  //     localStorage.removeItem("address");
-  //   }
-  //   dispatch({
-  //     type: "address",
-  //     payload: Clicked,
-  //   });
-  // };
-  // useEffect(() => {
-  //   addressReducer();
-  // }, [Clicked]);
   useEffect(() => {
     if (val.current_address) {
       setClicked(val);
@@ -108,7 +95,7 @@ export default function AddressCard({ val, getAddress, Clicked, setClicked }) {
         }}
       >
         <Icon
-          as={isBiRadioCircleMarkedActive ? BiRadioCircleMarked : BiRadioCircle}
+          as={Clicked.id == val.id ? BiRadioCircleMarked : BiRadioCircle}
           fontSize={"40px"}
           color={"#2A960C"}
         />

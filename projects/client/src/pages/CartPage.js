@@ -10,11 +10,12 @@ import { useDispatch } from "react-redux";
 
 export default function CartPage() {
   const windowWidth = window.innerWidth;
+  const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"))
   // function get all cart
   const [prodCart, setProdCart] = useState([]);
   const getAll = async () => {
     await api()
-      .get("/cart")
+      .get("/cart",{params:{branch_id:nearestBranch}})
       .then((res) => {
         setProdCart(res.data.result);
         console.log(res.data.result);

@@ -31,7 +31,7 @@ export default function LandingPage() {
     };
     navigator.geolocation.getCurrentPosition(success, error);
   };
-
+  console.log("latlong", latlong);
   useEffect(() => {
     getGeoloc();
     // console.log(latlong);
@@ -100,9 +100,15 @@ export default function LandingPage() {
   async function getGeoloc2() {
     return new Promise((resolve, reject) => {
       const success = (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        resolve({ latitude, longitude });
+        if (selectedAddress && Object.keys(selectedAddress).length > 0) {
+          const latitude = selectedAddress?.latitude;
+          const longitude = selectedAddress?.longitude;
+          resolve({ latitude, longitude });
+        } else {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          resolve({ latitude, longitude });
+        }
       };
       const error = () => {
         reject("Unable to retrieve user location.");
@@ -136,6 +142,7 @@ export default function LandingPage() {
   }
 
   const [nearestBranch, setNearestBranch] = useState();
+  const [branchName, setBranchName] = useState();
 
   // Fungsi untuk mencari branch terdekat berdasarkan latitude dan longitude user
   async function findNearestBranchForUser() {
@@ -165,10 +172,11 @@ export default function LandingPage() {
   findNearestBranchForUser()
     .then(({ nearestBranch, latlong }) => {
       if (nearestBranch) {
-        console.log(`Nearest branch to user: ${nearestBranch.branch_name}`);
-        console.log(`User latitude: ${latlong.latitude}`);
-        console.log(`User longitude: ${latlong.longitude}`);
+        // console.log(`Nearest branch to user: ${nearestBranch.branch_name}`);
+        // console.log(`User latitude: ${latlong.latitude}`);
+        // console.log(`User longitude: ${latlong.longitude}`);
         setNearestBranch(nearestBranch.id);
+        setBranchName(nearestBranch.branch_name);
       } else {
         console.log("No branches found.");
       }
@@ -183,6 +191,7 @@ export default function LandingPage() {
     }
   }, [nearestBranch]);
   console.log(nearestBranch);
+  console.log(branchName);
 
   return (
     <>
@@ -197,7 +206,11 @@ export default function LandingPage() {
               )}
             </Flex>
             <Flex flexDir={"column"}>
-              <TopBar address={address} selectedAddress={selectedAddress} />
+              <TopBar
+                address={address}
+                selectedAddress={selectedAddress}
+                branchName={branchName}
+              />
               <Category
                 lengthCart={lengthCart}
                 selectedAddress={selectedAddress}
@@ -212,6 +225,7 @@ export default function LandingPage() {
             address={address}
             selectedAddress={selectedAddress}
             setSelectedAddress={setSelectedAddress}
+            branchName={branchName}
           />
           <Category
             lengthCart={lengthCart}

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-export default function TopBar({ address, selectedAddress }) {
+export default function TopBar({ address, selectedAddress, branchName }) {
   const userSelector = useSelector((state) => state.auth);
   console.log(selectedAddress.address);
   console.log(userSelector);
@@ -35,8 +35,8 @@ export default function TopBar({ address, selectedAddress }) {
               {address ? (
                 selectedAddress.address ? (
                   <>
-                    <Flex>alamat anda</Flex>
-                    <Flex>{selectedAddress.address}</Flex>
+                    <Flex>alamat anda : {selectedAddress.address}</Flex>
+                    <Flex>Toko terdekat : {branchName}</Flex>
                   </>
                 ) : (
                   <>
