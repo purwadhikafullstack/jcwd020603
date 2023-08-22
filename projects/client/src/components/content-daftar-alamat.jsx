@@ -49,23 +49,26 @@ export default function ContentDaftarAlamat() {
         setAllAddress(res.data.result);
       });
   };
-  useEffect(() => {
-    getAddress();
-  }, []);
-  //menyipan address yang dipilih
+  //edit current address yang dipilih
   const setAddress = async () => {
     const find = await api().patch(`/addressG/current/${Clicked.id}`);
     console.log(find.data);
   };
-  // const dispatch = useDispatch();
-  // const setAddress = () => {
-  //   delete Clicked.user_id;
-  //   localStorage.setItem("address", JSON.stringify(Clicked));
-  //   dispatch({
-  //     type: "address",
-  //     payload: Clicked,
-  //   });
-  // };
+  //menyimpan alamat yang dipilih
+  const [selectedAddress, setSelectedAddress] = useState({});
+  const getSelectedAddress = async () => {
+    const primary = await api().get("/addressG/primary");
+    const selected = await api().get("/addressG/current");
+    if (selected.data.result) {
+      setSelectedAddress(selected.data.result);
+    } else {
+      setSelectedAddress(primary.data.result);
+    }
+  };
+  useEffect(() => {
+    getAddress();
+    getSelectedAddress();
+  }, []);
   return (
     <>
       <Box>
@@ -91,6 +94,7 @@ export default function ContentDaftarAlamat() {
                   getAddress={getAddress}
                   Clicked={Clicked}
                   setClicked={setClicked}
+                  selectedAddress={selectedAddress}
                 />
               );
             })}

@@ -4,6 +4,7 @@ const axios = require("axios");
 const cartController = {
   cartChecker: async (req, res, next) => {
     try {
+      console.log("stock", req.params.id);
       const check = await db.Cart.findOne({
         where: {
           stock_id: req.params.id,
@@ -43,7 +44,7 @@ const cartController = {
     try {
       const { qty } = req.body;
       const { discounted_price } = req.query;
-      console.log(discounted_price);
+      console.log("krecek", req.check);
       if (req.check?.dataValues?.id) {
         await db.Cart.update(
           {
@@ -102,6 +103,7 @@ const cartController = {
       const get = await db.Cart.findAndCountAll({
         where: {
           user_id: req.user.id,
+          "$Stock.branch_id$": req.query.branch_id,
         },
         include: [
           {

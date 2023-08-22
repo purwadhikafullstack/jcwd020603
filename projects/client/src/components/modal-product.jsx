@@ -20,11 +20,13 @@ import {
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { api } from "../api/api";
 import ModalAlamatPengiriman from "./modal-alamat-pengiriman";
+import { useFetchCart } from "../hooks/useFetchCart";
 
 export default function ModalProduct(props) {
   const { prodVal, setProdVal, checked, setChecked, selectedAddress } = props;
   const [count, tambah, kurang] = useCounter(1, 1);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { countAll, fetch } = useFetchCart();
 
   // insert qty ke prodVal
   const insertQty = () => {
@@ -45,25 +47,25 @@ export default function ModalProduct(props) {
     insertQty();
   }, [count]);
   //get jumlah keranjang
-  const [countAll, setCountAll] = useState(0);
-  const getCount = async () => {
-    await api()
-      .get("/cart")
-      .then((res) => {
-        setCountAll(res.data.total);
-        console.log(res.data.result);
-      });
-  };
-
+  // const [countAll, setCountAll] = useState(0);
+  // const getCount = async () => {
+  //   await api()
+  //     .get("/cart")
+  //     .then((res) => {
+  //       setCountAll(res.data.total);
+  //       console.log(res.data.result);
+  //     });
+  // };
+  console.log("prodVal", prodVal);
   //function cek update post produk ke cart
   const toast = useToast();
   const updateAdd = async () => {
     try {
       const update = await api().post(
-        `/cart/${prodVal?.id}?discounted_price=${prodVal?.discountedPrice}`,
+        `/cart/${prodVal?.stock_id}?discounted_price=${prodVal?.discountedPrice}`,
         prodVal
       );
-      getCount();
+      await fetch();
       toast({
         title: update.data.message,
         status: update.data.status,
