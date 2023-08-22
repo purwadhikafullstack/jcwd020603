@@ -142,7 +142,7 @@ export default function AdminStockList() {
             flexDir={"column"}
             rowGap={"10px"}
           >
-            <Flex>Stock History</Flex>
+            <Flex>Stock List</Flex>
             <Flex justifyContent={"space-between"} w={"100%"} gap={"5px"}>
               <Input
                 placeholder="Pilih Tanggal"

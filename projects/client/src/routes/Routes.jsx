@@ -43,7 +43,7 @@ const routes = [
   <Route
     path="/dashboard"
     element={
-      <ProtectedPage needLogin={true} guestOnly={true} adminOnly={true}>
+      <ProtectedPage>
         <Dashboard />
       </ProtectedPage>
     }
@@ -52,7 +52,7 @@ const routes = [
   <Route
     path="/login"
     element={
-      <ProtectedPage>
+      <ProtectedPage guestOnly={true}>
         <LoginPage />
       </ProtectedPage>
     }

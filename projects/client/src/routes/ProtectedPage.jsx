@@ -24,20 +24,31 @@ export default function ProtectedPage({
   console.log(user.role);
 
   useEffect(() => {
-    if (guestOnly || user.role) {
-      if (user.role == "USER") {
-        return nav("/");
-      } else {
-        return nav("/dashboard");
-      }
-    } else if (needLogin && !user.role) {
+    // If the user is not logged in and needs login, redirect to "/"
+    if (needLogin && !user.role) {
       return nav("/");
-    } else if (
-      (needLogin && adminOnly) ||
-      user.role != "ADMIN" ||
-      user.role != "SUPER ADMIN"
-    ) {
+    }
+
+    // If the user is a guest and guestOnly is true, redirect to "/"
+    if (guestOnly && user.role === "USER") {
       return nav("/");
+    }
+
+    // If the user is not logged in and trying to access /dashboard, redirect to "/"
+    if (!user.role && window.location.pathname === "/dashboard") {
+      return nav("/");
+    }
+
+    // If the user is not an admin but adminOnly is required, or if the user role is not ADMIN or SUPER ADMIN
+    if (adminOnly && user.role !== "ADMIN" && user.role !== "SUPER ADMIN") {
+      return nav("/");
+    }
+
+    // Redirect user based on their role
+    if (user.role === "USER") {
+      nav("/");
+    } else if (user.role === "ADMIN" || user.role === "SUPER ADMIN") {
+      nav("/dashboard");
     }
   }, []);
 
