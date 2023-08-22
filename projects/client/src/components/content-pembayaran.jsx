@@ -17,20 +17,33 @@ import NavbarPembayaran from "./navbar-pembayaran";
 import PembayaranProduk from "./pembayaran-produk";
 import { TbPhotoSearch } from "react-icons/tb";
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ModalKonfirmasiPesanan from "./modal-konfirmasi-pesanan";
 import { api } from "../api/api";
 import moment from "moment";
 import ModalWaktuPemabayaran from "./modal-waktu-pembayaran";
+import "moment/locale/id";
+
+const diffrenceTime = (validDate) => {
+  const then = moment(validDate, "MM DD YYYY, h:mm a");
+  const now = moment();
+  const countDown = moment(then - now);
+
+  return countDown;
+};
 
 export default function ContentPembayaran() {
+  moment.locale("id");
   const toast = useToast();
   const nav = useNavigate();
+  const order_number = useParams();
   // get order
   const [orderValue, setOrderValue] = useState([]);
   const [orderDetVal, setOrderDetVal] = useState([]);
   const getLatestOrder = async () => {
-    const order = await api().get("/order/latest");
+    const order = await api().get("/order/latest", {
+      params: { order_number: order_number.order_number },
+    });
     setOrderValue(order.data.result);
     console.log(order.data.result);
 
@@ -43,40 +56,9 @@ export default function ContentPembayaran() {
   useEffect(() => {
     getLatestOrder();
   }, []);
-  //tambahkan waktu 15 menit
-  // const validDate = dateValue.add(15, "minutes");
-  // console.log(validDate);
-  //timer countdown 15 menit
-  // const formatTime = (time) => {
-  //   let minutes = Math.floor(time / 60);
-  //   let seconds = Math.floor(time - minutes * 60);
-  //   if (minutes < 10) minutes = "0" + minutes;
-  //   if (seconds < 10) seconds = "0" + seconds;
-  //   return minutes + ":" + seconds;
-  // };
-  // const [countdown, setCountdown] = useState(() => {
-  //   const storedCountdown = localStorage.getItem("countdown");
-  //   return storedCountdown ? parseInt(storedCountdown, 10) : 900;
-  // });
-  // const timerId = useRef();
-  // const CountDown = () => {
-  // useEffect(() => {
-  //   timerId.current = setInterval(() => {
-  //     setCountdown((prev) => prev - 1);
-  //   }, 1000);
-  //   return () => clearInterval(timerId.current);
-  // }, []);
 
-  //   useEffect(() => {
-  //     localStorage.setItem("countdown", countdown.toString());
-  //     if (countdown <= 0) {
-  //       clearInterval(timerId.current);
-  //       localStorage.removeItem("countdown");
-  //       alert("WAKTU HABIS");
-  //     }
-  //   }, [countdown]);
-  // return formatTime(countdown);
-  // };
+  //tambahkan waktu 15 menit
+  const [difference, setDifference] = useState(1);
   const validDate = moment(orderValue[0]?.date).clone();
   const [countdown, setCountdown] = useState("00:00");
 
@@ -90,31 +72,21 @@ export default function ContentPembayaran() {
     return minutes + ":" + seconds;
   };
 
-  const updateCountdown = () => {
-    const difference = moment(validDate).diff(moment(), "seconds");
-    console.log(difference);
-    setCountdown(formatTime(difference));
-  };
-
-  const interval = useRef();
-  // useEffect(() => {
-  //   interval.current = setInterval(updateCountdown, 1000);
-  //   updateCountdown(); // Pertama kali update saat komponen diinisialisasi
-  //   return () => clearInterval(interval.current);
-  // }, []);
-
-  // useEffect(() => {
-  //   interval.current = setInterval(updateCountdown, 1000);
-  //   updateCountdown(); // Pertama kali update saat komponen diinisialisasi
-  //   return () => clearInterval(interval.current);
-  // }, [countdown]);
+  useEffect(() => {
+    if (difference >= 0) {
+      setCountdown(formatTime(difference));
+    } else {
+      onOpenModal2();
+    }
+  }, [difference]);
 
   useEffect(() => {
-    if (countdown === "00:00" || countdown >= 0) {
-      clearInterval(interval.current);
-      // onOpenModal2();
+    if (orderValue[0]?.date) {
+      setInterval(() => {
+        setDifference(moment(validDate).diff(moment(), "seconds"));
+      }, 1000);
     }
-  }, [countdown]);
+  }, [orderValue[0]?.date]);
 
   //count total harga belanja
   const subtotal =
@@ -221,9 +193,7 @@ export default function ContentPembayaran() {
             >
               <Flex flexDir={"column"} fontSize={"18px"}>
                 Lakukan Pembayaran Sebelum
-                <Flex fontWeight={"500"}>
-                  {validDate.format("MMMM Do YYYY, h:mm:ss a")}
-                </Flex>
+                <Flex fontWeight={"500"}>{validDate.format("lll")}</Flex>
               </Flex>
               <Flex
                 fontSize={"18px"}

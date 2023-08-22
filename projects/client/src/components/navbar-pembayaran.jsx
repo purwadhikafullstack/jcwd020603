@@ -24,7 +24,7 @@ export default function NavbarPembayaran() {
           w={"40px"}
           h={"40px"}
           onClick={() => {
-            nav("/order");
+            nav("/orders");
           }}
         >
           <Icon as={BiArrowBack} fontSize={"24px"} />

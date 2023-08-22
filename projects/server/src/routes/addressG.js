@@ -11,10 +11,17 @@ router.delete(
   roleController.checkUser,
   addressControllerG.deleteAddress
 );
+router.get("/primary", roleController.checkUser, addressControllerG.getPrimary);
 router.patch(
   "/primary/:id",
   roleController.checkUser,
   addressControllerG.updatePrimary
+);
+router.get("/current", roleController.checkUser, addressControllerG.getCurrent);
+router.patch(
+  "/current/:id",
+  roleController.checkUser,
+  addressControllerG.updateCurrent
 );
 
 module.exports = router;

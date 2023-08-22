@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Center,
   Checkbox,
   Flex,
@@ -12,7 +13,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { BiMinus, BiPlus } from "react-icons/bi";
+import { BiMinus, BiPlus, BiTrash } from "react-icons/bi";
+import { GoTrash } from "react-icons/go";
 import { api } from "../api/api";
 import ModalKonfirmasiProduk from "./modal-konfirmasi-produk";
 
@@ -95,12 +97,22 @@ export default function KeranjangList(props) {
           </Box>
         </Flex>
         <Flex w={"85%"} flexDir={"column"} gap={"10px"}>
-          <Flex w={"100%"} flexDir={"column"}>
-            <Flex fontSize={"12px"} fontWeight={"500"}>
-              {Product.product_name}
+          <Flex w={"100%"} justifyContent={"space-between"}>
+            <Flex w={"100%"} flexDir={"column"}>
+              <Flex fontSize={"12px"} fontWeight={"500"}>
+                {Product.product_name}
+              </Flex>
+              <Flex fontSize={"12px"} color={"grey"}>
+                {Product.desc}
+              </Flex>
             </Flex>
-            <Flex fontSize={"12px"} color={"grey"}>
-              {Product.desc}
+            <Flex w={"25px"} h={"25px"} onClick={onOpen}>
+              <Icon
+                as={GoTrash}
+                fontSize={"24px"}
+                color={"lightgrey"}
+                _hover={{ color: "grey", cursor: "pointer" }}
+              />
             </Flex>
           </Flex>
           <Flex
@@ -161,11 +173,19 @@ export default function KeranjangList(props) {
                 fontSize={"50px"}
                 alignItems={"center"}
                 bg={"#ECFFF4"}
+                _hover={{
+                  cursor: "pointer",
+                  bg: "green",
+                  transition: "0.3s",
+                }}
               >
                 <Icon
                   as={BiMinus}
                   fontSize={"20px"}
                   color={"#199950"}
+                  _hover={{
+                    color: "white",
+                  }}
                   onClick={() => {
                     if (Discount?.nominal != 50) {
                       if (props.prodCart[props.index].qty <= 1) {
@@ -175,13 +195,7 @@ export default function KeranjangList(props) {
                         updateQty(props.prodCart[props.index].qty - 1);
                       }
                     } else {
-                      toast({
-                        title:
-                          "Hanya dapat membeli satu produk promo buy 1 get 1",
-                        status: "error",
-                        position: "top",
-                        duration: 4000,
-                      });
+                      onOpen();
                     }
                   }}
                 />
@@ -196,11 +210,19 @@ export default function KeranjangList(props) {
                 fontSize={"50px"}
                 alignItems={"center"}
                 bg={"#ECFFF4"}
+                _hover={{
+                  cursor: "pointer",
+                  bg: "green",
+                  transition: "0.3s",
+                }}
               >
                 <Icon
                   as={BiPlus}
                   fontSize={"20px"}
                   color={"#199950"}
+                  _hover={{
+                    color: "white",
+                  }}
                   onClick={() => {
                     if (Discount?.nominal != 50) {
                       updateQty(props.prodCart[props.index].qty + 1);

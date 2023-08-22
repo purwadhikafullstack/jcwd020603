@@ -1,9 +1,12 @@
 import { useDispatch } from "react-redux";
 import { api } from "../api/api";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Loading from "../components/loading";
 
 export default function AuthProvider({ children }) {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+
   async function get() {
     try {
       const token = JSON.parse(localStorage.getItem("auth"));
@@ -25,10 +28,12 @@ export default function AuthProvider({ children }) {
       }
     } catch (err) {
       console.log(err.message);
+    } finally {
+      setIsLoading(false);
     }
   }
   useEffect(() => {
     get();
   }, []);
-  return <>{children}</>;
+  return <>{isLoading ? <Loading /> : children}</>;
 }

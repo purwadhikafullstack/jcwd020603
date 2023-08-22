@@ -6,6 +6,9 @@ import {
   Image,
   useDisclosure,
   useToast,
+  Modal,
+  ModalContent,
+  ModalOverlay,
 } from "@chakra-ui/react";
 import { BiHome, BiCategory, BiFoodMenu, BiUserCircle } from "react-icons/bi";
 import { MdOutlineShoppingCart } from "react-icons/md";
@@ -15,15 +18,19 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { warning } from "framer-motion";
 import { api } from "../api/api";
+import ModalAlamatPengiriman from "./modal-alamat-pengiriman";
+import { useFetchCart } from "../hooks/useFetchCart";
+
 // import ModalProduct from "./modal-product";
 
 export default function Sidebar(props) {
-  const { setLengthCart, setGetFunction } = props;
+  const { setLengthCart, setGetFunction, prodCart } = props;
   const user = JSON.parse(localStorage.getItem("auth"));
-  const addressSelector = useSelector((state) => state.address);
-  console.log(addressSelector);
+  const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const nav = useNavigate();
   const toast = useToast();
+  const { countAll } = useFetchCart();
   //style untuk setiap menu sidebar
   //merubah warna saat di click
   const [Clicked, setClicked] = useState("");
@@ -47,19 +54,29 @@ export default function Sidebar(props) {
     setClicked(e.currentTarget.id);
   };
   //get jumlah keranjang
-  const [countAll, setCountAll] = useState(0);
   const getCount = async () => {
     await api()
-      .get("/cart")
+      .get("/cart", { params: { branch_id: nearestBranch } })
       .then((res) => {
-        setCountAll(res.data.total);
         setLengthCart(res.data.total);
         console.log(res.data.result);
       });
   };
+  //menyimpan alamat yang dipilih
+  const [selectedAddress, setSelectedAddress] = useState({});
+  const getSelectedAddress = async () => {
+    const primary = await api().get("/addressG/primary");
+    const selected = await api().get("/addressG/current");
+    if (selected.data.result) {
+      setSelectedAddress(selected.data.result);
+    } else {
+      setSelectedAddress(primary.data.result);
+    }
+  };
 
   useEffect(() => {
     getCount();
+    getSelectedAddress();
   }, []);
 
   return (
@@ -137,7 +154,7 @@ export default function Sidebar(props) {
         </Flex>
         <Flex
           w={"100%"}
-          h={"200px"}
+          h={"100px"}
           alignItems={"end"}
           justifyContent={"center"}
         >
@@ -145,8 +162,8 @@ export default function Sidebar(props) {
             id="keranjang"
             className="menuSidebarCartG"
             onClick={() => {
-              if (addressSelector && Object.keys(addressSelector).length > 0) {
-                nav("/cart");
+              if (selectedAddress && Object.keys(selectedAddress).length > 0) {
+                onOpen();
               } else {
                 toast({
                   title: "Tentukan alamat pengiriman terlebih dahulu",
@@ -170,6 +187,16 @@ export default function Sidebar(props) {
           </Flex>
         </Flex>
       </Flex>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalAlamatPengiriman
+            onClose={onClose}
+            isOpen={isOpen}
+            selectedAddress={selectedAddress}
+          />
+        </ModalContent>
+      </Modal>
     </>
   );
 }
