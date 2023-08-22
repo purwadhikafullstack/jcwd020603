@@ -14,6 +14,7 @@ import {
   useDisclosure,
   Tbody,
   Button,
+  Select,
 } from "@chakra-ui/react";
 import AdminNavbarOrder from "./admin-navbar-order";
 import { BiSearch, BiSolidChevronDown, BiSolidChevronUp } from "react-icons/bi";
@@ -52,6 +53,7 @@ export default function SuperAdminProductList() {
   const [filtering, setFiltering] = useState({
     page: shown.page,
     search: "",
+    category_id: "",
   });
 
   const [totalPages, setTotalPages] = useState(0);
@@ -76,6 +78,7 @@ export default function SuperAdminProductList() {
 
   useEffect(() => {
     fetchData();
+    getSelector();
   }, []);
 
   useEffect(() => {
@@ -104,6 +107,12 @@ export default function SuperAdminProductList() {
   const productsPerPage = 8;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  //get selector branch
+  const [selector, setSelector] = useState([]);
+  const getSelector = async () => {
+    const get = await api().get("/branch/selector-category");
+    setSelector(get.data.result);
+  };
 
   return (
     <>
@@ -112,10 +121,28 @@ export default function SuperAdminProductList() {
       </Box>
       <Flex className="adminCategoryB">
         <Flex flexDir={"column"} rowGap={"10px"}>
-          <Flex className="adminCategory2B">
-            <Flex width={"350px"}>Daftar Produk</Flex>
-            <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
-              <InputGroup>
+          <Flex
+            fontSize={"24px"}
+            fontWeight={"700"}
+            paddingBottom={"20px"}
+            flexDir={"column"}
+            rowGap={"10px"}
+          >
+            <Flex>Product List</Flex>
+            <Flex justifyContent={"space-between"} w={"100%"} gap={"5px"}>
+              <Select
+                placeholder="Categories"
+                h={"41px"}
+                bg={"white"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, category_id: e.target.value });
+                }}
+              >
+                {selector.map((val) => {
+                  return <option value={val.id}>{val.category_name}</option>;
+                })}
+              </Select>
+              <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
                   placeholder="search"
                   bg={"white"}
@@ -145,6 +172,7 @@ export default function SuperAdminProductList() {
               </Button>
             </Flex>
           </Flex>
+
           <Stack>
             <TableContainer
               id="containerTableB"
@@ -171,10 +199,6 @@ export default function SuperAdminProductList() {
                     <Th className="thProductB">
                       <Flex alignItems="center" id="tableNameB">
                         <Flex>Category</Flex>
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
                       </Flex>
                     </Th>
                     <Th className="thProductB">

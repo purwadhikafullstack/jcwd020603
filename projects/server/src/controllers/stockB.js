@@ -148,8 +148,9 @@ const stockControllerB = {
     try {
       const page = req.query.page - 1 || 0;
       const search = req.query.search || "";
-      const branch_id = req.query.branch_id;
-      let whereClause = {};
+      let whereClause = {
+        [Op.and]: [],
+      };
       if (req.query.search) {
         whereClause[Op.or] = [
           { "$Product.product_name$": { [Op.like]: `%${search}%` } },
@@ -161,8 +162,30 @@ const stockControllerB = {
           },
         ];
       }
+
       if (req.query.branch_id) {
-        whereClause.branch_id = req.query.branch_id;
+        whereClause[Op.and].push({
+          branch_id: req.query.branch_id,
+        });
+      }
+      if (req.query.category_id) {
+        whereClause[Op.and].push({
+          "$Product.category_id$": req.query.category_id,
+        });
+      }
+      if (req.query.time1 && req.query.time2) {
+        whereClause[Op.and].push({
+          createdAt: {
+            [Op.and]: [
+              {
+                [Op.gte]: moment(req.query.time1).startOf("date"),
+              },
+              {
+                [Op.lte]: moment(req.query.time2).endOf("date"),
+              },
+            ],
+          },
+        });
       }
       const stockAdmin = await db.Stock.findAndCountAll({
         include: [
@@ -192,6 +215,7 @@ const stockControllerB = {
           },
         ],
         where: whereClause,
+        order: [[req.query.sort, req.query.order]],
         limit: 6,
         offset: 6 * page,
       });
@@ -494,8 +518,9 @@ const stockControllerB = {
     try {
       const page = req.query.page - 1 || 0;
       const search = req.query.search || "";
-      const branch_id = req.query.branch_id;
-      let whereClause = {};
+      let whereClause = {
+        [Op.and]: [],
+      };
       if (req.query.search) {
         whereClause[Op.or] = [
           { "$Stock.Product.product_name$": { [Op.like]: `%${search}%` } },
@@ -508,13 +533,35 @@ const stockControllerB = {
         ];
       }
       if (req.query.branch_id) {
-        whereClause[Op.and] = [
-          {
-            "$Stock.branch_id$": req.query.branch_id,
-          },
-        ];
+        whereClause[Op.and].push({
+          "$Stock.branch_id$": req.query.branch_id,
+        });
       }
-      console.log("whereClause", whereClause);
+      if (req.query.category_id) {
+        whereClause[Op.and].push({
+          "$Stock.Product.category_id$": req.query.category_id,
+        });
+      }
+      if (req.query.feature) {
+        whereClause[Op.and].push({
+          feature: req.query.feature,
+        });
+      }
+      if (req.query.time1 && req.query.time2) {
+        whereClause[Op.and].push({
+          createdAt: {
+            [Op.and]: [
+              {
+                [Op.gte]: moment(req.query.time1).startOf("date"),
+              },
+              {
+                [Op.lte]: moment(req.query.time2).endOf("date"),
+              },
+            ],
+          },
+        });
+      }
+
       const stockHistory = await db.StockHistory.findAndCountAll({
         where: whereClause,
         include: [
@@ -552,6 +599,7 @@ const stockControllerB = {
           },
         ],
         where: whereClause,
+        order: [[req.query.sort, req.query.order]],
         limit: 6,
         offset: 6 * page,
       });

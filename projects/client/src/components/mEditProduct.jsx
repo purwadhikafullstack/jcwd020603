@@ -32,8 +32,6 @@ export function EditProduct(props) {
     desc: "",
   });
 
-  console.log(product);
-
   const inputFileRef = useRef(null);
   const handleFile = async (event) => {
     const file = event.target.files[0];
@@ -52,7 +50,6 @@ export function EditProduct(props) {
     const tempProduct = { ...product };
     tempProduct[id] = value;
     setProduct(tempProduct);
-    console.log(tempProduct);
   };
 
   const categoryImage = async () => {
@@ -67,11 +64,11 @@ export function EditProduct(props) {
     formData.append("weight", product.weight);
 
     try {
-      console.log(formData);
+      // console.log(formData);
       await api()
         .patch("/product/v2/" + props.id, formData)
         .then((result) => {
-          console.log(result.data);
+          // console.log(result.data);
         });
       alert("Posting success");
       setSelectedFile(null);

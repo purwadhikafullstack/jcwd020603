@@ -16,20 +16,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import "../css/indexB.css";
-import { RiArrowDropUpLine, RiArrowDropDownLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
-import { MdArrowBackIosNew } from "react-icons/md";
-import { AdminSearchBar } from "./adminSearchBar";
 import { api } from "../api/api";
 import { useEffect, useState } from "react";
-import { FiEdit } from "react-icons/fi";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { EditCategory } from "./mEditCategory";
-import { EditProduct } from "./mEditProduct";
-import { DeleteProduct } from "./mDeleteProduct";
+import moment from "moment";
 
 export function SATableStockHistory({
-  key,
   idx,
   stockHistory,
   url,
@@ -44,6 +36,7 @@ export function SATableStockHistory({
   fetchData,
   indexOfLastProduct,
   productsPerPage,
+  createdAt,
 }) {
   const navigate = useNavigate();
   //   const modalDelete = useDisclosure();
@@ -90,8 +83,10 @@ export function SATableStockHistory({
     <>
       <Tr id="SACategoryB">
         <Td>{indexOfLastProduct - productsPerPage + idx + 1}</Td>
-        <Td className="SAImgCategoryB">
-          <Image src={url} />
+        <Td className="SACategoryNameB">
+          <Flex alignItems="center" id="tableNameB">
+            {feature}
+          </Flex>
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
@@ -125,7 +120,7 @@ export function SATableStockHistory({
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
-            {feature}
+            {moment(createdAt).format("LLL")}
           </Flex>
         </Td>
       </Tr>

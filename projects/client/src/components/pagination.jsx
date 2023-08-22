@@ -3,7 +3,6 @@ import { GrNext } from "react-icons/gr";
 
 export default function Pagination(props) {
   const { totalPages, pages, setShown, shown } = props;
-  console.log(props);
   const NumberBox = ({ val }) => {
     return (
       <Center
@@ -21,13 +20,12 @@ export default function Pagination(props) {
     );
   };
 
-  console.log(pages);
-
   return (
     <>
       <Center gap={"5px"}>
         <Flex transform="rotate(180deg)">
           <GrNext
+            style={{ cursor: "pointer" }}
             display={shown.page > 1 ? "flex" : "none"}
             onClick={() => {
               if (shown.page > 1) {
@@ -37,7 +35,9 @@ export default function Pagination(props) {
           />
         </Flex>
         {pages.length <= 3 ? (
-          pages.map((val) => <NumberBox val={val} />)
+          pages.map((val) => (
+            <NumberBox style={{ cursor: "pointer" }} val={val} />
+          ))
         ) : (
           <>
             {shown.page < Math.ceil(pages.length / 3) && (
@@ -48,7 +48,7 @@ export default function Pagination(props) {
                     shown.page >= 2 ? shown.page + 1 : shown.page + 2
                   )
                   .map((val) => (
-                    <NumberBox val={val} />
+                    <NumberBox style={{ cursor: "pointer" }} val={val} />
                   ))}
               </>
             )}
@@ -56,20 +56,21 @@ export default function Pagination(props) {
               shown.page <= pages.length - 2 && (
                 <>
                   {pages.slice(shown.page - 2, shown.page + 1).map((val) => (
-                    <NumberBox val={val} />
+                    <NumberBox style={{ cursor: "pointer" }} val={val} />
                   ))}
                 </>
               )}
             {shown.page > pages.length - 2 && (
               <>
                 {pages.slice(-3).map((val) => (
-                  <NumberBox val={val} />
+                  <NumberBox style={{ cursor: "pointer" }} val={val} />
                 ))}
               </>
             )}
           </>
         )}
         <GrNext
+          style={{ cursor: "pointer" }}
           display={shown.page < totalPages ? "flex" : "none"}
           onClick={() => {
             if (shown.page < totalPages) {

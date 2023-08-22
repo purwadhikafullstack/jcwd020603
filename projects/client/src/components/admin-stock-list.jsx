@@ -56,6 +56,11 @@ export default function AdminStockList() {
     page: shown.page,
     search: "",
     branch_id: "",
+    category_id: "",
+    time1: "",
+    time2: "",
+    order: "DESC",
+    sort: "createdAt",
   });
   const [totalPages, setTotalPages] = useState(0);
   const [addStock, setAddStock] = useState(null);
@@ -80,6 +85,7 @@ export default function AdminStockList() {
   useEffect(() => {
     fetchData();
     getSelector();
+    getSelectorCategory();
   }, []);
 
   useEffect(() => {
@@ -116,6 +122,12 @@ export default function AdminStockList() {
     setSelector(get.data.result);
   };
 
+  const [selectorCategory, setSelectorCategory] = useState([]);
+  const getSelectorCategory = async () => {
+    const get = await api().get("/branch/selector-category");
+    setSelectorCategory(get.data.result);
+  };
+
   return (
     <>
       <Box>
@@ -130,8 +142,31 @@ export default function AdminStockList() {
             flexDir={"column"}
             rowGap={"10px"}
           >
-            <Flex justifyContent={"space-between"} w={"100%"}>
-              <Flex>Stock List</Flex>
+            <Flex>Stock History</Flex>
+            <Flex justifyContent={"space-between"} w={"100%"} gap={"5px"}>
+              <Input
+                placeholder="Pilih Tanggal"
+                bg={"white"}
+                type="date"
+                value={filtering.time}
+                maxW={"200px"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, time1: e.target.value });
+                  setShown({ page: 1 });
+                }}
+              ></Input>
+              -
+              <Input
+                placeholder="Pilih Tanggal"
+                bg={"white"}
+                type="date"
+                maxW={"200px"}
+                value={filtering.time2}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, time2: e.target.value });
+                  setShown({ page: 1 });
+                }}
+              ></Input>
               <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
                   placeholder="search"
@@ -162,31 +197,20 @@ export default function AdminStockList() {
               </Button>
             </Flex>
             <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
-              <Input
-                placeholder="Pilih Tanggal"
-                bg={"white"}
-                type="date"
-                value={filtering.time}
-                maxW={"200px"}
-                onChange={(e) => {
-                  setFiltering({ ...filtering, time: e.target.value });
-                  setShown({ page: 1 });
-                }}
-              ></Input>
-              -
-              <Input
-                placeholder="Pilih Tanggal"
-                bg={"white"}
-                type="date"
-                maxW={"200px"}
-                value={filtering.time2}
-                onChange={(e) => {
-                  setFiltering({ ...filtering, time2: e.target.value });
-                  setShown({ page: 1 });
-                }}
-              ></Input>
               <Select
-                placeholder="Semua Cabang"
+                placeholder="Categories"
+                h={"41px"}
+                bg={"white"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, category_id: e.target.value });
+                }}
+              >
+                {selectorCategory.map((val) => {
+                  return <option value={val.id}>{val.category_name}</option>;
+                })}
+              </Select>
+              <Select
+                placeholder="Branches"
                 bg={"white"}
                 display={userSelector.role == "ADMIN" ? "none" : "flex"}
                 onChange={(e) => {
@@ -206,11 +230,14 @@ export default function AdminStockList() {
                 setFiltering({
                   page: 1,
                   order: "DESC",
+                  sort: "createdAt",
                   search: "",
                   time: "",
                   time2: "",
                   status: "",
                   branch_id: userSelector.branch_id || "",
+                  category_id: "",
+                  feature: "",
                 });
                 setShown({ page: 1 });
               }}
@@ -218,6 +245,7 @@ export default function AdminStockList() {
               Reset Filter
             </Flex>
           </Flex>
+
           <Stack>
             <TableContainer
               id="containerTableB"
@@ -235,34 +263,42 @@ export default function AdminStockList() {
                     <Th>
                       <Flex alignItems="center" id="tableNameB">
                         Product Name{" "}
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
                       </Flex>
                     </Th>
                     <Th className="thProductB">
                       <Flex alignItems="center" id="tableNameB">
                         <Flex>Category</Flex>
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
                       </Flex>
                     </Th>
                     <Th className="thProductB">
                       <Flex alignItems="center" id="tableNameB">
                         Price{" "}
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
                       </Flex>
                     </Th>
                     <Th className="thProductB">Desc </Th>
                     <Th className="thProductB">Weight </Th>
                     <Th className="thProductB">Qty </Th>
-                    <Th className="thProductB">Discount </Th>
+                    <Th className="thProductB">
+                      <Flex alignItems="center" id="tableNameB">
+                        Date{" "}
+                        <Flex flexDirection="column">
+                          <Icon
+                            id="ascendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({ ...filtering, order: "ASC" });
+                            }}
+                          />
+                          <Icon
+                            id="descendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({ ...filtering, order: "DESC" });
+                            }}
+                          />
+                        </Flex>
+                      </Flex>
+                    </Th>
                     <Th textAlign={"center"}>Action</Th>
                   </Tr>
                 </Thead>
@@ -286,6 +322,7 @@ export default function AdminStockList() {
                       category={stock.Product.category_id}
                       indexOfLastProduct={indexOfLastProduct}
                       productsPerPage={productsPerPage}
+                      createdAt={stock.createdAt}
                       fetchData={fetchData}
                     />
                   ))}

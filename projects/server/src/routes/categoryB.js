@@ -27,4 +27,6 @@ router.delete(
 );
 router.get("/:id", categoryControllerB.getById);
 
+router.get("/selector", categoryControllerB.getSelector);
+
 module.exports = router;

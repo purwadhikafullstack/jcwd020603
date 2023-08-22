@@ -52,7 +52,15 @@ export default function StockHistoryList() {
     page: shown.page,
     search: "",
     branch_id: "",
+    category_id: "",
+    feature: "",
+    time1: "",
+    time2: "",
+    order: "DESC",
+    sort: "createdAt",
   });
+
+  console.log("ini filtering", filtering);
   const [totalPages, setTotalPages] = useState(0);
   const [stockHistory, setStockHistory] = useState([]);
 
@@ -79,6 +87,8 @@ export default function StockHistoryList() {
   useEffect(() => {
     fetchData();
     getSelector();
+    getSelectorCategory();
+    getSelectorFeature();
   }, []);
 
   useEffect(() => {
@@ -115,6 +125,17 @@ export default function StockHistoryList() {
     setSelector(get.data.result);
   };
 
+  const [selectorCategory, setSelectorCategory] = useState([]);
+  const getSelectorCategory = async () => {
+    const get = await api().get("/branch/selector-category");
+    setSelectorCategory(get.data.result);
+  };
+
+  const [selectorFeature, setSelectorFeature] = useState([]);
+  const getSelectorFeature = async () => {
+    const get = await api().get("/branch/selector-feature");
+    setSelectorFeature(get.data.result);
+  };
   return (
     <>
       <Box>
@@ -129,8 +150,31 @@ export default function StockHistoryList() {
             flexDir={"column"}
             rowGap={"10px"}
           >
-            <Flex justifyContent={"space-between"} w={"100%"}>
-              <Flex>Stock History</Flex>
+            <Flex>Stock History</Flex>
+            <Flex justifyContent={"space-between"} w={"100%"} gap={"5px"}>
+              <Input
+                placeholder="Pilih Tanggal"
+                bg={"white"}
+                type="date"
+                value={filtering.time}
+                maxW={"200px"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, time1: e.target.value });
+                  setShown({ page: 1 });
+                }}
+              ></Input>
+              -
+              <Input
+                placeholder="Pilih Tanggal"
+                bg={"white"}
+                type="date"
+                maxW={"200px"}
+                value={filtering.time2}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, time2: e.target.value });
+                  setShown({ page: 1 });
+                }}
+              ></Input>
               <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
                   placeholder="search"
@@ -152,33 +196,33 @@ export default function StockHistoryList() {
                 />
               </InputGroup>
             </Flex>
-
             <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
-              <Input
-                placeholder="Pilih Tanggal"
-                bg={"white"}
-                type="date"
-                value={filtering.time}
-                maxW={"200px"}
-                onChange={(e) => {
-                  setFiltering({ ...filtering, time: e.target.value });
-                  setShown({ page: 1 });
-                }}
-              ></Input>
-              -
-              <Input
-                placeholder="Pilih Tanggal"
-                bg={"white"}
-                type="date"
-                maxW={"200px"}
-                value={filtering.time2}
-                onChange={(e) => {
-                  setFiltering({ ...filtering, time2: e.target.value });
-                  setShown({ page: 1 });
-                }}
-              ></Input>
               <Select
-                placeholder="Semua Cabang"
+                placeholder="Categories"
+                h={"41px"}
+                bg={"white"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, category_id: e.target.value });
+                }}
+              >
+                {selectorCategory.map((val) => {
+                  return <option value={val.id}>{val.category_name}</option>;
+                })}
+              </Select>
+              <Select
+                placeholder="Features"
+                h={"41px"}
+                bg={"white"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, feature: e.target.value });
+                }}
+              >
+                {selectorFeature.map((val) => {
+                  return <option value={val.id}>{val.feature}</option>;
+                })}
+              </Select>
+              <Select
+                placeholder="Branches"
                 bg={"white"}
                 display={userSelector.role == "ADMIN" ? "none" : "flex"}
                 onChange={(e) => {
@@ -198,11 +242,14 @@ export default function StockHistoryList() {
                 setFiltering({
                   page: 1,
                   order: "DESC",
+                  sort: "createdAt",
                   search: "",
                   time: "",
                   time2: "",
                   status: "",
                   branch_id: userSelector.branch_id || "",
+                  category_id: "",
+                  feature: "",
                 });
                 setShown({ page: 1 });
               }}
@@ -223,39 +270,47 @@ export default function StockHistoryList() {
                 >
                   <Tr className="tableHeadMenuG">
                     <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"}>Pic</Th>
+                    <Th className="thProductB">Features</Th>
+
                     <Th>
                       <Flex alignItems="center" id="tableNameB">
                         Product Name{" "}
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
                       </Flex>
                     </Th>
                     <Th className="thProductB">
                       <Flex alignItems="center" id="tableNameB">
                         <Flex>Category</Flex>
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
                       </Flex>
                     </Th>
                     <Th className="thProductB">Stock Before </Th>
                     <Th className="thProductB">
                       <Flex alignItems="center" id="tableNameB">
                         Status{" "}
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
                       </Flex>
                     </Th>
                     <Th className="thProductB">Difference </Th>
                     <Th className="thProductB">Stock After </Th>
-                    <Th className="thProductB">Features</Th>
-                    {/* <Th textAlign={"center"}>Action</Th> */}
+                    <Th className="thProductB">
+                      <Flex alignItems="center" id="tableNameB">
+                        Date{" "}
+                        <Flex flexDirection="column">
+                          <Icon
+                            id="ascendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({ ...filtering, order: "ASC" });
+                            }}
+                          />
+                          <Icon
+                            id="descendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({ ...filtering, order: "DESC" });
+                            }}
+                          />
+                        </Flex>
+                      </Flex>
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody
@@ -279,6 +334,7 @@ export default function StockHistoryList() {
                       after={stockHistory.quantity_after}
                       indexOfLastProduct={indexOfLastProduct}
                       productsPerPage={productsPerPage}
+                      createdAt={stockHistory.createdAt}
                       fetchData={fetchData}
                     />
                   ))}
