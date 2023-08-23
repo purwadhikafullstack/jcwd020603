@@ -19,7 +19,6 @@ export default function Product({ nearestBranch }) {
   const [productSearchResults, setProductSearchResults] = useState([]);
 
   const performSearch = (searchTerm) => {
-    console.log("babss", nearestBranch);
     api()
       .get("/stock/search", {
         params: {

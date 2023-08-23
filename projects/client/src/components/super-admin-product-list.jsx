@@ -212,7 +212,12 @@ export default function SuperAdminProductList() {
                     </Th>
                     <Th className="thProductB">Desc </Th>
                     <Th className="thProductB">Weight </Th>
-                    <Th textAlign={"center"}>Action</Th>
+                    <Th
+                      textAlign={"center"}
+                      display={userSelector.role == "ADMIN" ? "none" : "flex"}
+                    >
+                      Action
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody

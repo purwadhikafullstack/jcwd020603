@@ -106,7 +106,7 @@ export default function SuperAdminCategoryList() {
     }
   }, [shown]);
 
-  const productsPerPage = 6;
+  const productsPerPage = 4;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
@@ -180,7 +180,12 @@ export default function SuperAdminCategoryList() {
                         Category Name{" "}
                       </Flex>
                     </Th>
-                    <Th textAlign={"center"}>Action</Th>
+                    <Th
+                      textAlign={"center"}
+                      display={userSelector.role == "ADMIN" ? "none" : "flex"}
+                    >
+                      Action
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody
