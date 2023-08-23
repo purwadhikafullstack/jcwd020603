@@ -16,6 +16,7 @@ export default function Category({
   selectedAddress,
   nearestBranchSet,
 }) {
+  console.log(nearestBranchSet);
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
   const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
@@ -34,6 +35,7 @@ export default function Category({
       const endpoint = nearestBranch
         ? `/stock?nearestBranch=${nearestBranch}`
         : "/stock";
+      console.log(endpoint);
 
       api()
         .get(endpoint)
