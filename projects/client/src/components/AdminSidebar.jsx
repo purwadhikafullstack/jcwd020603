@@ -18,7 +18,7 @@ import "../css/indexG.css";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminSidebar() {
-  const nav = useNavigate()
+  const nav = useNavigate();
   //merubah warna saat di click
   const [Clicked, setClicked] = useState("");
   const handleClick = (e) => {
@@ -40,7 +40,10 @@ export default function AdminSidebar() {
           <Flex
             id="pesanan"
             className="adminMenuStyleG"
-            onClick={(e) => handleClick(e)}
+            onClick={(e) => {
+              handleClick(e);
+              nav("/admin/orders");
+            }}
             bg={Clicked == "pesanan" ? "#FFF4DD" : "white"}
             color={Clicked == "pesanan" ? "#FFAE0D" : "gray"}
           >
@@ -70,19 +73,43 @@ export default function AdminSidebar() {
         {isAppear ? (
           <>
             <Flex className="adminSubMenuG">
-              <Flex alignItems={"center"}>
+              <Flex
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => {
+                  nav("/sa-category");
+                }}
+              >
                 <Icon as={BsDot} fontSize={"22px"} />
                 Kategori
               </Flex>
-              <Flex alignItems={"center"}>
+              <Flex
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => {
+                  nav("/sa-product");
+                }}
+              >
                 <Icon as={BsDot} fontSize={"22px"} />
                 Produk
               </Flex>
-              <Flex alignItems={"center"}>
+              <Flex
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => {
+                  nav("/a-stock");
+                }}
+              >
                 <Icon as={BsDot} fontSize={"22px"} />
                 Stok Produk
               </Flex>
-              <Flex alignItems={"center"}>
+              <Flex
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => {
+                  nav("/stockhistory");
+                }}
+              >
                 <Icon as={BsDot} fontSize={"22px"} />
                 Riwayat Stok
               </Flex>
@@ -98,8 +125,8 @@ export default function AdminSidebar() {
             id="karyawan"
             className="adminMenuStyleG"
             onClick={(e) => {
-              handleClick(e)
-              nav("/adminbranch")
+              handleClick(e);
+              nav("/ab");
             }}
             bg={Clicked == "karyawan" ? "#FFF4DD" : "white"}
             color={Clicked == "karyawan" ? "#FFAE0D" : "gray"}
@@ -116,7 +143,10 @@ export default function AdminSidebar() {
           <Flex
             id="diskon"
             className="adminMenuStyleG"
-            onClick={(e) => handleClick(e)}
+            onClick={(e) => {
+              handleClick(e);
+              nav("/dis");
+            }}
             bg={Clicked == "diskon" ? "#FFF4DD" : "white"}
             color={Clicked == "diskon" ? "#FFAE0D" : "gray"}
           >
@@ -137,7 +167,7 @@ export default function AdminSidebar() {
             color={Clicked == "laporan" ? "#FFAE0D" : "gray"}
           >
             <Icon as={TbReportAnalytics} fontSize={"28px"} />
-            {/* Laporan */}
+            Laporan
           </Flex>
         </Flex>
       </Flex>

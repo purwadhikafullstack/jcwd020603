@@ -262,7 +262,8 @@ function useCounter(val, step) {
         setCount(count + step);
       } else {
         toast({
-          title: "Jumlah produk mencapai batas stok",
+          title:
+            "Jumlah produk telah mencapai batas stok maksimum yang tersedia",
           status: "warning",
           position: "top",
           duration: 4000,
@@ -270,7 +271,8 @@ function useCounter(val, step) {
       }
     } else {
       toast({
-        title: "Hanya dapat membeli satu produk promo buy 1 get 1",
+        title: "Promo Buy 1 Get 1",
+        description: "Hanya dapat membeli satu produk promo buy 1 get 1",
         status: "error",
         position: "top",
         duration: 4000,
@@ -283,7 +285,7 @@ function useCounter(val, step) {
         setCount(count - step);
       } else {
         toast({
-          title: "Tidak dapat membeli produk kurang dari 1",
+          title: "Kuantitas Minimum 1 Unit",
           status: "warning",
           position: "top",
           duration: 4000,
@@ -291,7 +293,8 @@ function useCounter(val, step) {
       }
     } else {
       toast({
-        title: "Hanya dapat membeli satu produk promo buy 1 get 1",
+        title: "Promo Buy 1 Get 1",
+        description: "Hanya dapat membeli satu produk promo buy 1 get 1",
         status: "error",
         position: "top",
         duration: 4000,

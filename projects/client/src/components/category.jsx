@@ -11,11 +11,15 @@ import { api } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
 
-export default function Category({ lengthCart, selectedAddress }) {
+export default function Category({
+  lengthCart,
+  selectedAddress,
+  nearestBranchSet,
+}) {
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
+  const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
 
   const performSearch = (searchTerm) => {
@@ -26,20 +30,22 @@ export default function Category({ lengthCart, selectedAddress }) {
   };
 
   useEffect(() => {
-    const endpoint = nearestBranch
-      ? `/stock?nearestBranch=${nearestBranch}`
-      : "/stock";
+    if (nearestBranchSet) {
+      const endpoint = nearestBranch
+        ? `/stock?nearestBranch=${nearestBranch}`
+        : "/stock";
 
-    api()
-      .get(endpoint)
-      .then((response) => {
-        setStocks(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [nearestBranch]);
+      api()
+        .get(endpoint)
+        .then((response) => {
+          setStocks(response.data);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [nearestBranchSet]);
 
   useEffect(() => {
     api()

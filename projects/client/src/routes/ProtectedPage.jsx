@@ -7,9 +7,9 @@ import Loading from "../components/loading";
 
 export default function ProtectedPage({
   children,
-  guestOnly,
-  needLogin,
-  adminOnly,
+  guestOnly = false,
+  needLogin = false,
+  adminOnly = false,
 }) {
   let userSelector = useSelector((state) => state.auth);
   const user = userSelector;
@@ -26,7 +26,7 @@ export default function ProtectedPage({
   useEffect(() => {
     // If the user is not logged in and needs login, redirect to "/"
     if (needLogin && !user.role) {
-      return nav("/");
+      return nav("/login");
     }
 
     // If the user is a guest and guestOnly is true, redirect to "/"
@@ -36,21 +36,33 @@ export default function ProtectedPage({
 
     // If the user is not logged in and trying to access /dashboard, redirect to "/"
     if (!user.role && window.location.pathname === "/dashboard") {
-      return nav("/");
+      return nav("/login");
     }
 
     // If the user is not an admin but adminOnly is required, or if the user role is not ADMIN or SUPER ADMIN
     if (adminOnly && user.role !== "ADMIN" && user.role !== "SUPER ADMIN") {
       return nav("/");
     }
+    // If the user role is USER, redirect to "/"
+    if (user.role === "USER" && window.location.pathname === "/dashboard") {
+      return nav("/");
+    }
+
+    // If the user role is ADMIN or SUPER ADMIN, redirect to "/dashboard"
+    if (
+      (user.role === "ADMIN" || user.role === "SUPER ADMIN") &&
+      window.location.pathname === "/"
+    ) {
+      return nav("/dashboard");
+    }
 
     // Redirect user based on their role
-    if (user.role === "USER") {
-      nav("/");
-    } else if (user.role === "ADMIN" || user.role === "SUPER ADMIN") {
-      nav("/dashboard");
-    }
-  }, []);
+    // if (user.role === "USER") {
+    //   nav("/");
+    // } else if (user.role === "ADMIN" || user.role === "SUPER ADMIN") {
+    //   nav("/dashboard");
+    // }
+  }, [user, needLogin, guestOnly, adminOnly, nav]);
 
   useEffect(() => {
     setTimeout(() => {

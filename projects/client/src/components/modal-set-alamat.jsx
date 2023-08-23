@@ -1,20 +1,17 @@
 import { Button, Flex } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-export default function ModalLogoutAdmin(props) {
+export default function ModalSetAlamat(props) {
   const nav = useNavigate();
-  const dispatch = useDispatch();
-  const logout = () => {
-    dispatch({ type: "logout" });
-    localStorage.removeItem("auth");
-    return nav("/login");
-  };
 
   return (
     <>
       <Flex padding={"20px"} flexDir={"column"} rowGap={"20px"}>
-        <Flex fontWeight={"600"}>Apakah anda ingin logout?</Flex>
+        <Flex flexDir={"column"} rowGap={"10px"}>
+          <Flex fontWeight={"600"}>
+            Anda perlu login terlebih dahulu untuk mengatur alamat pengiriman
+          </Flex>
+        </Flex>
         <Flex justifyContent={"right"} gap={"20px"}>
           <Button
             color={"grey"}
@@ -22,17 +19,17 @@ export default function ModalLogoutAdmin(props) {
               props.onClose();
             }}
           >
-            TIDAK
+            NANTI SAJA
           </Button>
           <Button
-            bg={" #f7d1d5"}
-            color={"red"}
+            color="green"
+            bg={"#BBDEBD"}
             onClick={() => {
-              logout();
+              nav("/login");
               props.onClose();
             }}
           >
-            YA
+            LOGIN
           </Button>
         </Flex>
       </Flex>

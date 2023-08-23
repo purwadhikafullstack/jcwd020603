@@ -6,6 +6,7 @@ import {
   ModalContent,
   ModalOverlay,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import Category from "../components/category";
 import Footer from "../components/footer";
@@ -21,6 +22,7 @@ import ModalNearestBranch from "../components/modal-nearest-branch";
 export default function LandingPage() {
   const windowWidth = window.outerWidth;
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   const [isLoaded, setIsLoaded] = useState(false);
   const [latlong, setLatlong] = useState({
     latitude: "",
@@ -38,7 +40,14 @@ export default function LandingPage() {
       });
     };
     const error = () => {
-      alert("unable to retrive your location");
+      toast({
+        title: "Akses Lokasi",
+        description: "Anda menolak untuk mengakses lokasi saat ini",
+        status: "error",
+        position: "bottom",
+        duration: 5000,
+        isClosable: true,
+      });
     };
     navigator.geolocation.getCurrentPosition(success, error);
   };
@@ -110,21 +119,21 @@ export default function LandingPage() {
   // Fungsi untuk mendapatkan geolokasi pengguna
   async function getGeoloc2() {
     return new Promise((resolve, reject) => {
-      const success = (position) => {
-        if (selectedAddress && Object.keys(selectedAddress).length > 0) {
-          const latitude = selectedAddress?.latitude;
-          const longitude = selectedAddress?.longitude;
-          resolve({ latitude, longitude });
-        } else {
+      if (navigator.geolocation && !selectedAddress) {
+        const success = (position) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
           resolve({ latitude, longitude });
-        }
-      };
-      const error = () => {
-        reject("Unable to retrieve user location.");
-      };
-      navigator.geolocation.getCurrentPosition(success, error);
+        };
+        const error = () => {
+          reject("Unable to retrieve user location.");
+        };
+        navigator.geolocation.getCurrentPosition(success, error);
+      } else {
+        const latitude = selectedAddress?.latitude;
+        const longitude = selectedAddress?.longitude;
+        resolve({ latitude, longitude });
+      }
     });
   }
 
@@ -176,7 +185,7 @@ export default function LandingPage() {
 
       return { nearestBranch, latlong };
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       throw error;
     }
   }
@@ -196,15 +205,16 @@ export default function LandingPage() {
     .catch((error) => {
       console.error("Error:", error);
     });
+  // state untuk memastikan setItem selesai dilakukan
+  const [nearestBranchSet, setNearestBranchSet] = useState(false);
 
   useEffect(() => {
     if (nearestBranch && minDistance < 65) {
-      return localStorage.setItem(
-        "nearestBranch",
-        JSON.stringify(nearestBranch)
-      );
+      localStorage.setItem("nearestBranch", JSON.stringify(nearestBranch));
+      return setNearestBranchSet(true);
     } else if (nearestBranch && minDistance > 65) {
       localStorage.removeItem("nearestBranch");
+      setNearestBranchSet(true);
       return onOpen();
     }
   }, [nearestBranch]);
@@ -218,9 +228,15 @@ export default function LandingPage() {
           <Flex maxWidth={"1160px"} w={"100%"}>
             <Flex>
               {windowWidth > 850 ? (
-                <Sidebar setLengthCart={setLengthCart} />
+                <Sidebar
+                  setLengthCart={setLengthCart}
+                  nearestBranchSet={nearestBranchSet}
+                />
               ) : (
-                <SidebarMini setLengthCart={setLengthCart} />
+                <SidebarMini
+                  setLengthCart={setLengthCart}
+                  nearestBranchSet={nearestBranchSet}
+                />
               )}
             </Flex>
             <Flex flexDir={"column"}>
@@ -235,6 +251,7 @@ export default function LandingPage() {
               <Category
                 lengthCart={lengthCart}
                 selectedAddress={selectedAddress}
+                nearestBranchSet={nearestBranchSet}
               />
             </Flex>
           </Flex>
@@ -248,8 +265,12 @@ export default function LandingPage() {
             branchName={branchName}
             minDistance={minDistance}
           />
-          <Category lengthCart={lengthCart} selectedAddress={selectedAddress} />
-          <Footer lengthCart={lengthCart} />
+          <Category
+            lengthCart={lengthCart}
+            selectedAddress={selectedAddress}
+            nearestBranchSet={nearestBranchSet}
+          />
+          <Footer lengthCart={lengthCart} nearestBranchSet={nearestBranchSet} />
         </>
       )}
       <Modal isOpen={isOpen} isCentered>

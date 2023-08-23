@@ -25,7 +25,7 @@ import ModalNearestBranch from "./modal-nearest-branch";
 // import ModalProduct from "./modal-product";
 
 export default function Sidebar(props) {
-  const { setLengthCart, setGetFunction, prodCart } = props;
+  const { setLengthCart, nearestBranchSet } = props;
   const user = JSON.parse(localStorage.getItem("auth"));
   const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
   console.log("sidebar", nearestBranch);
@@ -86,7 +86,12 @@ export default function Sidebar(props) {
   };
 
   useEffect(() => {
-    getCount();
+    if (nearestBranchSet) {
+      getCount();
+    }
+  }, [nearestBranchSet]);
+
+  useEffect(() => {
     getSelectedAddress();
   }, []);
 
