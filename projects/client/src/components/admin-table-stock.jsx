@@ -17,6 +17,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { EditStock } from "./mEditStock";
 import { DeleteStock } from "./mDeleteStock";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 export function AdminTableStock({
   key,
@@ -38,7 +39,7 @@ export function AdminTableStock({
   const navigate = useNavigate();
   const modalDelete = useDisclosure();
   const modalEdit = useDisclosure();
-
+  const userSelector = useSelector((state) => state.auth);
   const [editStock, setEditStock] = useState(null);
   const [categories, setCategories] = useState([]);
 
@@ -100,7 +101,11 @@ export function AdminTableStock({
             {moment(createdAt).format("LLL")}
           </Flex>
         </Td>
-        <Td className="SACategoryActionB" isNumeric>
+        <Td
+          className="SACategoryActionB"
+          isNumeric
+          display={userSelector.role == "SUPER ADMIN" ? "none" : "flex"}
+        >
           <Stack>
             <HStack display={"flex"} align={"center"} justifyContent={"center"}>
               <Button
