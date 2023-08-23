@@ -81,7 +81,7 @@ const routes = [
   <Route
     path="/change-pass"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage needLogin={true} userOnly={true}>
         <ChangePass />
       </ProtectedPage>
     }
@@ -148,7 +148,7 @@ const routes = [
   <Route
     path="/profile"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage needLogin={true} userOnly={true}>
         <ProfilePage />
       </ProtectedPage>
     }
@@ -188,7 +188,7 @@ const routes = [
   <Route
     path="/cart"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage needLogin={true} userOnly={true}>
         <CartPage />
       </ProtectedPage>
     }
@@ -196,7 +196,7 @@ const routes = [
   <Route
     path="/address"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage needLogin={true} userOnly={true}>
         <AddressListPage />
       </ProtectedPage>
     }
@@ -204,7 +204,7 @@ const routes = [
   <Route
     path="/orders/:order_number"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage needLogin={true} userOnly={true}>
         <OrderDetailPage />
       </ProtectedPage>
     }
@@ -212,7 +212,7 @@ const routes = [
   <Route
     path="/orders"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage needLogin={true} userOnly={true}>
         <OrderListPage />
       </ProtectedPage>
     }
@@ -220,7 +220,7 @@ const routes = [
   <Route
     path="/payment/:order_number"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage needLogin={true} userOnly={true}>
         <PaymentPage />
       </ProtectedPage>
     }
@@ -228,7 +228,7 @@ const routes = [
   <Route
     path="/payment"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage needLogin={true} userOnly={true}>
         <PaymentPage />
       </ProtectedPage>
     }
@@ -268,7 +268,7 @@ const routes = [
   <Route
     path="/invoice/:order_number"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage needLogin={true} userOnly={true}>
         <InvoicePage />
       </ProtectedPage>
     }

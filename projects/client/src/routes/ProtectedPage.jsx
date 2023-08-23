@@ -10,6 +10,7 @@ export default function ProtectedPage({
   guestOnly = false,
   needLogin = false,
   adminOnly = false,
+  userOnly = false,
 }) {
   let userSelector = useSelector((state) => state.auth);
   const user = userSelector;
@@ -42,6 +43,9 @@ export default function ProtectedPage({
     // If the user is not an admin but adminOnly is required, or if the user role is not ADMIN or SUPER ADMIN
     if (adminOnly && user.role !== "ADMIN" && user.role !== "SUPER ADMIN") {
       return nav("/");
+    }
+    if (userOnly && user.role !== "USER") {
+      return nav("/dashboard");
     }
     // If the user role is USER, redirect to "/"
     if (user.role === "USER" && window.location.pathname === "/dashboard") {

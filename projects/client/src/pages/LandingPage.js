@@ -119,7 +119,8 @@ export default function LandingPage() {
   // Fungsi untuk mendapatkan geolokasi pengguna
   async function getGeoloc2() {
     return new Promise((resolve, reject) => {
-      if (navigator.geolocation && !selectedAddress) {
+      if (!selectedAddress?.address) {
+        console.log("masuk");
         const success = (position) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
@@ -136,6 +137,9 @@ export default function LandingPage() {
       }
     });
   }
+  useEffect(() => {
+    getGeoloc2();
+  }, [selectedAddress]);
 
   const [nearestBranch, setNearestBranch] = useState("");
   const [branchName, setBranchName] = useState("");
@@ -213,6 +217,10 @@ export default function LandingPage() {
       localStorage.setItem("nearestBranch", JSON.stringify(nearestBranch));
       return setNearestBranchSet(true);
     } else if (nearestBranch && minDistance > 65) {
+      localStorage.removeItem("nearestBranch");
+      setNearestBranchSet(true);
+      return onOpen();
+    } else if (minDistance == Infinity) {
       localStorage.removeItem("nearestBranch");
       setNearestBranchSet(true);
       return onOpen();
