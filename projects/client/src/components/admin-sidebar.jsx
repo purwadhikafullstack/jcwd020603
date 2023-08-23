@@ -124,7 +124,10 @@ export default function AdminSidebar() {
           <Flex
             id="karyawan"
             className="adminMenuStyleG"
-            onClick={(e) => handleClick(e)}
+            onClick={(e) => {
+              handleClick(e);
+              nav("/ab");
+            }}
             bg={Clicked == "karyawan" ? "#FFF4DD" : "white"}
             color={Clicked == "karyawan" ? "#FFAE0D" : "gray"}
           >
@@ -140,7 +143,10 @@ export default function AdminSidebar() {
           <Flex
             id="diskon"
             className="adminMenuStyleG"
-            onClick={(e) => handleClick(e)}
+            onClick={(e) => {
+              handleClick(e);
+              nav("/dis");
+            }}
             bg={Clicked == "diskon" ? "#FFF4DD" : "white"}
             color={Clicked == "diskon" ? "#FFAE0D" : "gray"}
           >

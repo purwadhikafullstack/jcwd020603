@@ -1,5 +1,5 @@
 import { Button, Flex, useToast } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 
@@ -7,9 +7,11 @@ export default function ProfileVeriPass() {
   const nav = useNavigate();
   const toast = useToast();
   const userSelector = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const logout = () => {
+    dispatch({ type: "logout" });
     localStorage.removeItem("auth");
-    localStorage.removeItem("address");
+    localStorage.removeItem("nearestBranch");
     nav("/");
   };
 
