@@ -222,6 +222,110 @@ const addressController = {
       });
     }
   },
+  updateCurrent: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const current = await db.Address.findOne({
+        where: {
+          current_address: true,
+          user_id: req.user.id,
+        },
+      });
+      if (current) {
+        await db.Address.update(
+          {
+            current_address: false,
+          },
+          {
+            where: {
+              current_address: true,
+              id: current.id,
+              user_id: req.user.id,
+            },
+          }
+        );
+      }
+      const find = await db.Address.update(
+        {
+          current_address: true,
+        },
+        {
+          where: {
+            id: req.params.id,
+            current_address: false,
+            user_id: req.user.id,
+          },
+          transaction: trans,
+        }
+      );
+      await trans.commit();
+      return res.status(200).send({
+        message: "OK",
+        result: find,
+      });
+    } catch (err) {
+      await trans.rollback();
+      return res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+  getCurrent: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const getOne = await db.Address.findOne({
+        where: {
+          current_address: true,
+          user_id: req.user.id,
+        },
+        include: [
+          {
+            model: db.City,
+            as: "City",
+            attributes: ["type", "city_name", "province", "postal_code"],
+          },
+        ],
+      });
+      await trans.commit();
+      res.status(200).send({
+        message: "OK",
+        result: getOne,
+      });
+    } catch (err) {
+      await trans.rollback();
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+  getPrimary: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const getOne = await db.Address.findOne({
+        where: {
+          is_primary: true,
+          user_id: req.user.id,
+        },
+        include: [
+          {
+            model: db.City,
+            as: "City",
+            attributes: ["type", "city_name", "province", "postal_code"],
+          },
+        ],
+      });
+      await trans.commit();
+      res.status(200).send({
+        message: "OK",
+        result: getOne,
+      });
+    } catch (err) {
+      await trans.rollback();
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
 };
 
 module.exports = addressController;

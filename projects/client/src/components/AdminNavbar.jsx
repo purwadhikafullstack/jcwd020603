@@ -5,17 +5,30 @@ import {
   DrawerOverlay,
   Flex,
   Icon,
+  Modal,
+  ModalContent,
+  ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
 import { HiMenu, HiOutlineLogout } from "react-icons/hi";
 import AdminSidebar from "./admin-sidebar"
 import "../css/indexG.css";
 import { useSelector } from "react-redux";
+import ModalLogoutAdmin from "./modal-logout-admin";
 
 export default function AdminNavbar() {
-  const userSelector = useSelector((state) => state.auth)
+  const userSelector = useSelector((state) => state.auth);
   const windowWidth = window.innerWidth;
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenModal1,
+    onOpen: onOpenModal1,
+    onClose: onCloseModal1,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenModal2,
+    onOpen: onOpenModal2,
+    onClose: onCloseModal2,
+  } = useDisclosure();
   return (
     <>
       <Flex
@@ -36,7 +49,7 @@ export default function AdminNavbar() {
               as={HiMenu}
               fontSize={"24px"}
               onClick={() => {
-                onOpen();
+                onOpenModal1();
               }}
             />
           </Flex>
@@ -50,10 +63,16 @@ export default function AdminNavbar() {
         >
           <Avatar w={"40px"} h={"40px"} />
           {userSelector.user_name}
-          <Icon as={HiOutlineLogout} fontSize={"25px"} />
+          <Icon
+            as={HiOutlineLogout}
+            fontSize={"25px"}
+            onClick={() => {
+              onOpenModal2();
+            }}
+          />
         </Flex>
       </Flex>
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+      <Drawer isOpen={isOpenModal1} placement="left" onClose={onCloseModal1}>
         <DrawerOverlay />
         <DrawerContent
           css={{
@@ -63,6 +82,12 @@ export default function AdminNavbar() {
           <AdminSidebar />
         </DrawerContent>
       </Drawer>
+      <Modal isOpen={isOpenModal2} onClose={onCloseModal2} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalLogoutAdmin onClose={onCloseModal2} />
+        </ModalContent>
+      </Modal>
     </>
   );
 }

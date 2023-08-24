@@ -1,4 +1,13 @@
-import { Box, Center, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import Category from "../components/category";
 import Footer from "../components/footer";
 import Sidebar from "../components/sidebar";
@@ -7,18 +16,23 @@ import TopBar2 from "../components/topbar2";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
 import SidebarMini from "../components/sidebar-mini";
+import { useDispatch } from "react-redux";
+import ModalNearestBranch from "../components/modal-nearest-branch";
 
 export default function LandingPage() {
   const windowWidth = window.outerWidth;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const [isLoaded, setIsLoaded] = useState(false);
   const [latlong, setLatlong] = useState({
     latitude: "",
     longitude: "",
   });
   const getGeoloc = () => {
     const success = (position) => {
-      console.log(position.coords.latitude);
-      console.log(position.coords.longitude);
-      console.log(position);
+      // console.log(position.coords.latitude);
+      // console.log(position.coords.longitude);
+      // console.log(position);
       setLatlong({
         ...latlong,
         latitude: position.coords.latitude,
@@ -26,11 +40,18 @@ export default function LandingPage() {
       });
     };
     const error = () => {
-      alert("unable to retrive your location");
+      toast({
+        title: "Akses Lokasi",
+        description: "Anda menolak untuk mengakses lokasi saat ini",
+        status: "error",
+        position: "bottom",
+        duration: 5000,
+        isClosable: true,
+      });
     };
     navigator.geolocation.getCurrentPosition(success, error);
   };
-
+  console.log("latlong", latlong);
   useEffect(() => {
     getGeoloc();
     // console.log(latlong);
@@ -39,11 +60,10 @@ export default function LandingPage() {
   const [address, setAddress] = useState("");
   const getAddress = async () => {
     try {
-      console.log(latlong);
+      // console.log(latlong);
       const response = await api().get(
         `/address?latitude=${latlong.latitude}&longitude=${latlong.longitude}`
       );
-      console.log(response.data);
       setAddress(response.data);
     } catch (error) {
       console.log(error);
@@ -54,11 +74,24 @@ export default function LandingPage() {
     if (latlong.latitude) {
       getAddress();
     }
-    console.log(latlong);
+    // console.log(latlong);
   }, [latlong]);
 
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});
+  const getSelectedAddress = async () => {
+    const primary = await api().get("/addressG/primary");
+    const selected = await api().get("/addressG/current");
+    if (selected.data.result) {
+      setSelectedAddress(selected.data.result);
+    } else {
+      setSelectedAddress(primary.data.result);
+    }
+  };
+  useEffect(() => {
+    getSelectedAddress();
+  }, []);
+  console.log(selectedAddress);
   //menyimpan length cart
   const [lengthCart, setLengthCart] = useState(0);
 
@@ -86,18 +119,31 @@ export default function LandingPage() {
   // Fungsi untuk mendapatkan geolokasi pengguna
   async function getGeoloc2() {
     return new Promise((resolve, reject) => {
-      const success = (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
+      if (!selectedAddress?.address) {
+        console.log("masuk");
+        const success = (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          resolve({ latitude, longitude });
+        };
+        const error = () => {
+          reject("Unable to retrieve user location.");
+        };
+        navigator.geolocation.getCurrentPosition(success, error);
+      } else {
+        const latitude = selectedAddress?.latitude;
+        const longitude = selectedAddress?.longitude;
         resolve({ latitude, longitude });
-      };
-      const error = () => {
-        reject("Unable to retrieve user location.");
-      };
-      navigator.geolocation.getCurrentPosition(success, error);
+      }
     });
   }
+  useEffect(() => {
+    getGeoloc2();
+  }, [selectedAddress]);
 
+  const [nearestBranch, setNearestBranch] = useState("");
+  const [branchName, setBranchName] = useState("");
+  const [minDistance, setMinDistance] = useState("");
   // Fungsi untuk mencari cabang terdekat
   async function findNearestBranch(userLat, userLon, branches) {
     let nearestBranch = null;
@@ -113,31 +159,28 @@ export default function LandingPage() {
         branchLat,
         branchLon
       );
-      console.log("ini distance", distance);
 
       if (distance < minDistance) {
         minDistance = distance;
         nearestBranch = branch;
-        console.log("ini nearestBranch", nearestBranch);
       }
     }
+    setMinDistance(minDistance);
     return nearestBranch;
   }
-
-  const [nearestBranch, setNearestBranch] = useState(0);
+  console.log("minmin", minDistance);
 
   // Fungsi untuk mencari branch terdekat berdasarkan latitude dan longitude user
   async function findNearestBranchForUser() {
     try {
       const latlong = await getGeoloc2();
-
       const token = JSON.parse(localStorage.getItem("auth"));
       const response = await api().get("/branch/getbranch", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const branches = response.data;
-      console.log("ini branches", branches);
+      // console.log("ini branches", branches);
       const nearestBranch = await findNearestBranch(
         latlong.latitude,
         latlong.longitude,
@@ -146,7 +189,7 @@ export default function LandingPage() {
 
       return { nearestBranch, latlong };
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       throw error;
     }
   }
@@ -154,10 +197,11 @@ export default function LandingPage() {
   findNearestBranchForUser()
     .then(({ nearestBranch, latlong }) => {
       if (nearestBranch) {
-        console.log(`Nearest branch to user: ${nearestBranch.branch_name}`);
-        console.log(`User latitude: ${latlong.latitude}`);
-        console.log(`User longitude: ${latlong.longitude}`);
+        // console.log(`Nearest branch to user: ${nearestBranch.branch_name}`);
+        // console.log(`User latitude: ${latlong.latitude}`);
+        // console.log(`User longitude: ${latlong.longitude}`);
         setNearestBranch(nearestBranch.id);
+        setBranchName(nearestBranch.branch_name);
       } else {
         console.log("No branches found.");
       }
@@ -165,8 +209,25 @@ export default function LandingPage() {
     .catch((error) => {
       console.error("Error:", error);
     });
+  // state untuk memastikan setItem selesai dilakukan
+  const [nearestBranchSet, setNearestBranchSet] = useState(false);
+
+  useEffect(() => {
+    if (nearestBranch && minDistance < 65) {
+      localStorage.setItem("nearestBranch", JSON.stringify(nearestBranch));
+      return setNearestBranchSet(true);
+    } else if (nearestBranch && minDistance > 65) {
+      localStorage.removeItem("nearestBranch");
+      setNearestBranchSet(true);
+      return onOpen();
+    } else if (minDistance == Infinity) {
+      localStorage.removeItem("nearestBranch");
+      setNearestBranchSet(true);
+      return onOpen();
+    }
+  }, [nearestBranch]);
   console.log(nearestBranch);
-  useEffect(() => {}, []);
+  console.log(branchName);
 
   return (
     <>
@@ -175,18 +236,31 @@ export default function LandingPage() {
           <Flex maxWidth={"1160px"} w={"100%"}>
             <Flex>
               {windowWidth > 850 ? (
-                <Sidebar setLengthCart={setLengthCart} />
+                <Sidebar
+                  setLengthCart={setLengthCart}
+                  nearestBranchSet={nearestBranchSet}
+                />
               ) : (
-                <SidebarMini setLengthCart={setLengthCart} />
+                <SidebarMini
+                  setLengthCart={setLengthCart}
+                  nearestBranchSet={nearestBranchSet}
+                />
               )}
             </Flex>
             <Flex flexDir={"column"}>
               <TopBar
+                setIsLoaded={setIsLoaded}
+                isLoaded={isLoaded}
                 address={address}
                 selectedAddress={selectedAddress}
-                setSelectedAddress={setSelectedAddress}
+                branchName={branchName}
+                minDistance={minDistance}
               />
-              <Category nearestBranch={nearestBranch} lengthCart={lengthCart} />
+              <Category
+                lengthCart={lengthCart}
+                selectedAddress={selectedAddress}
+                nearestBranchSet={nearestBranchSet}
+              />
             </Flex>
           </Flex>
         </Center>
@@ -196,11 +270,23 @@ export default function LandingPage() {
             address={address}
             selectedAddress={selectedAddress}
             setSelectedAddress={setSelectedAddress}
+            branchName={branchName}
+            minDistance={minDistance}
           />
-          <Category nearestBranch={nearestBranch} lengthCart={lengthCart} />
-          <Footer />
+          <Category
+            lengthCart={lengthCart}
+            selectedAddress={selectedAddress}
+            nearestBranchSet={nearestBranchSet}
+          />
+          <Footer lengthCart={lengthCart} nearestBranchSet={nearestBranchSet} />
         </>
       )}
+      <Modal isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalNearestBranch onClose={onClose} />
+        </ModalContent>
+      </Modal>
     </>
   );
 }

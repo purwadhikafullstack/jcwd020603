@@ -3,7 +3,11 @@ import {
   Flex,
   Icon,
   Image,
+  Modal,
+  ModalContent,
+  ModalOverlay,
   assignRef,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -15,10 +19,26 @@ import {
 } from "react-icons/bi";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { api } from "../api/api";
+import ModalAlamatPengiriman from "./modal-alamat-pengiriman";
+import { useFetchCart } from "../hooks/useFetchCart";
+import ModalNearestBranch from "./modal-nearest-branch";
 
 export default function ModalProduct(props) {
-  const { prodVal, setProdVal, checked, setChecked } = props;
+  const { prodVal, setProdVal, checked, setChecked, selectedAddress } = props;
+  const nearestBranch = localStorage.getItem("nearestBranch");
   const [count, tambah, kurang] = useCounter(1, 1);
+  const {
+    isOpen: isOpenModal1,
+    onOpen: onOpenModal1,
+    onClose: onCloseModal1,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenModal2,
+    onOpen: onOpenModal2,
+    onClose: onCloseModal2,
+  } = useDisclosure();
+  const { fetch } = useFetchCart();
+
   // insert qty ke prodVal
   const insertQty = () => {
     const check = prodVal.discount;
@@ -38,25 +58,25 @@ export default function ModalProduct(props) {
     insertQty();
   }, [count]);
   //get jumlah keranjang
-  const [countAll, setCountAll] = useState(0);
-  const getCount = async () => {
-    await api()
-      .get("/cart")
-      .then((res) => {
-        setCountAll(res.data.total);
-        console.log(res.data.result);
-      });
-  };
-
+  // const [countAll, setCountAll] = useState(0);
+  // const getCount = async () => {
+  //   await api()
+  //     .get("/cart")
+  //     .then((res) => {
+  //       setCountAll(res.data.total);
+  //       console.log(res.data.result);
+  //     });
+  // };
+  console.log("prodVal", prodVal);
   //function cek update post produk ke cart
   const toast = useToast();
   const updateAdd = async () => {
     try {
       const update = await api().post(
-        `/cart/${prodVal?.id}?discounted_price=${prodVal?.discountedPrice}`,
+        `/cart/${prodVal?.stock_id}?discounted_price=${prodVal?.discountedPrice}`,
         prodVal
       );
-      getCount();
+      await fetch();
       toast({
         title: update.data.message,
         status: update.data.status,
@@ -67,7 +87,7 @@ export default function ModalProduct(props) {
       const res = err.response;
       console.log(err);
       toast({
-        title: res.data.message,
+        title: "Login terlebih dahulu untuk menambahkan produk",
         status: "error",
         position: "top",
         duration: 3000,
@@ -154,7 +174,24 @@ export default function ModalProduct(props) {
           </Flex>
           <Flex className="footerModalG">
             <Icon as={BiHeart} fontSize={"32px"} />
-            <Flex justifyContent={"right"}>
+            <Flex
+              justifyContent={"right"}
+              onClick={() => {
+                if (
+                  selectedAddress &&
+                  Object.keys(selectedAddress).length > 0
+                ) {
+                  onOpenModal1();
+                } else {
+                  toast({
+                    title: "Tentukan alamat pengiriman terlebih dahulu",
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                  });
+                }
+              }}
+            >
               <Icon as={MdOutlineShoppingCart} fontSize={"32px"} />
               <Center
                 className="redDotCountG"
@@ -179,8 +216,12 @@ export default function ModalProduct(props) {
             <Center
               className="tombolAddtoCart"
               onClick={() => {
-                addToCart();
-                props.onClose();
+                if (nearestBranch == null || !nearestBranch) {
+                  onOpenModal2();
+                } else {
+                  addToCart();
+                  props.onClose();
+                }
               }}
             >
               Tambah Ke Keranjang
@@ -188,6 +229,26 @@ export default function ModalProduct(props) {
           </Flex>
         </Flex>
       </Center>
+      <Modal isOpen={isOpenModal1} onClose={onCloseModal1} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalAlamatPengiriman
+            onClose={onCloseModal1}
+            isOpen={isOpenModal1}
+            selectedAddress={selectedAddress}
+          />
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpenModal2} onClose={onCloseModal2} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalNearestBranch
+            onClose={onCloseModal2}
+            isOpen={isOpenModal2}
+            selectedAddress={selectedAddress}
+          />
+        </ModalContent>
+      </Modal>
     </>
   );
 }
@@ -201,7 +262,8 @@ function useCounter(val, step) {
         setCount(count + step);
       } else {
         toast({
-          title: "Jumlah produk mencapai batas stok",
+          title:
+            "Jumlah produk telah mencapai batas stok maksimum yang tersedia",
           status: "warning",
           position: "top",
           duration: 4000,
@@ -209,7 +271,8 @@ function useCounter(val, step) {
       }
     } else {
       toast({
-        title: "Hanya dapat membeli satu produk promo buy 1 get 1",
+        title: "Promo Buy 1 Get 1",
+        description: "Hanya dapat membeli satu produk promo buy 1 get 1",
         status: "error",
         position: "top",
         duration: 4000,
@@ -222,7 +285,7 @@ function useCounter(val, step) {
         setCount(count - step);
       } else {
         toast({
-          title: "Tidak dapat membeli produk kurang dari 1",
+          title: "Kuantitas Minimum 1 Unit",
           status: "warning",
           position: "top",
           duration: 4000,
@@ -230,7 +293,8 @@ function useCounter(val, step) {
       }
     } else {
       toast({
-        title: "Hanya dapat membeli satu produk promo buy 1 get 1",
+        title: "Promo Buy 1 Get 1",
+        description: "Hanya dapat membeli satu produk promo buy 1 get 1",
         status: "error",
         position: "top",
         duration: 4000,

@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminSidebar() {
+  const nav = useNavigate();
   //merubah warna saat di click
   const [Clicked, setClicked] = useState("");
   const handleClick = (e) => {
@@ -27,7 +28,6 @@ export default function AdminSidebar() {
   const [isAppear, setIsAppear] = useState(false);
   const [isAppearDiscount, setIsAppearDiscount] = useState(false);
   const [isAppearReport, setIsAppearReport] = useState(false);
-  const nav = useNavigate();
 
   return (
     <>

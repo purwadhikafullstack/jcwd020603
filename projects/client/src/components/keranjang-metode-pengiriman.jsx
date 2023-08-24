@@ -63,6 +63,7 @@ export default function MetodePengiriman({
               borderBottom={"1px solid lightgrey"}
             >
               <Icon
+                _hover={{ cursor: "pointer" }}
                 id="jne"
                 onClick={(e) => handleClick(e)}
                 as={Clicked == "jne" ? BiRadioCircleMarked : BiRadioCircle}
@@ -84,6 +85,7 @@ export default function MetodePengiriman({
             >
               <Icon
                 id="pos"
+                _hover={{ cursor: "pointer" }}
                 onClick={(e) => handleClick(e)}
                 as={Clicked == "pos" ? BiRadioCircleMarked : BiRadioCircle}
                 fontSize={"35px"}
@@ -104,6 +106,7 @@ export default function MetodePengiriman({
             >
               <Icon
                 id="tiki"
+                _hover={{ cursor: "pointer" }}
                 onClick={(e) => handleClick(e)}
                 as={Clicked == "tiki" ? BiRadioCircleMarked : BiRadioCircle}
                 fontSize={"35px"}
@@ -134,6 +137,7 @@ export default function MetodePengiriman({
                         <Icon
                           values={val}
                           id={idx}
+                          _hover={{ cursor: "pointer" }}
                           onClick={(e) => handleCost(e.target.id)}
                           as={
                             cost?.service == val?.service

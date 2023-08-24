@@ -8,15 +8,19 @@ import { CardCategory } from "./cardCategory";
 import { CardCarousel } from "./cardCarousel";
 import { SearchBar } from "./searchBar";
 import { api } from "../api/api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
 
-export default function Category({ nearestBranch, lengthCart }) {
-  console.log("ini props", nearestBranch);
+export default function Category({
+  lengthCart,
+  selectedAddress,
+  nearestBranchSet,
+}) {
+  console.log(nearestBranchSet);
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
+  const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
   const [searchTerm, setSearchTerm] = useState("");
-
   const dispatch = useDispatch();
 
   const performSearch = (searchTerm) => {
@@ -27,20 +31,23 @@ export default function Category({ nearestBranch, lengthCart }) {
   };
 
   useEffect(() => {
-    const endpoint = nearestBranch
-      ? `/stock?nearestBranch=${nearestBranch}`
-      : "/stock";
+    if (nearestBranchSet) {
+      const endpoint = nearestBranch
+        ? `/stock?nearestBranch=${nearestBranch}`
+        : "/stock";
+      console.log(endpoint);
 
-    api()
-      .get(endpoint)
-      .then((response) => {
-        setStocks(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [nearestBranch]);
+      api()
+        .get(endpoint)
+        .then((response) => {
+          setStocks(response.data);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [nearestBranchSet]);
 
   useEffect(() => {
     api()
@@ -67,7 +74,7 @@ export default function Category({ nearestBranch, lengthCart }) {
   return (
     <>
       <Flex id="baseContainerB">
-        <SearchBar onSearch={performSearch} />
+        <SearchBar nearestBranch={nearestBranch} onSearch={performSearch} />
         <Flex id="headB" paddingTop={"20px"}>
           KATEGORI
         </Flex>
@@ -108,6 +115,7 @@ export default function Category({ nearestBranch, lengthCart }) {
               quantity_stock={val.quantity_stock}
               stock_id={val.id}
               lengthCart={lengthCart}
+              selectedAddress={selectedAddress}
             />
           ))}
         </Grid>

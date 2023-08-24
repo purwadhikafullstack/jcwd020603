@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/SVG/2.svg";
+import Loading from "../components/loading";
 
 export default function ProtectedPage({
   children,
-  guestOnly,
-  needLogin,
-  adminOnly,
+  guestOnly = false,
+  needLogin = false,
+  adminOnly = false,
+  userOnly = false,
 }) {
   let userSelector = useSelector((state) => state.auth);
   const user = userSelector;
@@ -23,16 +25,48 @@ export default function ProtectedPage({
   console.log(!user.role);
 
   useEffect(() => {
-    if (loading) return; // Wait until loading is done
+    // If the user is not logged in and needs login, redirect to "/"
+    if (needLogin && !user.role) {
+      return nav("/login");
+    }
 
-    if (guestOnly && user.role) {
-      return nav("/");
-    } else if (needLogin && !user.role) {
-      return nav("/");
-    } else if (adminOnly && (!user.role || (user.role !== "ADMIN" && user.role !== "SUPER ADMIN"))) {
+    // If the user is a guest and guestOnly is true, redirect to "/"
+    if (guestOnly && user.role === "USER") {
       return nav("/");
     }
-  }, [loading, user.role, guestOnly, needLogin, adminOnly, nav]);
+
+    // If the user is not logged in and trying to access /dashboard, redirect to "/"
+    if (!user.role && window.location.pathname === "/dashboard") {
+      return nav("/login");
+    }
+
+    // If the user is not an admin but adminOnly is required, or if the user role is not ADMIN or SUPER ADMIN
+    if (adminOnly && user.role !== "ADMIN" && user.role !== "SUPER ADMIN") {
+      return nav("/");
+    }
+    if (userOnly && user.role !== "USER") {
+      return nav("/dashboard");
+    }
+    // If the user role is USER, redirect to "/"
+    if (user.role === "USER" && window.location.pathname === "/dashboard") {
+      return nav("/");
+    }
+
+    // If the user role is ADMIN or SUPER ADMIN, redirect to "/dashboard"
+    if (
+      (user.role === "ADMIN" || user.role === "SUPER ADMIN") &&
+      window.location.pathname === "/"
+    ) {
+      return nav("/dashboard");
+    }
+
+    // Redirect user based on their role
+    // if (user.role === "USER") {
+    //   nav("/");
+    // } else if (user.role === "ADMIN" || user.role === "SUPER ADMIN") {
+    //   nav("/dashboard");
+    // }
+  }, [user, needLogin, guestOnly, adminOnly, nav]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -40,39 +74,5 @@ export default function ProtectedPage({
     }, 1000);
   }, [userSelector]);
 
-  useEffect(() => {
-    // When loading is done, check the access restrictions
-    if (!loading) {
-      // Handle unauthorized access based on role
-      if (guestOnly && user.role) {
-        nav("/");
-      } else if (needLogin && !user.role) {
-        nav("/");
-      } else if (adminOnly && (!user.role || (user.role !== "ADMIN" && user.role !== "SUPER ADMIN"))) {
-        nav("/");
-      }
-    }
-  }, [loading, user.role, guestOnly, needLogin, adminOnly, nav]);
-
-  return (
-    <>
-      {loading ? (
-        <Center
-          h={"100vh"}
-          maxW={"100vw"}
-          w={"100%"}
-          display={"flex"}
-          flexDir={"row"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Flex w={"30%"} h={"30%"} justifyContent={"center"} p={4}>
-            <Image src={logo} />
-          </Flex>
-        </Center>
-      ) : (
-        children
-      )}
-    </>
-  );
+  return <>{loading ? <Loading /> : children}</>;
 }

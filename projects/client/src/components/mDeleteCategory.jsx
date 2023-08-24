@@ -13,7 +13,6 @@ import { api } from "../api/api";
 
 export function DeleteCategory(props) {
   const toast = useToast();
-  console.log(props);
   const deleteCategory = async () => {
     await api().delete("/category/v3/" + props.id);
     toast({

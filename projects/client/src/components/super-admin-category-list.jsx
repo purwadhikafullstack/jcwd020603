@@ -14,6 +14,7 @@ import {
   useDisclosure,
   Tbody,
   Button,
+  Select,
 } from "@chakra-ui/react";
 import AdminNavbarOrder from "./admin-navbar-order";
 import { BiSearch, BiSolidChevronDown, BiSolidChevronUp } from "react-icons/bi";
@@ -25,6 +26,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { SATableCategory } from "./sATableCategory";
 import { AddCategory } from "./mAddCategory";
 import Pagination from "./pagination";
+import { useSelector } from "react-redux";
 
 export default function SuperAdminCategoryList() {
   const windowWidth = window.innerWidth;
@@ -33,6 +35,7 @@ export default function SuperAdminCategoryList() {
   const tableHeadRef = useRef(null);
   const tableRowRef = useRef(null);
   const searchRef = useRef(null);
+  const userSelector = useSelector((state) => state.auth);
 
   const handleTableHeadScroll = (e) => {
     if (tableRowRef.current) {
@@ -103,7 +106,7 @@ export default function SuperAdminCategoryList() {
     }
   }, [shown]);
 
-  const productsPerPage = 5;
+  const productsPerPage = 4;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
@@ -138,6 +141,7 @@ export default function SuperAdminCategoryList() {
                 />
               </InputGroup>
               <Button
+                display={userSelector.role == "ADMIN" ? "none" : "flex"}
                 onClick={() => {
                   onOpen();
                   setAddCategory();
@@ -176,7 +180,12 @@ export default function SuperAdminCategoryList() {
                         Category Name{" "}
                       </Flex>
                     </Th>
-                    <Th textAlign={"center"}>Action</Th>
+                    <Th
+                      textAlign={"center"}
+                      display={userSelector.role == "ADMIN" ? "none" : "flex"}
+                    >
+                      Action
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody

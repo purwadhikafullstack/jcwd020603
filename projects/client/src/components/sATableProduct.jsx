@@ -27,6 +27,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { EditCategory } from "./mEditCategory";
 import { EditProduct } from "./mEditProduct";
 import { DeleteProduct } from "./mDeleteProduct";
+import { useSelector } from "react-redux";
 
 export function SATableProduct({
   product,
@@ -41,17 +42,11 @@ export function SATableProduct({
   productsPerPage,
   fetchData,
 }) {
-  console.log(product);
   const navigate = useNavigate();
   const modalDelete = useDisclosure();
   const modalEdit = useDisclosure();
-
+  const userSelector = useSelector((state) => state.auth);
   const [editProduct, setEditProduct] = useState(null);
-
-  useEffect(() => {
-    console.log(url);
-  }, []);
-
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -102,7 +97,11 @@ export function SATableProduct({
             {weight}
           </Flex>
         </Td>
-        <Td className="SACategoryActionB" isNumeric>
+        <Td
+          className="SACategoryActionB"
+          isNumeric
+          display={userSelector.role == "ADMIN" ? "none" : "flex"}
+        >
           <Stack>
             <HStack display={"flex"} align={"center"} justifyContent={"center"}>
               <Button

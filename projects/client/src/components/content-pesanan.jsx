@@ -110,7 +110,32 @@ export default function ContentPesanan() {
                         w={"100%"}
                         borderBottom={"1px solid lightgrey"}
                       >
-                        <Flex fontSize={"14px"} fontWeight={"500"}>
+                        <Flex
+                          fontSize={"14px"}
+                          fontWeight={"500"}
+                          padding={"3px"}
+                          borderRadius={"5px"}
+                          bg={
+                            val.status == "Menunggu Pembayaran" ||
+                            val.status == "Menunggu Konfirmasi Pembayaran"
+                              ? "#fdefce"
+                              : val.status == "Dibatalkan"
+                              ? "#f7d1d5"
+                              : val.status == "Pesanan Dikonfirmasi"
+                              ? "#ebf5e9"
+                              : "#cbe4fb"
+                          }
+                          color={
+                            val.status == "Menunggu Pembayaran" ||
+                            val.status == "Menunggu Konfirmasi Pembayaran"
+                              ? "#ffb21c"
+                              : val.status == "Dibatalkan"
+                              ? "red"
+                              : val.status == "Pesanan Dikonfirmasi"
+                              ? "#2a960c"
+                              : "#007bfe"
+                          }
+                        >
                           {val.status}
                         </Flex>
                         <Flex fontSize={"12px"} color={"#767676"}>
@@ -123,7 +148,11 @@ export default function ContentPesanan() {
                         flexDir={"column"}
                         rowGap={"16px"}
                         onClick={() => {
-                          nav(`/orders/${val.order_number}`);
+                          if (val.status == "Menunggu Pembayaran") {
+                            nav(`/payment/${val.order_number}`);
+                          } else {
+                            nav(`/orders/${val.order_number}`);
+                          }
                         }}
                       >
                         <Flex justifyContent={"space-between"} w={"100%"}>

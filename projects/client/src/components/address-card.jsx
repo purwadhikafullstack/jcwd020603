@@ -12,7 +12,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BiRadioCircle,
   BiRadioCircleMarked,
@@ -22,7 +22,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import ModalEditAddress from "./modal-edit-address";
 import { api } from "../api/api";
 import ModalKonfirmasiAlamat from "./modal-konfirmasi-alamat";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function AddressCard({
   val,
@@ -30,7 +30,6 @@ export default function AddressCard({
   Clicked,
   setClicked,
   selectedAddress,
-  setSelectedAddress,
 }) {
   const {
     isOpen: isOpenModal1,
@@ -42,17 +41,20 @@ export default function AddressCard({
     onOpen: onOpenModal2,
     onClose: onCloseModal2,
   } = useDisclosure();
+  const address = useSelector((state) => state.address);
+  console.log(address);
+  // Check if the current address is clicked
+  const isAddressClicked = Clicked.id == val.id;
+
+  // Determine if BiRadioCircleMarked should be active
+  const isBiRadioCircleMarkedActive = isAddressClicked;
+
   //function delete address
   const toast = useToast();
   const deleteAddress = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem("auth"));
       await api()
-        .delete(`/addressG/${val.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .delete(`/addressG/${val.id}`)
         .then((res) => {
           console.log(res.data.message);
           getAddress();
@@ -73,15 +75,13 @@ export default function AddressCard({
       });
     }
   };
-  //function dispatch address
-  const dispatch = useDispatch();
-  const addressReducer = (val) => {
-    setClicked(val);
-    dispatch({
-      type: "address",
-      payload: val,
-    });
-  };
+  useEffect(() => {
+    if (val.current_address) {
+      setClicked(val);
+    } else if (!val.current_address && val.is_primary) {
+      setClicked(val);
+    }
+  }, []);
   return (
     <>
       <Flex
@@ -91,10 +91,11 @@ export default function AddressCard({
         padding={"16px"}
         gap={"16px"}
         onClick={() => {
-          addressReducer(val);
+          setClicked(val);
         }}
       >
         <Icon
+          _hover={{ cursor: "pointer" }}
           as={Clicked.id == val.id ? BiRadioCircleMarked : BiRadioCircle}
           fontSize={"40px"}
           color={"#2A960C"}

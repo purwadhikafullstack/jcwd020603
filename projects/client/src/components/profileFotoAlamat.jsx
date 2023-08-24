@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { api } from "../api/api";
 import { GrDocumentUpdate } from "react-icons/gr";
 import logoPro from "../assets/PNG/bgProfile3.png";
+import { Link } from "react-router-dom";
 
 export default function ProfileFotoAlamat() {
   const userSelector = useSelector((state) => state.auth);
@@ -52,6 +53,16 @@ export default function ProfileFotoAlamat() {
       isClosable: true,
     });
   };
+  //get primary address user
+  const [primaryAddress, setPrimaryAddress] = useState({});
+  const getPrimary = async () => {
+    const primary = await api().get("addressG/primary");
+    setPrimaryAddress(primary.data.result);
+  };
+  useEffect(() => {
+    getPrimary();
+  }, []);
+  console.log(primaryAddress);
 
   return (
     <>
@@ -136,10 +147,24 @@ export default function ProfileFotoAlamat() {
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <Box fontSize={"14px"} fontWeight={"bold"} cursor={"pointer"}>
-              Perummahan Villa Muka Kuning, Blok E5 NO 11. Batam - Kepulauan
-              Riau
-            </Box>
+            {primaryAddress && Object.keys(primaryAddress).length > 0 ? (
+              <Box fontSize={"14px"} fontWeight={"bold"} cursor={"pointer"}>
+                {primaryAddress?.address}, {primaryAddress?.district},{" "}
+                {primaryAddress?.City?.type} {primaryAddress?.City?.city_name} -{" "}
+                {primaryAddress?.City?.province}
+              </Box>
+            ) : (
+              <Flex fontSize={"14px"} fontWeight={"bold"} cursor={"pointer"}>
+                {" "}
+                Atur Alamat Utama{" "}
+                <Link to={"/address"}>
+                  <Flex color={"green"} paddingLeft={"3px"}>
+                    disini
+                  </Flex>
+                </Link>
+              </Flex>
+            )}
+
             {/* <Box border={"1px solid gray"} w={"100%"}></Box> */}
             {/* <Button
               w={"100%"}

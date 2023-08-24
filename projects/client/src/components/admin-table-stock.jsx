@@ -16,6 +16,8 @@ import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { EditStock } from "./mEditStock";
 import { DeleteStock } from "./mDeleteStock";
+import moment from "moment";
+import { useSelector } from "react-redux";
 
 export function AdminTableStock({
   key,
@@ -31,19 +33,14 @@ export function AdminTableStock({
   category,
   indexOfLastProduct,
   productsPerPage,
+  createdAt,
   fetchData,
 }) {
-  console.log(stock);
   const navigate = useNavigate();
   const modalDelete = useDisclosure();
   const modalEdit = useDisclosure();
-
+  const userSelector = useSelector((state) => state.auth);
   const [editStock, setEditStock] = useState(null);
-
-  useEffect(() => {
-    console.log(url);
-  }, []);
-
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -101,10 +98,14 @@ export function AdminTableStock({
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
-            {discount}
+            {moment(createdAt).format("LLL")}
           </Flex>
         </Td>
-        <Td className="SACategoryActionB" isNumeric>
+        <Td
+          className="SACategoryActionB"
+          isNumeric
+          display={userSelector.role == "SUPER ADMIN" ? "none" : "flex"}
+        >
           <Stack>
             <HStack display={"flex"} align={"center"} justifyContent={"center"}>
               <Button

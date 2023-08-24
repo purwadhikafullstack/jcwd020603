@@ -5,93 +5,95 @@ const moment = require("moment");
 const { query } = require("express");
 const { createStockHistory } = require("../service/stock.service");
 const stockControllerB = {
-
-  getAllStockByDiscount : async (req, res) => {
-    const {discount_id} = req.query
+  getAllStockByDiscount: async (req, res) => {
+    const { discount_id } = req.query;
     console.log(req.query, "ini diskon id");
-      try {
-        const getbydiscount = await db.Stock.findAll({
-          where : {
-            discount_id
+    try {
+      const getbydiscount = await db.Stock.findAll({
+        where: {
+          discount_id,
+        },
+        include: [
+          {
+            model: db.Product,
+            as: "Product",
+            attributes: [
+              "product_name",
+              "price",
+              "photo_product_url",
+              "category_id",
+              "desc",
+              "weight",
+            ],
+            include: [
+              {
+                model: db.Category,
+                as: "Category",
+                attributes: ["category_name"],
+              },
+            ],
           },
-          include: [
-            {
-              model: db.Product,
-              as: "Product",
-              attributes: [
-                "product_name",
-                "price",
-                "photo_product_url",
-                "category_id",
-                "desc",
-                "weight",
-              ],
-              include: [
-                {
-                  model: db.Category,
-                  as: "Category",
-                  attributes: ["category_name"],
-                },
-              ],
-            },
-            {
-              model: db.Discount,
-              as: "Discount",
-              attributes: ["nominal", "title", "valid_start", "valid_to"],
-            },
-          ],
-        });
-        res.status(200).send({message : "Data Stock by discount_id", data : getbydiscount});
-      } catch (err) {
-        res.status(500).send({
-          message: err.message,
-        });
-      }
+          {
+            model: db.Discount,
+            as: "Discount",
+            attributes: ["nominal", "title", "valid_start", "valid_to"],
+          },
+        ],
+      });
+      res
+        .status(200)
+        .send({ message: "Data Stock by discount_id", data: getbydiscount });
+    } catch (err) {
+      res.status(500).send({
+        message: err.message,
+      });
+    }
   },
 
-  getAllStockByBranch : async (req,res) => {
-    const {branch_id} = req.query
+  getAllStockByBranch: async (req, res) => {
+    const { branch_id } = req.query;
     console.log(req.query, "ini");
-      try {
-        const getbybranch = await db.Stock.findAll({
-          where : {
-           [Op.or] : [{branch_id : branch_id}]
+    try {
+      const getbybranch = await db.Stock.findAll({
+        where: {
+          [Op.or]: [{ branch_id: branch_id }],
+        },
+        include: [
+          {
+            model: db.Product,
+            as: "Product",
+            attributes: [
+              "product_name",
+              "price",
+              "photo_product_url",
+              "category_id",
+              "desc",
+              "weight",
+            ],
+            include: [
+              {
+                model: db.Category,
+                as: "Category",
+                attributes: ["category_name"],
+              },
+            ],
           },
-          include: [
-            {
-              model: db.Product,
-              as: "Product",
-              attributes: [
-                "product_name",
-                "price",
-                "photo_product_url",
-                "category_id",
-                "desc",
-                "weight",
-              ],
-              include: [
-                {
-                  model: db.Category,
-                  as: "Category",
-                  attributes: ["category_name"],
-                },
-              ],
-            },
-            {
-              model: db.Discount,
-              as: "Discount",
-              attributes: ["nominal", "title", "valid_start", "valid_to"],
-            },
-          ],
-        });
-        res.status(200).send({message : "Data Stock by branch_id", data : getbybranch});
-      } catch (err) {
-        res.status(500).send({
-          message: err.message,
-        });
-      }
+          {
+            model: db.Discount,
+            as: "Discount",
+            attributes: ["nominal", "title", "valid_start", "valid_to"],
+          },
+        ],
+      });
+      res
+        .status(200)
+        .send({ message: "Data Stock by branch_id", data: getbybranch });
+    } catch (err) {
+      res.status(500).send({
+        message: err.message,
+      });
+    }
   },
-
 
   getAllStock: async (req, res) => {
     try {
@@ -146,15 +148,46 @@ const stockControllerB = {
     try {
       const page = req.query.page - 1 || 0;
       const search = req.query.search || "";
-      let whereClause = {};
+      let whereClause = {
+        [Op.and]: [],
+      };
       if (req.query.search) {
         whereClause[Op.or] = [
-          { product_name: { [Op.like]: `%${search}%` } },
-          { category_name: { [Op.like]: `%${search}%` } },
+          { "$Product.product_name$": { [Op.like]: `%${search}%` } },
+          { "$Product.desc$": { [Op.like]: `%${search}%` } },
+          {
+            "$Product.Category.category_name$": {
+              [Op.like]: `%${search}%`,
+            },
+          },
         ];
       }
+
+      if (req.query.branch_id) {
+        whereClause[Op.and].push({
+          branch_id: req.query.branch_id,
+        });
+      }
+      if (req.query.category_id) {
+        whereClause[Op.and].push({
+          "$Product.category_id$": req.query.category_id,
+        });
+      }
+      if (req.query.time1 && req.query.time2) {
+        whereClause[Op.and].push({
+          createdAt: {
+            [Op.and]: [
+              {
+                [Op.gte]: moment(req.query.time1).startOf("date"),
+              },
+              {
+                [Op.lte]: moment(req.query.time2).endOf("date"),
+              },
+            ],
+          },
+        });
+      }
       const stockAdmin = await db.Stock.findAndCountAll({
-        where: whereClause,
         include: [
           {
             model: db.Product,
@@ -181,15 +214,17 @@ const stockControllerB = {
             attributes: ["nominal", "title", "valid_start", "valid_to"],
           },
         ],
-        limit: 10,
-        offset: 10 * page,
+        where: whereClause,
+        order: [[req.query.sort, req.query.order]],
+        limit: 6,
+        offset: 6 * page,
       });
 
       await trans.commit(); // Move the commit after successful operation
       return res.status(200).send({
         message: "OK",
         result: stockAdmin.rows,
-        total: Math.ceil(stockAdmin.count / 10),
+        total: Math.ceil(stockAdmin.count / 6),
       });
     } catch (err) {
       await trans.rollback(); // Rollback only if an error occurs
@@ -201,7 +236,9 @@ const stockControllerB = {
 
   searchStock: async (req, res) => {
     try {
-      const { search_query } = req.query;
+      const { search_query, branch_id } = req.query;
+      console.log("s", search_query);
+      console.log(branch_id);
 
       if (search_query) {
         const stocks = await db.Stock.findAll({
@@ -225,7 +262,9 @@ const stockControllerB = {
               ],
             },
           ],
+
           where: {
+            branch_id: branch_id,
             [Op.or]: [
               { "$Product.product_name$": { [Op.like]: `%${search_query}%` } },
               { "$Product.desc$": { [Op.like]: `%${search_query}%` } },
@@ -241,6 +280,9 @@ const stockControllerB = {
         res.send(stocks);
       } else {
         const stocks = await db.Stock.findAll({
+          where: {
+            branch_id: branch_id,
+          },
           include: [
             {
               model: db.Product,
@@ -409,8 +451,11 @@ const stockControllerB = {
 
   getAllStockByCategory: async (req, res) => {
     try {
-      const { category_name } = req.query;
+      const { category_name, branch_id } = req.query;
       const get = await db.Stock.findAll({
+        where: {
+          branch_id: branch_id,
+        },
         include: [
           {
             model: db.Product,
@@ -473,13 +518,50 @@ const stockControllerB = {
     try {
       const page = req.query.page - 1 || 0;
       const search = req.query.search || "";
-      let whereClause = {};
+      let whereClause = {
+        [Op.and]: [],
+      };
       if (req.query.search) {
         whereClause[Op.or] = [
-          { product_name: { [Op.like]: `%${search}%` } },
-          { category_name: { [Op.like]: `%${search}%` } },
+          { "$Stock.Product.product_name$": { [Op.like]: `%${search}%` } },
+          { "$Stock.Product.desc$": { [Op.like]: `%${search}%` } },
+          {
+            "$Stock.Product.Category.category_name$": {
+              [Op.like]: `%${search}%`,
+            },
+          },
         ];
       }
+      if (req.query.branch_id) {
+        whereClause[Op.and].push({
+          "$Stock.branch_id$": req.query.branch_id,
+        });
+      }
+      if (req.query.category_id) {
+        whereClause[Op.and].push({
+          "$Stock.Product.category_id$": req.query.category_id,
+        });
+      }
+      if (req.query.feature) {
+        whereClause[Op.and].push({
+          feature: req.query.feature,
+        });
+      }
+      if (req.query.time1 && req.query.time2) {
+        whereClause[Op.and].push({
+          createdAt: {
+            [Op.and]: [
+              {
+                [Op.gte]: moment(req.query.time1).startOf("date"),
+              },
+              {
+                [Op.lte]: moment(req.query.time2).endOf("date"),
+              },
+            ],
+          },
+        });
+      }
+
       const stockHistory = await db.StockHistory.findAndCountAll({
         where: whereClause,
         include: [
@@ -516,15 +598,17 @@ const stockControllerB = {
             ],
           },
         ],
-        limit: 10,
-        offset: 10 * page,
+        where: whereClause,
+        order: [[req.query.sort, req.query.order]],
+        limit: 6,
+        offset: 6 * page,
       });
 
       await trans.commit(); // Move the commit after successful operation
       return res.status(200).send({
         message: "OK",
         result: stockHistory.rows,
-        total: Math.ceil(stockHistory.count / 10),
+        total: Math.ceil(stockHistory.count / 6),
       });
     } catch (err) {
       await trans.rollback(); // Rollback only if an error occurs

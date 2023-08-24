@@ -1,4 +1,4 @@
-import { Flex, Center, Image, Icon } from "@chakra-ui/react";
+import { Flex, Center, Image, Icon, Input, IconButton } from "@chakra-ui/react";
 import "../css/indexB.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -9,6 +9,7 @@ import { MdSearch } from "react-icons/md";
 import { MdArrowBackIosNew } from "react-icons/md";
 
 export function SearchBar(props) {
+  const { nearestBranch } = props;
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -43,20 +44,23 @@ export function SearchBar(props) {
           type="text"
           placeholder="Mau Belanja Apa?"
           value={searchTerm}
-          style={{ width: "100%" }}
+          style={{ width: "100%", border: "none", outline: "none" }}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Icon
+          // isDisabled={searchTerm ? false : true}
           id="iconSearchB"
           as={MdSearch}
           onClick={(e) => {
-            navigate(`/product`, {
-              state: {
-                searchTerm: e.target.values,
-                searchResults: location.state?.searchResults,
-              },
-            });
-            handleSearch();
+            if (searchTerm) {
+              navigate(`/product`, {
+                state: {
+                  searchTerm: e.target.values,
+                  searchResults: location.state?.searchResults,
+                },
+              });
+              handleSearch();
+            }
           }}
         />
         <Icon

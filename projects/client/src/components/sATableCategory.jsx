@@ -16,6 +16,7 @@ import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { EditCategory } from "./mEditCategory";
 import { DeleteCategory, DeleteProduct } from "./mDeleteCategory";
+import { useSelector } from "react-redux";
 
 export function SATableCategory({
   category,
@@ -28,10 +29,7 @@ export function SATableCategory({
   const modalEdit = useDisclosure();
   const { photo_category_url, id } = category;
   const [editCategory, setEditCategory] = useState(null);
-
-  useEffect(() => {
-    console.log(photo_category_url);
-  }, []);
+  const userSelector = useSelector((state) => state.auth);
 
   return (
     <>
@@ -47,7 +45,11 @@ export function SATableCategory({
             {category.category_name}
           </Flex>
         </Td>
-        <Td className="SACategoryActionB" isNumeric>
+        <Td
+          display={userSelector.role == "ADMIN" ? "none" : "flex"}
+          className="SACategoryActionB"
+          isNumeric
+        >
           <Stack>
             <HStack display={"flex"} align={"center"} justifyContent={"center"}>
               <Button

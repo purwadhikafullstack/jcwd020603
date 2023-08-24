@@ -218,23 +218,24 @@ const branchController = {
         transaction
       );
 
-      await db.Branch.update({
-        branch_name,
-        branch_address : address,
-        district,
-        city_id,
-        province,
-      },
-      {
-        where : {
-          id : branch_id
-        }
-      },
-      transaction
-      )
+      await db.Branch.update(
+        {
+          branch_name,
+          branch_address: address,
+          district,
+          city_id,
+          province,
+        },
+        {
+          where: {
+            id: branch_id,
+          },
+        },
+        transaction
+      );
 
-      await transaction.commit()
-      res.status(200).send({message : "Admin dan Branch berhasil di edit"})
+      await transaction.commit();
+      res.status(200).send({ message: "Admin dan Branch berhasil di edit" });
     } catch (error) {
       await transaction.rollback();
       res.status(500).send({ message: error.message });
@@ -250,16 +251,54 @@ const branchController = {
   },
 
   getSelector: async (req, res) => {
-    // const trans = await db.sequelize.transaction();
+    const trans = await db.sequelize.transaction();
     try {
       const selector = await db.Branch.findAll();
-      // await trans.commit();
+      await trans.commit();
       res.status(200).send({
         message: "OK",
         result: selector,
       });
     } catch (err) {
-      // await trans.rollback();
+      await trans.rollback();
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  getSelectorCategory: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const selector = await db.Category.findAll();
+      await trans.commit();
+      res.status(200).send({
+        message: "OK",
+        result: selector,
+      });
+    } catch (err) {
+      await trans.rollback();
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  getSelectorFeature: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const selector = await db.StockHistory.findAll({
+        attributes: ["feature"],
+        group: ["feature"],
+      });
+
+      await trans.commit();
+      res.status(200).send({
+        message: "OK",
+        result: selector,
+      });
+    } catch (err) {
+      await trans.rollback();
       res.status(500).send({
         message: err.message,
       });

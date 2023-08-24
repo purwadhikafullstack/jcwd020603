@@ -4,8 +4,18 @@ import Product from "../components/product";
 import Sidebar from "../components/sidebar";
 import { useLocation } from "react-router-dom";
 import SidebarMini from "../components/sidebar-mini";
+import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
 
 export default function ProductPage() {
+  const [nearestBranch, setNearestBranch] = useState();
+  console.log("fakkk", nearestBranch);
+
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem("nearestBranch"))) {
+      setNearestBranch(JSON.parse(localStorage.getItem("nearestBranch")));
+    }
+  }, []);
   const windowWidth = window.innerWidth;
   return (
     <>
@@ -14,33 +24,16 @@ export default function ProductPage() {
           <Flex maxWidth={"1212px"} w={"100%"}>
             <Flex>{windowWidth > 750 ? <Sidebar /> : <SidebarMini />}</Flex>
             <Flex>
-              <Product />
+              <Product nearestBranch={nearestBranch} />
             </Flex>
           </Flex>
         </Center>
       ) : (
         <>
-          <Product />
+          <Product nearestBranch={nearestBranch} />
           <Footer />
         </>
       )}
     </>
-    // <>
-    //   {windowWidth > 850 ? (
-    //     <Center>
-    //       <Box>
-    //         <Sidebar />
-    //       </Box>
-    //       <Box paddingLeft={"250px"}>
-    //         <Product />
-    //       </Box>
-    //     </Center>
-    //   ) : (
-    //     <>
-    //       <Product />
-    //       <Footer />
-    //     </>
-    //   )}
-    // </>
   );
 }

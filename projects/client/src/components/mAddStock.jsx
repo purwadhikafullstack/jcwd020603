@@ -13,11 +13,14 @@ import {
 } from "@chakra-ui/react";
 import { api } from "../api/api";
 import { useState, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 export function AddStock(props) {
   const { selectedOption, setSelectedOption } = useState("");
+  const userSelector = useSelector((state) => state.auth);
+
   const [stock, setStock] = useState({
-    branch_id: 1,
+    branch_id: userSelector.branch_id,
     product_id: "",
     quantity_stock: "",
   });
@@ -93,12 +96,6 @@ export function AddStock(props) {
                 className="inputAddProduct"
                 placeholder="Jumlah Stock"
                 id="quantity_stock"
-                onChange={inputHandler}
-              />
-              <Input
-                className="inputAddProduct"
-                placeholder="Branch"
-                id="branch_id"
                 onChange={inputHandler}
               />
             </Flex>

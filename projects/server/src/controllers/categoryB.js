@@ -28,18 +28,35 @@ const categoryController = {
       }
       const category = await db.Category.findAndCountAll({
         where: whereClause,
-        limit: 5,
-        offset: 5 * page,
+        limit: 4,
+        offset: 4 * page,
       });
       await trans.commit();
       return res.status(200).send({
         message: "OK",
         result: category.rows,
-        total: Math.ceil(category.count / 5),
+        total: Math.ceil(category.count / 4),
       });
     } catch (err) {
       await trans.rollback();
       console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  getSelector: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      const selector = await db.Category.findAll();
+      await trans.commit();
+      res.status(200).send({
+        message: "OK",
+        result: selector,
+      });
+    } catch (err) {
+      await trans.rollback();
       res.status(500).send({
         message: err.message,
       });

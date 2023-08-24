@@ -26,6 +26,7 @@ import ResetPass from "../components/ResetPass";
 import DiscountAddModal from "../components/DiscountAddModal";
 import DiscountAddProductModal from "../components/DiscountAddProductModal";
 import VoucherPage from "../pages/VoucherPage";
+import InvoicePage from "../pages/InvoicePage";
 import SalesReportPage from "../pages/SalesReportPage";
 import ChartSalesReportTransactions from "../components/Chart-SalesReport-transaction";
 import SalesReportProductPage from "../pages/SalesReportProductPage";
@@ -33,20 +34,13 @@ import SalesReportUserPage from "../pages/SalesReportUserPage";
 import DashboardAdminPage from "../pages/Dashboard-Admin-Page";
 
 const routes = [
-  <Route
-    path="/"
-    element={
-      <ProtectedPage >
-        <LandingPage />
-      </ProtectedPage>
-    }
-  ></Route>,
+  <Route path="/" element={<LandingPage />}></Route>,
 
   <Route
     path="/dashboard"
     element={
-      <ProtectedPage >
-        <DashboardAdminPage />
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <Dashboard />
       </ProtectedPage>
     }
   ></Route>,
@@ -54,7 +48,7 @@ const routes = [
   <Route
     path="/login"
     element={
-      <ProtectedPage >
+      <ProtectedPage guestOnly={true}>
         <LoginPage />
       </ProtectedPage>
     }
@@ -63,7 +57,7 @@ const routes = [
   <Route
     path="/register"
     element={
-      <ProtectedPage>
+      <ProtectedPage guestOnly={true}>
         <RegisterPage />
       </ProtectedPage>
     }
@@ -72,7 +66,7 @@ const routes = [
   <Route
     path="/verify/:token"
     element={
-      <ProtectedPage>
+      <ProtectedPage guestOnly={true}>
         <VerifyPage />
       </ProtectedPage>
     }
@@ -81,7 +75,7 @@ const routes = [
   <Route
     path="/forgot-password/:token"
     element={
-      <ProtectedPage>
+      <ProtectedPage guestOnly={true}>
         <ResetPass />
       </ProtectedPage>
     }
@@ -90,26 +84,8 @@ const routes = [
   <Route
     path="/change-pass"
     element={
-      <ProtectedPage >
+      <ProtectedPage needLogin={true} userOnly={true}>
         <ChangePass />
-      </ProtectedPage>
-    }
-  ></Route>,
-
-  <Route
-    path="/product"
-    element={
-      <ProtectedPage >
-        <ProductPage />
-      </ProtectedPage>
-    }
-  ></Route>,
-
-  <Route
-    path="/sa-product"
-    element={
-      <ProtectedPage >
-        <SuperAdminProductPage />
       </ProtectedPage>
     }
   ></Route>,
@@ -117,7 +93,7 @@ const routes = [
   <Route
     path="/admin-branch"
     element={
-      <ProtectedPage>
+      <ProtectedPage needLogin={true} adminOnly={true}>
         <DashboardBranch />
       </ProtectedPage>
     }
@@ -126,7 +102,7 @@ const routes = [
   <Route
     path="/sales-report"
     element={
-      <ProtectedPage adminOnly={true} >
+      <ProtectedPage adminOnly={true} needLogin={true} >
         <SalesReportPage />
       </ProtectedPage>
     }
@@ -135,7 +111,7 @@ const routes = [
   <Route
     path="/sales-report-product"
     element={
-      <ProtectedPage>
+      <ProtectedPage adminOnly={true} needLogin={true}>
         <SalesReportProductPage />
       </ProtectedPage>
     }
@@ -144,20 +120,12 @@ const routes = [
   <Route
     path="/sales-report-user"
     element={
-      <ProtectedPage>
+      <ProtectedPage adminOnly={true} needLogin={true}>
         <SalesReportUserPage />
       </ProtectedPage>
     }
   ></Route>,
-
-  <Route
-    path="/*"
-    element={
-      <ProtectedPage>
-        <NotFound />
-      </ProtectedPage>
-    }
-  ></Route>,
+  <Route path="/*" element={<NotFound />}></Route>,
 
   <Route
     path="/not-authority"
@@ -167,28 +135,173 @@ const routes = [
       </ProtectedPage>
     }
   ></Route>,
-  <Route path="/a-stock" element={<AdminStockPage />}></Route>,
-  <Route path="/stockhistory" element={<StockHistoryPage />}></Route>,
-  <Route path="/sa-category" element={<SuperAdminCategoryPage />}></Route>,
-  <Route path="/profile" element={<ProfilePage />}></Route>,
-  <Route path="/admin-branch" element={<DashboardBranch />}></Route>,
-  <Route path="/discount" element={<DiscountPage />}></Route>,
-  <Route path="/voucher" element={<VoucherPage />}></Route>,
-  <Route path="/sales-report" element={<SalesReportPage />}></Route>,
-  <Route path="/sales-report-product" element={<SalesReportProductPage />}></Route>,
-  <Route path="/sales-report-user" element={<SalesReportUserPage />}></Route>,
-  <Route path="/cart" element={<CartPage />}></Route>,
-  <Route path="/address" element={<AddressListPage />}></Route>,
-  <Route path="/orders/:order_number" element={<OrderDetailPage />}></Route>,
-  <Route path="/orders" element={<OrderListPage />}></Route>,
-  <Route path="/payment" element={<PaymentPage />}></Route>,
+
+  <Route path="/product" element={<ProductPage />}></Route>,
+
+  <Route
+    path="/sa-product"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <SuperAdminProductPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/a-stock"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <AdminStockPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/stockhistory"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <StockHistoryPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/sa-category"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <SuperAdminCategoryPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/profile"
+    element={
+      <ProtectedPage needLogin={true} userOnly={true}>
+        <ProfilePage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/ab"
+    element={
+      <ProtectedPage>
+        <DashboardBranch needLogin={true} adminOnly={true} />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/dis"
+    element={
+      <ProtectedPage>
+        <DiscountPage needLogin={true} adminOnly={true} />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/vocer"
+    element={
+      <ProtectedPage>
+        <VoucherPage needLogin={true} adminOnly={true} />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/sales-report"
+    element={
+      <ProtectedPage>
+        <SalesReportPage needLogin={true} adminOnly={true} />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/cart"
+    element={
+      <ProtectedPage needLogin={true} userOnly={true}>
+        <CartPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/address"
+    element={
+      <ProtectedPage needLogin={true} userOnly={true}>
+        <AddressListPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/orders/:order_number"
+    element={
+      <ProtectedPage needLogin={true} userOnly={true}>
+        <OrderDetailPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/orders"
+    element={
+      <ProtectedPage needLogin={true} userOnly={true}>
+        <OrderListPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/payment/:order_number"
+    element={
+      <ProtectedPage needLogin={true} userOnly={true}>
+        <PaymentPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/payment"
+    element={
+      <ProtectedPage needLogin={true} userOnly={true}>
+        <PaymentPage />
+      </ProtectedPage>
+    }
+  ></Route>,
   <Route
     path="/admin/orders/:order_number"
-    element={<AdminOrderDetailPage />}
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <AdminOrderDetailPage />
+      </ProtectedPage>
+    }
   ></Route>,
-  <Route path="/admin/orders" element={<AdminOrderPage />}></Route>,
-  <Route path="/disadd" element={<DiscountAddModal />}></Route>,
-  <Route path="/disaprod" element={<DiscountAddProductModal />}></Route>,
+  <Route
+    path="/admin/orders"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <AdminOrderPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/disadd"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <DiscountAddModal />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/disaprod"
+    element={
+      <ProtectedPage needLogin={true} adminOnly={true}>
+        <DiscountAddProductModal />
+      </ProtectedPage>
+    }
+  ></Route>,
+  <Route
+    path="/invoice/:order_number"
+    element={
+      <ProtectedPage needLogin={true} userOnly={true}>
+        <InvoicePage />
+      </ProtectedPage>
+    }
+  ></Route>,
 ];
 
 export default routes;
