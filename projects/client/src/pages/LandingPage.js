@@ -131,6 +131,7 @@ export default function LandingPage() {
         };
         navigator.geolocation.getCurrentPosition(success, error);
       } else {
+        console.log("ini masuk nya", selectedAddress);
         const latitude = selectedAddress?.latitude;
         const longitude = selectedAddress?.longitude;
         resolve({ latitude, longitude });
@@ -194,12 +195,10 @@ export default function LandingPage() {
     }
   }
   // Contoh penggunaan
+  const [nearestBranchSet, setNearestBranchSet] = useState(false);
   findNearestBranchForUser()
     .then(({ nearestBranch, latlong }) => {
       if (nearestBranch) {
-        // console.log(`Nearest branch to user: ${nearestBranch.branch_name}`);
-        // console.log(`User latitude: ${latlong.latitude}`);
-        // console.log(`User longitude: ${latlong.longitude}`);
         setNearestBranch(nearestBranch.id);
         setBranchName(nearestBranch.branch_name);
       } else {
@@ -210,7 +209,6 @@ export default function LandingPage() {
       console.error("Error:", error);
     });
   // state untuk memastikan setItem selesai dilakukan
-  const [nearestBranchSet, setNearestBranchSet] = useState(false);
 
   useEffect(() => {
     if (nearestBranch && minDistance < 65) {
@@ -260,6 +258,8 @@ export default function LandingPage() {
                 lengthCart={lengthCart}
                 selectedAddress={selectedAddress}
                 nearestBranchSet={nearestBranchSet}
+                nearestBranch={nearestBranch}
+                minDistance={minDistance}
               />
             </Flex>
           </Flex>
@@ -277,6 +277,8 @@ export default function LandingPage() {
             lengthCart={lengthCart}
             selectedAddress={selectedAddress}
             nearestBranchSet={nearestBranchSet}
+            nearestBranch={nearestBranch}
+            minDistance={minDistance}
           />
           <Footer lengthCart={lengthCart} nearestBranchSet={nearestBranchSet} />
         </>

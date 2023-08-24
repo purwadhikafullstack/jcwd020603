@@ -10,16 +10,19 @@ import { SearchBar } from "./searchBar";
 import { api } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
+import { async } from "q";
 
 export default function Category({
   lengthCart,
   selectedAddress,
   nearestBranchSet,
+  nearestBranch,
+  minDistance,
 }) {
-  console.log(nearestBranchSet);
+  console.log("cat", nearestBranch);
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
-  const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
+  // const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
 
@@ -30,24 +33,24 @@ export default function Category({
     dispatch(setSearchResults(searchResults));
   };
 
-  useEffect(() => {
-    if (nearestBranchSet) {
-      const endpoint = nearestBranch
-        ? `/stock?nearestBranch=${nearestBranch}`
-        : "/stock";
-      console.log(endpoint);
-
-      api()
-        .get(endpoint)
-        .then((response) => {
-          setStocks(response.data);
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+  const fetchStock = async () => {
+    try {
+      const endpoint =
+        minDistance > 65 ? "/stock" : `/stock?nearestBranch=${nearestBranch}`;
+      console.log("endpoint", endpoint);
+      const get = await api().get(endpoint);
+      setStocks(get.data);
+      console.log(get.data);
+    } catch (err) {
+      console.error(err);
     }
-  }, [nearestBranchSet]);
+  };
+
+  useEffect(() => {
+    // if (nearestBranchSet) {
+    fetchStock();
+    // }
+  }, [nearestBranch]);
 
   useEffect(() => {
     api()
@@ -104,7 +107,7 @@ export default function Category({
         <Grid id="productB">
           {stocks.map((val, idx) => (
             <CardProduct
-              key={val.Product.id}
+              key={val.Product?.id}
               id={val.product_id}
               url={val.Product?.photo_product_url}
               product_name={val.Product?.product_name}
