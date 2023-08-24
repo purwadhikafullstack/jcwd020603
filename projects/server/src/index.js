@@ -1,25 +1,56 @@
-require("dotenv/config");
+const { join } = require("path");
+require("dotenv/config")({ path: join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
-const { join } = require("path");
+const db = require("./models");
+const verify = require("./middleware/verify");
+const cronJob = require("./utils/cronJob");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
-);
-
+// app.use(
+// cors({
+// origin: [
+// process.env.WHITELISTED_DOMAIN &&
+// process.env.WHITELISTED_DOMAIN.split(","),
+// ],
+// })
+// );
+const routes = require("./routes");
+const { route } = require("./routes/branch");
+app.use(cors());
 app.use(express.json());
+// app.use(verify);
+// const { verify } = require("crypto");
+// db.sequelize.sync({ alter: true });
 
 //#region API ROUTES
 
 // ===========================
 // NOTE : Add your routes here
+app.use("/categoryImg", express.static(`${__dirname}/public/categoryImg`));
+app.use("/productImg", express.static(`${__dirname}/public/productImg`));
+app.use("/paymentImg", express.static(`${__dirname}/public/paymentImg`));
+app.use("/api/user", routes.userRoutes);
+app.use("/api/branch", routes.branchRoutes);
+app.use("/api/token", routes.tokenRoutes);
+app.use("/api/address", routes.addressRoutesB);
+app.use("/api/category", routes.categoryRoutesB);
+app.use("/api/stock", routes.stockRoutesB);
+app.use("/api/addressG", routes.addressRoutesG);
+app.use("/api/city", routes.cityRoutes);
+app.use("/api/province", routes.provinceRoutes);
+app.use("/api/cart", routes.cartRoutes);
+app.use("/api/order-detail", routes.orderDetailRoutes);
+app.use("/api/order", routes.orderRoutes);
+app.use("/api/discount", routes.discountRoutes);
+app.use("/api/product", routes.productRoutesB);
+app.use("/api/voucher", routes.voucherRoutes);
+app.use("/api/sales-report", routes.salesReportRoutes);
+app.use("/avatar", express.static(`${__dirname}/public/Avatar`));
+
+// import konfigurasi cron job
+cronJob();
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);

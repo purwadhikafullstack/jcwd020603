@@ -1,0 +1,486 @@
+#containerTopBarB {
+  width: 100%;
+}
+
+#topBarB {
+  /* align-items: center; */
+  width: 100%;
+  max-width: 910px;
+  height: 80px;
+  padding-top: 40px;
+  padding-right: 20px;
+  padding-left: 20px;
+  justify-content: end;
+  z-index: 3;
+  background-color: white;
+}
+
+#topBar2B {
+  align-items: center;
+  width: 100%;
+  max-width: 910px;
+  height: 80px;
+  padding-top: 5px;
+  padding-right: 20px;
+  padding-left: 20px;
+  justify-content: space-between;
+  z-index: 3;
+  background-color: white;
+}
+
+#iconLocationB {
+  height: 24px;
+  width: 24px;
+  color: #ff0000cc;
+  cursor: pointer;
+}
+
+#iconSearchB {
+  height: 35px;
+  width: 35px;
+  color: green;
+  cursor: pointer;
+  padding-right: 10px;
+}
+#iconBackSpaceB {
+  height: 35px;
+  width: 32px;
+  color: grey;
+  cursor: pointer;
+  padding-right: 10px;
+}
+
+#alamatTopBarB {
+  flex-direction: column;
+  font-size: 70%;
+  cursor: pointer;
+  padding-left: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  color: #808080;
+
+  @media (max-width: 600px) {
+    font-size: 60%;
+  }
+  @media (min-width: 601px) {
+    font-size: 85%;
+  }
+}
+
+#baseContainerB {
+  justify-content: top;
+  padding-right: 20px;
+  padding-left: 20px;
+  background-color: white;
+  flex-direction: column;
+  width: 100%;
+  max-width: 910px;
+  padding-top: 20px;
+  padding-bottom: 50px;
+
+  @media (max-width: 600px) {
+    padding-top: 10px;
+    padding-bottom: 100px;
+  }
+  @media (min-width: 601px) and (max-width: 900px) {
+    padding-top: 20px;
+    padding-bottom: 80px;
+  }
+}
+
+#searchBarB {
+  width: 100%;
+  max-width: 910px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: white;
+  border-radius: 3%;
+  cursor: pointer;
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+#logoSSB {
+  width: auto;
+  height: 50px;
+}
+
+#headB {
+  width: 100%;
+  text-align: end;
+  font-weight: bold;
+  font-size: 16px;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  color: #199950;
+}
+
+#bgCategoryB {
+  width: 100%;
+  max-width: 910px;
+  flex-direction: column;
+  overflow: auto;
+}
+
+#bgCategoryB::-webkit-scrollbar {
+  display: none;
+}
+
+#categoryB {
+  padding-left: 2px;
+  flex-wrap: wrap;
+  gap: 13px;
+  padding-bottom: 10px;
+  border-bottom-width: 1px;
+  border-color: #9d9b44;
+
+  @media (max-width: 600px) {
+    min-width: 730px;
+  }
+  @media (min-width: 601px) {
+    min-width: 1430px;
+  }
+}
+
+#categoryImageB {
+  width: 60px;
+  height: 60px;
+}
+
+#categoryName {
+  flex: 1;
+  font-weight: bold;
+  font-size: 12px;
+  text-align: center;
+}
+/* 
+#carouselB {
+  width: 100%;
+  max-width: 910px;
+}
+  */
+.cardCarouselB {
+  height: 280px;
+
+  @media (max-width: 600px) {
+    height: 200px;
+  }
+
+  @media (min-width: 601px) and (max-width: 900px) {
+    height: 250px;
+  }
+}
+
+/* #imageCarousel {
+  width: 100%;
+  max-width: 910px;
+  object-fit: cover;
+  height: fit-content;
+} */
+
+img {
+  object-fit: cover;
+}
+
+.cardCategoryB {
+  margin: 1px;
+  width: 100%;
+  max-width: 65px;
+  cursor: pointer;
+  flex-direction: column;
+}
+
+.cardCategoryB:hover {
+  background-color: #ecfff4;
+  border-radius: 10%;
+  font-weight: 600;
+  color: #199950;
+}
+
+.cardCategoryB img {
+  object-fit: cover; /* Memastikan gambar terisi penuh pada div */
+  border-radius: 50%;
+}
+
+#categoryNameB {
+  text-align: center;
+  @media (max-width: 600px) {
+    font-size: 11px;
+  }
+
+  @media (min-width: 601px) {
+    font-size: 14px;
+  }
+}
+
+#productB {
+  width: 100%;
+  max-width: 910px;
+  flex-wrap: wrap;
+  gap: 13px;
+  grid-template-columns: repeat(2, 1fr);
+
+  /* Media query untuk lebar layar di bawah 600px */
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Media query untuk lebar layar di atas 600px */
+  @media (min-width: 601px) {
+    grid-template-columns: repeat(4, 1fr); /* 4 kolom pada layar besar */
+  }
+}
+
+#image_productB {
+  width: 100%;
+  max-width: 910px;
+  border-top-left-radius: 5%;
+  border-top-right-radius: 5%;
+  object-fit: cover;
+  height: 210px;
+
+  @media (max-width: 600px) {
+    height: 160px;
+  }
+
+  @media (min-width: 601px) and (max-width: 900px) {
+    height: 180px;
+  }
+}
+
+#cardProductB {
+  background-color: white;
+  border-radius: 5%;
+  cursor: pointer;
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+#cardProductB:hover {
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.6);
+}
+
+#product_nameB {
+  flex: 1;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+#satuanB {
+  flex: 1;
+  font-size: 14px;
+}
+
+#hasilDiscountB {
+  flex: 1;
+  font-weight: bold;
+  font-size: 16px;
+  color: #df6207;
+}
+
+#discountB {
+  flex: 1;
+  font-size: 14px;
+  color: white;
+  border-width: 1px;
+  border-radius: 45%;
+  padding-left: 2px;
+  padding-right: 2px;
+  background-color: rgb(224, 33, 33);
+}
+
+#discountBOGOB {
+  flex: 1;
+  font-size: 14px;
+  color: green;
+  border-width: 1px;
+  border-radius: 10%;
+  padding-left: 2px;
+  padding-right: 2px;
+  background-color: rgb(231, 244, 49);
+}
+
+#priceB {
+  flex: 1;
+  font-size: 13px;
+  padding-left: 5px;
+  text-decoration: line-through;
+}
+
+#iconAddCartB {
+  /* transform: scaleX(-1); */
+  height: 26px;
+  width: 26px;
+  color: green;
+  cursor: pointer;
+}
+
+#buttonProductB {
+  background-color: white;
+  color: #199950;
+  width: 18px;
+  border-radius: 50%;
+  border-width: 1px;
+  border-color: #808080;
+}
+
+#buttonProductB:hover {
+  background-color: #199950;
+  color: wheat;
+}
+
+.adminCategoryB {
+  max-width: 910px;
+  height: 91vh;
+  width: 100%;
+  padding: 30px;
+  row-gap: 20px;
+  flex-direction: column;
+  margin-top: 60px;
+  border-top-left-radius: 20px;
+  background: #fff7e7;
+}
+
+.adminCategory2B {
+  font-size: 24px;
+  font-weight: 700;
+  padding-bottom: 20px;
+  justify-content: space-between;
+}
+
+#containerTableB {
+  width: 900px;
+  flex-wrap: wrap;
+  overflow: auto;
+}
+
+.tHeadB {
+  background-color: #199950;
+  padding: 0;
+}
+
+#tRowB {
+  overflow: auto;
+}
+
+.chakra-table__container::-webkit-scrollbar {
+  display: none;
+}
+
+.thProductB button {
+  background-color: #199950;
+  height: 10px;
+  width: 5px;
+}
+/* button {
+  width: 1em;
+} */
+
+#thProductB {
+  color-scheme: #199950;
+  font-size: 20px;
+  size: 5px;
+}
+
+#tableNameB {
+  justify-content: center;
+  gap: 10px;
+}
+
+#ascendingB:active,
+#descendingB:active {
+  color: #ecfff4 !important; /* Ganti warna saat tombol ikon diklik */
+  border-radius: 25%;
+}
+
+#ascendingB {
+  transform: rotate(90deg);
+}
+
+#descendingB {
+  transform: rotate(-90deg);
+}
+
+.SAImgCategoryB {
+  max-width: 50px;
+}
+
+#buttonAction {
+  max-width: 40px;
+  max-height: 20px;
+}
+
+.css-j7qwjs {
+  align-items: center;
+}
+
+.containerAddProduct {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputAddProduct {
+  height: 50px;
+  border-radius: 5px;
+}
+
+.inputBoxContainer {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* .inputBox {
+  position: relative;
+  width: 250px;
+}
+
+.inputBox input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: #1d2b3a;
+  border-radius: 5px;
+  outline: none;
+  color: #fff;
+  font-size: 1em;
+  transition: 0.5s;
+}
+
+.inputBox span {
+  position: absolute;
+  left: 0;
+  padding: 10px;
+  pointer-events: none;
+  font-size: 1em;
+  color: rgba(255, 255, 255, 0.25);
+  text-transform: uppercase;
+}
+
+.inputBox input :valid ~ span,
+.inputBox input :focus ~ span {
+  color: #00dfc4;
+  transform: translateX(10px) translateY(-7px);
+  font-size: 0.65em;
+  padding: 0.1px;
+  background: #1d2b3a;
+  border-left: 1px solid #00dfc4;
+  letter-spacing: 0.2em;
+}
+
+.inputBox :nth-child(2) input :valid ~ span,
+.inputBox :nth-child(2) input :focus ~ span {
+  background: #00dfc4;
+  color: #1d2b3a;
+  border-radius: 2px;
+}
+
+.inputBox input :valid,
+.inputBox input :focus {
+  border: 1px solid #00dfc4;
+} */

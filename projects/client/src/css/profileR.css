@@ -1,0 +1,10 @@
+.flex2R {
+  display: flex;
+  cursor: pointer;
+  flex-direction: row;
+  justify-content: right;
+  gap: 2%;
+  color: green;
+  font-weight: bolder;
+  border-bottom: 1px solid green;
+}

@@ -1,0 +1,19 @@
+0 silly argv {
+0 silly argv   _: [ 'run' ],
+0 silly argv   stream: true,
+0 silly argv   lernaVersion: '5.4.0',
+0 silly argv   '$0': 'node_modules\\lerna\\cli.js',
+0 silly argv   script: 'start'
+0 silly argv }
+1 notice cli v5.4.0
+2 verbose rootPath C:\Users\surya\OneDrive\Documents\JCWD Purwadhika\Final-Project\jcwd020603
+3 error Error: Invalid package name "crypto-b rowserify": name can only contain URL-friendly characters
+3 error     at invalidPackageName (C:\Users\surya\OneDrive\Documents\JCWD Purwadhika\Final-Project\jcwd020603\node_modules\npm-package-arg\npa.js:89:15)
+3 error     at Result.setName (C:\Users\surya\OneDrive\Documents\JCWD Purwadhika\Final-Project\jcwd020603\node_modules\npm-package-arg\npa.js:124:11)
+3 error     at new Result (C:\Users\surya\OneDrive\Documents\JCWD Purwadhika\Final-Project\jcwd020603\node_modules\npm-package-arg\npa.js:114:23)
+3 error     at Function.resolve (C:\Users\surya\OneDrive\Documents\JCWD Purwadhika\Final-Project\jcwd020603\node_modules\npm-package-arg\npa.js:61:15)
+3 error     at C:\Users\surya\OneDrive\Documents\JCWD Purwadhika\Final-Project\jcwd020603\node_modules\@lerna\package-graph\index.js:66:30
+3 error     at Array.forEach (<anonymous>)
+3 error     at C:\Users\surya\OneDrive\Documents\JCWD Purwadhika\Final-Project\jcwd020603\node_modules\@lerna\package-graph\index.js:60:38
+3 error     at Map.forEach (<anonymous>)
+3 error     at new PackageGraph (C:\Users\surya\OneDrive\Documents\JCWD Purwadhika\Final-Project\jcwd020603\node_modules\@lerna\package-graph\index.js:49:10)
