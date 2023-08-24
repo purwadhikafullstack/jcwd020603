@@ -22,8 +22,6 @@
   ],
   "dependencies": {
     "@chakra-ui/icons": "^2.1.0",
-    "chart.js": "^4.3.3",
-    "opencage-api-client": "^1.0.2",
-    "react-chartjs-2": "^5.2.0"
+    "opencage-api-client": "^1.0.2"
   }
 }

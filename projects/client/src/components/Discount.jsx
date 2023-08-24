@@ -144,7 +144,7 @@ export default function Discount() {
                 {userSelector.branch_id}
               </Flex>
               <Flex color={"grey"} fontWeight={"semibold"}>
-                Cabang ID
+                Nama Cabang
               </Flex>
             </Flex>
           </Flex>
@@ -270,13 +270,6 @@ export default function Discount() {
           />
         </ModalContent>
       </Modal>
-
-      {/* <Modal isOpen={isOpenEdit} onClose={onCloseEdit} isCentered>
-        <ModalOverlay/>
-        <ModalContent maxW={"500px"} w={"100%"} borderRadius={"20px"} >
-          <EditAdminBranch isOpen={isOpenEdit} onClose={onCloseEdit} fetchAll = {fetchAll} dtDis ={dtDis} number={number} />
-        </ModalContent>
-      </Modal> */}
 
       <Modal isOpen={isOpenDel} onClose={onCloseDel} isCentered>
         <ModalOverlay />

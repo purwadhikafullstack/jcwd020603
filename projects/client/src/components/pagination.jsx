@@ -25,8 +25,8 @@ export default function Pagination(props) {
 
   return (
     <>
-      <Center gap={"5px"}>
-        <Flex transform="rotate(180deg)">
+      <Center gap={"5px"} cursor={"pointer"}>
+        <Flex transform="rotate(180deg)" >
           <GrNext
             display={shown.page > 1 ? "flex" : "none"}
             onClick={() => {
@@ -37,7 +37,7 @@ export default function Pagination(props) {
           />
         </Flex>
         {pages.length <= 3 ? (
-          pages.map((val) => <NumberBox val={val} />)
+          pages.map((val, index) => <NumberBox val={val} key={index} />)
         ) : (
           <>
             {shown.page < Math.ceil(pages.length / 3) && (

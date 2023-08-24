@@ -28,12 +28,15 @@ import DiscountAddProductModal from "../components/DiscountAddProductModal";
 import VoucherPage from "../pages/VoucherPage";
 import SalesReportPage from "../pages/SalesReportPage";
 import ChartSalesReportTransactions from "../components/Chart-SalesReport-transaction";
+import SalesReportProductPage from "../pages/SalesReportProductPage";
+import SalesReportUserPage from "../pages/SalesReportUserPage";
+import DashboardAdminPage from "../pages/Dashboard-Admin-Page";
 
 const routes = [
   <Route
     path="/"
     element={
-      <ProtectedPage needLogin={true} guestOnly={true}>
+      <ProtectedPage >
         <LandingPage />
       </ProtectedPage>
     }
@@ -42,8 +45,8 @@ const routes = [
   <Route
     path="/dashboard"
     element={
-      <ProtectedPage needLogin={true} guestOnly={true} adminOnly={true}>
-        <Dashboard />
+      <ProtectedPage >
+        <DashboardAdminPage />
       </ProtectedPage>
     }
   ></Route>,
@@ -51,7 +54,7 @@ const routes = [
   <Route
     path="/login"
     element={
-      <ProtectedPage>
+      <ProtectedPage >
         <LoginPage />
       </ProtectedPage>
     }
@@ -87,7 +90,7 @@ const routes = [
   <Route
     path="/change-pass"
     element={
-      <ProtectedPage needLogin={true}>
+      <ProtectedPage >
         <ChangePass />
       </ProtectedPage>
     }
@@ -96,7 +99,7 @@ const routes = [
   <Route
     path="/product"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage >
         <ProductPage />
       </ProtectedPage>
     }
@@ -105,7 +108,7 @@ const routes = [
   <Route
     path="/sa-product"
     element={
-      <ProtectedPage adminOnly={true}>
+      <ProtectedPage >
         <SuperAdminProductPage />
       </ProtectedPage>
     }
@@ -116,6 +119,33 @@ const routes = [
     element={
       <ProtectedPage>
         <DashboardBranch />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/sales-report"
+    element={
+      <ProtectedPage adminOnly={true} >
+        <SalesReportPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/sales-report-product"
+    element={
+      <ProtectedPage>
+        <SalesReportProductPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/sales-report-user"
+    element={
+      <ProtectedPage>
+        <SalesReportUserPage />
       </ProtectedPage>
     }
   ></Route>,
@@ -141,10 +171,12 @@ const routes = [
   <Route path="/stockhistory" element={<StockHistoryPage />}></Route>,
   <Route path="/sa-category" element={<SuperAdminCategoryPage />}></Route>,
   <Route path="/profile" element={<ProfilePage />}></Route>,
-  <Route path="/ab" element={<DashboardBranch />}></Route>,
-  <Route path="/dis" element={<DiscountPage />}></Route>,
-  <Route path="/vocer" element={<VoucherPage />}></Route>,
+  <Route path="/admin-branch" element={<DashboardBranch />}></Route>,
+  <Route path="/discount" element={<DiscountPage />}></Route>,
+  <Route path="/voucher" element={<VoucherPage />}></Route>,
   <Route path="/sales-report" element={<SalesReportPage />}></Route>,
+  <Route path="/sales-report-product" element={<SalesReportProductPage />}></Route>,
+  <Route path="/sales-report-user" element={<SalesReportUserPage />}></Route>,
   <Route path="/cart" element={<CartPage />}></Route>,
   <Route path="/address" element={<AddressListPage />}></Route>,
   <Route path="/orders/:order_number" element={<OrderDetailPage />}></Route>,

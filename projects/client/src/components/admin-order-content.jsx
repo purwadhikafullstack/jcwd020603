@@ -69,6 +69,7 @@ export default function AdminOrderList() {
   const [countOrder, setCountOrder] = useState(0);
   const [doneOrder, setDoneOrder] = useState(0);
   const [undoneOrder, setUndoneOrder] = useState(0);
+  
   const getAllOrders = async () => {
     const params = { ...filtering };
     if (userSelector.branch_id !== null) {
@@ -93,6 +94,7 @@ export default function AdminOrderList() {
   console.log(allBranchOrder);
   //pagination
   const [pages, setPages] = useState([]);
+
   function pageHandler() {
     const output = [];
     for (let i = 1; i <= totalPages; i++) {

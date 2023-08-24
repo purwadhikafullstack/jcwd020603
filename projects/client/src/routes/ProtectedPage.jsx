@@ -20,31 +20,39 @@ export default function ProtectedPage({
   console.log(adminOnly);
   console.log(userSelector);
   console.log(userSelector.role);
-  console.log(user.role);
+  console.log(!user.role);
 
   useEffect(() => {
+    if (loading) return; // Wait until loading is done
+
     if (guestOnly && user.role) {
-      if (user.role == "USER") {
-        return nav("/");
-      } else {
-        return nav("/dashboard");
-      }
+      return nav("/");
     } else if (needLogin && !user.role) {
       return nav("/");
-    } else if (
-      needLogin &&
-      adminOnly &&
-      (user.role != "ADMIN" || user.role != "SUPER ADMIN")
-    ) {
+    } else if (adminOnly && (!user.role || (user.role !== "ADMIN" && user.role !== "SUPER ADMIN"))) {
       return nav("/");
     }
-  }, []);
+  }, [loading, user.role, guestOnly, needLogin, adminOnly, nav]);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1000);
   }, [userSelector]);
+
+  useEffect(() => {
+    // When loading is done, check the access restrictions
+    if (!loading) {
+      // Handle unauthorized access based on role
+      if (guestOnly && user.role) {
+        nav("/");
+      } else if (needLogin && !user.role) {
+        nav("/");
+      } else if (adminOnly && (!user.role || (user.role !== "ADMIN" && user.role !== "SUPER ADMIN"))) {
+        nav("/");
+      }
+    }
+  }, [loading, user.role, guestOnly, needLogin, adminOnly, nav]);
 
   return (
     <>
