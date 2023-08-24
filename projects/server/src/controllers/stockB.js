@@ -96,10 +96,23 @@ const stockControllerB = {
   },
 
   getAllStock: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+
     try {
       const { nearestBranch } = req.query;
+      const lastId = req.query.lastId || 0;
+      const whereClause = {};
 
-      let stockQueryOptions = {
+      if (nearestBranch) {
+        whereClause.branch_id = nearestBranch;
+      }
+
+      if (lastId > 0) {
+        whereClause.id = { [Op.gt]: lastId };
+      }
+
+      const stocks = await db.Stock.findAll({
+        where: whereClause,
         include: [
           {
             model: db.Product,
@@ -123,20 +136,29 @@ const stockControllerB = {
           {
             model: db.Discount,
             as: "Discount",
-            attributes: ["nominal", "title", "valid_start", "valid_to"],
+            attributes: [
+              "nominal",
+              "title",
+              "valid_start",
+              "valid_to",
+              "photo_discount_url",
+            ],
           },
         ],
-      };
+        limit: 4,
+      });
 
-      if (nearestBranch) {
-        stockQueryOptions.where = {
-          branch_id: nearestBranch,
-        };
-      }
-
-      const stocks = await db.Stock.findAll(stockQueryOptions);
-      res.send(stocks);
+      console.log(whereClause, "test");
+      console.log(whereClause.id, "test2");
+      await trans.commit();
+      return res.status(200).send({
+        message: "OK",
+        result: stocks,
+        lastId: stocks.length ? stocks[stocks.length - 1].id : 0,
+        hasMore: stocks.length >= 4 ? true : false,
+      });
     } catch (err) {
+      await trans.rollback();
       res.status(500).send({
         message: err.message,
       });
@@ -451,10 +473,11 @@ const stockControllerB = {
 
   getAllStockByCategory: async (req, res) => {
     try {
-      const { category_name, branch_id } = req.query;
+      const { category_name, branch_id, discount_id } = req.query;
       const get = await db.Stock.findAll({
         where: {
           branch_id: branch_id,
+          discount_id: discount_id,
         },
         include: [
           {
@@ -561,7 +584,6 @@ const stockControllerB = {
           },
         });
       }
-
       const stockHistory = await db.StockHistory.findAndCountAll({
         where: whereClause,
         include: [

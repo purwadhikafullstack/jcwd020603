@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function ProductPage() {
   const [nearestBranch, setNearestBranch] = useState();
-  console.log("fakkk", nearestBranch);
+  console.log("ini nearestBranch", nearestBranch);
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("nearestBranch"))) {

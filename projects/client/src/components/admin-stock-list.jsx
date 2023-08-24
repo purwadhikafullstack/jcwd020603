@@ -299,7 +299,14 @@ export default function AdminStockList() {
                         </Flex>
                       </Flex>
                     </Th>
-                    <Th textAlign={"center"}>Action</Th>
+                    <Th
+                      textAlign={"center"}
+                      display={
+                        userSelector.role == "SUPER ADMIN" ? "none" : "flex"
+                      }
+                    >
+                      Action
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody
