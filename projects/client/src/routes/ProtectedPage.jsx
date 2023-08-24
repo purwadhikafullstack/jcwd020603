@@ -22,7 +22,7 @@ export default function ProtectedPage({
   console.log(adminOnly);
   console.log(userSelector);
   console.log(userSelector.role);
-  console.log(user.role);
+  console.log(!user.role);
 
   useEffect(() => {
     // If the user is not logged in and needs login, redirect to "/"
