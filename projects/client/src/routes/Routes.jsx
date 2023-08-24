@@ -34,13 +34,20 @@ import SalesReportUserPage from "../pages/SalesReportUserPage";
 import DashboardAdminPage from "../pages/Dashboard-Admin-Page";
 
 const routes = [
-  <Route path="/" element={<LandingPage />}></Route>,
+  <Route
+    path="/"
+    element={
+      <ProtectedPage guestOnly={true} adminOnly={false}>
+        <LandingPage />
+      </ProtectedPage>
+    }
+  ></Route>,
 
   <Route
     path="/dashboard"
     element={
       <ProtectedPage needLogin={true} adminOnly={true}>
-        <Dashboard />
+        <DashboardAdminPage />
       </ProtectedPage>
     }
   ></Route>,

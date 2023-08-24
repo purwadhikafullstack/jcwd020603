@@ -35,7 +35,7 @@ export default function Pagination(props) {
           />
         </Flex>
         {pages.length <= 3 ? (
-          pages.map((val) => (
+          pages.map((val, index) => (
             <NumberBox style={{ cursor: "pointer" }} val={val} key={index} />
           ))
         ) : (
