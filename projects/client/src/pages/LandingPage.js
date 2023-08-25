@@ -258,8 +258,8 @@ export default function LandingPage() {
                 lengthCart={lengthCart}
                 selectedAddress={selectedAddress}
                 nearestBranchSet={nearestBranchSet}
-                nearestBranch={nearestBranch}
                 minDistance={minDistance}
+                nearestBranch={nearestBranch}
               />
             </Flex>
           </Flex>
@@ -277,8 +277,8 @@ export default function LandingPage() {
             lengthCart={lengthCart}
             selectedAddress={selectedAddress}
             nearestBranchSet={nearestBranchSet}
-            nearestBranch={nearestBranch}
             minDistance={minDistance}
+            nearestBranch={nearestBranch}
           />
           <Footer lengthCart={lengthCart} nearestBranchSet={nearestBranchSet} />
         </>
