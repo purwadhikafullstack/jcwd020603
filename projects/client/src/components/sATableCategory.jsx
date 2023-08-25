@@ -47,7 +47,9 @@ export function SATableCategory({
         </Td>
         <Td
           display={userSelector.role == "ADMIN" ? "none" : "flex"}
-          className="SACategoryActionB"
+          justifyContent={"center"}
+          alignItems={"center"}
+          minH={"11vh"}
           isNumeric
         >
           <Stack>

@@ -128,10 +128,10 @@ export default function SuperAdminProductList() {
             flexDir={"column"}
             rowGap={"10px"}
           >
-            <Flex>Product List</Flex>
+            <Flex>Daftar Produk</Flex>
             <Flex justifyContent={"space-between"} w={"100%"} gap={"5px"}>
               <Select
-                placeholder="Categories"
+                placeholder="Kategori"
                 h={"41px"}
                 bg={"white"}
                 onChange={(e) => {
@@ -144,7 +144,7 @@ export default function SuperAdminProductList() {
               </Select>
               <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
-                  placeholder="search"
+                  placeholder="pencarian"
                   bg={"white"}
                   ref={searchRef}
                 ></Input>
@@ -186,37 +186,29 @@ export default function SuperAdminProductList() {
                 >
                   <Tr className="tableHeadMenuG">
                     <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"}>Pic</Th>
+                    <Th textAlign={"center"}>Gambar</Th>
                     <Th>
                       <Flex alignItems="center" id="tableNameB">
-                        Product Name{" "}
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
+                        Nama Produk{" "}
                       </Flex>
                     </Th>
                     <Th className="thProductB">
                       <Flex alignItems="center" id="tableNameB">
-                        <Flex>Category</Flex>
+                        <Flex>Kategori</Flex>
                       </Flex>
                     </Th>
                     <Th className="thProductB">
                       <Flex alignItems="center" id="tableNameB">
-                        Price{" "}
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
+                        Harga{" "}
                       </Flex>
                     </Th>
                     <Th className="thProductB">Desc </Th>
-                    <Th className="thProductB">Weight </Th>
+                    <Th className="thProductB">Berat </Th>
                     <Th
                       textAlign={"center"}
                       display={userSelector.role == "ADMIN" ? "none" : "flex"}
                     >
-                      Action
+                      Tindakan
                     </Th>
                   </Tr>
                 </Thead>

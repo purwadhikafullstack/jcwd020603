@@ -14,9 +14,10 @@ import { useLocation } from "react-router-dom";
 import SidebarMini from "../components/sidebar-mini";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import Promo from "../components/promo";
 import ModalNearestBranch from "../components/modal-nearest-branch";
 
-export default function ProductPage() {
+export default function PromoPage() {
   const [nearestBranch, setNearestBranch] = useState();
   console.log("ini nearestBranch", nearestBranch);
 
@@ -29,7 +30,6 @@ export default function ProductPage() {
   const [nearestBranchSet, setNearestBranchSet] = useState(false);
   const [lengthCart, setLengthCart] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   return (
     <>
       {windowWidth > 850 ? (
@@ -49,13 +49,13 @@ export default function ProductPage() {
               )}
             </Flex>
             <Flex flexDir={"column"}>
-              <Product nearestBranch={nearestBranch} />
+              <Promo nearestBranch={nearestBranch} />
             </Flex>
           </Flex>
         </Center>
       ) : (
         <>
-          <Product nearestBranch={nearestBranch} />
+          <Promo nearestBranch={nearestBranch} />
           <Footer lengthCart={lengthCart} nearestBranchSet={nearestBranchSet} />
         </>
       )}

@@ -22,7 +22,7 @@ app.use(cors());
 app.use(express.json());
 // app.use(verify);
 // const { verify } = require("crypto");
-// db.sequelize.sync({ alter: true });
+db.sequelize.sync({ alter: true });
 
 //#region API ROUTES
 
