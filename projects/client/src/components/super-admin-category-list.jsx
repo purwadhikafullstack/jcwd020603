@@ -122,7 +122,7 @@ export default function SuperAdminCategoryList() {
             <Flex maxW={"400px"} w={"100%"} gap={"10px"}>
               <InputGroup>
                 <Input
-                  placeholder="search"
+                  placeholder="pencarian"
                   bg={"white"}
                   ref={searchRef}
                 ></Input>
@@ -174,17 +174,19 @@ export default function SuperAdminCategoryList() {
                 >
                   <Tr className="tableHeadMenuG">
                     <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"}>Pic</Th>
+                    <Th textAlign={"center"}>Gambar</Th>
                     <Th>
                       <Flex alignItems="center" id="tableNameB">
-                        Category Name{" "}
+                        Kategori{" "}
                       </Flex>
                     </Th>
                     <Th
+                      alignItems="center"
+                      id="tableNameB"
                       textAlign={"center"}
                       display={userSelector.role == "ADMIN" ? "none" : "flex"}
                     >
-                      Action
+                      Tindakan
                     </Th>
                   </Tr>
                 </Thead>

@@ -6,7 +6,7 @@ export function CardCarousel(props) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/product`, {
+    navigate(`/promo`, {
       state: {
         discount_id: props.discount_id,
         nearestBranch: props.nearestBranch,

@@ -45,7 +45,7 @@ export default function Category({
         minDistance > 65
           ? `/stock?lastId=${lastId}`
           : `/stock?nearestBranch=${nearestBranch}&&lastId=${lastId}`;
-      console.log("endpoint", endpoint);
+      // console.log("endpoint", endpoint);
       const get = await api().get(endpoint);
       console.log("iniiiii", get.data.result);
       if (lastId) {

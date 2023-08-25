@@ -36,7 +36,13 @@ const stockControllerB = {
           {
             model: db.Discount,
             as: "Discount",
-            attributes: ["nominal", "title", "valid_start", "valid_to"],
+            attributes: [
+              "nominal",
+              "title",
+              "valid_start",
+              "valid_to",
+              "photo_discount_url",
+            ],
           },
         ],
       });
@@ -233,7 +239,13 @@ const stockControllerB = {
           {
             model: db.Discount,
             as: "Discount",
-            attributes: ["nominal", "title", "valid_start", "valid_to"],
+            attributes: [
+              "nominal",
+              "title",
+              "valid_start",
+              "valid_to",
+              "photo_discount_url",
+            ],
           },
         ],
         where: whereClause,
@@ -242,7 +254,7 @@ const stockControllerB = {
         offset: 6 * page,
       });
 
-      await trans.commit(); // Move the commit after successful operation
+      await trans.commit();
       return res.status(200).send({
         message: "OK",
         result: stockAdmin.rows,
@@ -337,7 +349,7 @@ const stockControllerB = {
         status: "INCREMENT",
         status_quantity: quantity_stock,
         quantity_after: quantity_stock,
-        feature: "ADDED BY ADMIN BRANCH",
+        feature: "Ditambahkan Oleh Admin",
       };
 
       const stock = await db.Stock.create(
@@ -381,7 +393,7 @@ const stockControllerB = {
         status,
         status_quantity,
         quantity_after: quantity_stock,
-        feature: "UPDATED BY ADMIN BRANCH",
+        feature: "Disunting Oleh Admin",
       };
 
       const stok = await db.Stock.findOne({
@@ -437,7 +449,7 @@ const stockControllerB = {
         status: "DECREMENT",
         status_quantity: quantity_before,
         quantity_after: 0,
-        feature: "DELETED BY ADMIN BRANCH",
+        feature: "Dihapus Oleh Admin",
       };
 
       const stok = await db.Stock.findOne({
@@ -473,11 +485,10 @@ const stockControllerB = {
 
   getAllStockByCategory: async (req, res) => {
     try {
-      const { category_name, branch_id, discount_id } = req.query;
+      const { category_name, branch_id } = req.query;
       const get = await db.Stock.findAll({
         where: {
           branch_id: branch_id,
-          discount_id: discount_id,
         },
         include: [
           {
@@ -634,6 +645,68 @@ const stockControllerB = {
       });
     } catch (err) {
       await trans.rollback(); // Rollback only if an error occurs
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+  getStockDiscount: async (req, res) => {
+    const trans = await db.sequelize.transaction();
+    try {
+      let whereClause = {
+        [Op.and]: [],
+      };
+      if (req.query.branch_id) {
+        whereClause[Op.and].push({
+          branch_id: req.query.branch_id,
+        });
+      }
+      if (req.query.discount_id) {
+        whereClause[Op.and].push({
+          discount_id: req.query.discount_id,
+        });
+      }
+
+      const stockDiscount = await db.Stock.findAndCountAll({
+        include: [
+          {
+            model: db.Product,
+            as: "Product",
+            attributes: [
+              "product_name",
+              "price",
+              "photo_product_url",
+              "category_id",
+              "desc",
+              "weight",
+            ],
+            include: [
+              {
+                model: db.Category,
+                as: "Category",
+                attributes: ["category_name"],
+              },
+            ],
+          },
+          {
+            model: db.Discount,
+            as: "Discount",
+            attributes: [
+              "nominal",
+              "title",
+              "valid_start",
+              "valid_to",
+              "photo_discount_url",
+            ],
+          },
+        ],
+        where: whereClause,
+      });
+
+      await trans.commit();
+      return res.send(stockDiscount.rows);
+    } catch (err) {
+      await trans.rollback();
       res.status(500).send({
         message: err.message,
       });

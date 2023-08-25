@@ -142,7 +142,7 @@ export default function AdminStockList() {
             flexDir={"column"}
             rowGap={"10px"}
           >
-            <Flex>Stock List</Flex>
+            <Flex>Daftar Stok</Flex>
             <Flex justifyContent={"space-between"} w={"100%"} gap={"5px"}>
               <Input
                 placeholder="Pilih Tanggal"
@@ -169,7 +169,7 @@ export default function AdminStockList() {
               ></Input>
               <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
-                  placeholder="search"
+                  placeholder="pencarian"
                   bg={"white"}
                   ref={searchRef}
                 ></Input>
@@ -198,7 +198,7 @@ export default function AdminStockList() {
             </Flex>
             <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
               <Select
-                placeholder="Categories"
+                placeholder="Kategori"
                 h={"41px"}
                 bg={"white"}
                 onChange={(e) => {
@@ -210,7 +210,7 @@ export default function AdminStockList() {
                 })}
               </Select>
               <Select
-                placeholder="Branches"
+                placeholder="Cabang"
                 bg={"white"}
                 display={userSelector.role == "ADMIN" ? "none" : "flex"}
                 onChange={(e) => {
@@ -259,28 +259,30 @@ export default function AdminStockList() {
                 >
                   <Tr className="tableHeadMenuG">
                     <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"}>Pic</Th>
+                    <Th textAlign={"center"}>Gambar</Th>
                     <Th>
                       <Flex alignItems="center" id="tableNameB">
-                        Product Name{" "}
+                        Nama Produk{" "}
                       </Flex>
                     </Th>
                     <Th className="thProductB">
                       <Flex alignItems="center" id="tableNameB">
-                        <Flex>Category</Flex>
+                        <Flex>Kategori</Flex>
                       </Flex>
                     </Th>
                     <Th className="thProductB">
                       <Flex alignItems="center" id="tableNameB">
-                        Price{" "}
+                        Harga{" "}
                       </Flex>
                     </Th>
-                    <Th className="thProductB">Desc </Th>
-                    <Th className="thProductB">Weight </Th>
+                    <Th textAlign={"center"} className="thProductB">
+                      Keterangan{" "}
+                    </Th>
+                    <Th className="thProductB">Berat </Th>
                     <Th className="thProductB">Qty </Th>
                     <Th className="thProductB">
                       <Flex alignItems="center" id="tableNameB">
-                        Date{" "}
+                        Tanggal{" "}
                         <Flex flexDirection="column">
                           <Icon
                             id="ascendingB"
@@ -305,7 +307,7 @@ export default function AdminStockList() {
                         userSelector.role == "SUPER ADMIN" ? "none" : "flex"
                       }
                     >
-                      Action
+                      Tindakan
                     </Th>
                   </Tr>
                 </Thead>

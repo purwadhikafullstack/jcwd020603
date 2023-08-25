@@ -29,6 +29,7 @@ import VoucherPage from "../pages/VoucherPage";
 import InvoicePage from "../pages/InvoicePage";
 import SalesReportPage from "../pages/SalesReportPage";
 import ChartSalesReportTransactions from "../components/Chart-SalesReport-transaction";
+import PromoPage from "../pages/PromoPage";
 
 const routes = [
   <Route path="/" element={<LandingPage />}></Route>,
@@ -108,6 +109,7 @@ const routes = [
   ></Route>,
 
   <Route path="/product" element={<ProductPage />}></Route>,
+  <Route path="/promo" element={<PromoPage />}></Route>,
 
   <Route
     path="/sa-product"
