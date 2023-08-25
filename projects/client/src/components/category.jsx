@@ -11,6 +11,7 @@ import { api } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { async } from "q";
 
 export default function Category({
   lengthCart,
@@ -19,7 +20,7 @@ export default function Category({
   minDistance,
   nearestBranch,
 }) {
-  console.log(nearestBranchSet);
+  console.log("cat", nearestBranch);
   const [categories, setCategories] = useState([]);
   const [discounts, setDiscounts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");

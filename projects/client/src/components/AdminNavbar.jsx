@@ -11,7 +11,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { HiMenu, HiOutlineLogout } from "react-icons/hi";
-import AdminSidebar from "./AdminSidebar";
+import AdminSidebar from "./admin-sidebar"
 import "../css/indexG.css";
 import { useSelector } from "react-redux";
 import ModalLogoutAdmin from "./modal-logout-admin";

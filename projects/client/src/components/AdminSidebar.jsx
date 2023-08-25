@@ -10,11 +10,11 @@ import {
 import logo from "../assets/SVG/3.svg";
 import { BiHome, BiSolidOffer } from "react-icons/bi";
 import { RiShoppingBag3Fill } from "react-icons/ri";
+import { MdDashboard } from "react-icons/md";
 import { MdInventory } from "react-icons/md";
 import { BsDot, BsFillPersonBadgeFill } from "react-icons/bs";
 import { TbReportAnalytics } from "react-icons/tb";
 import { useState } from "react";
-import "../css/indexG.css";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminSidebar() {
@@ -26,12 +26,34 @@ export default function AdminSidebar() {
   };
   //memunculkan sub-menu
   const [isAppear, setIsAppear] = useState(false);
+  const [isAppearDiscount, setIsAppearDiscount] = useState(false);
+  const [isAppearReport, setIsAppearReport] = useState(false);
+
   return (
     <>
       <Flex className="flexTerluarG">
         <Box w={"80%"} h={"123px"} padding={"30px 10px"}>
           <Image src={logo} />
         </Box>
+        <Flex w={"100%"} gap={"20px"}>
+          <Flex
+            className="adminMiniFlexG"
+            bg={Clicked == "dashboard" ? "#FFAE0D" : "white"}
+          ></Flex>
+          <Flex
+            id="dashboard"
+            className="adminMenuStyleG"
+            onClick={(e) => {
+              handleClick(e)
+              nav("/dashboard")
+            }}
+            bg={Clicked == "dashboard" ? "#FFF4DD" : "white"}
+            color={Clicked == "dashboard" ? "#FFAE0D" : "gray"}
+          >
+            <Icon as={MdDashboard} fontSize={"28px"} />
+            Dashboard
+          </Flex>
+        </Flex>
         <Flex w={"100%"} gap={"20px"}>
           <Flex
             className="adminMiniFlexG"
@@ -125,8 +147,8 @@ export default function AdminSidebar() {
             id="karyawan"
             className="adminMenuStyleG"
             onClick={(e) => {
-              handleClick(e);
-              nav("/ab");
+              handleClick(e)
+              nav("/admin-branch")
             }}
             bg={Clicked == "karyawan" ? "#FFF4DD" : "white"}
             color={Clicked == "karyawan" ? "#FFAE0D" : "gray"}
@@ -144,8 +166,8 @@ export default function AdminSidebar() {
             id="diskon"
             className="adminMenuStyleG"
             onClick={(e) => {
-              handleClick(e);
-              nav("/dis");
+              handleClick(e)
+              setIsAppearDiscount(!isAppearDiscount)
             }}
             bg={Clicked == "diskon" ? "#FFF4DD" : "white"}
             color={Clicked == "diskon" ? "#FFAE0D" : "gray"}
@@ -154,6 +176,34 @@ export default function AdminSidebar() {
             Diskon
           </Flex>
         </Flex>
+        {isAppearDiscount ? (
+          <>
+            <Flex className="adminSubMenuG">
+              <Flex
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => {
+                  nav("/discount");
+                }}
+              >
+                <Icon as={BsDot} fontSize={"22px"} />
+                Pengaturan Diskon
+              </Flex>
+              <Flex
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => {
+                  nav("/voucher");
+                }}
+              >
+                <Icon as={BsDot} fontSize={"22px"} />
+                Pengaturan Voucher
+              </Flex>
+            </Flex>
+          </>
+        ) : null}
+
+
         <Flex w={"100%"} gap={"20px"}>
           <Flex
             className="adminMiniFlexG"
@@ -162,7 +212,10 @@ export default function AdminSidebar() {
           <Flex
             id="laporan"
             className="adminMenuStyleG"
-            onClick={(e) => handleClick(e)}
+            onClick={(e) => {
+              handleClick(e)
+              setIsAppearReport(!isAppearReport)
+            }}
             bg={Clicked == "laporan" ? "#FFF4DD" : "white"}
             color={Clicked == "laporan" ? "#FFAE0D" : "gray"}
           >
@@ -170,6 +223,42 @@ export default function AdminSidebar() {
             Laporan
           </Flex>
         </Flex>
+        {isAppearReport ? (
+          <>
+            <Flex className="adminSubMenuG">
+              <Flex
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => {
+                  nav("/sales-report");
+                }}
+              >
+                <Icon as={BsDot} fontSize={"22px"} />
+                Laporan Transaksi
+              </Flex>
+              <Flex
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => {
+                  nav("/sales-report-product");
+                }}
+              >
+                <Icon as={BsDot} fontSize={"22px"} />
+                Laporan Produk
+              </Flex>
+              <Flex
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => {
+                  nav("/sales-report-user");
+                }}
+              >
+                <Icon as={BsDot} fontSize={"22px"} />
+                Laporan Pembeli
+              </Flex>
+            </Flex>
+          </>
+        ) : null}
       </Flex>
     </>
   );

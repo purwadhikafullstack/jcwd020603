@@ -30,15 +30,25 @@ import InvoicePage from "../pages/InvoicePage";
 import SalesReportPage from "../pages/SalesReportPage";
 import ChartSalesReportTransactions from "../components/Chart-SalesReport-transaction";
 import PromoPage from "../pages/PromoPage";
+import SalesReportProductPage from "../pages/SalesReportProductPage";
+import SalesReportUserPage from "../pages/SalesReportUserPage";
+import DashboardAdminPage from "../pages/Dashboard-Admin-Page";
 
 const routes = [
-  <Route path="/" element={<LandingPage />}></Route>,
+  <Route
+    path="/"
+    element={
+      <ProtectedPage guestOnly={true} adminOnly={false}>
+        <LandingPage />
+      </ProtectedPage>
+    }
+  ></Route>,
 
   <Route
     path="/dashboard"
     element={
       <ProtectedPage needLogin={true} adminOnly={true}>
-        <Dashboard />
+        <DashboardAdminPage />
       </ProtectedPage>
     }
   ></Route>,
@@ -97,6 +107,32 @@ const routes = [
     }
   ></Route>,
 
+  <Route
+    path="/sales-report"
+    element={
+      <ProtectedPage adminOnly={true} needLogin={true}>
+        <SalesReportPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/sales-report-product"
+    element={
+      <ProtectedPage adminOnly={true} needLogin={true}>
+        <SalesReportProductPage />
+      </ProtectedPage>
+    }
+  ></Route>,
+
+  <Route
+    path="/sales-report-user"
+    element={
+      <ProtectedPage adminOnly={true} needLogin={true}>
+        <SalesReportUserPage />
+      </ProtectedPage>
+    }
+  ></Route>,
   <Route path="/*" element={<NotFound />}></Route>,
 
   <Route

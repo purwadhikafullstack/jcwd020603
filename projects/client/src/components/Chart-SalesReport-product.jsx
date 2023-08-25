@@ -1,31 +1,33 @@
 import "../css/indexR.css"
-import { Bar, Doughnut, Line } from "react-chartjs-2";
+import { Bar, Line, Pie } from "react-chartjs-2";
 import { Chart, registerables } from 'chart.js';
 import { Flex } from "@chakra-ui/layout";
 Chart.register(...registerables);
 
-export default function ChartSalesReportTransactions(props) {
+export default function ChartSalesReportProduct(props) {
 const windowWidth = window.innerWidth
    // chart awal ===================================================================================
 const prepareChartData = () => {
     const dateCountMap = {};
     const dateRevenueMap = {};
   
-    props.dtSalesReport.forEach((item) => {
-      const date = item.date.split("T")[0];
-      if (dateCountMap[date]) {
-        dateCountMap[date]++;
-        dateRevenueMap[date] += item.total;
+    props.dtSumQtyProd.forEach((item) => {
+      const name = item.Stock.Product.product_name;
+      if (dateCountMap[name]) {
+        dateCountMap[name]++;
+        dateRevenueMap[name] += item.total_qty;
       } else {
-        dateCountMap[date] = 1;
-        dateRevenueMap[date] = item.total;
+        dateCountMap[name] = 1;
+        dateRevenueMap[name] = item.total_qty;
       }
     });
   
+    console.log(dateCountMap);
+    console.log(dateRevenueMap);
     const dates = Object.keys(dateCountMap);
     const revenues = Object.values(dateRevenueMap);
     const labels = dates.map(date =>
-       `${date} (${dateCountMap[date]} transaksi)`);
+       `${date} (${dateRevenueMap[date]} Terjual)`);
   
     return {
       labels,
@@ -39,9 +41,9 @@ const prepareChartData = () => {
       labels: chartData.labels,
       datasets: [
         {
-          label: "Pendapatan",
+          label: "Penjualan",
           data: chartData.revenues,
-          backgroundColor: "rgba(115, 214, 115  )", // Warna latar belakang
+          backgroundColor: "rgba(115, 214, 115)", // Warna latar belakang
           borderColor: "rgb(115, 214, 115)", // Warna garis
         },
       ],
