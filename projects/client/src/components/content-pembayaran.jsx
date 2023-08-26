@@ -33,12 +33,17 @@ export default function ContentPembayaran() {
   const [orderValue, setOrderValue] = useState([]);
   const [orderDetVal, setOrderDetVal] = useState([]);
   const getLatestOrder = async () => {
-    const order = await api().get("/order/latest", {
-      params: { order_number: order_number.order_number },
-    });
-    setOrderValue(order.data.result);
-    console.log(order.data.result);
-
+    if (order_number) {
+      const order = await api().get("/order/specific", {
+        params: { order_number: order_number.order_number },
+      });
+      setOrderValue(order.data.result);
+      console.log(order.data.result);
+    } else {
+      const order = await api().get("/order/latest");
+      setOrderValue(order.data.result);
+      console.log(order.data.result);
+    }
     const orderDetail = await api().get("/order-detail/", {
       params: { id: order.data.result[0]?.id },
     });
@@ -48,10 +53,10 @@ export default function ContentPembayaran() {
   useEffect(() => {
     getLatestOrder();
   }, []);
+  console.log("ini orval", orderValue);
 
   // menyimpan shipping_cost
-  const [shippingCost, setShippingCost] = useState(0);
-  console.log(orderValue[0]?.shipping_cost);
+  const [shippingCost, setShippingCost] = useState({});
   useEffect(() => {
     if (orderValue.length > 0) {
       const parsedShippingCost = JSON.parse(orderValue[0]?.shipping_cost);
@@ -59,9 +64,9 @@ export default function ContentPembayaran() {
     }
   }, [orderValue]);
   //count total harga belanja
-  console.log("order", orderValue);
+
   const calculateSubtotal = () => {
-    if (orderValue.length > 0 && shippingCost !== 0) {
+    if (orderValue.length > 0 && shippingCost !== {}) {
       return (
         orderValue[0]?.total -
         (shippingCost?.cost[0]?.value - orderValue[0]?.discount_voucher)
@@ -233,7 +238,7 @@ export default function ContentPembayaran() {
               <Flex>Biaya Pengiriman</Flex>
               <Flex>
                 Rp{" "}
-                {shippingCost !== 0
+                {shippingCost !== {}
                   ? shippingCost.cost[0].value.toLocaleString("id-ID")
                   : 0}
               </Flex>

@@ -29,7 +29,7 @@ export default function PembayaranProduk(props) {
           >
             <Flex alignItems={"center"}>
               <Flex fontWeight={"500"} fontSize={"14px"}>
-                Rp {props.current_price?.toLocaleString("id-ID")} X{" "}
+                Rp {Number(props.current_price).toLocaleString("id-ID")} X{" "}
                 {props.quantity}
               </Flex>
             </Flex>
