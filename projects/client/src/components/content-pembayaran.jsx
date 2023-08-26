@@ -26,24 +26,19 @@ import "moment/locale/id";
 
 export default function ContentPembayaran() {
   moment.locale("id");
-  const toast = useToast();
   const nav = useNavigate();
   const order_number = useParams();
+  console.log(order_number);
   // get order
   const [orderValue, setOrderValue] = useState([]);
   const [orderDetVal, setOrderDetVal] = useState([]);
   const getLatestOrder = async () => {
-    if (order_number) {
-      const order = await api().get("/order/specific", {
-        params: { order_number: order_number.order_number },
-      });
-      setOrderValue(order.data.result);
-      console.log(order.data.result);
-    } else {
-      const order = await api().get("/order/latest");
-      setOrderValue(order.data.result);
-      console.log(order.data.result);
-    }
+    const order = await api().get("/order/latest", {
+      params: { order_number: order_number.order_number },
+    });
+    setOrderValue(order.data.result);
+    console.log(order.data.result);
+
     const orderDetail = await api().get("/order-detail/", {
       params: { id: order.data.result[0]?.id },
     });
