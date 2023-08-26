@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module.exports = (sequelize, Sequelize) => {
   const OrderDetail = sequelize.define("OrderDetails", {
     quantity: Sequelize.INTEGER,
@@ -5,3 +6,12 @@ module.exports = (sequelize, Sequelize) => {
   });
   return OrderDetail;
 };
+=======
+module.exports = (sequelize, Sequelize) => {
+  const OrderDetail = sequelize.define("OrderDetails", {
+    quantity: Sequelize.INTEGER,
+    current_price: Sequelize.STRING,
+  });
+  return OrderDetail;
+};
+>>>>>>> develop

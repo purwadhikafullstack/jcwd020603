@@ -61,9 +61,11 @@
 
   @media (max-width: 600px) {
     font-size: 60%;
+    width: 110px;
   }
   @media (min-width: 601px) {
     font-size: 85%;
+    width: 180px;
   }
 }
 

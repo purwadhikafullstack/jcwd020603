@@ -15,6 +15,7 @@ export default function Product({ nearestBranch }) {
   const [stocks, setStocks] = useState([]);
 
   const category_name = location.state?.category_name;
+  const discount_id = location.state?.discount_id;
 
   const [productSearchResults, setProductSearchResults] = useState([]);
 
@@ -55,7 +56,7 @@ export default function Product({ nearestBranch }) {
 
   useEffect(() => {
     getCategory();
-  }, [category_name]);
+  }, [category_name, discount_id]);
 
   useEffect(() => {
     api()
