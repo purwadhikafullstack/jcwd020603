@@ -11,7 +11,7 @@ export const useFetchCart = () => {
         params: { branch_id: nearestBranch },
       });
       setCountAll(res.data.total);
-      console.log("tot", res.data.total);
+      // console.log("tot", res.data.total);
     } catch (err) {
       console.log(err);
     }

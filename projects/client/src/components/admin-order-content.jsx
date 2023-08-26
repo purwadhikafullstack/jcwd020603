@@ -1,16 +1,11 @@
 import {
   Box,
   Center,
-  Drawer,
-  DrawerContent,
-  DrawerOverlay,
   Flex,
   Grid,
   Icon,
   Input,
   InputGroup,
-  InputLeftElement,
-  InputRightAddon,
   InputRightElement,
   Select,
   Table,
@@ -24,19 +19,16 @@ import {
 } from "@chakra-ui/react";
 import { RiShoppingBag3Fill } from "react-icons/ri";
 import { BsFillBoxSeamFill, BsFillBagCheckFill } from "react-icons/bs";
-import { SlOptionsVertical } from "react-icons/sl";
-import AdminNavbarOrder from "./admin-navbar-order";
 import { BiSearch, BiSolidChevronDown, BiSolidChevronUp } from "react-icons/bi";
-import AdminSidebar from "./admin-sidebar";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../api/api";
 import { MdArrowBackIosNew } from "react-icons/md";
 import moment from "moment";
 import Pagination from "./pagination";
-import { color } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AdminNavbar from "./AdminNavbar";
+import AdminOrderCard from "./admin-order-card";
 
 export default function AdminOrderList() {
   const windowWidth = window.innerWidth;
@@ -73,7 +65,7 @@ export default function AdminOrderList() {
   const [countOrder, setCountOrder] = useState(0);
   const [doneOrder, setDoneOrder] = useState(0);
   const [undoneOrder, setUndoneOrder] = useState(0);
-  
+
   const getAllOrders = async () => {
     const params = { ...filtering };
     if (userSelector.branch_id !== null) {
@@ -217,8 +209,8 @@ export default function AdminOrderList() {
           flexDir={"column"}
           rowGap={"10px"}
         >
-          <Flex justifyContent={"space-between"} w={"100%"}>
-            <Flex>List Pesanan</Flex>
+          <Flex justifyContent={"space-between"} w={"100%"} gap={"20px"}>
+            <Flex minW={"140px"}>List Pesanan</Flex>
             <InputGroup maxW={"300px"} w={"100%"}>
               <Input placeholder="search" bg={"white"} ref={searchRef}></Input>
               <InputRightElement
@@ -236,54 +228,58 @@ export default function AdminOrderList() {
               />
             </InputGroup>
           </Flex>
-          <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
-            <Input
-              placeholder="Pilih Tanggal"
-              bg={"white"}
-              type="date"
-              value={filtering.time}
-              maxW={"200px"}
-              onChange={(e) => {
-                setFiltering({ ...filtering, time: e.target.value });
-                setShown({ page: 1 });
-              }}
-            ></Input>
-            -
-            <Input
-              placeholder="Pilih Tanggal"
-              bg={"white"}
-              type="date"
-              maxW={"200px"}
-              value={filtering.time2}
-              onChange={(e) => {
-                setFiltering({ ...filtering, time2: e.target.value });
-                setShown({ page: 1 });
-              }}
-            ></Input>
-            <Select
-              placeholder="Semua Cabang"
-              bg={"white"}
-              display={userSelector.role == "ADMIN" ? "none" : "flex"}
-              onChange={(e) => {
-                setFiltering({ ...filtering, branch_id: e.target.value });
-              }}
-            >
-              {selector.map((val) => {
-                return <option value={val.id}>{val.branch_name}</option>;
-              })}
-            </Select>
-            <Select
-              placeholder="Pilih Status"
-              bg={"white"}
-              fontSize={"14px"}
-              onChange={(e) =>
-                setFiltering({ ...filtering, status: e.target.value })
-              }
-            >
-              {SelectorStatus.map((val) => {
-                return <option value={val.value}>{val.value}</option>;
-              })}
-            </Select>
+          <Flex className="adminOrderFiltering">
+            <Flex gap={"10px"} w={"100%"}>
+              <Input
+                placeholder="Pilih Tanggal"
+                bg={"white"}
+                type="date"
+                value={filtering.time}
+                maxW={"200px"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, time: e.target.value });
+                  setShown({ page: 1 });
+                }}
+              ></Input>
+              -
+              <Input
+                placeholder="Pilih Tanggal"
+                bg={"white"}
+                type="date"
+                maxW={"200px"}
+                value={filtering.time2}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, time2: e.target.value });
+                  setShown({ page: 1 });
+                }}
+              ></Input>
+            </Flex>
+            <Flex gap={"10px"} w={"100%"}>
+              <Select
+                placeholder="Semua Cabang"
+                bg={"white"}
+                display={userSelector.role == "ADMIN" ? "none" : "flex"}
+                onChange={(e) => {
+                  setFiltering({ ...filtering, branch_id: e.target.value });
+                }}
+              >
+                {selector.map((val) => {
+                  return <option value={val.id}>{val.branch_name}</option>;
+                })}
+              </Select>
+              <Select
+                placeholder="Pilih Status"
+                bg={"white"}
+                fontSize={"14px"}
+                onChange={(e) =>
+                  setFiltering({ ...filtering, status: e.target.value })
+                }
+              >
+                {SelectorStatus.map((val) => {
+                  return <option value={val.value}>{val.value}</option>;
+                })}
+              </Select>
+            </Flex>
           </Flex>
           <Flex
             maxW={"65px"}
@@ -305,7 +301,11 @@ export default function AdminOrderList() {
             Reset Filter
           </Flex>
         </Flex>
-        <TableContainer id="containerTableB" justifyContent={"space-between"}>
+        <TableContainer
+          id="containerTableB"
+          justifyContent={"space-between"}
+          display={windowWidth >= 600 ? "flex" : "none"}
+        >
           <Table variant="simple">
             <Thead
               className="tableHeadG"
@@ -376,6 +376,16 @@ export default function AdminOrderList() {
             </Tbody>
           </Table>
         </TableContainer>
+        <Flex
+          display={windowWidth >= 600 ? "none" : "flex"}
+          flexDir={"column"}
+          rowGap={"10px"}
+        >
+          {allBranchOrder.map((val) => {
+            return <AdminOrderCard val={val} />;
+          })}
+        </Flex>
+
         <Flex justifyContent={"end"}>
           <Pagination
             shown={shown}

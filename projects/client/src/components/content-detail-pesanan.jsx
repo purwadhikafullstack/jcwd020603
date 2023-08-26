@@ -26,25 +26,17 @@ export default function ContentDetailPesanan() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const order_number = useParams();
   // get order
-  const [orderValue, setOrderValue] = useState();
   const [orderDetVal, setOrderDetVal] = useState([]);
-  const [peraturan, setPeraturan] = useState(null);
+  const [peraturan, setPeraturan] = useState({});
   const getLatestOrder = async () => {
     let order;
-    if (order_number) {
-      console.log(order_number);
-      order = await api().get("/order/specific", {
-        params: { order_number: order_number.order_number },
-      });
-      setPeraturan(order.data.result);
-      setOrderValue(order.data.result);
-      console.log("ORDER VALUE", order.data.result);
-    } else {
-      order = await api().get("/order/latest");
-      setPeraturan(order.data.result[0]);
-      setOrderValue(order.data.result);
-      console.log(order.data.result);
-    }
+    console.log(order_number);
+    order = await api().get("/order/specific", {
+      params: { order_number: order_number.order_number },
+    });
+    setPeraturan(order.data.result);
+    console.log("ORDER VALUE", order.data.result);
+
     console.log(order.data.result.id);
     const orderDetail = await api().get("/order-detail/", {
       params: { id: order.data.result.id || order.data.result[0].id },
@@ -54,11 +46,29 @@ export default function ContentDetailPesanan() {
   };
   useEffect(() => {
     getLatestOrder();
-  }, []);
+  }, [order_number]);
+  // menyimpan shipping_cost
+  const [shippingCost, setShippingCost] = useState({});
+  const [calculateSubtotal, setCalculateSubtotal] = useState(0);
+  console.log("ini val peraturan", peraturan);
+  useEffect(() => {
+    if (Object.keys(peraturan).length > 0) {
+      const parsedShippingCost = JSON.parse(peraturan?.shipping_cost);
+      setShippingCost(parsedShippingCost);
+    }
+  }, [peraturan]);
   //count total harga belanja
-  const subtotal =
-    peraturan?.total - (peraturan?.shipping_cost - peraturan?.discount_voucher);
-
+  useEffect(() => {
+    if (Object.keys(peraturan).length > 0 && shippingCost != {}) {
+      return setCalculateSubtotal(
+        peraturan?.total -
+          (shippingCost?.cost[0]?.value - peraturan?.discount_voucher)
+      );
+    } else {
+      return setCalculateSubtotal(0);
+    }
+  }, [shippingCost]);
+  console.log(calculateSubtotal);
   return (
     <>
       <Box>
@@ -155,11 +165,22 @@ export default function ContentDetailPesanan() {
               fontWeight={"500"}
             >
               <Flex>Total Belanja</Flex>
-              <Flex> Rp {subtotal.toLocaleString("id-ID")}</Flex>
+              <Flex> Rp {calculateSubtotal.toLocaleString("id-ID")}</Flex>
             </Flex>
           </Flex>
-          {peraturan && <DetailPengiriman peraturan={peraturan} />}
-          {peraturan && <DetailPembayaran peraturan={peraturan} />}
+          {peraturan && shippingCost && (
+            <DetailPengiriman
+              peraturan={peraturan}
+              shippingCost={shippingCost}
+            />
+          )}
+          {peraturan && shippingCost && calculateSubtotal && (
+            <DetailPembayaran
+              peraturan={peraturan}
+              shippingCost={shippingCost}
+              calculateSubtotal={calculateSubtotal}
+            />
+          )}
         </Flex>
       </Center>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>

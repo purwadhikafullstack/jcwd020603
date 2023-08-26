@@ -58,6 +58,7 @@ export default function KeranjangList(props) {
         stock_id: stock_id,
       },
     });
+    props.getAll();
     await fetch();
   };
 
@@ -122,16 +123,16 @@ export default function KeranjangList(props) {
             justifyContent={"space-between"}
             alignItems={"center"}
           >
-            {!props?.discounted_price || props?.discounted_price ? (
+            {!props?.discounted_price ? (
               <Flex alignItems={"center"}>
                 <Flex fontSize={"12px"} fontWeight={"700"} color={"#F25F0C"}>
-                  Rp. {Product.price.toLocaleString("id-ID")}
+                  Rp. {Product?.price?.toLocaleString("id-ID")}
                 </Flex>
               </Flex>
             ) : Discount?.nominal == 50 ? (
               <Flex alignItems={"center"} gap={"10px"}>
                 <Flex fontSize={"12px"} fontWeight={"700"} color={"#F25F0C"}>
-                  Rp {(props.discounted_price * 2).toLocaleString("id-ID")}
+                  Rp {(props?.discounted_price * 2).toLocaleString("id-ID")}
                 </Flex>
                 <Flex>
                   <Center

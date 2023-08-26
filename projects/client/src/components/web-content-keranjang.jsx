@@ -71,8 +71,9 @@ export default function WebKeranjang(props) {
   //get biaya pengiriman dari rajaOngkir
   const [courier, setCourier] = useState("");
   const [shipCost, setShipCost] = useState([]);
+  const [courierName, setCourierName] = useState("");
+  console.log(courierName);
   const [isLoading, setIsLoading] = useState(false);
-  console.log(courier);
   const inputCost = {
     origin: prodCart[0]?.Stock.Branch?.city_id,
     destination: selectedAddress.city_id,
@@ -86,7 +87,7 @@ export default function WebKeranjang(props) {
         .post("/cart/cost", inputCost)
         .then((res) => {
           setShipCost(res.data.data[0].costs);
-          console.log(res.data.data[0].costs);
+          setCourierName(res.data.data[0].name);
           setIsLoading(false);
         });
     } catch (err) {
@@ -122,13 +123,13 @@ export default function WebKeranjang(props) {
   const toast = useToast();
   const postOrder = async () => {
     setIsLoading(true);
-    localStorage.setItem("selectedItems", JSON.stringify(selectedItems));
     try {
+      const newCost = { ...cost, name: courierName };
       const insert = await api().post("/order", {
         selectedItems,
         total: pembayaran,
         status: "Menunggu Pembayaran",
-        shipping_cost: cost.cost[0]?.value,
+        shipping_cost: JSON.stringify(newCost),
         address_id: selectedAddress.id,
         discount_voucher: getVoucher.nominal,
       });
@@ -141,7 +142,7 @@ export default function WebKeranjang(props) {
       });
       return nav("/payment");
     } catch (err) {
-      console.log(err.message);
+      console.log(err);
     }
   };
 
