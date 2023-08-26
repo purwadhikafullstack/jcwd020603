@@ -200,7 +200,7 @@ const routes = [
     }
   ></Route>,
   <Route
-    path="/dis"
+    path="/discount"
     element={
       <ProtectedPage>
         <DiscountPage needLogin={true} adminOnly={true} />
@@ -208,7 +208,7 @@ const routes = [
     }
   ></Route>,
   <Route
-    path="/vocer"
+    path="/voucher"
     element={
       <ProtectedPage>
         <VoucherPage needLogin={true} adminOnly={true} />

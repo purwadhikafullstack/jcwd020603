@@ -20,11 +20,13 @@ import {
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { api } from "../api/api";
 import ModalAlamatPengiriman from "./modal-alamat-pengiriman";
+import { useDispatch } from "react-redux";
 import { useFetchCart } from "../hooks/useFetchCart";
 import ModalNearestBranch from "./modal-nearest-branch";
 
 export default function ModalProduct(props) {
   const { prodVal, setProdVal, checked, setChecked, selectedAddress } = props;
+  const dispatch = useDispatch();
   const nearestBranch = localStorage.getItem("nearestBranch");
   const [count, tambah, kurang] = useCounter(1, 1);
   const {
@@ -37,7 +39,7 @@ export default function ModalProduct(props) {
     onOpen: onOpenModal2,
     onClose: onCloseModal2,
   } = useDisclosure();
-  const { fetch } = useFetchCart();
+  const { countAll, fetch } = useFetchCart();
 
   // insert qty ke prodVal
   const insertQty = () => {
@@ -73,7 +75,7 @@ export default function ModalProduct(props) {
   const updateAdd = async () => {
     try {
       const update = await api().post(
-        `/cart/${prodVal?.stock_id}?discounted_price=${prodVal?.discountedPrice}`,
+        `/cart/${prodVal?.stock_id}?discounted_price=${prodVal?.discountedPrice}&&branch_id=${nearestBranch}`,
         prodVal
       );
       await fetch();
@@ -84,7 +86,6 @@ export default function ModalProduct(props) {
         duration: 3000,
       });
     } catch (err) {
-      const res = err.response;
       console.log(err);
       toast({
         title: "Login terlebih dahulu untuk menambahkan produk",
@@ -116,6 +117,13 @@ export default function ModalProduct(props) {
     console.log(prodVal);
     stockAmount();
   }, []);
+  console.log("total", countAll);
+  useEffect(() => {
+    dispatch({
+      type: "cart",
+      payload: countAll,
+    });
+  }, [countAll, dispatch]);
 
   return (
     <>

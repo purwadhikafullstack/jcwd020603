@@ -242,6 +242,7 @@ const orderController = {
         address_id,
         discount_voucher,
       } = req.body;
+      console.log("ongkir", shipping_cost);
       const order = await db.Order.create(
         {
           date: moment().add(15, "minutes"),
@@ -255,13 +256,19 @@ const orderController = {
         },
         { transaction: trans }
       );
+      console.log("select", selectedItems?.Stock?.Product?.price);
       const arrInput = selectedItems.map((val) => {
+        console.log(!val?.discounted_price);
         return {
           quantity: val.qty,
           order_id: order.id,
           stock_id: val.stock_id,
+          current_price: val?.discounted_price
+            ? val?.discounted_price
+            : val?.Stock?.Product?.price,
         };
       });
+      console.log("arr", arrInput);
       await db.OrderDetail.bulkCreate(arrInput, { transaction: trans });
       for (item of selectedItems) {
         const check = await db.Stock.findOne({
@@ -273,13 +280,12 @@ const orderController = {
           {
             status: "DECREMENT",
             status_quantity: item.qty,
-            feature: "Ordered by Consument",
+            feature: "Pemesanan Konsumen",
             stock_id: item.stock_id,
             quantity_before: check.quantity_stock,
             quantity_after: check.quantity_stock - item.qty,
           },
         ];
-
         await db.StockHistory.bulkCreate(arrStockHistory, {
           transaction: trans,
         });
@@ -363,7 +369,7 @@ const orderController = {
           {
             status: "INCREMENT",
             status_quantity: item.quantity,
-            feature: "Cancelled Order",
+            feature: "Pembatalan Pesanan",
             stock_id: item.stock_id,
             quantity_before: check.quantity_stock,
             quantity_after: (check.quantity_stock += item.quantity),
@@ -449,7 +455,7 @@ const orderController = {
               {
                 status: "INCREMENT",
                 status_quantity: item.quantity,
-                feature: "Cancelled Order",
+                feature: "Pembatalan Pesanan",
                 stock_id: item.stock_id,
                 quantity_before: check.quantity_stock,
                 quantity_after: (check.quantity_stock += item.quantity),

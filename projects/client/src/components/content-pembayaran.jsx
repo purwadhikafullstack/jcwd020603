@@ -24,14 +24,6 @@ import moment from "moment";
 import ModalWaktuPemabayaran from "./modal-waktu-pembayaran";
 import "moment/locale/id";
 
-const diffrenceTime = (validDate) => {
-  const then = moment(validDate, "MM DD YYYY, h:mm a");
-  const now = moment();
-  const countDown = moment(then - now);
-
-  return countDown;
-};
-
 export default function ContentPembayaran() {
   moment.locale("id");
   const toast = useToast();
@@ -57,6 +49,26 @@ export default function ContentPembayaran() {
     getLatestOrder();
   }, []);
 
+  // menyimpan shipping_cost
+  const [shippingCost, setShippingCost] = useState(0);
+  console.log(orderValue[0]?.shipping_cost);
+  useEffect(() => {
+    if (orderValue.length > 0) {
+      const parsedShippingCost = JSON.parse(orderValue[0]?.shipping_cost);
+      setShippingCost(parsedShippingCost);
+    }
+  }, [orderValue]);
+  //count total harga belanja
+  console.log("order", orderValue);
+  const calculateSubtotal = () => {
+    if (orderValue.length > 0 && shippingCost !== 0) {
+      return (
+        orderValue[0]?.total -
+        (shippingCost?.cost[0]?.value - orderValue[0]?.discount_voucher)
+      );
+    }
+    return 0;
+  };
   //tambahkan waktu 15 menit
   const [difference, setDifference] = useState(1);
   const validDate = moment(orderValue[0]?.date).clone();
@@ -87,11 +99,6 @@ export default function ContentPembayaran() {
       }, 1000);
     }
   }, [orderValue[0]?.date]);
-
-  //count total harga belanja
-  const subtotal =
-    orderValue[0]?.total -
-    (orderValue[0]?.shipping_cost - orderValue[0]?.discount_voucher);
 
   // pengondisian tombol
   const windowWidth = window.innerWidth;
@@ -219,17 +226,15 @@ export default function ContentPembayaran() {
             })}
             <Flex justifyContent={"space-between"} w={"100%"} fontSize={"18px"}>
               <Flex>Subtotal</Flex>
-              <Flex>
-                Rp {subtotal != 0 ? subtotal.toLocaleString("id-ID") : 0}
-              </Flex>
+              <Flex>Rp {calculateSubtotal().toLocaleString("id-ID")}</Flex>
             </Flex>
 
             <Flex justifyContent={"space-between"} w={"100%"} fontSize={"18px"}>
               <Flex>Biaya Pengiriman</Flex>
               <Flex>
                 Rp{" "}
-                {orderValue[0]?.shipping_cost != 0
-                  ? orderValue[0]?.shipping_cost.toLocaleString("id-ID")
+                {shippingCost !== 0
+                  ? shippingCost.cost[0].value.toLocaleString("id-ID")
                   : 0}
               </Flex>
             </Flex>
@@ -278,7 +283,7 @@ export default function ContentPembayaran() {
             >
               <Center
                 w={selectedFile ? "300px" : "150px"}
-                h={selectedFile ? "220px" : "110px"}
+                h={selectedFile ? "100%" : "110px"}
                 border={"1px solid grey"}
                 borderRadius={"10px"}
                 flexDir={"column"}

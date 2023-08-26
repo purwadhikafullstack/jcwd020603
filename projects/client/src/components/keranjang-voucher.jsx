@@ -130,7 +130,8 @@ export default function VoucherPromo(props) {
                   <Flex
                     gap={"10px"}
                     padding={"0px 10px 10px 10px"}
-                    alignItems={"center"}
+                    alignItems={"end"}
+                    flexDir={"column"}
                   >
                     <Input
                       className="inputVoucher"

@@ -29,11 +29,28 @@ export default function Invoice() {
   useEffect(() => {
     getOrder();
   }, []);
-  //get subtotal
-  const subtotal =
-    orderValue?.total -
-    (orderValue?.shipping_cost - orderValue?.discount_voucher);
-
+  // menyimpan shipping_cost
+  const [shippingCost, setShippingCost] = useState({});
+  const [calculateSubtotal, setCalculateSubtotal] = useState(0);
+  console.log("ini val orderValue", orderValue);
+  useEffect(() => {
+    if (Object.keys(orderValue).length > 0) {
+      const parsedShippingCost = JSON.parse(orderValue?.shipping_cost);
+      setShippingCost(parsedShippingCost);
+    }
+  }, [orderValue]);
+  //count total harga belanja
+  useEffect(() => {
+    if (Object.keys(orderValue).length > 0 && shippingCost != {}) {
+      return setCalculateSubtotal(
+        orderValue?.total -
+          (shippingCost?.cost[0]?.value - orderValue?.discount_voucher)
+      );
+    } else {
+      return setCalculateSubtotal(0);
+    }
+  }, [shippingCost]);
+  console.log(calculateSubtotal);
   return (
     <>
       <Flex flexDir={"column"}>
@@ -173,18 +190,25 @@ export default function Invoice() {
                 padding={"5px 0px"}
               >
                 <Flex>Total Harga ({orderValue?.Order?.length} Barang)</Flex>
-                <Flex>Rp {subtotal.toLocaleString("id-ID")}</Flex>
+                <Flex>Rp {calculateSubtotal.toLocaleString("id-ID")}</Flex>
               </Flex>
               <Flex w={"100%"} justifyContent={"space-between"}>
                 <Flex>Biaya Pengiriman</Flex>
-                <Flex>
-                  Rp {orderValue?.shipping_cost?.toLocaleString("id-ID")}
-                </Flex>
+                {shippingCost &&
+                  shippingCost.cost &&
+                  shippingCost.cost.length > 0 && (
+                    <Flex fontWeight={"500"}>
+                      Rp {shippingCost.cost[0].value.toLocaleString("id-ID")}
+                    </Flex>
+                  )}
               </Flex>
               <Flex w={"100%"} justifyContent={"space-between"}>
                 <Flex>Potongan Harga</Flex>
                 <Flex>
-                  -Rp {orderValue?.discount_voucher?.toLocaleString("id-ID")}
+                  -Rp{" "}
+                  {orderValue?.discount_voucher
+                    ? orderValue?.discount_voucher?.toLocaleString("id-ID")
+                    : 0}
                 </Flex>
               </Flex>
               <Flex
@@ -199,7 +223,19 @@ export default function Invoice() {
             </Flex>
           </Flex>
           <Flex w={"100%"} justifyContent={"space-between"}>
-            <Flex maxW={"398px"} w={"100%"}></Flex>
+            <Flex
+              maxW={"398px"}
+              w={"100%"}
+              fontSize={"12px"}
+              flexDir={"column"}
+              paddingTop={"20px"}
+              rowGap={"5px"}
+            >
+              <Flex>Kurir:</Flex>
+              <Flex fontWeight={"700"} gap={"4px"}>
+                {shippingCost?.name} - {shippingCost?.service}
+              </Flex>
+            </Flex>
             <Flex
               maxW={"370px"}
               w={"100%"}

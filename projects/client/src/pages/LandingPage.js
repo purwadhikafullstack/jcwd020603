@@ -267,9 +267,10 @@ export default function LandingPage() {
       ) : (
         <>
           <TopBar2
+            setIsLoaded={setIsLoaded}
+            isLoaded={isLoaded}
             address={address}
             selectedAddress={selectedAddress}
-            setSelectedAddress={setSelectedAddress}
             branchName={branchName}
             minDistance={minDistance}
           />
