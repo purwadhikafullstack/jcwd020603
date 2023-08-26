@@ -165,14 +165,11 @@ db.Discount.belongsTo(db.Branch, {
   as: "Branch",
 });
 
-<<<<<<< HEAD
 db.Voucher.belongsTo(db.Branch, {
   foreignKey: "branch_id",
   as: "Branch",
 });
 
-=======
->>>>>>> develop
 // db.Order.belongsTo(db.Branch, {
 //   foreignKey: "branch_id",
 //   as: "Branch",
