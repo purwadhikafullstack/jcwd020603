@@ -26,6 +26,8 @@ import ModalNearestBranch from "./modal-nearest-branch";
 
 export default function Sidebar(props) {
   const { setLengthCart, nearestBranchSet } = props;
+  const cartSelector = useSelector((state) => state.cart);
+  console.log("dispatch tot", cartSelector);
   const user = JSON.parse(localStorage.getItem("auth"));
   const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
   console.log("sidebar", nearestBranch);
@@ -203,9 +205,9 @@ export default function Sidebar(props) {
             </Flex>
             <Center
               className="jumlahOrderSidebarG"
-              display={countAll == 0 ? "none" : "center"}
+              display={cartSelector.total == 0 ? "none" : "center"}
             >
-              {countAll}
+              {cartSelector.total}
             </Center>
           </Flex>
         </Flex>

@@ -23,6 +23,7 @@ import { api } from "../api/api";
 export default function ContentKeranjang(props) {
   const { prodCart } = props;
   const nav = useNavigate();
+  const nearestBranch = localStorage.getItem("nearestBranch");
   useEffect(() => {
     console.log(prodCart);
   }, [prodCart]);
@@ -208,6 +209,7 @@ export default function ContentKeranjang(props) {
                             getAll={props.getAll}
                             selectedItems={selectedItems}
                             setSelectedItems={setSelectedItems}
+                            nearestBranch={nearestBranch}
                           />
                         );
                       })}

@@ -145,7 +145,7 @@ const orderController = {
       if (req.query.order_number) {
         whereClause.order_number = req.query.order_number;
       }
-
+      console.log(whereClause);
       const order = await db.Order.findAll({
         where: whereClause,
         limit: 1,

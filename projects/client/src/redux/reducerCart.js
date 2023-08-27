@@ -1,4 +1,4 @@
-const init = {};
+const init = { total: 0 };
 
 function cartReducer(state = init, action) {
   if (action.type == "cart") {
