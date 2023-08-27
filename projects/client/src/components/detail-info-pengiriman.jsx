@@ -20,7 +20,9 @@ export default function DetailPengiriman(props) {
           Informasi Pengiriman
         </Flex>
         <Flex w={"100%"} fontSize={"14px"} gap={"30px"} padding={"5px 0px"}>
-          <Flex w={"20%"}>Status Pengiriman</Flex>
+          <Flex w={"20%"} minW={"72px"}>
+            Status Pengiriman
+          </Flex>
           <Flex w={"100%"} flexDir={"column"}>
             <Flex>{peraturan?.status}</Flex>
             <Flex fontWeight={"400"}>
@@ -29,7 +31,9 @@ export default function DetailPengiriman(props) {
           </Flex>
         </Flex>
         <Flex w={"100%"} fontSize={"14px"} gap={"30px"} padding={"5px 0px"}>
-          <Flex w={"20%"}>Kurir Pengiriman</Flex>
+          <Flex w={"20%"} minW={"72px"}>
+            Kurir Pengiriman
+          </Flex>
           <Flex w={"100%"} flexDir={"column"}>
             <Flex>{shippingCost?.name}</Flex>
             <Flex fontWeight={"400"}>
@@ -45,7 +49,9 @@ export default function DetailPengiriman(props) {
           </Flex>
         </Flex>
         <Flex w={"100%"} fontSize={"14px"} gap={"30px"} padding={"5px 0px"}>
-          <Flex w={"20%"}>Alamat Penerima</Flex>
+          <Flex w={"20%"} minW={"72px"}>
+            Alamat Penerima
+          </Flex>
           <Flex w={"100%"} flexDir={"column"}>
             <Flex>{peraturan?.Address?.address_name}</Flex>
             <Flex fontWeight={"400"}>{peraturan?.Address?.address_phone}</Flex>

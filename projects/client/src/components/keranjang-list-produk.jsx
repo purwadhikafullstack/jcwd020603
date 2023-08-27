@@ -59,7 +59,7 @@ export default function KeranjangList(props) {
       },
     });
     props.getAll();
-    await fetch();
+    await fetch(props.nearestBranch);
   };
 
   //checklist logic
@@ -160,7 +160,7 @@ export default function KeranjangList(props) {
                     color={"white"}
                     fontSize={"8px"}
                   >
-                    {Discount.nominal}%
+                    {Discount?.nominal}%
                   </Center>
                   <Flex textDecor={"line-through"}>
                     Rp {Product.price.toLocaleString("id-ID")}

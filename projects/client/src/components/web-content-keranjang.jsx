@@ -22,6 +22,7 @@ import { api } from "../api/api";
 
 export default function WebKeranjang(props) {
   const { prodCart } = props;
+  const nearestBranch = localStorage.getItem("nearestBranch");
   const nav = useNavigate();
   useEffect(() => {
     console.log(prodCart);
@@ -196,6 +197,7 @@ export default function WebKeranjang(props) {
                           getAll={props.getAll}
                           selectedItems={selectedItems}
                           setSelectedItems={setSelectedItems}
+                          nearestBranch={nearestBranch}
                         />
                       );
                     })}

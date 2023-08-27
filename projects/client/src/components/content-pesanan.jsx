@@ -180,7 +180,7 @@ export default function ContentPesanan() {
                                     >
                                       <Image
                                         src={
-                                          val.Stock.Product?.photo_product_url
+                                          val.Stock?.Product?.photo_product_url
                                         }
                                         borderRadius={"10px"}
                                         border={"2px solid white"}
