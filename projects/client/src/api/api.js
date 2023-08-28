@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export function api() {
+  console.log("ini envvv", process.env.REACT_APP_SECRET_KEY);
   const headers = {
     ["x-secret-key"]: process.env.REACT_APP_SECRET_KEY,
   };
