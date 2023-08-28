@@ -65,45 +65,64 @@ export default function TopBar2({
           <Flex id="logoSSB" paddingLeft={"5px"} cursor={"pointer"}>
             <img src={logo} className="logoB" alt="" />
           </Flex>
-          <Flex
-            alignItems={"center"}
-            className="flexSideBarB"
-            cursor={"pointer"}
-            onClick={checkUser}
-          >
+          <Flex className="flexSideBarB" cursor={"pointer"} onClick={checkUser}>
             <Icon id="iconLocationB" as={MdLocationPin} />
             <Skeleton height={"30px"} isLoaded={isLoaded}>
               <Flex id="alamatTopBarB">
                 {address ? (
                   selectedAddress?.address != null ? (
-                    <>
-                      <Flex>Alamat Anda : {selectedAddress?.address}</Flex>
-                      <Flex>
+                    <Flex flexDir={"column"} className="groupB">
+                      <Flex className="text1B">
+                        Alamat Anda : {selectedAddress?.address}
+                      </Flex>
+                    </Flex>
+                  ) : (
+                    <Flex flexDir={"column"} className="groupB">
+                      <Flex className="text1B">Alamat Anda : {district}</Flex>
+                    </Flex>
+                  )
+                ) : selectedAddress?.address != null ? (
+                  <Flex flexDir={"column"} className="groupB">
+                    <Flex className="text1B">
+                      Alamat Anda : {selectedAddress?.address}
+                    </Flex>
+                  </Flex>
+                ) : (
+                  <Flex flexDir={"column"} className="groupB">
+                    <Flex className="text1B">Alamat belum dipilih</Flex>
+                  </Flex>
+                )}
+              </Flex>
+              <Flex id="alamatTopBarB">
+                {address ? (
+                  selectedAddress?.address != null ? (
+                    <Flex flexDir={"column"} className="groupB">
+                      <Flex className="text2B">
                         Toko Terdekat :{" "}
                         {minDistance < 65 ? branchName : "Tidak Tersedia"}
                       </Flex>
-                    </>
+                    </Flex>
                   ) : (
-                    <>
-                      <Flex>alamat anda</Flex>
-                      <Flex>{district}</Flex>
-                    </>
+                    <Flex flexDir={"column"} className="groupB">
+                      <Flex className="text2B">
+                        Toko Terdekat :{" "}
+                        {minDistance < 65 ? branchName : "Tidak Tersedia"}
+                      </Flex>
+                    </Flex>
                   )
                 ) : selectedAddress?.address != null ? (
-                  <>
-                    <Flex>Alamat Anda : {selectedAddress?.address}</Flex>
-                    <Flex>
+                  <Flex flexDir={"column"} className="groupB">
+                    <Flex className="text2B">
                       Toko Terdekat :{" "}
                       {minDistance < 65 || minDistance == Infinity
                         ? branchName
                         : "Tidak Tersedia"}
                     </Flex>
-                  </>
+                  </Flex>
                 ) : (
-                  <>
-                    <Flex>Alamat belum dipilih</Flex>
-                    <Flex>Mulai atur alamat pengiriman</Flex>
-                  </>
+                  <Flex flexDir={"column"} className="groupB">
+                    <Flex className="text2B">Mulai atur alamat pengiriman</Flex>
+                  </Flex>
                 )}
               </Flex>
             </Skeleton>
