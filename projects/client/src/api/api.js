@@ -2,7 +2,7 @@ import axios from "axios";
 
 export function api() {
   const headers = {
-    ["x-secret-key"]: "sahabatsembako",
+    ["x-secret-key"]: process.env.REACT_APP_SECRET_KEY,
   };
   const token = JSON.parse(localStorage.getItem("auth"));
   if (token) {
