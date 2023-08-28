@@ -1,10 +1,9 @@
 import { Flex } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
 export default function DetailPembayaran(props) {
-  const subtotal =
-    props.peraturan?.total -
-    (props.peraturan?.shipping_cost - props.peraturan?.discount_voucher);
-
+  const { shippingCost, calculateSubtotal, peraturan } = props;
+  console.log(shippingCost);
   return (
     <>
       <Flex
@@ -35,22 +34,26 @@ export default function DetailPembayaran(props) {
           <Flex justifyContent={"space-between"}>
             <Flex>Subtotal</Flex>
             <Flex fontWeight={"500"}>
-              Rp {subtotal.toLocaleString("id-ID")}
+              Rp {calculateSubtotal.toLocaleString("id-ID")}
             </Flex>
           </Flex>
           <Flex justifyContent={"space-between"}>
             <Flex>Biaya Pengiriman</Flex>
-            <Flex fontWeight={"500"}>
-              Rp {props.peraturan?.shipping_cost.toLocaleString("id-ID")}
-            </Flex>
+            {shippingCost &&
+              shippingCost.cost &&
+              shippingCost.cost.length > 0 && (
+                <Flex fontWeight={"500"}>
+                  Rp {shippingCost.cost[0].value.toLocaleString("id-ID")}
+                </Flex>
+              )}
           </Flex>
           <Flex justifyContent={"space-between"} color={"#2A960C"}>
             <Flex>Potongan Harga</Flex>
-            {props.peraturan && (
+            {peraturan && (
               <Flex fontWeight={"500"}>
                 - Rp{" "}
-                {props.peraturan?.discount_voucher
-                  ? (props.peraturan?.discount_voucher).toLocaleString("id-ID")
+                {peraturan?.discount_voucher
+                  ? (peraturan?.discount_voucher).toLocaleString("id-ID")
                   : 0}
               </Flex>
             )}
@@ -58,7 +61,7 @@ export default function DetailPembayaran(props) {
           <Flex h={"0.5px"} border={"1px solid lightgrey"} w={"100%"} />
           <Flex justifyContent={"space-between"} fontWeight={"600"}>
             <Flex>Total Pembayaran</Flex>
-            <Flex>Rp {props.peraturan?.total.toLocaleString("id-ID")}</Flex>
+            <Flex>Rp {peraturan?.total.toLocaleString("id-ID")}</Flex>
           </Flex>
         </Flex>
       </Flex>

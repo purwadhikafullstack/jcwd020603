@@ -24,39 +24,56 @@ import moment from "moment";
 import ModalWaktuPemabayaran from "./modal-waktu-pembayaran";
 import "moment/locale/id";
 
-const diffrenceTime = (validDate) => {
-  const then = moment(validDate, "MM DD YYYY, h:mm a");
-  const now = moment();
-  const countDown = moment(then - now);
-
-  return countDown;
-};
-
 export default function ContentPembayaran() {
   moment.locale("id");
-  const toast = useToast();
   const nav = useNavigate();
   const order_number = useParams();
+  console.log(order_number);
   // get order
   const [orderValue, setOrderValue] = useState([]);
   const [orderDetVal, setOrderDetVal] = useState([]);
-  const getLatestOrder = async () => {
-    const order = await api().get("/order/latest", {
-      params: { order_number: order_number.order_number },
-    });
-    setOrderValue(order.data.result);
-    console.log(order.data.result);
+  async function getLatestOrder() {
+    console.log("masuk tot");
+    try {
+      const order = await api().get("/order/latest", {
+        params: { order_number: order_number.order_number || "" },
+      });
+      setOrderValue(order.data.result);
+      console.log(order.data.result);
 
-    const orderDetail = await api().get("/order-detail/", {
-      params: { id: order.data.result[0]?.id },
-    });
-    setOrderDetVal(orderDetail.data.result);
-    console.log(orderDetail.data.result);
-  };
+      const orderDetail = await api().get("/order-detail/", {
+        params: { id: order.data.result[0]?.id },
+      });
+      setOrderDetVal(orderDetail.data.result);
+      console.log(orderDetail.data.result);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   useEffect(() => {
     getLatestOrder();
   }, []);
 
+  // menyimpan shipping_cost
+  const [shippingCost, setShippingCost] = useState({});
+  useEffect(() => {
+    if (orderValue.length > 0) {
+      const parsedShippingCost = JSON.parse(orderValue[0]?.shipping_cost);
+      console.log(parsedShippingCost);
+      setShippingCost(parsedShippingCost);
+    }
+  }, [orderValue]);
+
+  //count total harga belanja
+  const calculateSubtotal = () => {
+    if (orderValue.length > 0 && shippingCost.cost) {
+      return (
+        orderValue[0]?.total -
+        (shippingCost?.cost[0]?.value - orderValue[0]?.discount_voucher)
+      );
+    }
+    return 0;
+  };
   //tambahkan waktu 15 menit
   const [difference, setDifference] = useState(1);
   const validDate = moment(orderValue[0]?.date).clone();
@@ -73,6 +90,7 @@ export default function ContentPembayaran() {
   };
 
   useEffect(() => {
+    console.log("jalan hak");
     if (difference >= 0) {
       setCountdown(formatTime(difference));
     } else {
@@ -87,11 +105,6 @@ export default function ContentPembayaran() {
       }, 1000);
     }
   }, [orderValue[0]?.date]);
-
-  //count total harga belanja
-  const subtotal =
-    orderValue[0]?.total -
-    (orderValue[0]?.shipping_cost - orderValue[0]?.discount_voucher);
 
   // pengondisian tombol
   const windowWidth = window.innerWidth;
@@ -219,17 +232,15 @@ export default function ContentPembayaran() {
             })}
             <Flex justifyContent={"space-between"} w={"100%"} fontSize={"18px"}>
               <Flex>Subtotal</Flex>
-              <Flex>
-                Rp {subtotal != 0 ? subtotal.toLocaleString("id-ID") : 0}
-              </Flex>
+              <Flex>Rp {calculateSubtotal().toLocaleString("id-ID")}</Flex>
             </Flex>
 
             <Flex justifyContent={"space-between"} w={"100%"} fontSize={"18px"}>
               <Flex>Biaya Pengiriman</Flex>
               <Flex>
                 Rp{" "}
-                {orderValue[0]?.shipping_cost != 0
-                  ? orderValue[0]?.shipping_cost.toLocaleString("id-ID")
+                {shippingCost.cost
+                  ? shippingCost.cost[0].value.toLocaleString("id-ID")
                   : 0}
               </Flex>
             </Flex>
@@ -278,7 +289,7 @@ export default function ContentPembayaran() {
             >
               <Center
                 w={selectedFile ? "300px" : "150px"}
-                h={selectedFile ? "220px" : "110px"}
+                h={selectedFile ? "100%" : "110px"}
                 border={"1px solid grey"}
                 borderRadius={"10px"}
                 flexDir={"column"}
@@ -328,63 +339,35 @@ export default function ContentPembayaran() {
               />
             </Flex>
           </Flex>
-          <Flex
-            w={"100%"}
-            alignItems={"center"}
-            flexDir={"column"}
-            rowGap={"10px"}
-          >
-            {windowWidth > 600 ? (
-              <>
-                <Flex w={"100%"} padding={"0px 20px"} gap={"20px"}>
-                  <Center
-                    className="tombolMerah70"
-                    onClick={() => {
-                      onOpenModal1();
-                    }}
-                  >
-                    BATALKAN PESANAN
-                  </Center>
-                  <Center
-                    className="tombolHijau70"
-                    onClick={() => {
-                      postImage();
-                    }}
-                  >
-                    {" "}
-                    KONFIRMASI PEMBAYARAN
-                  </Center>
-                </Flex>
-              </>
-            ) : (
-              <>
-                <Center
-                  className="tombolMerah70"
-                  onClick={() => {
-                    onOpenModal1();
-                  }}
-                >
-                  BATALKAN PESANAN
-                </Center>
-                <Link to={`/orders/${orderValue[0]?.order_number}`}>
-                  <Center
-                    className="tombolHijau70"
-                    onClick={() => {
-                      postImage();
-                    }}
-                  >
-                    KONFIRMASI PEMBAYARAN
-                  </Center>
-                </Link>
-              </>
-            )}
-          </Flex>
+
+          <Center className="responsiveTombol">
+            <Center
+              className="tombolMerah70"
+              onClick={() => {
+                onOpenModal1();
+              }}
+              _hover={{ cursor: "pointer" }}
+            >
+              BATALKAN PESANAN
+            </Center>
+            <Center
+              className="tombolHijau70"
+              onClick={() => {
+                postImage();
+              }}
+              _hover={{ cursor: "pointer" }}
+            >
+              {" "}
+              KONFIRMASI PEMBAYARAN
+            </Center>
+          </Center>
         </Flex>
         <Center
           className="tombolDaftarPesanan"
           onClick={() => {
             nav("/orders");
           }}
+          _hover={{ cursor: "pointer" }}
         >
           DAFTAR PESANAN
         </Center>

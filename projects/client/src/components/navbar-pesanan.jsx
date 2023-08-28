@@ -24,7 +24,7 @@ export default function NavbarPesanan() {
           w={"40px"}
           h={"40px"}
           onClick={() => {
-            nav("/product");
+            nav("/");
           }}
         >
           <Icon as={BiArrowBack} fontSize={"24px"} />

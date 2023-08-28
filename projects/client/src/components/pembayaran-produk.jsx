@@ -1,10 +1,6 @@
 import { Box, Center, Flex, Icon, Image } from "@chakra-ui/react";
 
 export default function PembayaranProduk(props) {
-  const fixPrice =
-    props.Stock?.discounted_price == 0 || props.Stock?.discounted_price == null
-      ? props.Stock.Product?.price
-      : props.Stock?.discounted_price;
   return (
     <>
       <Flex borderBottom={"1px solid lightgrey"} gap={"10px"}>
@@ -33,12 +29,14 @@ export default function PembayaranProduk(props) {
           >
             <Flex alignItems={"center"}>
               <Flex fontWeight={"500"} fontSize={"14px"}>
-                Rp {fixPrice?.toLocaleString("id-ID")} X {props.quantity}
+                Rp {Number(props.current_price).toLocaleString("id-ID")} X{" "}
+                {props.quantity}
               </Flex>
             </Flex>
             <Flex fontSize={"16px"} fontWeight={"500"}>
               {" "}
-              Rp {(fixPrice * props.quantity)?.toLocaleString("id-ID")}
+              Rp{" "}
+              {(props.current_price * props.quantity)?.toLocaleString("id-ID")}
             </Flex>
           </Flex>
         </Flex>

@@ -44,8 +44,8 @@ export default function AdminSidebar() {
             id="dashboard"
             className="adminMenuStyleG"
             onClick={(e) => {
-              handleClick(e)
-              nav("/dashboard")
+              handleClick(e);
+              nav("/dashboard");
             }}
             bg={Clicked == "dashboard" ? "#FFF4DD" : "white"}
             color={Clicked == "dashboard" ? "#FFAE0D" : "gray"}
@@ -147,8 +147,8 @@ export default function AdminSidebar() {
             id="karyawan"
             className="adminMenuStyleG"
             onClick={(e) => {
-              handleClick(e)
-              nav("/admin-branch")
+              handleClick(e);
+              nav("/admin-branch");
             }}
             bg={Clicked == "karyawan" ? "#FFF4DD" : "white"}
             color={Clicked == "karyawan" ? "#FFAE0D" : "gray"}
@@ -166,8 +166,8 @@ export default function AdminSidebar() {
             id="diskon"
             className="adminMenuStyleG"
             onClick={(e) => {
-              handleClick(e)
-              setIsAppearDiscount(!isAppearDiscount)
+              handleClick(e);
+              setIsAppearDiscount(!isAppearDiscount);
             }}
             bg={Clicked == "diskon" ? "#FFF4DD" : "white"}
             color={Clicked == "diskon" ? "#FFAE0D" : "gray"}
@@ -203,7 +203,6 @@ export default function AdminSidebar() {
           </>
         ) : null}
 
-
         <Flex w={"100%"} gap={"20px"}>
           <Flex
             className="adminMiniFlexG"
@@ -213,8 +212,8 @@ export default function AdminSidebar() {
             id="laporan"
             className="adminMenuStyleG"
             onClick={(e) => {
-              handleClick(e)
-              setIsAppearReport(!isAppearReport)
+              handleClick(e);
+              setIsAppearReport(!isAppearReport);
             }}
             bg={Clicked == "laporan" ? "#FFF4DD" : "white"}
             color={Clicked == "laporan" ? "#FFAE0D" : "gray"}

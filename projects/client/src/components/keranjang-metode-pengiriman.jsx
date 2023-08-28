@@ -12,6 +12,7 @@ export default function MetodePengiriman({
   setIsLoading,
   setCost,
   cost,
+  setCourierName,
 }) {
   //mendapatkan courier
   const [Clicked, setClicked] = useState("");

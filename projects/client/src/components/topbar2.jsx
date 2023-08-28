@@ -58,12 +58,11 @@ export default function TopBar2({
       setIsLoaded(true);
     }
   }, [district]);
-
   return (
     <>
       <Flex id="containerTopBarB" justifyContent={"center"}>
         <Flex id="topBar2B">
-          <Flex id="logoSSB" paddingLeft={"5px"}>
+          <Flex id="logoSSB" paddingLeft={"5px"} cursor={"pointer"}>
             <img src={logo} className="logoB" alt="" />
           </Flex>
           <Flex className="flexSideBarB" cursor={"pointer"} onClick={checkUser}>

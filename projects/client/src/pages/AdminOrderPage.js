@@ -1,6 +1,7 @@
 import { Center, Flex } from "@chakra-ui/react";
 import AdminOrderList from "../components/admin-order-content";
 import AdminSidebar from "../components/admin-sidebar";
+import Loading from "../components/loading";
 
 export default function AdminOrderPage() {
   const windowWidth = window.innerWidth;
