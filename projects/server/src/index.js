@@ -20,7 +20,6 @@ const routes = require("./routes");
 const { route } = require("./routes/branch");
 app.use(cors());
 app.use(express.json());
-// app.use(verify);
 // const { verify } = require("crypto");
 db.sequelize.sync({ alter: true });
 
@@ -31,6 +30,8 @@ db.sequelize.sync({ alter: true });
 app.use("/categoryImg", express.static(`${__dirname}/public/categoryImg`));
 app.use("/productImg", express.static(`${__dirname}/public/productImg`));
 app.use("/paymentImg", express.static(`${__dirname}/public/paymentImg`));
+app.use("/avatar", express.static(`${__dirname}/public/Avatar`));
+app.use(verify);
 app.use("/api/user", routes.userRoutes);
 app.use("/api/branch", routes.branchRoutes);
 app.use("/api/token", routes.tokenRoutes);
@@ -47,7 +48,6 @@ app.use("/api/discount", routes.discountRoutes);
 app.use("/api/product", routes.productRoutesB);
 app.use("/api/voucher", routes.voucherRoutes);
 app.use("/api/sales-report", routes.salesReportRoutes);
-app.use("/avatar", express.static(`${__dirname}/public/Avatar`));
 
 // import konfigurasi cron job
 cronJob();

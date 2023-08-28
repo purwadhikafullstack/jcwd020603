@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
       ),
       order_number: Sequelize.STRING,
       order_transfer_url: Sequelize.STRING,
-      shipping_cost: Sequelize.INTEGER,
+      shipping_cost: Sequelize.STRING,
       discount_voucher: Sequelize.INTEGER,
     },
     {

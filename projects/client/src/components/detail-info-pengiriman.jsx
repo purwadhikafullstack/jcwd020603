@@ -1,15 +1,9 @@
 import { Flex } from "@chakra-ui/react";
 import moment from "moment";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function DetailPengiriman(props) {
-  const { peraturan } = props;
-  console.log({ ...peraturan });
-  // useEffect(() => {
-  //   props.getLatestOrder();
-  // }, []);
-  // console.log(props.orderValue);
-
+  const { peraturan, shippingCost } = props;
   return (
     <>
       <Flex
@@ -26,7 +20,9 @@ export default function DetailPengiriman(props) {
           Informasi Pengiriman
         </Flex>
         <Flex w={"100%"} fontSize={"14px"} gap={"30px"} padding={"5px 0px"}>
-          <Flex w={"20%"}>Status Pengiriman</Flex>
+          <Flex w={"20%"} minW={"72px"}>
+            Status Pengiriman
+          </Flex>
           <Flex w={"100%"} flexDir={"column"}>
             <Flex>{peraturan?.status}</Flex>
             <Flex fontWeight={"400"}>
@@ -35,14 +31,27 @@ export default function DetailPengiriman(props) {
           </Flex>
         </Flex>
         <Flex w={"100%"} fontSize={"14px"} gap={"30px"} padding={"5px 0px"}>
-          <Flex w={"20%"}>Dikirimkan Ke</Flex>
+          <Flex w={"20%"} minW={"72px"}>
+            Kurir Pengiriman
+          </Flex>
           <Flex w={"100%"} flexDir={"column"}>
-            <Flex>{peraturan?.Address?.address_name}</Flex>
-            <Flex fontWeight={"400"}>{peraturan?.Address?.address_phone}</Flex>
+            <Flex>{shippingCost?.name}</Flex>
+            <Flex fontWeight={"400"}>
+              {shippingCost?.description} ({shippingCost?.service})
+            </Flex>
+            {shippingCost &&
+              shippingCost.cost &&
+              shippingCost.cost.length > 0 && (
+                <Flex fontWeight={"400"}>
+                  Estimasi tiba dalam {shippingCost?.cost[0]?.etd} Hari
+                </Flex>
+              )}
           </Flex>
         </Flex>
         <Flex w={"100%"} fontSize={"14px"} gap={"30px"} padding={"5px 0px"}>
-          <Flex w={"20%"}>Alamat Penerima</Flex>
+          <Flex w={"20%"} minW={"72px"}>
+            Alamat Penerima
+          </Flex>
           <Flex w={"100%"} flexDir={"column"}>
             <Flex>{peraturan?.Address?.address_name}</Flex>
             <Flex fontWeight={"400"}>{peraturan?.Address?.address_phone}</Flex>

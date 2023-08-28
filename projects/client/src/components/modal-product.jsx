@@ -20,11 +20,14 @@ import {
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { api } from "../api/api";
 import ModalAlamatPengiriman from "./modal-alamat-pengiriman";
+import { useDispatch, useSelector } from "react-redux";
 import { useFetchCart } from "../hooks/useFetchCart";
 import ModalNearestBranch from "./modal-nearest-branch";
 
 export default function ModalProduct(props) {
   const { prodVal, setProdVal, checked, setChecked, selectedAddress } = props;
+  const dispatch = useDispatch();
+  const cartSelector = useSelector((state) => state.cart);
   const nearestBranch = localStorage.getItem("nearestBranch");
   const [count, tambah, kurang] = useCounter(1, 1);
   const {
@@ -37,7 +40,7 @@ export default function ModalProduct(props) {
     onOpen: onOpenModal2,
     onClose: onCloseModal2,
   } = useDisclosure();
-  const { fetch } = useFetchCart();
+  const { countAll, fetch } = useFetchCart();
 
   // insert qty ke prodVal
   const insertQty = () => {
@@ -73,10 +76,10 @@ export default function ModalProduct(props) {
   const updateAdd = async () => {
     try {
       const update = await api().post(
-        `/cart/${prodVal?.stock_id}?discounted_price=${prodVal?.discountedPrice}`,
+        `/cart/${prodVal?.stock_id}?discounted_price=${prodVal?.discountedPrice}&&branch_id=${nearestBranch}`,
         prodVal
       );
-      await fetch();
+      await fetch(nearestBranch);
       toast({
         title: update.data.message,
         status: update.data.status,
@@ -84,7 +87,6 @@ export default function ModalProduct(props) {
         duration: 3000,
       });
     } catch (err) {
-      const res = err.response;
       console.log(err);
       toast({
         title: "Login terlebih dahulu untuk menambahkan produk",
@@ -116,6 +118,13 @@ export default function ModalProduct(props) {
     console.log(prodVal);
     stockAmount();
   }, []);
+  console.log("total", countAll);
+  useEffect(() => {
+    dispatch({
+      type: "cart",
+      payload: countAll,
+    });
+  }, [countAll, dispatch]);
 
   return (
     <>
@@ -195,9 +204,9 @@ export default function ModalProduct(props) {
               <Icon as={MdOutlineShoppingCart} fontSize={"32px"} />
               <Center
                 className="redDotCountG"
-                display={props.lengthCart == 0 ? "none" : "flex"}
+                display={cartSelector.total == 0 ? "none" : "flex"}
               >
-                {props.lengthCart}
+                {cartSelector.total}
               </Center>
             </Flex>
             <Flex className="counterQtyG">

@@ -18,11 +18,13 @@ import { api } from "../api/api";
 import SidebarMini from "../components/sidebar-mini";
 import { useDispatch } from "react-redux";
 import ModalNearestBranch from "../components/modal-nearest-branch";
+import { useFetchCart } from "../hooks/useFetchCart";
 
 export default function LandingPage() {
   const windowWidth = window.outerWidth;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const { fetch } = useFetchCart();
   const [isLoaded, setIsLoaded] = useState(false);
   const [latlong, setLatlong] = useState({
     latitude: "",
@@ -213,6 +215,7 @@ export default function LandingPage() {
   useEffect(() => {
     if (nearestBranch && minDistance < 65) {
       localStorage.setItem("nearestBranch", JSON.stringify(nearestBranch));
+      fetch(nearestBranch);
       return setNearestBranchSet(true);
     } else if (nearestBranch && minDistance > 65) {
       localStorage.removeItem("nearestBranch");
@@ -267,9 +270,10 @@ export default function LandingPage() {
       ) : (
         <>
           <TopBar2
+            setIsLoaded={setIsLoaded}
+            isLoaded={isLoaded}
             address={address}
             selectedAddress={selectedAddress}
-            setSelectedAddress={setSelectedAddress}
             branchName={branchName}
             minDistance={minDistance}
           />

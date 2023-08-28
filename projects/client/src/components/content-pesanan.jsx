@@ -19,6 +19,7 @@ import moment from "moment";
 import ModalPesananSelesai from "./modal-pesanan-selesai";
 
 export default function ContentPesanan() {
+  const windowWidth = window.innerWidth;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const nav = useNavigate();
   //filter value
@@ -58,13 +59,19 @@ export default function ContentPesanan() {
       </Box>
       <Center maxW={"910px"} w={"100%"} alignItems={"flex-start"}>
         <Flex maxW={"910px"} w={"100%"} flexDir={"column"}>
-          <Flex className="statusRowG">
+          <Flex
+            className="statusRowG"
+            position={"sticky"}
+            top={0}
+            zIndex={9}
+            bg={"white"}
+          >
             <Flex gap={"20px"} minW={"675px"} w={"100%"}>
               {filterValue.map((val) => {
                 return (
                   <Center
                     h={"35px"}
-                    w={"160px"}
+                    w={"200px"}
                     padding={"10px"}
                     borderRadius={"10px"}
                     border={"1px solid lightgrey"}
@@ -111,7 +118,7 @@ export default function ContentPesanan() {
                         borderBottom={"1px solid lightgrey"}
                       >
                         <Flex
-                          fontSize={"14px"}
+                          fontSize={"12px"}
                           fontWeight={"500"}
                           padding={"3px"}
                           borderRadius={"5px"}
@@ -139,7 +146,7 @@ export default function ContentPesanan() {
                           {val.status}
                         </Flex>
                         <Flex fontSize={"12px"} color={"#767676"}>
-                          {moment(val.createdAt).format("lll")}
+                          {moment(val.createdAt).format("ll")}
                         </Flex>
                       </Flex>
                       <Flex
@@ -173,7 +180,7 @@ export default function ContentPesanan() {
                                     >
                                       <Image
                                         src={
-                                          val.Stock.Product?.photo_product_url
+                                          val.Stock?.Product?.photo_product_url
                                         }
                                         borderRadius={"10px"}
                                         border={"2px solid white"}
@@ -192,11 +199,9 @@ export default function ContentPesanan() {
                           </Flex>
                         </Flex>
                         <Flex justifyContent={"space-between"} w={"100%"}>
-                          <Flex fontSize={"14px"} alignItems={"center"}>
-                            Order Number :{" "}
-                            <Box fontWeight={"600"} paddingLeft={"5px"}>
-                              {val.order_number}
-                            </Box>
+                          <Flex fontSize={"14px"} flexDir={"column"}>
+                            <Flex>Order Number </Flex>
+                            <Box fontWeight={"600"}>{val.order_number}</Box>
                           </Flex>
                           <Flex flexDir={"column"} fontSize={"14px"}>
                             Total belanja
@@ -241,7 +246,9 @@ export default function ContentPesanan() {
                   <Box>
                     <LuListX fontSize={"100px"} />
                   </Box>
-                  <Flex>Tidak ada daftar pesanan yang sesuai filter.</Flex>
+                  <Flex textAlign={"center"}>
+                    Tidak ada daftar pesanan yang sesuai filter.
+                  </Flex>
                 </Center>
               </>
             )}
