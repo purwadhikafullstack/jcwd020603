@@ -54,6 +54,8 @@ export default function SuperAdminProductList() {
     page: shown.page,
     search: "",
     category_id: "",
+    order: "DESC",
+    sort: "createdAt",
   });
 
   const [totalPages, setTotalPages] = useState(0);
@@ -104,7 +106,7 @@ export default function SuperAdminProductList() {
     }
   }, [shown]);
 
-  const productsPerPage = 8;
+  const productsPerPage = 6;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   //get selector branch
@@ -204,6 +206,27 @@ export default function SuperAdminProductList() {
                     </Th>
                     <Th className="thProductB">Desc </Th>
                     <Th className="thProductB">Berat </Th>
+                    <Th className="thProductB">
+                      <Flex alignItems="center" id="tableNameB">
+                        Tanggal{" "}
+                        <Flex flexDirection="column">
+                          <Icon
+                            id="ascendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({ ...filtering, order: "ASC" });
+                            }}
+                          />
+                          <Icon
+                            id="descendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({ ...filtering, order: "DESC" });
+                            }}
+                          />
+                        </Flex>
+                      </Flex>
+                    </Th>
                     <Th
                       textAlign={"center"}
                       display={userSelector.role == "ADMIN" ? "none" : "flex"}
@@ -228,6 +251,7 @@ export default function SuperAdminProductList() {
                       desc={product.desc}
                       weight={product.weight}
                       category={product.category_id}
+                      createdAt={product.createdAt}
                       indexOfLastProduct={indexOfLastProduct}
                       productsPerPage={productsPerPage}
                       fetchData={fetchData}

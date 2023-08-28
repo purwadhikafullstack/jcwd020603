@@ -28,6 +28,7 @@ import { EditCategory } from "./mEditCategory";
 import { EditProduct } from "./mEditProduct";
 import { DeleteProduct } from "./mDeleteProduct";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
 export function SATableProduct({
   product,
@@ -41,6 +42,7 @@ export function SATableProduct({
   indexOfLastProduct,
   productsPerPage,
   fetchData,
+  createdAt,
 }) {
   const navigate = useNavigate();
   const modalDelete = useDisclosure();
@@ -65,6 +67,16 @@ export function SATableProduct({
     return category ? category.category_name : "";
   };
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+      useGrouping: true,
+    }).format(amount);
+  };
+
   return (
     <>
       <Tr id="SACategoryB">
@@ -84,7 +96,7 @@ export function SATableProduct({
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
-            {price}
+            {formatCurrency(price)}
           </Flex>
         </Td>
         <Td className="SACategoryNameB">
@@ -95,6 +107,11 @@ export function SATableProduct({
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
             {weight}
+          </Flex>
+        </Td>
+        <Td className="SACategoryNameB">
+          <Flex alignItems="center" id="tableNameB">
+            {moment(createdAt).format("LLL")}
           </Flex>
         </Td>
         <Td

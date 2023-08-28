@@ -7,7 +7,6 @@
   width: 100%;
   max-width: 910px;
   height: 80px;
-  padding-top: 40px;
   padding-right: 20px;
   padding-left: 20px;
   justify-content: end;
@@ -53,6 +52,7 @@
 #alamatTopBarB {
   flex-direction: column;
   font-size: 70%;
+  height: 25px;
   cursor: pointer;
   padding-left: 10px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -82,11 +82,11 @@
 
   @media (max-width: 600px) {
     padding-top: 10px;
-    padding-bottom: 100px;
+    padding-bottom: 85px;
   }
   @media (min-width: 601px) and (max-width: 900px) {
     padding-top: 20px;
-    padding-bottom: 80px;
+    padding-bottom: 70px;
   }
 }
 
@@ -224,14 +224,22 @@ img {
   gap: 13px;
   grid-template-columns: repeat(2, 1fr);
 
-  /* Media query untuk lebar layar di bawah 600px */
+  /* Media query for screens below 600px */
   @media (max-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
+    padding-bottom: 10px;
   }
 
-  /* Media query untuk lebar layar di atas 600px */
-  @media (min-width: 601px) {
-    grid-template-columns: repeat(4, 1fr); /* 4 kolom pada layar besar */
+  /* Media query for screens between 601px and 850px */
+  @media (min-width: 601px) and (max-width: 850px) {
+    padding-bottom: 10px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Media query for screens above 851px */
+  @media (min-width: 851px) {
+    padding-bottom: 10px;
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -435,6 +443,50 @@ img {
   height: 100%;
   justify-content: center;
   flex-direction: column;
+}
+
+.flexSideBarB {
+  align-items: center;
+}
+
+.groupB {
+  position: relative;
+  height: 30px;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.groupB .text1B {
+  position: absolute;
+  margin: 5px 0;
+  padding: 0;
+  width: max-content;
+  animation: my-animation 10s linear infinite;
+}
+
+@keyframes my-animation {
+  100% {
+    transform: translateX(-20px);
+  }
+  0% {
+    transform: translateX(20px);
+  }
+}
+.groupB .text2B {
+  position: absolute;
+  margin: 5px 0;
+  padding: 0;
+  width: max-content;
+  animation: my-animation 10s linear infinite;
+}
+
+@keyframes my-animation {
+  100% {
+    transform: translateX(-20px);
+  }
+  0% {
+    transform: translateX(20px);
+  }
 }
 
 /* .inputBox {
