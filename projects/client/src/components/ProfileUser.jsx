@@ -70,30 +70,9 @@ export default function Profile() {
   }, [selectedFile]);
 
   return (
-    <Flex w={"100vw"} h={"100vh"} justifyContent={"center"}>
-      <Flex
-        w={"100%"}
-        maxW={"1160px"}
-        h={"100vh"}
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
-        <Flex
-          pt={"100px"}
-          spacing={4}
-          w={"100%"}
-          maxW={"900px"}
-          h={"100vh"}
-          boxShadow={"lg"}
-          p={12}
-          my={8}
-          flexDir={"row"}
-          gap={"5%"}
-        >
-          <ProfileFotoAlamat />
-          <ProfileData />
-        </Flex>
-      </Flex>
+    <Flex className="responsiveProfile">
+      <ProfileFotoAlamat />
+      <ProfileData />
     </Flex>
   );
 }

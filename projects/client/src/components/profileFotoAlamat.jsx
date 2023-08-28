@@ -67,18 +67,25 @@ export default function ProfileFotoAlamat() {
   return (
     <>
       <Flex
-        w={"50%"}
+        w={"100%"}
         h={"100%"}
-        rounded={10}
-        p={6}
         boxShadow={"lg"}
         flexDir={"column"}
-        gap={"5%"}
+        rowGap={"20px"}
         bgColor={"gray.100"}
-        // justifyContent={"space-between"}
+        padding={"20px"}
+        borderRadius={"10px"}
       >
-        <Flex w={"100%"} h={"70%"} boxShadow={"dark-lg"} p={2} rounded={10}>
-          <Center cursor={"pointer"}>
+        <Flex
+          w={"100%"}
+          h={"100%"}
+          minH={"350px"}
+          boxShadow={"dark-lg"}
+          p={2}
+          rounded={10}
+          position={"relative"}
+        >
+          <Center cursor={"pointer"} w={"100%"}>
             <Input
               accept="image/png , image/jpg, image/gif"
               onChange={handleFile}
@@ -87,9 +94,6 @@ export default function ProfileFotoAlamat() {
               display={"none"}
             />
             <Avatar
-              ml={"22%"}
-              align={"center"}
-              position={"absolute"}
               zIndex={4}
               size={"2xl"}
               src={image}
@@ -97,15 +101,17 @@ export default function ProfileFotoAlamat() {
                 inputFileRef.current.click();
               }}
             />
+            <Image
+              position={"absolute"}
+              src={logoPro}
+              rounded={12}
+              w={"100%"}
+              minH={"350px"}
+              h={"100%"}
+              blur={"3xl"}
+              filter={"blur(2px)"}
+            ></Image>
           </Center>
-          <Image
-            src={logoPro}
-            rounded={12}
-            w={"100%"}
-            h={"100%"}
-            blur={"3xl"}
-            filter={"blur(2px)"}
-          ></Image>
           <Button
             position={"absolute"}
             zIndex={"4"}
@@ -127,11 +133,12 @@ export default function ProfileFotoAlamat() {
         </Flex>
         <Flex
           w={"100%"}
-          h={"15%"}
+          h={"100%"}
           justifyContent={"space-around"}
           alignItems={"center"}
           rounded={10}
           boxShadow={"dark-lg"}
+          padding={"5px"}
         >
           <Icon
             textAlign={"center"}
