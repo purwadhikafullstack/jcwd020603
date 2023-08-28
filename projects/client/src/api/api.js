@@ -1,8 +1,9 @@
 import axios from "axios";
+const secret = process.env.secret;
 
 export function api() {
   const headers = {
-    ["x-secret-key"]: "sahabatsembako",
+    ["x-secret-key"]: secret,
   };
   const token = JSON.parse(localStorage.getItem("auth"));
   if (token) {

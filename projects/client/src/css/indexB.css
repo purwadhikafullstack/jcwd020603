@@ -52,7 +52,6 @@
 #alamatTopBarB {
   flex-direction: column;
   font-size: 70%;
-  height: 25px;
   cursor: pointer;
   padding-left: 10px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -62,10 +61,12 @@
   @media (max-width: 600px) {
     font-size: 60%;
     width: 110px;
+    height: 20px;
   }
   @media (min-width: 601px) {
     font-size: 85%;
     width: 180px;
+    height: 25px;
   }
 }
 
