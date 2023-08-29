@@ -1,4 +1,5 @@
 import {
+  Button,
     Center,
     Flex,
     Icon,
@@ -23,13 +24,14 @@ import {
   import Pagination from "./pagination";
   import ChartSalesReportProduct from "./Chart-SalesReport-product";
   Chart.register(...registerables);
+  
 
 export default function SalesReportProductContent (props) {
     
   const {
-  setSelectedSortBy, setSelectedOrderBy, setSearch, ascModeDate, setAscModeDate, total_terjualBestSeller,
+  setSelectedSortBy, setSelectedOrderBy, setSearch, ascModeDate, setAscModeDate, total_terjualBestSeller,handleDownloadExcel,
   ascModePrice, setAscModePrice, getBranch_name, pages, roleOfUSer,totalPages, shown, setShown, date, product_nameBestSeller,
-  inputHandler, inputHandlerBranch_name, formatCurrency, searchRef, dtSumQtyProd, dtSumQtyProdPagination } = props
+  inputHandler, inputHandlerBranch_name, formatCurrency, searchRef, dtSumQtyProd, dtSumQtyProdPagination, itemPerPage } = props
     return(
         <>
         <Flex flexDir={"row"} justifyContent={"center"} mb={"10px"} fontWeight={"extrabold"} fontSize={{base: "25px" , sm:"25px", md:"40px", lg: "50px"}}>
@@ -137,6 +139,10 @@ export default function SalesReportProductContent (props) {
           {/* table */}
           <Flex w={"100%"} overflowX={"auto"} flexDir={"column"} >
           <Flex w={"100%"} fontSize={{base: "10px", sm: "18px", md : "20px", lg:"20px"}} fontWeight={'extrabold'}>Table laporan penjualan berdasarkan Produk</Flex>
+          <Button  borderTopRadius={"20px"} bgColor={"#EBE76C"} fontWeight={"extrabold"}
+           onClick={()=> {
+            // setIsDownloadTriggered(true)
+             handleDownloadExcel()}}>Unduh ke Excel</Button>
           <Table
             size="sm"
             w={"100%"}
@@ -178,7 +184,7 @@ export default function SalesReportProductContent (props) {
             <Tbody fontSize={"14px"}>
               {dtSumQtyProdPagination?.map((val, index) => (
                 <Tr key={val?.index} className="table-row">
-                  <Td textAlign={"center"}>{index + 1}</Td>
+                  <Td textAlign={"center"}>{((shown.page -1) * itemPerPage) + (index + 1)}</Td>
                   <Td >{val?.Stock?.Product?.product_name}</Td>
                   <Td textAlign={"center"}>{formatCurrency(val?.Stock?.Product?.price)}</Td>
                   <Td textAlign={"center"}>{val?.total_qty}</Td>

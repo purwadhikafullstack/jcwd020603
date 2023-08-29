@@ -104,6 +104,7 @@ export default function ProfileData() {
         console.log(error);
       }
     },
+
   });
 
   const inputHandler = (e) => {
@@ -114,7 +115,9 @@ export default function ProfileData() {
 
   return (
     <>
-      <Flex flexDir={"column"} justifyContent={"space-between"} w={"50%"}>
+      <Flex flexDir={"column"} justifyContent={"space-between"} 
+       w={{base : "95%", sm : "95%", md : "50%", lg: "50%"}}
+       h={"100%"}  >
         <Flex
           w={"100%"}
           h={"68%"}
@@ -166,7 +169,7 @@ export default function ProfileData() {
             >
               {formik.errors.user_name}
             </Flex>
-          </FormControl>
+          </FormControl> 
 
           <FormControl>
             <FormLabel>Email</FormLabel>

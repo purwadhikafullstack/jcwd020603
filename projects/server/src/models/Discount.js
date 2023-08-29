@@ -4,6 +4,7 @@ module.exports = (sequelize, Sequelize) => {
     valid_start: Sequelize.DATE,
     valid_to: Sequelize.DATE,
     nominal: Sequelize.INTEGER,
+    photo_discount_url : Sequelize.STRING
   },
   {
     paranoid : true

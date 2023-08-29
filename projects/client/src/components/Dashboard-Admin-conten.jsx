@@ -3,28 +3,16 @@ import {
   Center,
   Flex,
   Icon,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Select,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
   useDisclosure,
 } from "@chakra-ui/react";
 import {api} from "../api/api"
-import { BiSearch, BiSolidChevronDown, BiSolidChevronUp } from "react-icons/bi";
 import "../css/indexG.css";
 import "../css/indexR.css";
-import { FaPeopleGroup } from "react-icons/fa6";
 import { FaStore, } from "react-icons/fa";
-import { IoReorderThreeSharp, } from "react-icons/io5";
-import { MdOutlinePayments, MdArrowBackIosNew } from "react-icons/md";
-import { Chart, registerables, scales } from 'chart.js';
-import Pagination from "./pagination";
+import { BiSolidHot, } from "react-icons/bi";
+import { LuPackageCheck, } from "react-icons/lu";
+import { MdOutlinePayments } from "react-icons/md";
+import { Chart, registerables } from 'chart.js';
 import ChartSalesReportProduct from "./Chart-SalesReport-product";
 import ChartSalesReportUser from "./Chart-SalesReport-user";
 import { useSelector } from "react-redux";
@@ -225,8 +213,8 @@ export default function DashboardAdminContent() {
             <Icon as={FaStore} fontSize={"30px"} color={"#ffb21c"} />
           </Center>
           <Flex flexDir={"column"}>
-            <Flex fontSize={"20px"} fontWeight={"extrabold"} _loading={true}>
-              {userSelector.role == "SUPER ADMIN" ? dtUserBranch.length : getBranchName?.Branch?.branch_name}
+            <Flex fontSize={"16px"} fontWeight={"extrabold"} _loading={true}>
+              {userSelector.role == "SUPER ADMIN" ? dtUserBranch.length : getBranchName[0]?.Branch?.branch_name}
             </Flex>
             <Flex color={"grey"} fontWeight={"semibold"}>
             Cabang
@@ -248,8 +236,8 @@ export default function DashboardAdminContent() {
           </Flex>
         </Flex>
         <Flex className="menuTotalG" transition="transform 1s, box-shadow 1s" _hover={{ transform: 'scale(1.05)',}}>
-         <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#cbe4fb"}>
-            <Icon as={FaStore} fontSize={"30px"} color={"#007bfe"} />
+         <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#ffb6c1"}>
+            <Icon as={LuPackageCheck} fontSize={"30px"} color={"#f08080"} />
           </Center>
           <Flex flexDir={"column"}>
             <Flex fontSize={"16px"} fontWeight={"extrabold"} _loading={true}>
@@ -261,8 +249,8 @@ export default function DashboardAdminContent() {
           </Flex>
         </Flex>
         <Flex className="menuTotalG" transition="transform 1s, box-shadow 1s" _hover={{ transform: 'scale(1.05)',}}>
-         <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#cbe4fb"}>
-            <Icon as={FaStore} fontSize={"30px"} color={"#007bfe"} />
+         <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#B9B4C7"}>
+            <Icon as={BiSolidHot} fontSize={"30px"} color={"#5C5470"} />
           </Center>
           <Flex flexDir={"column"}>
             <Flex fontSize={"14px"} fontWeight={"extrabold"} _loading={true}>

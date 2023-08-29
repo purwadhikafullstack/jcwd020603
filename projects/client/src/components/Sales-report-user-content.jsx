@@ -1,4 +1,5 @@
 import {
+  Button,
     Center,
     Flex,
     Icon,
@@ -37,11 +38,11 @@ export default function SalesReportUserContent (props) {
   const userSelector = useSelector((state) => state.auth)
   const {isOpen, onOpen, onClose} = useDisclosure()
   const [indexnya, setIndexnya] = useState(0)
-    console.log(indexnya);
   const {
   setSelectedSortBy, setSelectedOrderBy, setSearch, ascModeDate, setAscModeDate, dtSumQtyUser, dtSumQtyUserByTrans, dtSumQtyUserPagination,
   ascModePrice, setAscModePrice, getBranch_name, pages, roleOfUSer,totalPages, shown, setShown, date, dtSumQtyUserAll, dtSumQtyUserAllPagination,
-  inputHandler, inputHandlerBranch_name, formatCurrency, searchRef, dtSumQtyProdPagination, inputBranch_name, setInputBranch_name } = props
+  inputHandler, inputHandlerBranch_name, formatCurrency, searchRef, dtSumQtyProdPagination, inputBranch_name, setInputBranch_name ,
+  handleDownloadExcel } = props
 
   let ini_namanya = null
   const branch_namenya = () => {
@@ -67,9 +68,7 @@ export default function SalesReportUserContent (props) {
       return ini_namanya
     }
   }
-  console.log(branch_namenya());
-  console.log(ini_namanya);
-  console.log(dtSumQtyUserPagination);
+  const itemPerPage = 3
     return(
         <>
         <Flex flexDir={"row"} justifyContent={"center"} mb={"10px"} fontWeight={"extrabold"} fontSize={{base: "25px" , sm:"25px", md:"40px", lg: "50px"}}>
@@ -169,6 +168,10 @@ export default function SalesReportUserContent (props) {
           {/* table */}
           <Flex w={"100%"} overflowX={"auto"} flexDir={"column"} >
           <Flex w={"100%"} fontSize={{base: "10px", sm: "18px", md : "20px", lg:"20px"}} fontWeight={'extrabold'}>Table laporan penjualan berdasarkan Pembeli</Flex>
+          <Button  borderTopRadius={"20px"} bgColor={"#EBE76C"} fontWeight={"extrabold"}
+           onClick={()=> {
+            // setIsDownloadTriggered(true)
+             handleDownloadExcel()}}>Unduh ke Excel</Button>
           <Table
             size="sm"
             w={"100%"}
@@ -194,7 +197,7 @@ export default function SalesReportUserContent (props) {
             <Tbody fontSize={"14px"}>
               {dtSumQtyUserPagination?.map((val, index) => (
                 <Tr key={index} className="table-row">
-                  <Td textAlign={"center"}>{index + 1}</Td>
+                  <Td textAlign={"center"}>{((shown.page -1) * itemPerPage) + (index + 1)}</Td>
                   <Td >{val?.date}</Td>
                   <Td >{val?.total_transaksi}</Td>
                   <Td textAlign={"center"}>{val?.dataUser.length}</Td>

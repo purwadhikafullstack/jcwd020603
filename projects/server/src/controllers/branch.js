@@ -10,6 +10,61 @@ const { openCage } = require("../service/location.service");
 dotenv.config();
 
 const branchController = {
+
+  getAllFilter : async (req,res) => {
+    const {branch_id, search, sort, ordering, page} = req.body
+    let where = {
+      role : "ADMIN"
+    }
+    if(branch_id){
+      where.branch_id = branch_id
+    }
+    if(search){
+      where[Op.or] = [
+        { "$user_name$" : { [Op.like]: `%${search}%` } },
+        { "$Branch.branch_name$" : { [Op.like]: `%${search}%` } }
+        ];
+    }
+    let order = []
+    if(ordering === "user_name"){
+      order = [[sort, ordering]]
+    }
+    if(ordering === "branch_name"){
+      order = [{model : db.Branch, as: "Branch"}, "branch_name", ordering]
+    }
+    try {
+      const branch = await db.User.findAndCountAll({
+        include: [
+          {
+            model: db.Branch,
+            as: "Branch",
+            include: [
+              {
+                model: db.City,
+                as: "City",
+                attributes: ["city_name", "type", "postal_code"],
+              },
+            ],
+          },
+        ],
+        where : where,
+        order : order,
+        limit : 3,
+        offset : 3 * page
+      });
+      // const noFilterBranch = await db.User.fin
+      res.status(200).send({ 
+        message: "List Branches", 
+        Data: branch.rows,
+        total : Math.ceil(branch.count / 3),
+        jumlahBranch : branch.count
+      });
+      return branch;
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  },
+
   getAll: async (req, res) => {
     try {
       const branch = await db.User.findAll({
@@ -164,6 +219,7 @@ const branchController = {
       const branch = await db.User.findOne({
         where: {
           branch_id: branch_id,
+          user_id : user_id
         },
         include: [
           {
@@ -196,7 +252,8 @@ const branchController = {
         },
         {
           where: {
-            branch_id: branch_id,
+            id : user_id,
+            branch_id: branch_id && !null,
           },
         },
         transaction
@@ -304,6 +361,32 @@ const branchController = {
       });
     }
   },
+
+  uploadAvatar: async (req, res) => {
+    try {
+      const { filename } = req.file;
+      await db.User.update(
+        {
+          avatar_url: url_avatar + filename,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+
+      await db.User.findOne({
+        where: {
+          id: req.params.id,
+        },
+      }).then((result) => res.status(200).send({message : "uoload foto", data: result}));
+    } catch (err) {
+      return res.status(500).send({ message: err.message });
+    }
+  },
+
+
 };
 
 module.exports = branchController;

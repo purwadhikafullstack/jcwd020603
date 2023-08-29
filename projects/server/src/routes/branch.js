@@ -9,6 +9,12 @@ router.get(
   branchController.getAll
 );
 
+router.post(
+  "/all-branch-filter",
+  roleController.checkAllAdmin,
+  branchController.getAllFilter
+);
+
 router.get("/getbranch", branchController.getAllBranchName);
 
 router.get(

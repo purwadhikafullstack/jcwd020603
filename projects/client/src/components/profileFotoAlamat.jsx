@@ -19,7 +19,6 @@ import { Link } from "react-router-dom";
 
 export default function ProfileFotoAlamat() {
   const userSelector = useSelector((state) => state.auth);
-  console.log(userSelector);
   const [selectedFile, setSelectedFile] = useState(null);
   const [image, setImage] = useState(userSelector.avatar_url);
   const [loading, setLoading] = useState(false);
@@ -67,17 +66,16 @@ export default function ProfileFotoAlamat() {
   return (
     <>
       <Flex
-        w={"50%"}
-        h={"100%"}
+        w={{base : "95%", sm : "95%", md : "50%", lg: "50%"}}
+        h={"auto"}
         rounded={10}
-        p={6}
+        py={12}
+        px={4}
         boxShadow={"lg"}
         flexDir={"column"}
-        gap={"5%"}
-        bgColor={"gray.100"}
-        // justifyContent={"space-between"}
+        gap={{base:"15%", sm:"15%", md:"15%", lg:"5%"}}
       >
-        <Flex w={"100%"} h={"70%"} boxShadow={"dark-lg"} p={2} rounded={10}>
+        <Flex w={"100%"} h={{base : "100%", sm: "100%", md:"70%", lg:"70%"}} boxShadow={"dark-lg"} p={2} rounded={10}>
           <Center cursor={"pointer"}>
             <Input
               accept="image/png , image/jpg, image/gif"
@@ -87,11 +85,11 @@ export default function ProfileFotoAlamat() {
               display={"none"}
             />
             <Avatar
-              ml={"22%"}
+              ml={{base:"80%", sm:"80%", md: "18%", lg:"18%"}}
               align={"center"}
               position={"absolute"}
               zIndex={4}
-              size={"2xl"}
+              size={{base : "lg", sm: "xl", md: "xl", lg: "2xl"}}
               src={image}
               onClick={() => {
                 inputFileRef.current.click();
@@ -112,7 +110,6 @@ export default function ProfileFotoAlamat() {
             fontWeight={"bolder"}
             isLoading={loading}
             bgColor={"green.200"}
-            // variant={"ghost"}
             color={"green"}
             onClick={() => {
               setLoading(true);
@@ -125,15 +122,19 @@ export default function ProfileFotoAlamat() {
             <Icon as={GrDocumentUpdate} mr={"10%"}></Icon> Simpan
           </Button>
         </Flex>
+       
         <Flex
           w={"100%"}
-          h={"15%"}
+          // h={{base : "40%", sm: "40%", md: "40%", lg: "25%", xl : "25%"}}
+          h={"100%"}
           justifyContent={"space-around"}
           alignItems={"center"}
           rounded={10}
           boxShadow={"dark-lg"}
+          bgColor={"red.200"}
         >
           <Icon
+          ml={"10px"}
             textAlign={"center"}
             as={FaMapMarkerAlt}
             w={"8%"}
@@ -164,21 +165,6 @@ export default function ProfileFotoAlamat() {
                 </Link>
               </Flex>
             )}
-
-            {/* <Box border={"1px solid gray"} w={"100%"}></Box> */}
-            {/* <Button
-              w={"100%"}
-              h={"30%"}
-              fontWeight={"bold"}
-              bgColor={"#118925"}
-              color={"white"}
-              _hover={{
-                color: "black",
-                bgColor: "green.200",
-              }}
-            >
-              Edit Alamat
-            </Button> */}
           </Flex>
         </Flex>
       </Flex>

@@ -1,4 +1,5 @@
 import {
+  Button,
     Center,
     Flex,
     Icon,
@@ -27,8 +28,8 @@ export default function SalesReportTransactionContent (props) {
     
   const {
   dtSalesReport, dtSalesReportFilter,total, setSelectedSortBy, setSelectedOrderBy, setSearch, ascModeDate, setAscModeDate,
-  ascModePrice, setAscModePrice, getBranch_name, pages, roleOfUSer,totalPages, shown, setShown, date,
-  inputHandler, inputHandlerBranch_name, formatCurrency, searchRef} = props
+  ascModePrice, setAscModePrice, getBranch_name, pages, roleOfUSer,totalPages, shown, setShown, date, setIsDownloadTriggered,
+  inputHandler, inputHandlerBranch_name, formatCurrency, searchRef, handleDownloadExcel, itemPerPage} = props
 
     return(
         <>
@@ -133,8 +134,14 @@ export default function SalesReportTransactionContent (props) {
           </Flex>
           {/* chart */}
           {/* table */}
+          <Flex>
+          </Flex>
           <Flex w={"100%"} overflowX={"auto"} flexDir={"column"} >
           <Flex w={"100%"} fontSize={{base: "10px", sm: "18px", md : "20px", lg:"20px"}} fontWeight={'extrabold'}>Table laporan penjualan berdasarkan Transaksi</Flex>
+          <Button  borderTopRadius={"20px"} bgColor={"#EBE76C"} fontWeight={"extrabold"}
+           onClick={()=> {
+            // setIsDownloadTriggered(true)
+             handleDownloadExcel()}}>Unduh ke Excel</Button>
           <Table
             size="sm"
             w={"100%"}
@@ -171,7 +178,7 @@ export default function SalesReportTransactionContent (props) {
             <Tbody fontSize={"10px"}>
               {dtSalesReportFilter?.map((val, index) => (
                 <Tr key={val?.id} className="table-row">
-                  <Td>{index + 1}</Td>
+                  <Td>{((shown.page -1) * itemPerPage) + (index + 1)}</Td>
                   <Td>{val?.order_number}</Td>
                   <Td>{val.date.split("T")[0]}</Td>
                   <Td>{val.User.user_name}</Td>

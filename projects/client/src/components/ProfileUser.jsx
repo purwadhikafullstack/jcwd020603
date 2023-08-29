@@ -74,8 +74,8 @@ export default function Profile() {
       <Flex
         w={"100%"}
         maxW={"1160px"}
-        h={"100vh"}
-        justifyContent={"center"}
+        h={"auto"}
+        justifyContent={"space-between"}
         alignItems={"center"}
       >
         <Flex
@@ -83,12 +83,13 @@ export default function Profile() {
           spacing={4}
           w={"100%"}
           maxW={"900px"}
-          h={"100vh"}
+          h={"100%"}
           boxShadow={"lg"}
-          p={12}
-          my={8}
-          flexDir={"row"}
-          gap={"5%"}
+          p={{base: 0, sm: 0, md: 12, lg : 12}}
+          my={8} 
+          flexDir={{base: "column", sm: "column", md: "column", lg : "row"}}
+          gap={"5%"}  
+          alignItems={"center"}
         >
           <ProfileFotoAlamat />
           <ProfileData />
