@@ -3,6 +3,7 @@ const moment = require("moment");
 const { nanoid } = require("nanoid");
 const { Op, where } = require("sequelize");
 const payment_image = process.env.payment_image;
+const fs = require("fs");
 
 const orderController = {
   getAll: async (req, res) => {
@@ -523,13 +524,22 @@ const orderController = {
   changeStatusOrder: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
+      const findPayment = await db.Order.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
       const update = {
         status: req.body.status,
       };
       if (req.body.status == "Menunggu Pembayaran") {
         update.date = moment().add(1, "hour");
+        fs.unlinkSync(
+          `${__dirname}/../public/paymentImg/${
+            findPayment.order_transfer_url.split("/")[4]
+          }`
+        );
       }
-      console.log("ini update nya yaa", update);
       const patch = await db.Order.update(update, {
         where: { id: req.params.id },
         transaction: trans,
