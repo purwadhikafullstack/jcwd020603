@@ -20,6 +20,7 @@ export default function MetodePengiriman({
     setIsLoading(true);
     setClicked(e.currentTarget.id);
     setCourier(e.currentTarget.id);
+    setCost({});
   };
   //mendapatkan biaya
   const handleCost = (idx) => {
@@ -62,11 +63,11 @@ export default function MetodePengiriman({
               padding={"10px 0px"}
               gap={"20px"}
               borderBottom={"1px solid lightgrey"}
+              id="jne"
+              onClick={(e) => handleClick(e)}
             >
               <Icon
                 _hover={{ cursor: "pointer" }}
-                id="jne"
-                onClick={(e) => handleClick(e)}
                 as={Clicked == "jne" ? BiRadioCircleMarked : BiRadioCircle}
                 fontSize={"35px"}
                 color={"#2A960C"}
@@ -83,11 +84,11 @@ export default function MetodePengiriman({
               padding={"10px 0px"}
               gap={"20px"}
               borderBottom={"1px solid lightgrey"}
+              id="pos"
+              onClick={(e) => handleClick(e)}
             >
               <Icon
-                id="pos"
                 _hover={{ cursor: "pointer" }}
-                onClick={(e) => handleClick(e)}
                 as={Clicked == "pos" ? BiRadioCircleMarked : BiRadioCircle}
                 fontSize={"35px"}
                 color={"#2A960C"}
@@ -104,11 +105,11 @@ export default function MetodePengiriman({
               padding={"10px 0px"}
               gap={"20px"}
               borderBottom={"1px solid lightgrey"}
+              id="tiki"
+              onClick={(e) => handleClick(e)}
             >
               <Icon
-                id="tiki"
                 _hover={{ cursor: "pointer" }}
-                onClick={(e) => handleClick(e)}
                 as={Clicked == "tiki" ? BiRadioCircleMarked : BiRadioCircle}
                 fontSize={"35px"}
                 color={"#2A960C"}
@@ -134,12 +135,14 @@ export default function MetodePengiriman({
                         fontSize={"12px"}
                         alignItems={"center"}
                         gap={"10px"}
+                        id={idx}
+                        onClick={(e) => handleCost(e.target.id)}
                       >
                         <Icon
                           values={val}
                           id={idx}
-                          _hover={{ cursor: "pointer" }}
                           onClick={(e) => handleCost(e.target.id)}
+                          _hover={{ cursor: "pointer" }}
                           as={
                             cost?.service == val?.service
                               ? BiRadioCircleMarked

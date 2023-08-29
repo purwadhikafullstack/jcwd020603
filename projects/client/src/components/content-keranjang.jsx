@@ -50,10 +50,13 @@ export default function ContentKeranjang(props) {
 
   //count total harga belanja
   const totalBelanja = selectedItems.map((val, idx) => {
-    const price = selectedItems[idx].discounted_price
-      ? selectedItems[idx].discounted_price == 50
+    const price = selectedItems[idx]?.Stock?.Discount
+      ? selectedItems[idx]?.Stock?.Discount?.nominal == 50
         ? Number(selectedItems[idx].Stock.Product.price)
-        : Number(selectedItems[idx].discounted_price)
+        : Number(
+            selectedItems[idx].Stock.Product.price *
+              ((100 - selectedItems[idx]?.Stock?.Discount?.nominal) / 100)
+          )
       : Number(selectedItems[idx].Stock.Product.price);
     return price * Number(selectedItems[idx].qty);
   });
@@ -308,8 +311,26 @@ export default function ContentKeranjang(props) {
             isLoading={isLoading}
             _hover={{ cursor: "pointer" }}
             onClick={() => {
-              updateLimit();
-              postOrder();
+              if (selectedItems.length > 0) {
+                if (cost.service) {
+                  updateLimit();
+                  postOrder();
+                } else {
+                  toast({
+                    title: "Tidak ada opsi pengiriman yang dipilih",
+                    status: "warning",
+                    position: "top",
+                    duratio: 3000,
+                  });
+                }
+              } else {
+                toast({
+                  title: "Tidak ada produk yang ingin di pesan",
+                  status: "warning",
+                  position: "top",
+                  duratio: 3000,
+                });
+              }
             }}
           >
             PESAN SEKARANG

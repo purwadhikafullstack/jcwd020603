@@ -23,6 +23,7 @@ export default function KeranjangList(props) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { Product, Discount } = props.Stock;
+  console.log("helo", props.prodCart);
   const { fetch } = useFetchCart();
   useEffect(() => {
     console.log(props.prodCart);
@@ -123,7 +124,7 @@ export default function KeranjangList(props) {
             justifyContent={"space-between"}
             alignItems={"center"}
           >
-            {!props?.discounted_price ? (
+            {!Discount ? (
               <Flex alignItems={"center"}>
                 <Flex fontSize={"12px"} fontWeight={"700"} color={"#F25F0C"}>
                   Rp. {Product?.price?.toLocaleString("id-ID")}

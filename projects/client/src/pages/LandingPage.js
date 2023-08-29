@@ -16,13 +16,14 @@ import TopBar2 from "../components/topbar2";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
 import SidebarMini from "../components/sidebar-mini";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ModalNearestBranch from "../components/modal-nearest-branch";
 import { useFetchCart } from "../hooks/useFetchCart";
 
 export default function LandingPage() {
   const windowWidth = window.outerWidth;
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const userSelector = useSelector((state) => state.auth);
   const toast = useToast();
   const { fetch } = useFetchCart();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -92,7 +93,7 @@ export default function LandingPage() {
   };
   useEffect(() => {
     getSelectedAddress();
-  }, []);
+  }, [userSelector?.email]);
   console.log(selectedAddress);
   //menyimpan length cart
   const [lengthCart, setLengthCart] = useState(0);
