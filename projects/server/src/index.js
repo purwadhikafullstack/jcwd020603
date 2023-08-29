@@ -31,6 +31,7 @@ app.use("/categoryImg", express.static(`${__dirname}/public/categoryImg`));
 app.use("/productImg", express.static(`${__dirname}/public/productImg`));
 app.use("/paymentImg", express.static(`${__dirname}/public/paymentImg`));
 app.use("/avatar", express.static(`${__dirname}/public/Avatar`));
+app.use("/photo-discount", express.static(`${__dirname}/public/PhotoDiscount`));
 // app.use(verify);
 app.use("/api/user", routes.userRoutes);
 app.use("/api/branch", routes.branchRoutes);

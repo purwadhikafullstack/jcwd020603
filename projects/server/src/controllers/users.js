@@ -12,6 +12,7 @@ const url_bg = process.env.bg_url;
 
 const userController = {
   register: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
       const { user_name, email, password, phone_number } = req.body;
       const hashPassword = await bcrypt.hash(password, 10);
@@ -25,6 +26,7 @@ const userController = {
         res.send(result);
       });
     } catch (err) {
+      
       return res.status(500).send({ message: err.message });
     }
   },
@@ -329,7 +331,6 @@ const userController = {
       await db.User.update(
         {
           avatar_url: url_avatar + filename,
-          bg_url: url_bg + filename,
         },
         {
           where: {
@@ -342,7 +343,7 @@ const userController = {
         where: {
           id: req.params.id,
         },
-      }).then((result) => res.send(result));
+      }).then((result) => res.status(200).send({message : "uoload foto", data: result}));
     } catch (err) {
       return res.status(500).send({ message: err.message });
     }

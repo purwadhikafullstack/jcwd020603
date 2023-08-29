@@ -16,8 +16,10 @@ import { BsDot, BsFillPersonBadgeFill } from "react-icons/bs";
 import { TbReportAnalytics } from "react-icons/tb";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function AdminSidebar() {
+  const userSelector = useSelector((state) => state.auth)
   //merubah warna saat di click
   const [Clicked, setClicked] = useState("");
   const handleClick = (e) => {
@@ -138,7 +140,7 @@ export default function AdminSidebar() {
             </Flex>
           </>
         ) : null}
-        <Flex w={"100%"} gap={"20px"}>
+        <Flex w={"100%"} gap={"20px"} display={userSelector.role == "SUPER ADMIN" ? "flex" : "none"}>
           <Flex
             className="adminMiniFlexG"
             bg={Clicked == "karyawan" ? "#FFAE0D" : "white"}

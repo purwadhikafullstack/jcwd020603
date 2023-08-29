@@ -74,7 +74,7 @@ const routes = [
   <Route
     path="/verify/:token"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage >
         <VerifyPage />
       </ProtectedPage>
     }
@@ -83,7 +83,7 @@ const routes = [
   <Route
     path="/forgot-password/:token"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage >
         <ResetPass />
       </ProtectedPage>
     }
@@ -192,7 +192,7 @@ const routes = [
     }
   ></Route>,
   <Route
-    path="/ab"
+    path="/admin-branch"
     element={
       <ProtectedPage>
         <DashboardBranch needLogin={true} adminOnly={true} />

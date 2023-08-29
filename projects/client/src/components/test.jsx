@@ -1,0 +1,37 @@
+<DiscountContent
+  userSelector
+  roleOfUSer
+  searchRef
+  getBranch_name
+  setGetBranch_name
+  inputBranch_name
+  setInputBranch_name
+  search
+  setSearch
+  ordered
+  setOrdered
+  sorted
+  ascMOdeStart
+  ascMOdeTo
+  setAscModeTo
+  ascMOdeNominal
+  setAscModeNominal
+  totalDiscount
+  totalPages
+  pages
+  setTotalPages
+  shown
+  setShown
+  onOpen
+  onClose
+  dtDis
+  setDtDis
+  onOpenDelel
+  onCloseDel
+  dtDisSelected
+  isEdit
+  setDtDisSelected
+  numberIdx
+  fetchAll
+  fetchDtBranch
+/>;

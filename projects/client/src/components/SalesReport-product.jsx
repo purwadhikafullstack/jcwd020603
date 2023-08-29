@@ -10,6 +10,7 @@ import { api } from "../api/api";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import * as XLSX from "xlsx"
 import { Chart, registerables, scales } from 'chart.js';
 import SalesReportProductContent from "./Sales-report-product-content";
 Chart.register(...registerables);
@@ -26,6 +27,7 @@ export default function SalesReportProduct() {
   const [ascModeDate, setAscModeDate] = useState(true)
   const [ascModePrice, setAscModePrice] = useState(true)
   const [dtSumQtyProd, setDtSumQtyProd] = useState([])
+  const [dtForDownload, setDtForDownload] = useState([])
   const [dtSumQtyProdPagination, setDtSumQtyProdPagination] = useState([])
   const [getBranch_name, setGetBranch_name] = useState([])
   const [inputBranch_name, setInputBranch_name] = useState("")
@@ -37,6 +39,7 @@ export default function SalesReportProduct() {
     dateTo : "",
   })
   // inputHandler
+  const itemPerPage = 3
   const inputHandler = (e) => {
     const {id, value} = e.target
     const tempDate = {...date}
@@ -81,11 +84,14 @@ export default function SalesReportProduct() {
       await api()
       .post("sales-report/sumqty", sendDataBody).then((res) => {
         console.log(res.data.data);
-        setDtSumQtyProd(res.data.data)})
+        setDtSumQtyProd(res.data.data)
+        setDtForDownload(res.data.data)  
+      })
     } catch (error) {
       console.log(error.message);
     }
   }
+  console.log(dtSumQtyProd);
   const fetchSumQtyProductForPagination = async() => {
     const sendDataBodyPagination = {
       dateFrom : date.dateFrom ? date.dateFrom : moment().subtract(1, "weeks").format("YYYY-MM-DD"), 
@@ -109,6 +115,35 @@ export default function SalesReportProduct() {
     }
   }
   // fetch data
+
+    // download ke excel
+const handleDownloadExcel = () => {
+  // if(isDownloadTriggered == true){
+    const excelData = dtForDownload.map((item, index) => ({
+      No : index+1,
+      "Nama Produk": item?.Stock?.Product?.product_name,
+      "Harga Produk": item?.Stock?.Product?.price,
+      "Jumlah Terjual": item?.total_qty,
+      "Jumlah Stok": item?.Stock?.quantity_stock,
+      "Nama Cabang": item?.Order?.Branch?.branch_name
+     }));
+   
+     const ws = XLSX.utils.json_to_sheet(excelData);
+     const wb = XLSX.utils.book_new();
+     XLSX.utils.book_append_sheet(wb, ws, 'SalesReport');
+     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+     const url = URL.createObjectURL(blob);
+     
+     const link = document.createElement('a');
+     link.href = url;
+     link.download = 'sales_report_produk.xlsx';
+     link.click();
+
+    //  setIsDownloadTriggered(false)
+  // }
+  
+};
 
 
   const cariBestSeller = () => {
@@ -168,8 +203,8 @@ export default function SalesReportProduct() {
       <Flex className="flex1R-salesReportTrans">
         {/* =========================================================== */}
         <SalesReportProductContent dtSumQtyProdPagination={dtSumQtyProdPagination} setDtSumQtyProdPagination={setDtSumQtyProdPagination}
-        dtSumQtyProd={dtSumQtyProd} setDtSumQtyProd={setDtSumQtyProd} searchRef={searchRef} roleOfUSer={roleOfUSer}
-        total={total} setTotal={setTotal} selectedSortBy={selectedSortBy} setSelectedSortBy={setSelectedSortBy}
+        dtSumQtyProd={dtSumQtyProd} setDtSumQtyProd={setDtSumQtyProd} searchRef={searchRef} roleOfUSer={roleOfUSer} itemPerPage={itemPerPage}
+        total={total} setTotal={setTotal} selectedSortBy={selectedSortBy} setSelectedSortBy={setSelectedSortBy} handleDownloadExcel={handleDownloadExcel}
         selectedOrderBy={selectedOrderBy} setSelectedOrderBy={setSelectedOrderBy} search={search} setSearch={setSearch} ascModeDate={ascModeDate} setAscModeDate={setAscModeDate}
         ascModePrice={ascModePrice} setAscModePrice={setAscModePrice} getBranch_name={getBranch_name} setGetBranch_name={setGetBranch_name} inputBranch_name={inputBranch_name} setInputBranch_name={setInputBranch_name}
         pages={pages} setPages={setPages} totalPages={totalPages} setTotalPages={setTotalPages} shown={shown} setShown={setShown} date={date} setDate={setDate} total_terjualBestSeller={total_terjualBestSeller}

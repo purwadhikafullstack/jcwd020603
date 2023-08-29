@@ -6,12 +6,13 @@ const { query } = require("express");
 const { createStockHistory } = require("../service/stock.service");
 const stockControllerB = {
   getAllStockByDiscount: async (req, res) => {
-    const { discount_id } = req.query;
+    const { discount_id, branch_id } = req.query;
     console.log(req.query, "ini diskon id");
     try {
       const getbydiscount = await db.Stock.findAll({
         where: {
           discount_id,
+          branch_id
         },
         include: [
           {
