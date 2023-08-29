@@ -344,6 +344,15 @@ const stockControllerB = {
     const trans = await db.sequelize.transaction();
     try {
       const { quantity_stock, product_id, branch_id } = req.body;
+
+      // Check if any required parameter is empty
+      if (!quantity_stock || !product_id || !branch_id) {
+        await trans.rollback();
+        return res.status(400).send({
+          message: "Semua parameter harus diisi pada form.",
+        });
+      }
+
       const input = {
         quantity_before: 0,
         status: "INCREMENT",
@@ -354,20 +363,21 @@ const stockControllerB = {
 
       const stock = await db.Stock.create(
         {
-          quantity_stock: parseInt(quantity_stock),
-          product_id: parseInt(product_id),
-          branch_id: parseInt(branch_id),
+          quantity_stock: quantity_stock,
+          product_id: product_id,
+          branch_id: branch_id,
         },
         {
           transaction: trans,
         }
       );
+
       await trans.commit();
+
       const isStockHistoryCreated = await createStockHistory(stock, input);
       if (isStockHistoryCreated) {
-        return await db.Stock.findAll().then((result) => {
-          res.send(result);
-        });
+        const stocks = await db.Stock.findAll();
+        res.send(stocks);
       } else {
         return res.status(500).send({
           message: "Error creating StockHistory.",
