@@ -5,6 +5,7 @@ const cronJob = () => {
   cron.schedule("*/10 * * * *", () => {
     try {
       orderController.cancelOrderAutomatically();
+      orderController.doneOrderAutomatically();
       console.log("cron job running");
     } catch (err) {
       console.log("Error in cron job", err.message);

@@ -55,7 +55,7 @@ export default function ProfileVeriPass() {
         p={6}
         boxShadow={"lg"}
         flexDir={"column"}
-        gap={"5%"}
+        rowGap={"10px"}
         bgColor={"gray.100"}
         justifyContent={"space-around"}
       >
