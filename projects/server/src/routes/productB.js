@@ -36,4 +36,7 @@ router.get(
   productControllerB.getSelector
 );
 
+router.get("/:id", productControllerB.getById);
+router.get("/category/:id", productControllerB.getByCategoryId);
+
 module.exports = router;

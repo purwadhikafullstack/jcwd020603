@@ -170,7 +170,12 @@ export default function SuperAdminProductList() {
                 display={userSelector.role == "ADMIN" ? "none" : "flex"}
               >
                 {<Icon as={AiOutlinePlus} fontSize={"28px"} />}
-                <AddProduct id={addProduct} isOpen={isOpen} onClose={onClose} />
+                <AddProduct
+                  id={addProduct}
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  fetchData={fetchData}
+                />
               </Button>
             </Flex>
           </Flex>
@@ -187,41 +192,36 @@ export default function SuperAdminProductList() {
                   ref={tableHeadRef}
                 >
                   <Tr className="tableHeadMenuG">
-                    <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"}>Gambar</Th>
-                    <Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      No
+                    </Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      Gambar
+                    </Th>
+                    <Th bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Nama Produk{" "}
-                      </Flex>
-                    </Th>
-                    <Th className="thProductB">
-                      <Flex alignItems="center" id="tableNameB">
-                        <Flex>Kategori</Flex>
-                      </Flex>
-                    </Th>
-                    <Th className="thProductB">
-                      <Flex alignItems="center" id="tableNameB">
-                        Harga{" "}
-                      </Flex>
-                    </Th>
-                    <Th className="thProductB">Desc </Th>
-                    <Th className="thProductB">Berat </Th>
-                    <Th className="thProductB">
-                      <Flex alignItems="center" id="tableNameB">
-                        Tanggal{" "}
                         <Flex flexDirection="column">
                           <Icon
                             id="ascendingB"
                             as={MdArrowBackIosNew}
                             onClick={() => {
-                              setFiltering({ ...filtering, order: "ASC" });
+                              setFiltering({
+                                ...filtering,
+                                order: "ASC",
+                                sort: "product_name",
+                              });
                             }}
                           />
                           <Icon
                             id="descendingB"
                             as={MdArrowBackIosNew}
                             onClick={() => {
-                              setFiltering({ ...filtering, order: "DESC" });
+                              setFiltering({
+                                ...filtering,
+                                order: "DESC",
+                                sort: "product_name",
+                              });
                             }}
                           />
                         </Flex>
@@ -229,7 +229,74 @@ export default function SuperAdminProductList() {
                     </Th>
                     <Th
                       textAlign={"center"}
-                      display={userSelector.role == "ADMIN" ? "none" : "flex"}
+                      className="thProductB"
+                      bgcolor="#ffb21c"
+                    >
+                      <Flex alignItems="center" id="tableNameB">
+                        <Flex>Kategori</Flex>
+                      </Flex>
+                    </Th>
+                    <Th
+                      textAlign={"center"}
+                      className="thProductB"
+                      bgcolor="#ffb21c"
+                    >
+                      <Flex alignItems="center" id="tableNameB">
+                        Harga{" "}
+                      </Flex>
+                    </Th>
+                    <Th
+                      textAlign={"center"}
+                      className="thProductB"
+                      bgcolor="#ffb21c"
+                    >
+                      Desc{" "}
+                    </Th>
+                    <Th
+                      textAlign={"center"}
+                      className="thProductB"
+                      bgcolor="#ffb21c"
+                    >
+                      Berat{" "}
+                    </Th>
+                    <Th
+                      textAlign={"center"}
+                      className="thProductB"
+                      bgcolor="#ffb21c"
+                    >
+                      <Flex alignItems="center" id="tableNameB">
+                        Tanggal{" "}
+                        <Flex flexDirection="column">
+                          <Icon
+                            id="ascendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({
+                                ...filtering,
+                                order: "ASC",
+                                sort: "createdAt",
+                              });
+                            }}
+                          />
+                          <Icon
+                            id="descendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({
+                                ...filtering,
+                                order: "DESC",
+                                sort: "createdAt",
+                              });
+                            }}
+                          />
+                        </Flex>
+                      </Flex>
+                    </Th>
+                    <Th
+                      textAlign={"center"}
+                      bgcolor="#ffb21c"
+                      className="thProductB"
+                      display={userSelector.role == "ADMIN" ? "none" : "column"}
                     >
                       Tindakan
                     </Th>

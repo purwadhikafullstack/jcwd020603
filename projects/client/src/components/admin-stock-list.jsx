@@ -193,7 +193,12 @@ export default function AdminStockList() {
                 display={userSelector.role == "SUPER ADMIN" ? "none" : "flex"}
               >
                 {<Icon as={AiOutlinePlus} fontSize={"28px"} />}
-                <AddStock id={addStock} isOpen={isOpen} onClose={onClose} />
+                <AddStock
+                  id={addStock}
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  fetchData={fetchData}
+                />
               </Button>
             </Flex>
             <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
@@ -258,29 +263,41 @@ export default function AdminStockList() {
                   ref={tableHeadRef}
                 >
                   <Tr className="tableHeadMenuG">
-                    <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"}>Gambar</Th>
-                    <Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      No
+                    </Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      Gambar
+                    </Th>
+                    <Th bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Nama Produk{" "}
                       </Flex>
                     </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         <Flex>Kategori</Flex>
                       </Flex>
                     </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Harga{" "}
                       </Flex>
                     </Th>
-                    <Th textAlign={"center"} className="thProductB">
+                    <Th
+                      textAlign={"center"}
+                      bgcolor="#ffb21c"
+                      className="thProductB"
+                    >
                       Keterangan{" "}
                     </Th>
-                    <Th className="thProductB">Berat </Th>
-                    <Th className="thProductB">Qty </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
+                      Berat{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
+                      Qty{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Tanggal{" "}
                         <Flex flexDirection="column">
@@ -303,8 +320,9 @@ export default function AdminStockList() {
                     </Th>
                     <Th
                       textAlign={"center"}
+                      bgcolor="#ffb21c"
                       display={
-                        userSelector.role == "SUPER ADMIN" ? "none" : "flex"
+                        userSelector.role == "SUPER ADMIN" ? "none" : "column"
                       }
                     >
                       Tindakan

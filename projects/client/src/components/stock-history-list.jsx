@@ -269,30 +269,42 @@ export default function StockHistoryList() {
                   ref={tableHeadRef}
                 >
                   <Tr className="tableHeadMenuG">
-                    <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"} className="thProductB">
+                    <Th bgcolor="#ffb21c" textAlign={"center"}>
+                      No
+                    </Th>
+                    <Th
+                      bgcolor="#ffb21c"
+                      textAlign={"center"}
+                      className="thProductB"
+                    >
                       Fitur
                     </Th>
 
-                    <Th>
+                    <Th bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Nama Produk{" "}
                       </Flex>
                     </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         <Flex>Kategori</Flex>
                       </Flex>
                     </Th>
-                    <Th className="thProductB">Stok Sebelum </Th>
-                    <Th className="thProductB">
+                    <Th bgcolor="#ffb21c" className="thProductB">
+                      Stok Sebelum{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Keterangan{" "}
                       </Flex>
                     </Th>
-                    <Th className="thProductB">Selisih </Th>
-                    <Th className="thProductB">Stok Sesudah </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
+                      Selisih{" "}
+                    </Th>
+                    <Th bgcolor="#ffb21c" className="thProductB">
+                      Stok Sesudah{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Tanggal{" "}
                         <Flex flexDirection="column">

@@ -82,7 +82,7 @@ export function SATableProduct({
       <Tr id="SACategoryB">
         <Td> {indexOfLastProduct - productsPerPage + idx + 1}</Td>
         <Td className="SAImgCategoryB">
-          <Image src={url} />
+          <Image maxH={"43px"} minH={"43px"} src={url} />
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
@@ -115,57 +115,55 @@ export function SATableProduct({
           </Flex>
         </Td>
         <Td
-          className="SACategoryActionB"
+          className="SACategoryNameB"
           isNumeric
-          display={userSelector.role == "ADMIN" ? "none" : "flex"}
+          display={userSelector.role == "ADMIN" ? "none" : "column"}
         >
-          <Stack>
-            <HStack display={"flex"} align={"center"} justifyContent={"center"}>
-              <Button
-                id="buttonAction"
-                colorScheme={"yellow"}
-                w={"50%"}
-                onClick={() => {
-                  modalEdit.onOpen();
-                  setEditProduct(product.id);
+          <Flex alignItems="center" id="tableNameB">
+            <Button
+              id="buttonAction"
+              colorScheme={"yellow"}
+              w={"50%"}
+              onClick={() => {
+                modalEdit.onOpen();
+                setEditProduct(product.id);
+                fetchData();
+              }}
+            >
+              {<FiEdit cursor={"pointer"} />}
+              <EditProduct
+                id={editProduct}
+                product={product}
+                isOpen={modalEdit.isOpen}
+                onClose={() => {
+                  modalEdit.onClose();
                   fetchData();
                 }}
-              >
-                {<FiEdit cursor={"pointer"} />}
-                <EditProduct
-                  id={editProduct}
-                  product={product}
-                  isOpen={modalEdit.isOpen}
-                  onClose={() => {
-                    modalEdit.onClose();
-                    fetchData();
-                  }}
-                />
-              </Button>
-              <Button
-                id="buttonAction"
-                colorScheme="red"
-                w={"50%"}
-                onClick={() => {
-                  modalDelete.onOpen();
-                  setEditProduct(product.id);
-                  fetchData();
-                }}
-              >
-                {<RiDeleteBin6Line cursor={"pointer"} />}
+              />
+            </Button>
+            <Button
+              id="buttonAction"
+              colorScheme="red"
+              w={"50%"}
+              onClick={() => {
+                modalDelete.onOpen();
+                setEditProduct(product.id);
+                fetchData();
+              }}
+            >
+              {<RiDeleteBin6Line cursor={"pointer"} />}
 
-                <DeleteProduct
-                  id={editProduct}
-                  product={product}
-                  isOpen={modalDelete.isOpen}
-                  onClose={() => {
-                    modalDelete.onClose();
-                    fetchData();
-                  }}
-                />
-              </Button>
-            </HStack>
-          </Stack>
+              <DeleteProduct
+                id={editProduct}
+                product={product}
+                isOpen={modalDelete.isOpen}
+                onClose={() => {
+                  modalDelete.onClose();
+                  fetchData();
+                }}
+              />
+            </Button>
+          </Flex>
         </Td>
       </Tr>
     </>
