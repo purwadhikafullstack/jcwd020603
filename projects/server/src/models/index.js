@@ -170,9 +170,13 @@ db.Order.hasMany(db.OrderDetail, {
   as: "Order",
 });
 
-// db.Order.belongsTo(db.Branch, {
-//   foreignKey: "branch_id",
-//   as: "Branch",
-// });
+db.Discount.belongsTo(db.Branch, {
+  foreignKey: "branch_id",
+  as: "Branch",
+});
+db.Voucher.belongsTo(db.Branch, {
+  foreignKey: "branch_id",
+  as: "Branch",
+});
 
 module.exports = db;

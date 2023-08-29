@@ -52,6 +52,7 @@ export default function ContentDaftarAlamat() {
   //edit current address yang dipilih
   const setAddress = async () => {
     const find = await api().patch(`/addressG/current/${Clicked.id}`);
+
     console.log(find.data);
   };
   //menyimpan alamat yang dipilih

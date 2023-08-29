@@ -54,6 +54,8 @@ export default function SuperAdminProductList() {
     page: shown.page,
     search: "",
     category_id: "",
+    order: "DESC",
+    sort: "createdAt",
   });
 
   const [totalPages, setTotalPages] = useState(0);
@@ -104,7 +106,7 @@ export default function SuperAdminProductList() {
     }
   }, [shown]);
 
-  const productsPerPage = 8;
+  const productsPerPage = 6;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   //get selector branch
@@ -128,10 +130,10 @@ export default function SuperAdminProductList() {
             flexDir={"column"}
             rowGap={"10px"}
           >
-            <Flex>Product List</Flex>
+            <Flex>Daftar Produk</Flex>
             <Flex justifyContent={"space-between"} w={"100%"} gap={"5px"}>
               <Select
-                placeholder="Categories"
+                placeholder="Kategori"
                 h={"41px"}
                 bg={"white"}
                 onChange={(e) => {
@@ -144,7 +146,7 @@ export default function SuperAdminProductList() {
               </Select>
               <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
-                  placeholder="search"
+                  placeholder="pencarian"
                   bg={"white"}
                   ref={searchRef}
                 ></Input>
@@ -168,7 +170,12 @@ export default function SuperAdminProductList() {
                 display={userSelector.role == "ADMIN" ? "none" : "flex"}
               >
                 {<Icon as={AiOutlinePlus} fontSize={"28px"} />}
-                <AddProduct id={addProduct} isOpen={isOpen} onClose={onClose} />
+                <AddProduct
+                  id={addProduct}
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  fetchData={fetchData}
+                />
               </Button>
             </Flex>
           </Flex>
@@ -185,38 +192,113 @@ export default function SuperAdminProductList() {
                   ref={tableHeadRef}
                 >
                   <Tr className="tableHeadMenuG">
-                    <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"}>Pic</Th>
-                    <Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      No
+                    </Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      Gambar
+                    </Th>
+                    <Th bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
-                        Product Name{" "}
+                        Nama Produk{" "}
                         <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
+                          <Icon
+                            id="ascendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({
+                                ...filtering,
+                                order: "ASC",
+                                sort: "product_name",
+                              });
+                            }}
+                          />
+                          <Icon
+                            id="descendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({
+                                ...filtering,
+                                order: "DESC",
+                                sort: "product_name",
+                              });
+                            }}
+                          />
                         </Flex>
                       </Flex>
                     </Th>
-                    <Th className="thProductB">
-                      <Flex alignItems="center" id="tableNameB">
-                        <Flex>Category</Flex>
-                      </Flex>
-                    </Th>
-                    <Th className="thProductB">
-                      <Flex alignItems="center" id="tableNameB">
-                        Price{" "}
-                        <Flex flexDirection="column">
-                          <Icon id="ascendingB" as={MdArrowBackIosNew} />
-                          <Icon id="descendingB" as={MdArrowBackIosNew} />
-                        </Flex>
-                      </Flex>
-                    </Th>
-                    <Th className="thProductB">Desc </Th>
-                    <Th className="thProductB">Weight </Th>
                     <Th
                       textAlign={"center"}
-                      display={userSelector.role == "ADMIN" ? "none" : "flex"}
+                      className="thProductB"
+                      bgcolor="#ffb21c"
                     >
-                      Action
+                      <Flex alignItems="center" id="tableNameB">
+                        <Flex>Kategori</Flex>
+                      </Flex>
+                    </Th>
+                    <Th
+                      textAlign={"center"}
+                      className="thProductB"
+                      bgcolor="#ffb21c"
+                    >
+                      <Flex alignItems="center" id="tableNameB">
+                        Harga{" "}
+                      </Flex>
+                    </Th>
+                    <Th
+                      textAlign={"center"}
+                      className="thProductB"
+                      bgcolor="#ffb21c"
+                    >
+                      Desc{" "}
+                    </Th>
+                    <Th
+                      textAlign={"center"}
+                      className="thProductB"
+                      bgcolor="#ffb21c"
+                    >
+                      Berat{" "}
+                    </Th>
+                    <Th
+                      textAlign={"center"}
+                      className="thProductB"
+                      bgcolor="#ffb21c"
+                    >
+                      <Flex alignItems="center" id="tableNameB">
+                        Tanggal{" "}
+                        <Flex flexDirection="column">
+                          <Icon
+                            id="ascendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({
+                                ...filtering,
+                                order: "ASC",
+                                sort: "createdAt",
+                              });
+                            }}
+                          />
+                          <Icon
+                            id="descendingB"
+                            as={MdArrowBackIosNew}
+                            onClick={() => {
+                              setFiltering({
+                                ...filtering,
+                                order: "DESC",
+                                sort: "createdAt",
+                              });
+                            }}
+                          />
+                        </Flex>
+                      </Flex>
+                    </Th>
+                    <Th
+                      textAlign={"center"}
+                      bgcolor="#ffb21c"
+                      className="thProductB"
+                      display={userSelector.role == "ADMIN" ? "none" : "column"}
+                    >
+                      Tindakan
                     </Th>
                   </Tr>
                 </Thead>
@@ -236,6 +318,7 @@ export default function SuperAdminProductList() {
                       desc={product.desc}
                       weight={product.weight}
                       category={product.category_id}
+                      createdAt={product.createdAt}
                       indexOfLastProduct={indexOfLastProduct}
                       productsPerPage={productsPerPage}
                       fetchData={fetchData}

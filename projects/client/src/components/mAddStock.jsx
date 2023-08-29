@@ -10,9 +10,13 @@ import {
   Button,
   Input,
   Select,
+  Icon,
+  Center,
+  Image,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
 import { useState, useRef, useEffect } from "react";
+import { TbPhotoSearch } from "react-icons/tb";
 import { useSelector } from "react-redux";
 
 export function AddStock(props) {
@@ -70,6 +74,21 @@ export function AddStock(props) {
       });
   }, []);
 
+  const [dataProduct, setDataProduct] = useState([]);
+  useEffect(() => {
+    api()
+      .get("/product/" + stock.product_id)
+      .then((response) => {
+        setDataProduct(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [stock]);
+
+  console.log("ini produkk", dataProduct.product_name);
+  console.log("ini produkk", dataProduct);
+
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -79,25 +98,60 @@ export function AddStock(props) {
           <ModalCloseButton />
           <ModalBody>
             <Flex className="containerAddProduct">
-              <Select
-                className="inputAddProduct"
-                value={selectedOption}
-                id="product_id"
-                onClick={inputHandler}
-                placeholder="Produk"
-              >
-                {product.map((product) => (
-                  <option key={product.id} value={`${product.id}`}>
-                    {product.product_name}
-                  </option>
-                ))}
-              </Select>
-              <Input
-                className="inputAddProduct"
-                placeholder="Jumlah Stock"
-                id="quantity_stock"
-                onChange={inputHandler}
-              />
+              <Center w={"100%"} h={"100%"}>
+                {dataProduct ? (
+                  <Flex flexDir={"column"}>
+                    <Image
+                      src={dataProduct.photo_product_url}
+                      // w={"100%"}
+                      h={"200px"}
+                      objectFit={"contain"}
+                    />
+                    <Select
+                      className="inputAddProduct"
+                      value={selectedOption}
+                      id="product_id"
+                      onClick={inputHandler}
+                      placeholder="Produk"
+                    >
+                      {product.map((product) => (
+                        <option key={product.id} value={`${product.id}`}>
+                          {product.product_name}
+                        </option>
+                      ))}
+                    </Select>
+                    <Input
+                      className="inputAddProduct"
+                      placeholder="Jumlah Stock"
+                      id="quantity_stock"
+                      onChange={inputHandler}
+                    />
+                  </Flex>
+                ) : (
+                  <Flex flexDir={"column"}>
+                    <Icon as={TbPhotoSearch} fontSize={"100px"} />
+                    <Select
+                      className="inputAddProduct"
+                      value={selectedOption}
+                      id="product_id"
+                      onClick={inputHandler}
+                      placeholder="Produk"
+                    >
+                      {product.map((product) => (
+                        <option key={product.id} value={`${product.id}`}>
+                          {product.product_name}
+                        </option>
+                      ))}
+                    </Select>
+                    <Input
+                      className="inputAddProduct"
+                      placeholder="Jumlah Stock"
+                      id="quantity_stock"
+                      onChange={inputHandler}
+                    />
+                  </Flex>
+                )}
+              </Center>
             </Flex>
           </ModalBody>
           <ModalFooter justifyContent="center">
@@ -106,7 +160,7 @@ export function AddStock(props) {
               colorScheme="green"
               onClick={() => {
                 addStock();
-                // props.fetchData();
+                props.fetchData();
               }}
             >
               Save

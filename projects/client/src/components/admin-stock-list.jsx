@@ -142,7 +142,7 @@ export default function AdminStockList() {
             flexDir={"column"}
             rowGap={"10px"}
           >
-            <Flex>Stock List</Flex>
+            <Flex>Daftar Stok</Flex>
             <Flex justifyContent={"space-between"} w={"100%"} gap={"5px"}>
               <Input
                 placeholder="Pilih Tanggal"
@@ -169,7 +169,7 @@ export default function AdminStockList() {
               ></Input>
               <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
-                  placeholder="search"
+                  placeholder="pencarian"
                   bg={"white"}
                   ref={searchRef}
                 ></Input>
@@ -193,12 +193,17 @@ export default function AdminStockList() {
                 display={userSelector.role == "SUPER ADMIN" ? "none" : "flex"}
               >
                 {<Icon as={AiOutlinePlus} fontSize={"28px"} />}
-                <AddStock id={addStock} isOpen={isOpen} onClose={onClose} />
+                <AddStock
+                  id={addStock}
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  fetchData={fetchData}
+                />
               </Button>
             </Flex>
             <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
               <Select
-                placeholder="Categories"
+                placeholder="Kategori"
                 h={"41px"}
                 bg={"white"}
                 onChange={(e) => {
@@ -210,7 +215,7 @@ export default function AdminStockList() {
                 })}
               </Select>
               <Select
-                placeholder="Branches"
+                placeholder="Cabang"
                 bg={"white"}
                 display={userSelector.role == "ADMIN" ? "none" : "flex"}
                 onChange={(e) => {
@@ -258,29 +263,43 @@ export default function AdminStockList() {
                   ref={tableHeadRef}
                 >
                   <Tr className="tableHeadMenuG">
-                    <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"}>Pic</Th>
-                    <Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      No
+                    </Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      Gambar
+                    </Th>
+                    <Th bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
-                        Product Name{" "}
+                        Nama Produk{" "}
                       </Flex>
                     </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
-                        <Flex>Category</Flex>
+                        <Flex>Kategori</Flex>
                       </Flex>
                     </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
-                        Price{" "}
+                        Harga{" "}
                       </Flex>
                     </Th>
-                    <Th className="thProductB">Desc </Th>
-                    <Th className="thProductB">Weight </Th>
-                    <Th className="thProductB">Qty </Th>
-                    <Th className="thProductB">
+                    <Th
+                      textAlign={"center"}
+                      bgcolor="#ffb21c"
+                      className="thProductB"
+                    >
+                      Keterangan{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
+                      Berat{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
+                      Qty{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
-                        Date{" "}
+                        Tanggal{" "}
                         <Flex flexDirection="column">
                           <Icon
                             id="ascendingB"
@@ -299,7 +318,15 @@ export default function AdminStockList() {
                         </Flex>
                       </Flex>
                     </Th>
-                    <Th textAlign={"center"}>Action</Th>
+                    <Th
+                      textAlign={"center"}
+                      bgcolor="#ffb21c"
+                      display={
+                        userSelector.role == "SUPER ADMIN" ? "none" : "column"
+                      }
+                    >
+                      Tindakan
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody

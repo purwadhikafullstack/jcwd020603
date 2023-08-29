@@ -22,6 +22,8 @@ export default function NotFoundComp() {
       return nav("/dashboard");
     } else if (userSelector.role == "USER") {
       return nav("/");
+    } else if (!userSelector.role) {
+      return nav("/");
     }
   };
 

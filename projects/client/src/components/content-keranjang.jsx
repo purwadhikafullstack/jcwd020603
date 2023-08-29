@@ -1,17 +1,154 @@
-import { Box, Center, Flex, Icon, Image, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Checkbox,
+  Flex,
+  Icon,
+  Stack,
+  useAccordion,
+  useToast,
+} from "@chakra-ui/react";
+import NavbarKeranjang from "./navbar-keranjang";
 import KeranjangList from "./keranjang-list-produk";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MetodePengiriman from "./keranjang-metode-pengiriman";
 import VoucherPromo from "./keranjang-voucher";
 import RincianPembayaran from "./keranjang-pembayaran";
-import NavbarKeranjang from "./navbar-keranjang";
 import DaftarAlamat from "./keranjang-daftar-alamat";
+import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { api } from "../api/api";
 
 export default function ContentKeranjang(props) {
+  const { prodCart } = props;
   const nav = useNavigate();
-  const [count, tambah, kurang] = useCounter(1, 1);
+  const nearestBranch = localStorage.getItem("nearestBranch");
+  useEffect(() => {
+    console.log(prodCart);
+  }, [prodCart]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  //menyimpan alamat yang dipilih
+  const [selectedAddress, setSelectedAddress] = useState({});
+  const [isLoading2, setIsLoading2] = useState(false);
+  const getSelectedAddress = async () => {
+    setIsLoading2(true);
+    const primary = await api().get("/addressG/primary");
+    const selected = await api().get("/addressG/current");
+    if (selected.data.result) {
+      setSelectedAddress(selected.data.result);
+      setIsLoading2(false);
+    } else {
+      setSelectedAddress(primary.data.result);
+      setIsLoading2(false);
+    }
+  };
+  useEffect(() => {
+    getSelectedAddress();
+  }, []);
+  console.log(selectedAddress);
+
+  //count total harga belanja
+  const totalBelanja = selectedItems.map((val, idx) => {
+    const price = selectedItems[idx]?.Stock?.Discount
+      ? selectedItems[idx]?.Stock?.Discount?.nominal == 50
+        ? Number(selectedItems[idx].Stock.Product.price)
+        : Number(
+            selectedItems[idx].Stock.Product.price *
+              ((100 - selectedItems[idx]?.Stock?.Discount?.nominal) / 100)
+          )
+      : Number(selectedItems[idx].Stock.Product.price);
+    return price * Number(selectedItems[idx].qty);
+  });
+  //count berat belanja
+  const [weightTotal, setWeightTotal] = useState(0);
+  const itungWeight = selectedItems.map(
+    (val, idx) =>
+      Number(selectedItems[idx].Stock.Product.weight) *
+      Number(selectedItems[idx].qty)
+  );
+  const totalWeight = () => {
+    if (itungWeight.length) {
+      setWeightTotal(itungWeight.reduce((a, b) => a + b));
+    }
+  };
+  //get biaya pengiriman dari rajaOngkir
+  const [courier, setCourier] = useState("");
+  const [shipCost, setShipCost] = useState([]);
+  const [courierName, setCourierName] = useState("");
+  console.log(courierName);
+  const [isLoading, setIsLoading] = useState(false);
+  const inputCost = {
+    origin: prodCart[0]?.Stock.Branch?.city_id,
+    destination: selectedAddress.city_id,
+    weight: weightTotal,
+    courier: courier,
+  };
+  console.log(inputCost);
+  const getCost = async () => {
+    try {
+      await api()
+        .post("/cart/cost", inputCost)
+        .then((res) => {
+          setShipCost(res.data.data[0].costs);
+          setCourierName(res.data.data[0].name);
+          setIsLoading(false);
+        });
+    } catch (err) {
+      console.log(err.response);
+    }
+  };
+  useEffect(() => {
+    getCost();
+  }, [courier]);
+  useEffect(() => {
+    console.log(selectedItems);
+    console.log(totalBelanja);
+    totalWeight();
+  }, [selectedItems]);
+  //menyimpan biaya pengiriman
+  const [cost, setCost] = useState({});
+  //menyimpan harga total pembayaran
+  const [pembayaran, setPembayaran] = useState(0);
+  //input voucher potongan harga
+  const [getVoucher, setGetVoucher] = useState({});
+  //kurangin limit voucher
+  const updateLimit = async () => {
+    try {
+      const update = await api().patch(
+        `/voucher/${getVoucher?.id}?limit=${getVoucher.limit}`
+      );
+      console.log(update.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  //post orders
+  const toast = useToast();
+  const postOrder = async () => {
+    setIsLoading(true);
+    try {
+      const newCost = { ...cost, name: courierName };
+      const insert = await api().post("/order", {
+        selectedItems,
+        total: pembayaran,
+        status: "Menunggu Pembayaran",
+        shipping_cost: JSON.stringify(newCost),
+        address_id: selectedAddress.id,
+        discount_voucher: getVoucher.nominal,
+      });
+      setIsLoading(false);
+      toast({
+        title: insert.data.message,
+        status: "warning",
+        position: "top",
+        duration: 3000,
+      });
+      return nav("/payment");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -24,7 +161,7 @@ export default function ContentKeranjang(props) {
           w={"100%"}
           minH={"100vh"}
           h={"100%"}
-          padding={"80px 20px 20px 20px"}
+          padding={"80px 20px 100px 20px"}
           zIndex={0}
           alignItems={"center"}
           flexDir={"column"}
@@ -64,18 +201,50 @@ export default function ContentKeranjang(props) {
                     },
                   }}
                 >
-                  {props.prodCart.map((val, idx) => {
-                    return (
-                      <KeranjangList
-                        key={idx}
-                        index={idx}
-                        {...val}
-                        count={count}
-                        tambah={tambah}
-                        kurang={kurang}
-                      />
-                    );
-                  })}
+                  {prodCart?.length ? (
+                    <>
+                      {prodCart.map((val, idx) => {
+                        return (
+                          <KeranjangList
+                            index={idx}
+                            {...val}
+                            prodCart={prodCart}
+                            getAll={props.getAll}
+                            selectedItems={selectedItems}
+                            setSelectedItems={setSelectedItems}
+                            nearestBranch={nearestBranch}
+                          />
+                        );
+                      })}
+                    </>
+                  ) : (
+                    <>
+                      <Center
+                        w={"100%"}
+                        h={"300px"}
+                        flexDir={"column"}
+                        fontWeight={"500"}
+                        rowGap={"10px"}
+                        color={"#2A960C"}
+                      >
+                        <Icon as={MdOutlineAddShoppingCart} fontSize={"80px"} />
+                        Anda belum memiliki produk di keranjang
+                        <Flex
+                          bg={"#2A960C"}
+                          color={"white"}
+                          padding={"5px"}
+                          borderRadius={"10px"}
+                          fontSize={"10px"}
+                          cursor={"pointer"}
+                          onClick={() => {
+                            nav("/");
+                          }}
+                        >
+                          Klik untuk memilih produk
+                        </Flex>
+                      </Center>
+                    </>
+                  )}
                 </Flex>
                 <Flex
                   w={"100%"}
@@ -87,21 +256,47 @@ export default function ContentKeranjang(props) {
                   paddingTop={"20px"}
                 >
                   <Flex>Total Belanja</Flex>
-                  <Flex>Rp 258.000</Flex>
+                  <Flex>
+                    Rp{" "}
+                    {totalBelanja.length
+                      ? totalBelanja
+                          .reduce((a, b) => a + b)
+                          .toLocaleString("id-ID")
+                      : 0}
+                  </Flex>
                 </Flex>
               </Flex>
             </Flex>
             <Flex>
-              <DaftarAlamat />
+              <DaftarAlamat
+                selectedAddress={selectedAddress}
+                isLoading2={isLoading2}
+              />
             </Flex>
             <Flex>
-              <MetodePengiriman />
+              <MetodePengiriman
+                setCourier={setCourier}
+                shipCost={shipCost}
+                setIsLoading={setIsLoading}
+                isLoading={isLoading}
+                setCost={setCost}
+                cost={cost}
+              />
             </Flex>
             <Flex>
-              <VoucherPromo />
+              <VoucherPromo
+                totalBelanja={totalBelanja}
+                getVoucher={getVoucher}
+                setGetVoucher={setGetVoucher}
+              />
             </Flex>
             <Flex>
-              <RincianPembayaran />
+              <RincianPembayaran
+                totalBelanja={totalBelanja}
+                cost={cost}
+                setPembayaran={setPembayaran}
+                getVoucher={getVoucher}
+              />
             </Flex>
           </Flex>
           <Center
@@ -113,8 +308,29 @@ export default function ContentKeranjang(props) {
             fontWeight={"500"}
             borderRadius={"10px"}
             letterSpacing={"1px"}
+            isLoading={isLoading}
+            _hover={{ cursor: "pointer" }}
             onClick={() => {
-              nav("/payment");
+              if (selectedItems.length > 0) {
+                if (cost.service) {
+                  updateLimit();
+                  postOrder();
+                } else {
+                  toast({
+                    title: "Tidak ada opsi pengiriman yang dipilih",
+                    status: "warning",
+                    position: "top",
+                    duratio: 3000,
+                  });
+                }
+              } else {
+                toast({
+                  title: "Tidak ada produk yang ingin di pesan",
+                  status: "warning",
+                  position: "top",
+                  duratio: 3000,
+                });
+              }
             }}
           >
             PESAN SEKARANG
@@ -123,17 +339,4 @@ export default function ContentKeranjang(props) {
       </Center>
     </>
   );
-}
-
-function useCounter(val, step) {
-  const [count, setCount] = useState(val);
-  function tambah() {
-    setCount(count + step);
-  }
-  function kurang() {
-    if (count > 1) {
-      setCount(count - step);
-    }
-  }
-  return [count, tambah, kurang];
 }

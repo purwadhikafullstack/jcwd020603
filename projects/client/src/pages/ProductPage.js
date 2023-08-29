@@ -1,4 +1,12 @@
-import { Box, Center, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import Footer from "../components/footer";
 import Product from "../components/product";
 import Sidebar from "../components/sidebar";
@@ -6,10 +14,11 @@ import { useLocation } from "react-router-dom";
 import SidebarMini from "../components/sidebar-mini";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import ModalNearestBranch from "../components/modal-nearest-branch";
 
 export default function ProductPage() {
   const [nearestBranch, setNearestBranch] = useState();
-  console.log("fakkk", nearestBranch);
+  console.log("ini nearestBranch", nearestBranch);
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("nearestBranch"))) {
@@ -17,13 +26,29 @@ export default function ProductPage() {
     }
   }, []);
   const windowWidth = window.innerWidth;
+  const [nearestBranchSet, setNearestBranchSet] = useState(false);
+  const [lengthCart, setLengthCart] = useState(0);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
-      {windowWidth > 600 ? (
+      {windowWidth > 850 ? (
         <Center>
-          <Flex maxWidth={"1212px"} w={"100%"}>
-            <Flex>{windowWidth > 750 ? <Sidebar /> : <SidebarMini />}</Flex>
+          <Flex maxWidth={"1160px"} w={"100%"}>
             <Flex>
+              {windowWidth > 850 ? (
+                <Sidebar
+                  setLengthCart={setLengthCart}
+                  nearestBranchSet={nearestBranchSet}
+                />
+              ) : (
+                <SidebarMini
+                  setLengthCart={setLengthCart}
+                  nearestBranchSet={nearestBranchSet}
+                />
+              )}
+            </Flex>
+            <Flex flexDir={"column"}>
               <Product nearestBranch={nearestBranch} />
             </Flex>
           </Flex>
@@ -31,9 +56,15 @@ export default function ProductPage() {
       ) : (
         <>
           <Product nearestBranch={nearestBranch} />
-          <Footer />
+          <Footer lengthCart={lengthCart} nearestBranchSet={nearestBranchSet} />
         </>
       )}
+      <Modal isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalNearestBranch onClose={onClose} />
+        </ModalContent>
+      </Modal>
     </>
   );
 }

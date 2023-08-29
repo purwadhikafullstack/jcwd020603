@@ -16,16 +16,15 @@ import logo from "../assets/logo/horizontal.png";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { warning } from "framer-motion";
 import { api } from "../api/api";
 import ModalAlamatPengiriman from "./modal-alamat-pengiriman";
 import { useFetchCart } from "../hooks/useFetchCart";
 import ModalNearestBranch from "./modal-nearest-branch";
 
-// import ModalProduct from "./modal-product";
-
 export default function Sidebar(props) {
   const { setLengthCart, nearestBranchSet } = props;
+  const cartSelector = useSelector((state) => state.cart);
+  const userSelector = useSelector((state) => state.auth);
   const user = JSON.parse(localStorage.getItem("auth"));
   const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
   console.log("sidebar", nearestBranch);
@@ -93,7 +92,7 @@ export default function Sidebar(props) {
 
   useEffect(() => {
     getSelectedAddress();
-  }, []);
+  }, [userSelector.user_name]);
 
   return (
     <>
@@ -203,9 +202,9 @@ export default function Sidebar(props) {
             </Flex>
             <Center
               className="jumlahOrderSidebarG"
-              display={countAll == 0 ? "none" : "center"}
+              display={cartSelector.total == 0 ? "none" : "center"}
             >
-              {countAll}
+              {cartSelector.total}
             </Center>
           </Flex>
         </Flex>

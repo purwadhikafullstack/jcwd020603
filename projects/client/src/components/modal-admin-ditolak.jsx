@@ -1,8 +1,13 @@
 import { Button, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
+import { useEffect } from "react";
 
 export default function ModalAdminDitolak(props) {
+  useEffect(() => {
+    props.setValueStatus("Menunggu Pembayaran");
+  }, []);
+
   return (
     <>
       <Flex padding={"20px"} flexDir={"column"} rowGap={"20px"}>
@@ -22,7 +27,8 @@ export default function ModalAdminDitolak(props) {
             bg={" #f7d1d5"}
             color={"red"}
             onClick={() => {
-              props.cancelOrder();
+              props.refuseOrder();
+              props.onClose();
             }}
           >
             YA

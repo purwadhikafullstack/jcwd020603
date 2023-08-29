@@ -150,7 +150,7 @@ export default function StockHistoryList() {
             flexDir={"column"}
             rowGap={"10px"}
           >
-            <Flex>Stock History</Flex>
+            <Flex>Riwayat Stok</Flex>
             <Flex justifyContent={"space-between"} w={"100%"} gap={"5px"}>
               <Input
                 placeholder="Pilih Tanggal"
@@ -177,7 +177,7 @@ export default function StockHistoryList() {
               ></Input>
               <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
-                  placeholder="search"
+                  placeholder="pencarian"
                   bg={"white"}
                   ref={searchRef}
                 ></Input>
@@ -198,7 +198,7 @@ export default function StockHistoryList() {
             </Flex>
             <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
               <Select
-                placeholder="Categories"
+                placeholder="Kategori"
                 h={"41px"}
                 bg={"white"}
                 onChange={(e) => {
@@ -210,7 +210,7 @@ export default function StockHistoryList() {
                 })}
               </Select>
               <Select
-                placeholder="Features"
+                placeholder="Fitur"
                 h={"41px"}
                 bg={"white"}
                 onChange={(e) => {
@@ -222,7 +222,7 @@ export default function StockHistoryList() {
                 })}
               </Select>
               <Select
-                placeholder="Branches"
+                placeholder="Cabang"
                 bg={"white"}
                 display={userSelector.role == "ADMIN" ? "none" : "flex"}
                 onChange={(e) => {
@@ -269,30 +269,44 @@ export default function StockHistoryList() {
                   ref={tableHeadRef}
                 >
                   <Tr className="tableHeadMenuG">
-                    <Th textAlign={"center"}>No</Th>
-                    <Th className="thProductB">Features</Th>
+                    <Th bgcolor="#ffb21c" textAlign={"center"}>
+                      No
+                    </Th>
+                    <Th
+                      bgcolor="#ffb21c"
+                      textAlign={"center"}
+                      className="thProductB"
+                    >
+                      Fitur
+                    </Th>
 
-                    <Th>
+                    <Th bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
-                        Product Name{" "}
+                        Nama Produk{" "}
                       </Flex>
                     </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
-                        <Flex>Category</Flex>
+                        <Flex>Kategori</Flex>
                       </Flex>
                     </Th>
-                    <Th className="thProductB">Stock Before </Th>
-                    <Th className="thProductB">
+                    <Th bgcolor="#ffb21c" className="thProductB">
+                      Stok Sebelum{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
-                        Status{" "}
+                        Keterangan{" "}
                       </Flex>
                     </Th>
-                    <Th className="thProductB">Difference </Th>
-                    <Th className="thProductB">Stock After </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
+                      Selisih{" "}
+                    </Th>
+                    <Th bgcolor="#ffb21c" className="thProductB">
+                      Stok Sesudah{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
-                        Date{" "}
+                        Tanggal{" "}
                         <Flex flexDirection="column">
                           <Icon
                             id="ascendingB"

@@ -6,6 +6,7 @@ const { fileUploader } = require("../middleware/multer")
 
 
 router.get("/all", discountController.getAll)
+router.get("/", discountController.getDiscountB);
 router.post("/stock-discount", discountController.getAllDt)
 router.post("/stock-selected", discountController.getAllSelected)
 router.post("/", roleController.checkAdmin, discountController.addDiscount)
@@ -15,5 +16,3 @@ discountController.uploadFotoDiscount)
 router.delete("/", roleController.checkAdmin, discountController.deleteDiscount)
 
 module.exports = router
-
-

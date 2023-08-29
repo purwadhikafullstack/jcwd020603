@@ -84,10 +84,25 @@ const cartController = {
             transaction: trans,
           }
         );
+        const count = await db.Cart.findAndCountAll({
+          where: {
+            user_id: req.user.id,
+            "$Stock.branch_id$": req.query.branch_id,
+          },
+          include: [
+            {
+              model: db.Stock,
+              as: "Stock",
+              attributes: ["product_id", "branch_id"],
+            },
+          ],
+        });
+        console.log("ini count", count);
         await trans.commit();
         return res.send({
           message: "Produk berhasil ditambahkan",
           status: "success",
+          // count: count,
         });
       }
     } catch (err) {

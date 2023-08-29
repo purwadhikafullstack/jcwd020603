@@ -28,6 +28,7 @@ import { EditCategory } from "./mEditCategory";
 import { EditProduct } from "./mEditProduct";
 import { DeleteProduct } from "./mDeleteProduct";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
 export function SATableProduct({
   product,
@@ -41,6 +42,7 @@ export function SATableProduct({
   indexOfLastProduct,
   productsPerPage,
   fetchData,
+  createdAt,
 }) {
   const navigate = useNavigate();
   const modalDelete = useDisclosure();
@@ -65,12 +67,22 @@ export function SATableProduct({
     return category ? category.category_name : "";
   };
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+      useGrouping: true,
+    }).format(amount);
+  };
+
   return (
     <>
       <Tr id="SACategoryB">
         <Td> {indexOfLastProduct - productsPerPage + idx + 1}</Td>
         <Td className="SAImgCategoryB">
-          <Image src={url} />
+          <Image maxH={"43px"} minH={"43px"} src={url} />
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
@@ -84,7 +96,7 @@ export function SATableProduct({
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
-            {price}
+            {formatCurrency(price)}
           </Flex>
         </Td>
         <Td className="SACategoryNameB">
@@ -97,58 +109,61 @@ export function SATableProduct({
             {weight}
           </Flex>
         </Td>
+        <Td className="SACategoryNameB">
+          <Flex alignItems="center" id="tableNameB">
+            {moment(createdAt).format("LLL")}
+          </Flex>
+        </Td>
         <Td
-          className="SACategoryActionB"
+          className="SACategoryNameB"
           isNumeric
-          display={userSelector.role == "ADMIN" ? "none" : "flex"}
+          display={userSelector.role == "ADMIN" ? "none" : "column"}
         >
-          <Stack>
-            <HStack display={"flex"} align={"center"} justifyContent={"center"}>
-              <Button
-                id="buttonAction"
-                colorScheme={"yellow"}
-                w={"50%"}
-                onClick={() => {
-                  modalEdit.onOpen();
-                  setEditProduct(product.id);
+          <Flex alignItems="center" id="tableNameB">
+            <Button
+              id="buttonAction"
+              colorScheme={"yellow"}
+              w={"50%"}
+              onClick={() => {
+                modalEdit.onOpen();
+                setEditProduct(product.id);
+                fetchData();
+              }}
+            >
+              {<FiEdit cursor={"pointer"} />}
+              <EditProduct
+                id={editProduct}
+                product={product}
+                isOpen={modalEdit.isOpen}
+                onClose={() => {
+                  modalEdit.onClose();
                   fetchData();
                 }}
-              >
-                {<FiEdit cursor={"pointer"} />}
-                <EditProduct
-                  id={editProduct}
-                  product={product}
-                  isOpen={modalEdit.isOpen}
-                  onClose={() => {
-                    modalEdit.onClose();
-                    fetchData();
-                  }}
-                />
-              </Button>
-              <Button
-                id="buttonAction"
-                colorScheme="red"
-                w={"50%"}
-                onClick={() => {
-                  modalDelete.onOpen();
-                  setEditProduct(product.id);
-                  fetchData();
-                }}
-              >
-                {<RiDeleteBin6Line cursor={"pointer"} />}
+              />
+            </Button>
+            <Button
+              id="buttonAction"
+              colorScheme="red"
+              w={"50%"}
+              onClick={() => {
+                modalDelete.onOpen();
+                setEditProduct(product.id);
+                fetchData();
+              }}
+            >
+              {<RiDeleteBin6Line cursor={"pointer"} />}
 
-                <DeleteProduct
-                  id={editProduct}
-                  product={product}
-                  isOpen={modalDelete.isOpen}
-                  onClose={() => {
-                    modalDelete.onClose();
-                    fetchData();
-                  }}
-                />
-              </Button>
-            </HStack>
-          </Stack>
+              <DeleteProduct
+                id={editProduct}
+                product={product}
+                isOpen={modalDelete.isOpen}
+                onClose={() => {
+                  modalDelete.onClose();
+                  fetchData();
+                }}
+              />
+            </Button>
+          </Flex>
         </Td>
       </Tr>
     </>

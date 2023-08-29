@@ -3,6 +3,7 @@ import {
   Button,
   Center,
   Flex,
+  Icon,
   Image,
   Modal,
   ModalContent,
@@ -19,6 +20,7 @@ import ModalAdminDikirim from "./modal-admin-dikirim";
 import ModalAdminDitolak from "./modal-admin-ditolak";
 import { useSelector } from "react-redux";
 import AdminNavbar from "./AdminNavbar";
+import { MdArrowBack } from "react-icons/md";
 
 export default function AdminOrderDetail() {
   const order_number = useParams();
@@ -64,13 +66,30 @@ export default function AdminOrderDetail() {
   useEffect(() => {
     fetchOrder();
   }, []);
+  // menyimpan shipping_cost
+  const [shippingCost, setShippingCost] = useState({});
+  const [calculateSubtotal, setCalculateSubtotal] = useState(0);
+  console.log("ini val orderValue", orderValue);
+  useEffect(() => {
+    if (Object.keys(orderValue).length > 0) {
+      const parsedShippingCost = JSON.parse(orderValue?.shipping_cost);
+      setShippingCost(parsedShippingCost);
+    }
+  }, [orderValue]);
+  //count total harga belanja
+  useEffect(() => {
+    if (Object.keys(orderValue).length > 0 && shippingCost != {}) {
+      return setCalculateSubtotal(
+        orderValue?.total -
+          (shippingCost?.cost[0]?.value - orderValue?.discount_voucher)
+      );
+    } else {
+      return setCalculateSubtotal(0);
+    }
+  }, [shippingCost]);
+  console.log(calculateSubtotal);
   console.log("ORDER VALUE", orderValue);
   console.log("ORDER DETAIL", orderDetVal);
-  //rincian pembayaran
-  const totalBelanja =
-    orderValue.total - (orderValue.shipping_cost - orderValue.discount_voucher);
-  const totalPembayaran =
-    totalBelanja + orderValue.shipping_cost - orderValue.discount_voucher;
   // cancel order
   const cancelOrder = async () => {
     try {
@@ -110,12 +129,20 @@ export default function AdminOrderDetail() {
         rowGap={"20px"}
         borderTopLeftRadius={"20px"}
       >
-        <Flex fontSize={"24px"} fontWeight={"700"}>
-          Order {orderValue?.order_number}
-        </Flex>
-        <Flex w={"100%"} gap={"20px"}>
+        <Flex fontSize={"24px"} fontWeight={"700"} gap={"20px"}>
           <Flex
-            w={"50%"}
+            alignItems={"center"}
+            onClick={() => {
+              nav("/admin/orders");
+            }}
+          >
+            <Icon as={MdArrowBack} />
+          </Flex>
+          <Flex>Order {orderValue?.order_number}</Flex>
+        </Flex>
+        <Flex className="adminOrderDetailBox">
+          <Flex
+            w={"100%"}
             borderRadius={"10px"}
             bg={"white"}
             flexDir={"column"}
@@ -166,7 +193,10 @@ export default function AdminOrderDetail() {
                       setChangeStatus(!changeStatus);
                     }}
                     display={
-                      userSelector.role == "SUPER ADMIN" ? "none" : "flex"
+                      userSelector.role == "SUPER ADMIN" ||
+                      orderValue.status == "Dikirim"
+                        ? "none"
+                        : "flex"
                     }
                   >
                     UBAH STATUS
@@ -189,7 +219,13 @@ export default function AdminOrderDetail() {
                 borderRadius={"10px"}
                 padding={"10px"}
               >
-                <Image src={orderValue.order_transfer_url} />
+                {orderValue?.order_transfer_url ? (
+                  <Image src={orderValue.order_transfer_url} />
+                ) : (
+                  <Center textAlign={"center"} fontWeight={600}>
+                    Tidak ada gambar Bukti Pembayaran
+                  </Center>
+                )}
               </Center>
               <Flex
                 w={"100%"}
@@ -212,7 +248,7 @@ export default function AdminOrderDetail() {
             </Flex>
           </Flex>
           <Flex
-            w={"50%"}
+            w={"100%"}
             borderRadius={"10px"}
             bg={"white"}
             flexDir={"column"}
@@ -235,16 +271,17 @@ export default function AdminOrderDetail() {
               >
                 <Flex justifyContent={"space-between"} w={"100%"}>
                   <Flex>Total Belanja</Flex>
-                  <Flex>Rp {totalBelanja.toLocaleString("id-ID")}</Flex>
+                  <Flex>Rp {calculateSubtotal.toLocaleString("id-ID")}</Flex>
                 </Flex>
                 <Flex justifyContent={"space-between"} w={"100%"}>
                   <Flex>Biaya Pengiriman</Flex>
-                  <Flex>
-                    Rp{" "}
-                    {orderValue.shipping_cost
-                      ? orderValue.shipping_cost.toLocaleString("id-ID")
-                      : 0}
-                  </Flex>
+                  {shippingCost &&
+                    shippingCost.cost &&
+                    shippingCost.cost.length > 0 && (
+                      <Flex fontWeight={"500"}>
+                        Rp {shippingCost.cost[0].value.toLocaleString("id-ID")}
+                      </Flex>
+                    )}
                 </Flex>
                 <Flex
                   justifyContent={"space-between"}
@@ -261,7 +298,12 @@ export default function AdminOrderDetail() {
                 </Flex>
                 <Flex justifyContent={"space-between"} w={"100%"}>
                   <Flex>Total Pembayaran</Flex>
-                  <Flex>Rp {totalPembayaran.toLocaleString("id-ID")}</Flex>
+                  <Flex>
+                    Rp{" "}
+                    {orderValue?.total
+                      ? orderValue?.total.toLocaleString("id-ID")
+                      : 0}
+                  </Flex>
                 </Flex>
               </Flex>
             </Flex>
@@ -280,6 +322,22 @@ export default function AdminOrderDetail() {
             <Flex w={"100%"} flexDir={"column"}>
               <Flex fontWeight={"500"}>{orderValue.User?.user_name}</Flex>
               <Flex>{orderValue.User?.phone_number}</Flex>
+            </Flex>
+          </Flex>
+          <Flex w={"100%"} fontSize={"14px"} gap={"20px"} padding={"5px 0px"}>
+            <Flex w={"20%"}>Kurir Pengiriman</Flex>
+            <Flex w={"100%"} flexDir={"column"}>
+              <Flex fontWeight={"500"}>{shippingCost?.name}</Flex>
+              <Flex>
+                {shippingCost?.description} ({shippingCost?.service})
+              </Flex>
+              {shippingCost &&
+                shippingCost.cost &&
+                shippingCost.cost.length > 0 && (
+                  <Flex fontWeight={"400"}>
+                    Estimasi tiba dalam {shippingCost?.cost[0]?.etd} Hari
+                  </Flex>
+                )}
             </Flex>
           </Flex>
           <Flex w={"100%"} fontSize={"14px"} gap={"20px"} padding={"5px 0px"}>
@@ -313,7 +371,8 @@ export default function AdminOrderDetail() {
           <ModalAdminDitolak
             isOpen={isOpenModal2}
             onClose={onCloseModal2}
-            cancelOrder={cancelOrder}
+            setValueStatus={setValueStatus}
+            refuseOrder={statusOrder}
           />
         </ModalContent>
       </Modal>

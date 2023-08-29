@@ -24,7 +24,6 @@ import {
   import Pagination from "./pagination";
   import ChartSalesReportProduct from "./Chart-SalesReport-product";
   Chart.register(...registerables);
-  
 
 export default function SalesReportProductContent (props) {
     

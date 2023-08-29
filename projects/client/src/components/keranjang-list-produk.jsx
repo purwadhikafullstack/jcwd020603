@@ -23,6 +23,7 @@ export default function KeranjangList(props) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { Product, Discount } = props.Stock;
+  console.log("helo", props.prodCart);
   const { fetch } = useFetchCart();
   useEffect(() => {
     console.log(props.prodCart);
@@ -58,7 +59,8 @@ export default function KeranjangList(props) {
         stock_id: stock_id,
       },
     });
-    await fetch();
+    props.getAll();
+    await fetch(props.nearestBranch);
   };
 
   //checklist logic
@@ -122,16 +124,16 @@ export default function KeranjangList(props) {
             justifyContent={"space-between"}
             alignItems={"center"}
           >
-            {!props?.discounted_price || props?.discounted_price ? (
+            {!Discount ? (
               <Flex alignItems={"center"}>
                 <Flex fontSize={"12px"} fontWeight={"700"} color={"#F25F0C"}>
-                  Rp. {Product.price.toLocaleString("id-ID")}
+                  Rp. {Product?.price?.toLocaleString("id-ID")}
                 </Flex>
               </Flex>
             ) : Discount?.nominal == 50 ? (
               <Flex alignItems={"center"} gap={"10px"}>
                 <Flex fontSize={"12px"} fontWeight={"700"} color={"#F25F0C"}>
-                  Rp {(props.discounted_price * 2).toLocaleString("id-ID")}
+                  Rp {(props?.discounted_price * 2).toLocaleString("id-ID")}
                 </Flex>
                 <Flex>
                   <Center
@@ -159,7 +161,7 @@ export default function KeranjangList(props) {
                     color={"white"}
                     fontSize={"8px"}
                   >
-                    {Discount.nominal}%
+                    {Discount?.nominal}%
                   </Center>
                   <Flex textDecor={"line-through"}>
                     Rp {Product.price.toLocaleString("id-ID")}

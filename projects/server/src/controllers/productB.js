@@ -33,14 +33,15 @@ const productController = {
       }
       const product = await db.Product.findAndCountAll({
         where: whereClause,
-        limit: 8,
-        offset: 8 * page,
+        order: [[req.query.sort, req.query.order]],
+        limit: 6,
+        offset: 6 * page,
       });
       await trans.commit();
       return res.status(200).send({
         message: "OK",
         result: product.rows,
-        total: Math.ceil(product.count / 8),
+        total: Math.ceil(product.count / 6),
       });
     } catch (err) {
       await trans.rollback();
@@ -83,6 +84,22 @@ const productController = {
       });
     }
   },
+
+  getByCategoryId: async (req, res) => {
+    try {
+      const product = await db.Product.findOne({
+        where: {
+          category_id: req.params.id,
+        },
+      });
+      return res.send(product);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
   // Pencarian berdasarkan nama produk dan harga
   getProduct: async (req, res) => {
     try {
@@ -115,13 +132,27 @@ const productController = {
       const { product_name, price, category_id, desc, weight } = req.body;
       const { filename } = req.file;
 
+      if (
+        !product_name ||
+        !price ||
+        !category_id ||
+        !desc ||
+        !weight ||
+        !filename
+      ) {
+        await trans.rollback();
+        return res.status(400).send({
+          message: "Semua parameter harus diisi pada form.",
+        });
+      }
+
       await db.Product.create(
         {
           product_name,
-          price: parseInt(price),
-          category_id: parseInt(category_id),
+          price: price,
+          category_id: category_id,
           desc,
-          weight: parseInt(weight),
+          weight: weight,
           photo_product_url: product_image + filename,
         },
         {

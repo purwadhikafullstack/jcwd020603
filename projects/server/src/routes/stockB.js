@@ -21,5 +21,6 @@ router.delete(
   roleController.checkAdmin,
   stockControllerB.deleteStock
 );
+router.get("/discount", stockControllerB.getStockDiscount);
 
 module.exports = router;

@@ -38,7 +38,7 @@ export function SATableCategory({
           {indexOfLastProduct - productsPerPage + idx + 1}
         </Td>
         <Td className="SAImgCategoryB">
-          <Image src={photo_category_url} />
+          <Image maxH={"85px"} minH={"85px"} src={photo_category_url} />
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
@@ -46,8 +46,10 @@ export function SATableCategory({
           </Flex>
         </Td>
         <Td
-          display={userSelector.role == "ADMIN" ? "none" : "flex"}
-          className="SACategoryActionB"
+          display={userSelector.role == "ADMIN" ? "none" : "column"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          minH={"11vh"}
           isNumeric
         >
           <Stack>

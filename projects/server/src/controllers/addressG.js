@@ -13,43 +13,54 @@ const addressController = {
         address_name,
         address_phone,
       } = req.body;
-      const coordinate = await openCage(req.body);
-      console.log(coordinate.data.results[0].geometry);
-      await db.Address.create(
-        {
-          address: address,
-          district: district,
-          city_id: city_id,
-          province: province,
-          user_id: req.user.id,
-          address_name: address_name,
-          address_phone: address_phone,
-          latitude: coordinate.data.results[0].geometry.lat,
-          longitude: coordinate.data.results[0].geometry.lng,
-        },
-        { transaction: trans }
-      );
-      const jumlahAlamat = await db.Address.count({
+      const checkAddress = await db.Address.findOne({
         where: {
           user_id: req.user.id,
+          address_name: address_name,
         },
       });
-      console.log(jumlahAlamat);
-      if (jumlahAlamat == 0) {
-        await db.Address.update(
+      if (!checkAddress) {
+        const coordinate = await openCage(req.body);
+        console.log(coordinate.data.results[0].geometry);
+        await db.Address.create(
           {
-            is_primary: true,
+            address: address,
+            district: district,
+            city_id: city_id,
+            province: province,
+            user_id: req.user.id,
+            address_name: address_name,
+            address_phone: address_phone,
+            latitude: coordinate.data.results[0].geometry.lat,
+            longitude: coordinate.data.results[0].geometry.lng,
           },
-          {
-            where: {
-              user_id: req.user.id,
-            },
-            transaction: trans,
-          }
+          { transaction: trans }
         );
+        const jumlahAlamat = await db.Address.count({
+          where: {
+            user_id: req.user.id,
+          },
+        });
+        console.log(jumlahAlamat);
+        if (jumlahAlamat == 0) {
+          await db.Address.update(
+            {
+              is_primary: true,
+            },
+            {
+              where: {
+                user_id: req.user.id,
+              },
+              transaction: trans,
+            }
+          );
+        }
+        await trans.commit();
+        return res.status(200).send({ message: "alamat berhasil di tambah" });
+      } else {
+        await trans.rollback();
+        return res.status(404).send({ message: "nama alamat sudah terdaftar" });
       }
-      await trans.commit();
-      return res.status(200).send({ message: "alamat berhasil di tambah" });
     } catch (err) {
       await trans.rollback();
       return res.status(500).send({
@@ -93,50 +104,63 @@ const addressController = {
         address_name,
         address_phone,
       } = req.body;
-      const alamat = await db.Address.findOne({
+      const checkAddress = await db.Address.findOne({
         where: {
-          id: req.params.id,
+          user_id: req.user.id,
+          address_name: address_name,
         },
       });
-      const ad = address ? address : alamat.dataValues.address;
-      const dis = district ? district : alamat.dataValues.district;
-      const ct = city_id ? city_id : alamat.dataValues.city;
-      const pro = province ? province : alamat.dataValues.province;
-      const ad_nm = address_name
-        ? address_name
-        : alamat.dataValues.address_name;
-      const ad_ph = address_phone
-        ? address_phone
-        : alamat.dataValues.address_phone;
+      if (!checkAddress || checkAddress.id === Number(req.params.id)) {
+        const alamat = await db.Address.findOne({
+          where: {
+            id: req.params.id,
+          },
+        });
+        const ad = address ? address : alamat.dataValues.address;
+        const dis = district ? district : alamat.dataValues.district;
+        const ct = city_id ? city_id : alamat.dataValues.city;
+        const pro = province ? province : alamat.dataValues.province;
+        const ad_nm = address_name
+          ? address_name
+          : alamat.dataValues.address_name;
+        const ad_ph = address_phone
+          ? address_phone
+          : alamat.dataValues.address_phone;
 
-      const coordinate = await openCage({
-        address: ad,
-        district: dis,
-        city: ct,
-        province: pro,
-      });
-      const updateAddress = await db.Address.update(
-        {
+        const coordinate = await openCage({
           address: ad,
           district: dis,
-          city_id: ct,
+          city: ct,
           province: pro,
-          user_id: req.user.id,
-          address_name: ad_nm,
-          address_phone: ad_ph,
-          latitude: coordinate.data.results[0].geometry.lat,
-          longitude: coordinate.data.results[0].geometry.lng,
-        },
-        {
-          where: { id: req.params.id },
-          transaction: trans,
-        }
-      );
-      await trans.commit();
-      return res.send({
-        message: "data berhasil diedit",
-        result: updateAddress,
-      });
+        });
+        const updateAddress = await db.Address.update(
+          {
+            address: ad,
+            district: dis,
+            city_id: ct,
+            province: pro,
+            user_id: req.user.id,
+            address_name: ad_nm,
+            address_phone: ad_ph,
+            latitude: coordinate.data.results[0].geometry.lat,
+            longitude: coordinate.data.results[0].geometry.lng,
+          },
+          {
+            where: { id: req.params.id },
+            transaction: trans,
+          }
+        );
+        await trans.commit();
+        return res.status(200).send({
+          message: "data berhasil diedit",
+          result: updateAddress,
+        });
+      } else {
+        await trans.rollback();
+        return res.status(404).send({
+          message: "nama alamat sudah terdaftar",
+        });
+      }
     } catch (err) {
       await trans.rollback();
       return res.status(500).send({

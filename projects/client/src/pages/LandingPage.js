@@ -16,13 +16,16 @@ import TopBar2 from "../components/topbar2";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
 import SidebarMini from "../components/sidebar-mini";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ModalNearestBranch from "../components/modal-nearest-branch";
+import { useFetchCart } from "../hooks/useFetchCart";
 
 export default function LandingPage() {
   const windowWidth = window.outerWidth;
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const userSelector = useSelector((state) => state.auth);
   const toast = useToast();
+  const { fetch } = useFetchCart();
   const [isLoaded, setIsLoaded] = useState(false);
   const [latlong, setLatlong] = useState({
     latitude: "",
@@ -90,7 +93,7 @@ export default function LandingPage() {
   };
   useEffect(() => {
     getSelectedAddress();
-  }, []);
+  }, [userSelector?.email]);
   console.log(selectedAddress);
   //menyimpan length cart
   const [lengthCart, setLengthCart] = useState(0);
@@ -131,6 +134,7 @@ export default function LandingPage() {
         };
         navigator.geolocation.getCurrentPosition(success, error);
       } else {
+        console.log("ini masuk nya", selectedAddress);
         const latitude = selectedAddress?.latitude;
         const longitude = selectedAddress?.longitude;
         resolve({ latitude, longitude });
@@ -194,12 +198,10 @@ export default function LandingPage() {
     }
   }
   // Contoh penggunaan
+  const [nearestBranchSet, setNearestBranchSet] = useState(false);
   findNearestBranchForUser()
     .then(({ nearestBranch, latlong }) => {
       if (nearestBranch) {
-        // console.log(`Nearest branch to user: ${nearestBranch.branch_name}`);
-        // console.log(`User latitude: ${latlong.latitude}`);
-        // console.log(`User longitude: ${latlong.longitude}`);
         setNearestBranch(nearestBranch.id);
         setBranchName(nearestBranch.branch_name);
       } else {
@@ -210,11 +212,11 @@ export default function LandingPage() {
       console.error("Error:", error);
     });
   // state untuk memastikan setItem selesai dilakukan
-  const [nearestBranchSet, setNearestBranchSet] = useState(false);
 
   useEffect(() => {
     if (nearestBranch && minDistance < 65) {
       localStorage.setItem("nearestBranch", JSON.stringify(nearestBranch));
+      fetch(nearestBranch);
       return setNearestBranchSet(true);
     } else if (nearestBranch && minDistance > 65) {
       localStorage.removeItem("nearestBranch");
@@ -260,6 +262,8 @@ export default function LandingPage() {
                 lengthCart={lengthCart}
                 selectedAddress={selectedAddress}
                 nearestBranchSet={nearestBranchSet}
+                minDistance={minDistance}
+                nearestBranch={nearestBranch}
               />
             </Flex>
           </Flex>
@@ -267,9 +271,10 @@ export default function LandingPage() {
       ) : (
         <>
           <TopBar2
+            setIsLoaded={setIsLoaded}
+            isLoaded={isLoaded}
             address={address}
             selectedAddress={selectedAddress}
-            setSelectedAddress={setSelectedAddress}
             branchName={branchName}
             minDistance={minDistance}
           />
@@ -277,6 +282,8 @@ export default function LandingPage() {
             lengthCart={lengthCart}
             selectedAddress={selectedAddress}
             nearestBranchSet={nearestBranchSet}
+            minDistance={minDistance}
+            nearestBranch={nearestBranch}
           />
           <Footer lengthCart={lengthCart} nearestBranchSet={nearestBranchSet} />
         </>

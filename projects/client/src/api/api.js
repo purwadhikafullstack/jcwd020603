@@ -9,7 +9,7 @@ export function api() {
     headers.Authorization = `Bearer ${token}`;
   }
   const api = axios.create({
-    baseURL: "http://localhost:2000/",
+    baseURL: process.env.REACT_APP_API_BASE_URL,
     headers: headers,
   });
   return api;
