@@ -4,16 +4,18 @@ export default function PembayaranProduk(props) {
   return (
     <>
       <Flex borderBottom={"1px solid lightgrey"} gap={"10px"}>
-        <Flex w={"10%"}>
-          <Box h={"40px"}>
+        <Flex w={"50px"} justifyContent={"center"} alignItems={"center"}>
+          <Box width={"50px"} h={"50px"}>
             <Image
               src={props.Stock?.Product?.photo_product_url}
               borderRadius={"10px"}
               h={"100%"}
+              maxW={"100px"}
+              w={"100%"}
             />
           </Box>
         </Flex>
-        <Flex w={"90%"} flexDir={"column"} gap={"10px"}>
+        <Flex w={"100%"} flexDir={"column"} gap={"10px"}>
           <Flex w={"100%"} flexDir={"column"}>
             <Flex fontSize={"14px"} fontWeight={"500"}>
               {props.Stock?.Product?.product_name}

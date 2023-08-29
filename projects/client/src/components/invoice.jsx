@@ -173,7 +173,6 @@ export default function Invoice() {
             orderValue?.Order.map((val) => {
               return <InvoiceProduk val={val} />;
             })}
-          {/* <InvoiceProduk /> */}
           <Flex paddingBottom={"5px"} borderBottom={"1px solid lightgrey"}>
             <Flex maxW={"398px"} w={"100%"}></Flex>
             <Flex

@@ -3,6 +3,7 @@ import logo from "../assets/PNG/1.png";
 import { useParams } from "react-router-dom";
 
 export default function InvoiceProduk({ val }) {
+  const windowWidth = window.innerWidth;
   const hargaProduk =
     val?.Stock?.discounted_price == 0
       ? val?.Stock?.Product?.price
@@ -19,7 +20,7 @@ export default function InvoiceProduk({ val }) {
         <Flex w={"10%"}>
           <Box h={"40px"}>
             <Image
-              src={val.Stock.Product?.photo_product_url}
+              src={val.Stock?.Product?.photo_product_url}
               borderRadius={"10px"}
               h={"100%"}
             />
@@ -27,8 +28,8 @@ export default function InvoiceProduk({ val }) {
         </Flex>
         <Flex w={"90%"} flexDir={"column"} gap={"10px"}>
           <Flex w={"100%"} flexDir={"column"}>
-            <Flex fontWeight={"500"}>{val.Stock.Product?.product_name}</Flex>
-            <Flex color={"grey"}>Berat : {val.Stock.Product?.desc}</Flex>
+            <Flex fontWeight={"500"}>{val.Stock?.Product?.product_name}</Flex>
+            <Flex color={"grey"}>Berat : {val.Stock?.Product?.desc}</Flex>
           </Flex>
         </Flex>
       </Flex>
