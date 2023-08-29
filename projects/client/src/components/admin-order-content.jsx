@@ -55,8 +55,8 @@ export default function AdminOrderList() {
     sort: "createdAt",
     order: "DESC",
     search: "",
-    time: "",
-    time2: "",
+    time: moment().startOf("W").format("YYYY-MM-DD"),
+    time2: moment().format("YYYY-MM-DD"),
     status: "",
     branch_id: "",
   });
@@ -237,8 +237,12 @@ export default function AdminOrderList() {
                 value={filtering.time}
                 maxW={"200px"}
                 onChange={(e) => {
-                  setFiltering({ ...filtering, time: e.target.value });
-                  setShown({ page: 1 });
+                  if (
+                    moment(e.target.value).isBefore(moment(filtering.time2))
+                  ) {
+                    setFiltering({ ...filtering, time: e.target.value });
+                    setShown({ page: 1 });
+                  }
                 }}
               ></Input>
               -
@@ -249,8 +253,10 @@ export default function AdminOrderList() {
                 maxW={"200px"}
                 value={filtering.time2}
                 onChange={(e) => {
-                  setFiltering({ ...filtering, time2: e.target.value });
-                  setShown({ page: 1 });
+                  if (moment(e.target.value).isAfter(moment(filtering.time))) {
+                    setFiltering({ ...filtering, time2: e.target.value });
+                    setShown({ page: 1 });
+                  }
                 }}
               ></Input>
             </Flex>
@@ -348,31 +354,39 @@ export default function AdminOrderList() {
               onScroll={handleTableRowScroll}
               border={"2px solid grey"}
             >
-              {allBranchOrder.map((val) => {
-                return (
-                  <>
-                    <Tr
-                      justifyContent={"space-between"}
-                      w={"100%"}
-                      minW={"808px"}
-                      _hover={{ backgroundColor: "lightgray" }}
-                      onClick={() => {
-                        nav(`/admin/orders/${val.order_number}`);
-                      }}
-                    >
-                      <Td textAlign={"center"}>{val.order_number}</Td>
-                      <Td textAlign={"center"}>{val.User?.user_name}</Td>
-                      <Td textAlign={"center"}>{val.status}</Td>
-                      <Td textAlign={"center"}>
-                        {moment(val.createdAt).format("ll")}
-                      </Td>
-                      <Td textAlign={"center"}>
-                        Rp {val.total?.toLocaleString("id-ID")}
-                      </Td>
-                    </Tr>
-                  </>
-                );
-              })}
+              {allBranchOrder.length > 0 ? (
+                allBranchOrder.map((val) => {
+                  return (
+                    <>
+                      <Tr
+                        justifyContent={"space-between"}
+                        w={"100%"}
+                        minW={"808px"}
+                        _hover={{ backgroundColor: "lightgray" }}
+                        onClick={() => {
+                          nav(`/admin/orders/${val.order_number}`);
+                        }}
+                      >
+                        <Td textAlign={"center"}>{val.order_number}</Td>
+                        <Td textAlign={"center"}>{val.User?.user_name}</Td>
+                        <Td textAlign={"center"}>{val.status}</Td>
+                        <Td textAlign={"center"}>
+                          {moment(val.createdAt).format("ll")}
+                        </Td>
+                        <Td textAlign={"center"}>
+                          Rp {val.total?.toLocaleString("id-ID")}
+                        </Td>
+                      </Tr>
+                    </>
+                  );
+                })
+              ) : (
+                <Tr>
+                  <Td colSpan={5} textAlign={"center"}>
+                    Data Tidak Ditemukan
+                  </Td>
+                </Tr>
+              )}
             </Tbody>
           </Table>
         </TableContainer>

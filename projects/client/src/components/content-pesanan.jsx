@@ -45,12 +45,16 @@ export default function ContentPesanan() {
   console.log(filter);
   const getOrders = async () => {
     const params = { ...filter };
-    setIsLoading(true);
-    const get = await api().get("/order", { params: { ...params } });
-    setAllOrders(get.data.result);
-    setTotalPages(get.data.total);
-    console.log(get.data.result);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const get = await api().get("/order", { params: { ...params } });
+      setAllOrders(get.data.result);
+      setTotalPages(get.data.total);
+      console.log(get.data.result);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     getOrders();
@@ -258,7 +262,7 @@ export default function ContentPesanan() {
                           Konfirmasi Pesanan
                         </Button>
                         <Button
-                          maxW={"130px"}
+                          maxW={"150px"}
                           colorScheme="gray"
                           fontSize={"12px"}
                           onClick={() => {
@@ -269,7 +273,9 @@ export default function ContentPesanan() {
                             }
                           }}
                         >
-                          Detail Pesanan
+                          {val.status == "Menunggu Pembayaran"
+                            ? "Selesaikan Pembayaran"
+                            : "Detail Pesanan"}
                         </Button>
                       </Flex>
                     </Flex>

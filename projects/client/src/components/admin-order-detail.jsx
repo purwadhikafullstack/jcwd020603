@@ -88,11 +88,6 @@ export default function AdminOrderDetail() {
   console.log(calculateSubtotal);
   console.log("ORDER VALUE", orderValue);
   console.log("ORDER DETAIL", orderDetVal);
-  //rincian pembayaran
-  // const totalBelanja =
-  //   orderValue.total - (orderValue.shipping_cost - orderValue.discount_voucher);
-  // const totalPembayaran =
-  //   totalBelanja + orderValue.shipping_cost - orderValue.discount_voucher;
   // cancel order
   const cancelOrder = async () => {
     try {
@@ -188,7 +183,10 @@ export default function AdminOrderDetail() {
                       setChangeStatus(!changeStatus);
                     }}
                     display={
-                      userSelector.role == "SUPER ADMIN" ? "none" : "flex"
+                      userSelector.role == "SUPER ADMIN" ||
+                      orderValue.status == "Dikirim"
+                        ? "none"
+                        : "flex"
                     }
                   >
                     UBAH STATUS
@@ -363,7 +361,8 @@ export default function AdminOrderDetail() {
           <ModalAdminDitolak
             isOpen={isOpenModal2}
             onClose={onCloseModal2}
-            cancelOrder={cancelOrder}
+            setValueStatus={setValueStatus}
+            refuseOrder={statusOrder}
           />
         </ModalContent>
       </Modal>

@@ -50,13 +50,17 @@ export default function WebKeranjang(props) {
 
   //count total harga belanja
   const totalBelanja = selectedItems.map((val, idx) => {
-    const price = selectedItems[idx].discounted_price
-      ? selectedItems[idx].discounted_price == 50
+    const price = selectedItems[idx]?.Stock?.Discount
+      ? selectedItems[idx]?.Stock?.Discount?.nominal == 50
         ? Number(selectedItems[idx].Stock.Product.price)
-        : Number(selectedItems[idx].discounted_price)
+        : Number(
+            selectedItems[idx].Stock.Product.price *
+              ((100 - selectedItems[idx]?.Stock?.Discount?.nominal) / 100)
+          )
       : Number(selectedItems[idx].Stock.Product.price);
     return price * Number(selectedItems[idx].qty);
   });
+  console.log("perhitungan", selectedItems[0]?.Stock?.Discount?.nominal / 100);
   //count berat belanja
   const [weightTotal, setWeightTotal] = useState(0);
   const itungWeight = selectedItems.map(
@@ -73,7 +77,7 @@ export default function WebKeranjang(props) {
   const [courier, setCourier] = useState("");
   const [shipCost, setShipCost] = useState([]);
   const [courierName, setCourierName] = useState("");
-  console.log(courierName);
+  console.log(courier);
   const [isLoading, setIsLoading] = useState(false);
   const inputCost = {
     origin: prodCart[0]?.Stock.Branch?.city_id,
@@ -146,6 +150,7 @@ export default function WebKeranjang(props) {
       console.log(err);
     }
   };
+  console.log("cost", cost);
 
   return (
     <>
@@ -298,8 +303,26 @@ export default function WebKeranjang(props) {
             boxShadow={"0px -4px 10px rgb(0,0,0,0.3)"}
             isLoading={isLoading}
             onClick={() => {
-              updateLimit();
-              postOrder();
+              if (selectedItems.length > 0) {
+                if (cost.service) {
+                  updateLimit();
+                  postOrder();
+                } else {
+                  toast({
+                    title: "Tidak ada opsi pengiriman yang dipilih",
+                    status: "warning",
+                    position: "top",
+                    duratio: 3000,
+                  });
+                }
+              } else {
+                toast({
+                  title: "Tidak ada produk yang ingin di pesan",
+                  status: "warning",
+                  position: "top",
+                  duratio: 3000,
+                });
+              }
             }}
           >
             PESAN SEKARANG
