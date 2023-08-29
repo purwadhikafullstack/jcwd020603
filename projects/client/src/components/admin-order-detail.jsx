@@ -3,6 +3,7 @@ import {
   Button,
   Center,
   Flex,
+  Icon,
   Image,
   Modal,
   ModalContent,
@@ -19,6 +20,7 @@ import ModalAdminDikirim from "./modal-admin-dikirim";
 import ModalAdminDitolak from "./modal-admin-ditolak";
 import { useSelector } from "react-redux";
 import AdminNavbar from "./AdminNavbar";
+import { MdArrowBack } from "react-icons/md";
 
 export default function AdminOrderDetail() {
   const order_number = useParams();
@@ -127,8 +129,16 @@ export default function AdminOrderDetail() {
         rowGap={"20px"}
         borderTopLeftRadius={"20px"}
       >
-        <Flex fontSize={"24px"} fontWeight={"700"}>
-          Order {orderValue?.order_number}
+        <Flex fontSize={"24px"} fontWeight={"700"} gap={"20px"}>
+          <Flex
+            alignItems={"center"}
+            onClick={() => {
+              nav("/admin/orders");
+            }}
+          >
+            <Icon as={MdArrowBack} />
+          </Flex>
+          <Flex>Order {orderValue?.order_number}</Flex>
         </Flex>
         <Flex className="adminOrderDetailBox">
           <Flex
