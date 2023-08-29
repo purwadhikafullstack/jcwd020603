@@ -17,8 +17,7 @@ import DetailPengiriman from "./detail-info-pengiriman";
 import { api } from "../api/api";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import { useNavigate, useParams } from "react-router-dom";
-import { HiOutlineCheckCircle } from "react-icons/hi";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ModalPesananSelesai from "./modal-pesanan-selesai";
 
 export default function ContentDetailPesanan() {
@@ -29,9 +28,8 @@ export default function ContentDetailPesanan() {
   const [orderDetVal, setOrderDetVal] = useState([]);
   const [peraturan, setPeraturan] = useState({});
   const getLatestOrder = async () => {
-    let order;
     console.log(order_number);
-    order = await api().get("/order/specific", {
+    const order = await api().get("/order/specific", {
       params: { order_number: order_number.order_number },
     });
     setPeraturan(order.data.result);
@@ -138,11 +136,13 @@ export default function ContentDetailPesanan() {
                       ? "flex"
                       : "none"
                   }
-                  onClick={() => {
-                    nav(`/invoice/${peraturan?.order_number}`);
-                  }}
                 >
-                  Faktur Pembelian
+                  <Link
+                    to={`/invoice/${peraturan?.order_number}`}
+                    target="_blank"
+                  >
+                    Faktur Pembelian
+                  </Link>
                 </Button>
               </Flex>
               <Flex w={"100%"} justifyContent={"space-between"}>

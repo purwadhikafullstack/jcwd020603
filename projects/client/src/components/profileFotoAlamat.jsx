@@ -66,114 +66,127 @@ export default function ProfileFotoAlamat() {
 
   return (
     <>
-      <Flex
-        w={"100%"}
-        h={"100%"}
-        boxShadow={"lg"}
-        flexDir={"column"}
-        rowGap={"20px"}
-        bgColor={"gray.100"}
-        padding={"20px"}
-        borderRadius={"10px"}
-      >
+      <Flex flexDir={"column"} w={"100%"} rowGap={"20px"}>
         <Flex
           w={"100%"}
           h={"100%"}
-          minH={"350px"}
-          boxShadow={"dark-lg"}
-          p={2}
-          rounded={10}
-          position={"relative"}
+          boxShadow={"lg"}
+          flexDir={"column"}
+          rowGap={"20px"}
+          bgColor={"gray.100"}
+          padding={"20px"}
+          borderRadius={"10px"}
         >
-          <Center cursor={"pointer"} w={"100%"}>
-            <Input
-              accept="image/png , image/jpg, image/gif"
-              onChange={handleFile}
-              ref={inputFileRef}
-              type="file"
-              display={"none"}
-            />
-            <Avatar
-              zIndex={4}
-              size={"2xl"}
-              src={image}
-              onClick={() => {
-                inputFileRef.current.click();
-              }}
-            />
-            <Image
-              position={"absolute"}
-              src={logoPro}
-              rounded={12}
-              w={"100%"}
-              minH={"350px"}
-              h={"100%"}
-              blur={"3xl"}
-              filter={"blur(2px)"}
-            ></Image>
-          </Center>
-          <Button
-            position={"absolute"}
-            zIndex={"4"}
-            fontWeight={"bolder"}
-            isLoading={loading}
-            bgColor={"green.200"}
-            // variant={"ghost"}
-            color={"green"}
-            onClick={() => {
-              setLoading(true);
-              setTimeout(() => {
-                setLoading(false);
-                updateAvatar();
-              }, 1000);
-            }}
+          <Flex
+            w={"100%"}
+            h={"100%"}
+            minH={"350px"}
+            maxW={"450px"}
+            boxShadow={"dark-lg"}
+            p={2}
+            rounded={10}
+            position={"relative"}
           >
-            <Icon as={GrDocumentUpdate} mr={"10%"}></Icon> Simpan
-          </Button>
+            <Center cursor={"pointer"} w={"100%"}>
+              <Input
+                accept="image/png , image/jpg, image/gif"
+                onChange={handleFile}
+                ref={inputFileRef}
+                type="file"
+                display={"none"}
+              />
+              <Avatar
+                zIndex={4}
+                size={"2xl"}
+                src={image}
+                onClick={() => {
+                  inputFileRef.current.click();
+                }}
+              />
+              <Image
+                position={"absolute"}
+                src={logoPro}
+                rounded={12}
+                w={"100%"}
+                minH={"350px"}
+                maxW={"450px"}
+                h={"100%"}
+                blur={"3xl"}
+                filter={"blur(2px)"}
+              ></Image>
+            </Center>
+            <Button
+              position={"absolute"}
+              zIndex={"4"}
+              fontWeight={"bolder"}
+              isLoading={loading}
+              bgColor={"green.200"}
+              color={"green"}
+              onClick={() => {
+                setLoading(true);
+                setTimeout(() => {
+                  setLoading(false);
+                  updateAvatar();
+                }, 1000);
+              }}
+            >
+              <Icon as={GrDocumentUpdate} mr={"10%"}></Icon> Simpan
+            </Button>
+          </Flex>
         </Flex>
         <Flex
           w={"100%"}
           h={"100%"}
-          justifyContent={"space-around"}
-          alignItems={"center"}
-          rounded={10}
-          boxShadow={"dark-lg"}
-          padding={"5px"}
+          boxShadow={"lg"}
+          flexDir={"column"}
+          rowGap={"20px"}
+          bgColor={"gray.100"}
+          padding={"20px"}
+          borderRadius={"10px"}
         >
-          <Icon
-            textAlign={"center"}
-            as={FaMapMarkerAlt}
-            w={"8%"}
-            h={"30px"}
-            color={"red.600"}
-          ></Icon>
           <Flex
-            flexDir={"column"}
-            w={"80%"}
-            h={"80%"}
-            justifyContent={"center"}
+            w={"100%"}
+            h={"100%"}
+            justifyContent={"space-around"}
             alignItems={"center"}
+            rounded={10}
+            boxShadow={"dark-lg"}
+            padding={"5px"}
           >
-            {primaryAddress && Object.keys(primaryAddress).length > 0 ? (
-              <Box fontSize={"14px"} fontWeight={"bold"} cursor={"pointer"}>
-                {primaryAddress?.address}, {primaryAddress?.district},{" "}
-                {primaryAddress?.City?.type} {primaryAddress?.City?.city_name} -{" "}
-                {primaryAddress?.City?.province}
-              </Box>
-            ) : (
-              <Flex fontSize={"14px"} fontWeight={"bold"} cursor={"pointer"}>
-                {" "}
-                Atur Alamat Utama{" "}
-                <Link to={"/address"}>
-                  <Flex color={"green"} paddingLeft={"3px"}>
-                    disini
-                  </Flex>
-                </Link>
-              </Flex>
-            )}
+            <Icon
+              textAlign={"center"}
+              as={FaMapMarkerAlt}
+              w={"8%"}
+              h={"30px"}
+              color={"red.600"}
+            ></Icon>
+            <Flex
+              flexDir={"column"}
+              w={"80%"}
+              h={"80%"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              {primaryAddress && Object.keys(primaryAddress).length > 0 ? (
+                <Box fontSize={"14px"} fontWeight={"bold"} cursor={"pointer"}>
+                  {primaryAddress?.address}, {primaryAddress?.district},{" "}
+                  {primaryAddress?.City?.type} {primaryAddress?.City?.city_name}{" "}
+                  - {primaryAddress?.City?.province}
+                </Box>
+              ) : (
+                <Flex fontSize={"14px"} fontWeight={"bold"} cursor={"pointer"}>
+                  {" "}
+                  Atur Alamat Utama{" "}
+                  <Link to={"/address"}>
+                    <Flex color={"green"} paddingLeft={"3px"}>
+                      disini
+                    </Flex>
+                  </Link>
+                </Flex>
+              )}
 
-            {/* <Box border={"1px solid gray"} w={"100%"}></Box> */}
-            {/* <Button
+              {/* <Box border={"1px solid gray"} w={"100%"}></Box> */}
+              {/* <Button
               w={"100%"}
               h={"30%"}
               fontWeight={"bold"}
@@ -186,6 +199,7 @@ export default function ProfileFotoAlamat() {
             >
               Edit Alamat
             </Button> */}
+            </Flex>
           </Flex>
         </Flex>
       </Flex>

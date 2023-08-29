@@ -19,10 +19,13 @@ import { useNavigate } from "react-router-dom";
 // import ModalProduct from "./modal-product";
 import { api } from "../api/api";
 import ModalAlamatPengiriman from "./modal-alamat-pengiriman";
+import { useSelector } from "react-redux";
 
 export default function Footer(props) {
   const nav = useNavigate();
-  const { setLengthCart, setGetFunction } = props;
+  const { setLengthCart, nearestBranchSet } = props;
+  const cartSelector = useSelector((state) => state.cart);
+  const userSelector = useSelector((state) => state.auth);
   const user = JSON.parse(localStorage.getItem("auth"));
   const [Clicked, setClicked] = useState();
   const handleClick = (e) => {
@@ -69,9 +72,14 @@ export default function Footer(props) {
     }
   };
   useEffect(() => {
-    getCount();
+    if (nearestBranchSet) {
+      getCount();
+    }
+  }, [nearestBranchSet]);
+
+  useEffect(() => {
     getSelectedAddress();
-  }, []);
+  }, [userSelector.user_name]);
 
   return (
     <>
@@ -129,7 +137,12 @@ export default function Footer(props) {
                 color={"white"}
               />
             </Center>
-            <Center className="jumlahOrderG">1</Center>
+            <Center
+              className="jumlahOrderG"
+              display={cartSelector.total == 0 ? "none" : "center"}
+            >
+              {cartSelector.total}
+            </Center>
           </Flex>
           <Flex maxW={"40%"} w={"100%"}>
             <Flex

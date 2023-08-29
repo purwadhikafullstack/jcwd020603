@@ -8,25 +8,24 @@ const orderController = {
   getAll: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
+      const page = req.query.page - 1 || 0;
       const whereClause = {
         user_id: req.user.id,
       };
-      const status1 = req.query.status.split(",")[0];
-      const status2 = req.query.status.split(",")[1];
       if (req.query.status) {
+        const status1 = req.query.status.split(",")[0];
+        const status2 = req.query.status.split(",")[1];
         whereClause.status = {
           [Op.or]: [{ [Op.eq]: status1 }, { [Op.eq]: status2 }],
         };
       }
       console.log(whereClause);
-      const get = await db.Order.findAll({
+      const get = await db.Order.findAndCountAll({
         where: whereClause,
         include: [
           {
             model: db.OrderDetail,
             as: "Order",
-            require: false,
-            right: true,
             include: [
               {
                 model: db.Stock,
@@ -42,12 +41,17 @@ const orderController = {
           },
         ],
         order: [["createdAt", "DESC"]],
+        limit: 5,
+        offset: 5 * page,
+        distinct: true,
       });
       await trans.commit();
       return res.status(200).send({
         message: "OK",
-        result: get,
+        result: get.rows,
+        total: Math.ceil(get.count / 5),
       });
+      x;
     } catch (err) {
       await trans.rollback();
       res.status(500).send({
@@ -103,6 +107,7 @@ const orderController = {
         order: [[sort, order]],
         limit: 5,
         offset: 5 * page,
+        distinct: true,
       });
       const whereClause = {};
       if (branch_id) {
@@ -428,9 +433,6 @@ const orderController = {
           },
         ],
       });
-      console.log("findOrder", findOrder);
-      console.log("Waktu Sekarang:", currentTime);
-      console.log("Tanggal Pesanan:", findOrder.date);
       if (findOrder) {
         const patch = await db.Order.update(
           {
@@ -482,6 +484,38 @@ const orderController = {
       console.error("Error in cancelOrderAutomatically:", err.message);
     }
   },
+  doneOrderAutomatically: async () => {
+    const trans = await db.sequelize.transaction();
+    console.log("ini juga jalan");
+    try {
+      const afterAWeek = moment().utc().add(-7, "day");
+      const findOrder = await db.Order.findOne({
+        where: {
+          status: "Dikirim",
+          updatedAt: { [Op.lte]: afterAWeek },
+        },
+      });
+      if (findOrder) {
+        const patch = await db.Order.update(
+          {
+            status: "Pesanan Dikonfirmasi",
+          },
+          {
+            where: {
+              id: findOrder.id,
+            },
+            transaction: trans,
+          }
+        );
+      } else {
+        return console.log("tidak ada order yang selesai dikirim");
+      }
+      await trans.commit();
+    } catch (err) {
+      await trans.rollback();
+      console.error("Error in doneOrderAutomatically:", err.message);
+    }
+  },
   changeStatusOrder: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
@@ -494,7 +528,6 @@ const orderController = {
           transaction: trans,
         }
       );
-      console.log("ini cancel order otomatis");
       await trans.commit();
       res.status(200).send({
         message: "OK",
