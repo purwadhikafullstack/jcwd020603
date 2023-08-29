@@ -35,6 +35,7 @@ export default function VoucherAddUpdateModal(props) {
     minimal_order,
     limit,
     desc,
+    branch_id
   } = dtVocer[numberIdx];
   const valid_startConvert = moment(valid_start).format("YYYY-MM-DD");
   const valid_toConvert = moment(valid_to).format("YYYY-MM-DD");
@@ -49,6 +50,7 @@ export default function VoucherAddUpdateModal(props) {
       minimal_order: props.isEdit == true ? minimal_order : "",
       limit: props.isEdit == true ? limit : "",
       desc: props.isEdit == true ? desc : "",
+      branch_id : props.branch_id
     },
 
     validationSchema: Yup.object().shape({
@@ -62,11 +64,11 @@ export default function VoucherAddUpdateModal(props) {
       ),
       nominal: Yup.string().required(
         "Gagal disimpan.. kolom ini tidak boleh kosong"
-      ),
-      minimal_order: Yup.string(),
+      ).matches(/^[1-9][0-9]*$/, "Tidak Boleh angka negative"),
+      minimal_order: Yup.string().matches(/^[1-9][0-9]*$/, "Tidak Boleh angka negative"),
       limit: Yup.string().required(
         "Gagal disimpan.. kolom ini tidak boleh kosong"
-      ),
+      ).matches(/^[1-9][0-9]*$/, "Tidak Boleh angka negative"),
       desc: Yup.string(),
     }),
 
@@ -94,6 +96,7 @@ export default function VoucherAddUpdateModal(props) {
             minimal_order,
             limit,
             desc,
+            branch_id : userSelector.branch_id
           };
           await api()
             .patch("/voucher", dataEditVoucher)
@@ -133,6 +136,7 @@ export default function VoucherAddUpdateModal(props) {
             minimal_order,
             limit,
             desc,
+            branch_id : userSelector.branch_id
           };
           await api()
             .post("/voucher", dataInputVoucher)
@@ -155,9 +159,25 @@ export default function VoucherAddUpdateModal(props) {
     },
   });
 
+  // function inputHandler(event) {
+  //   const { value, id } = event.target;
+  //   formik.setFieldValue(id, value);
+  //   console.log(formik.values);
+  // }
+
   function inputHandler(event) {
     const { value, id } = event.target;
-    formik.setFieldValue(id, value);
+    if (id === "nominal" || id === "minimal_order" || id === "limit" ) {
+      const numericValue = parseFloat(value);
+
+      if (!isNaN(numericValue) && numericValue >= 0) {
+        formik.setFieldValue(id, numericValue);
+      }
+    } else if (id === "voucher_code"){
+        formik.setFieldValue(id, value.toUpperCase())
+    }else {
+        formik.setFieldValue(id, value);
+    }
     console.log(formik.values);
   }
 
@@ -197,6 +217,7 @@ export default function VoucherAddUpdateModal(props) {
                         onChange={inputHandler}
                         id="voucher_code"
                         type="text"
+                        style={{textTransform: 'uppercase'}}
                         transition={"1s"}
                         _hover={{
                           borderColor: "#9d9c45",
@@ -270,7 +291,8 @@ export default function VoucherAddUpdateModal(props) {
                           defaultValue={isEdit ? nominal : ""}
                           onChange={inputHandler}
                           id="nominal"
-                          type="text"
+                          type="number"
+                          min={0}
                           transition={"1s"}
                           _hover={{
                             borderColor: "#9d9c45",
@@ -293,7 +315,7 @@ export default function VoucherAddUpdateModal(props) {
                           defaultValue={isEdit ? minimal_order : ""}
                           onChange={inputHandler}
                           id="minimal_order"
-                          type="text"
+                          type="number"
                           transition={"1s"}
                           _hover={{
                             borderColor: "#9d9c45",
@@ -328,7 +350,7 @@ export default function VoucherAddUpdateModal(props) {
                         defaultValue={isEdit ? limit : ""}
                         onChange={inputHandler}
                         id="limit"
-                        type="text"
+                        type="number"
                         transition={"1s"}
                         _hover={{
                           borderColor: "#9d9c45",

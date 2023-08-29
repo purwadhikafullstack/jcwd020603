@@ -27,12 +27,14 @@ import { BsHandIndexFill } from "react-icons/bs";
 export default function EditAdminBranch(props) {
   const getBranch_id = props.dtBranch[props.number].branch_id;
   console.log(getBranch_id);
+  console.log(props.dtBranch[props.number]);
   const toast = useToast();
   const [seePass, setSeePass] = useState(false);
   const [data, setData] = useState({});
   YupPassword(Yup);
   const formik = useFormik({
     initialValues: {
+      user_id : props.dtBranch[props.number].id,
       user_name: props.dtBranch[props.number].user_name,
       email: props.dtBranch[props.number].email,
       role: "ADMIN",
@@ -54,7 +56,6 @@ export default function EditAdminBranch(props) {
         .required("Gagal disimpan.. kolom ini tidak boleh kosong")
         .email("Invalid. Write like this example@mail.com"),
       password: Yup.string()
-        .required("Gagal disimpan.. kolom ini tidak boleh kosong")
         .min(8, "Your Password too short.")
         .matches(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*$/,
@@ -88,6 +89,7 @@ export default function EditAdminBranch(props) {
       try {
         console.log("masuk dlu");
         const {
+          user_id,
           user_name,
           email,
           password,
@@ -98,9 +100,9 @@ export default function EditAdminBranch(props) {
           city_id,
           province,
           branch_id,
-          // user_id
         } = formik.values;
         const newBranchAdmin = {
+          user_id : props.dtBranch[props.number].id,
           user_name,
           email,
           password,
@@ -333,7 +335,7 @@ export default function EditAdminBranch(props) {
               alignItems={"center"}
             >
               <Box className="flex3R-box-addbranch"></Box>
-              <Image src={logo} w={"100%"} h={"20%"}></Image>
+              <Image src={logo} display={{base : "none", sm: "none",md:"flex", lg: "flex", xl: "flex"}} w={"100%"} h={"20%"}></Image>
               <Box className="flex3R-box-addbranch"></Box>
             </Flex>
 
@@ -476,7 +478,7 @@ export default function EditAdminBranch(props) {
                 bgGradient: "linear(to-l, #9d9c45, #f0ee93 )",
               }}
             >
-              Simpan
+              Simpan Perubahan
             </Button>
           </Flex>
         </Flex>

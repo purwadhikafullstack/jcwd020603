@@ -1,10 +1,10 @@
 import {
   Box,
   Button,
+  Center,
   Flex,
   FormControl,
   FormLabel,
-  Icon,
   Image,
   Input,
   InputGroup,
@@ -12,48 +12,51 @@ import {
   Modal,
   ModalContent,
   ModalOverlay,
-  Select,
-  Textarea,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import "../css/adminBranchR.css";
-import logo from "../assets/SVG/4.svg";
-import AddUser from "./AdminBranchAddModal-user";
-import AddBranch from "./AdminBranchAddModal-branch";
 import { api } from "../api/api";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import YupPassword from "yup-password";
 import { FaPercentage } from "react-icons/fa";
-import { FaRupiahSign } from "react-icons/fa6";
-import { TbNumbers } from "react-icons/tb";
-import { AiOutlineCloseCircle, AiOutlineAppstoreAdd } from "react-icons/ai";
-import tes from "../assets/ayam segar.jpg";
+import { AiOutlineAppstoreAdd } from "react-icons/ai";
 import DiscountAddProductModal from "./DiscountAddProductModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 
 export default function DiscountAddModal(props) {
   const userSelector = useSelector((state) => state.auth);
-  const branch_id = useSelector.branch_id;
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [dtStock, setDtStock] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
-  const { dtDis, fetchAll, numberIdx, isEdit } = props;
-  const { title, valid_start, valid_to, nominal, id, discount_id } =
-    dtDis[numberIdx];
+  const [getDiscountId, setGetDiscountId] = useState([]);
+  const { dtDis, fetchAll, numberIdx, isEdit, dtDisSelected } = props;
+  const { title, valid_start, valid_to, nominal, id, discount_id, photo_discount_url  } = dtDis[numberIdx];
   const valid_startConvert = moment(valid_start).format("YYYY-MM-DD");
   const valid_toConvert = moment(valid_to).format("YYYY-MM-DD");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [image, setImage] = useState(null);
+  const [sendDiscount_id, setSendDiscount_id] = useState()
+  const [loading, setLoading] = useState(false);
+  const inputFileRef = useRef(null);
+  const dispatch = useDispatch();
   YupPassword(Yup);
   console.log(props.isEdit);
   console.log(title);
   console.log(dtDis);
   console.log(id);
   console.log(discount_id);
+  console.log(numberIdx);
+
+  const handleFile = (e) => {
+    setSelectedFile(e.target.files[0]);
+    setImage(URL.createObjectURL(e.target.files[0]));
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -96,15 +99,19 @@ export default function DiscountAddModal(props) {
             valid_start,
             valid_to,
             nominal,
-            branch_id,
+            branch_id : userSelector.branch_id,
             product_id: [...selectedId],
             discount_id: id,
           };
-          await api()
+         const editDiskon =  await api()
             .patch("/discount", dataDiscountEdit)
-            .then((result) => {
-              console.log(result.data);
-            });
+              console.log(editDiskon.data);
+            if(editDiskon && selectedFile){
+              const formData = new FormData();
+              formData.append("PhotoDiscount", selectedFile);
+              await api()
+                .patch(`/discount/photo-discount/${dataDiscountEdit.discount_id}`, formData)
+            }
           toast({
             title: "Data diskon berhasil diubah",
             status: "success",
@@ -133,14 +140,20 @@ export default function DiscountAddModal(props) {
             valid_start,
             valid_to,
             nominal,
-            branch_id,
+            branch_id : userSelector.branch_id,
             product_id: [...selectedId],
+            discount_id
           };
-          await api()
+        const tambahDiskon =  await api()
             .post("/discount", dataDiscountTambah)
-            .then((result) => {
-              console.log(result.data);
-            });
+              console.log(tambahDiskon.data.data);
+              setGetDiscountId(tambahDiskon.data.data)
+            if( tambahDiskon.data.data.id && selectedFile){
+              const formData = new FormData();
+              formData.append("PhotoDiscount", selectedFile);
+              await api()
+                .patch(`/discount/photo-discount/${tambahDiskon.data.data.id}`, formData)
+            }
           toast({
             title: "Data diskon berhasil ditambahkan",
             status: "success",
@@ -157,14 +170,21 @@ export default function DiscountAddModal(props) {
     },
   });
 
+ 
   function inputHandler(event) {
     const { value, id } = event.target;
-    formik.setFieldValue(id, value);
+    if (id === "nominal") {
+      const numericValue = parseFloat(value);
+      if (!isNaN(numericValue) && numericValue >= 0) {
+        formik.setFieldValue(id, numericValue);
+      }
+    } else {
+      formik.setFieldValue(id, value);
+    }
     console.log(formik.values);
   }
 
-  console.log(userSelector.id);
-  console.log(userSelector.branch_id);
+  
   const getStock = async () => {
     const getData = await api()
       .get("/stock/byBranch", { params: { branch_id: userSelector.branch_id } })
@@ -175,7 +195,7 @@ export default function DiscountAddModal(props) {
   };
   const getStockByDiscount = async () => {
     const stockByDiscount = await api()
-      .get("/stock/byDiscount", { params: { discount_id: id } })
+      .get("/stock/byDiscount", { params: { discount_id: id, branch_id: userSelector.branch_id } })
       .then((result) => {
         console.log(result.data);
         if (isEdit == true) {
@@ -184,14 +204,14 @@ export default function DiscountAddModal(props) {
        
       });
   };
-
-  
-
+  console.log(selectedFile);
+  console.log(image);
   console.log(userSelector);
   console.log(userSelector.branch_id);
   console.log(selectedProducts);
   console.log(dtStock);
   console.log(selectedId);
+  console.log(dtDisSelected);
 
   useEffect(() => {
     getStock();
@@ -205,7 +225,39 @@ export default function DiscountAddModal(props) {
           <Flex className="flex3R-addbranch">
             <Flex className="flex3R-input_user-disvoc" gap={"20px"}>
               <Box className="flex3R-input-box-addbranch">Tambah Discount</Box>
-              <FormControl>
+              {/* <Flex w={"40%"} > */}
+               <Center cursor={"pointer"} w={"100%"} mt={"30px"}>
+                  <Input
+                    accept="image/png , image/jpg, image/gif"
+                    onChange={handleFile}
+                    ref={inputFileRef}
+                    type="file"
+                    display={"none"}
+                  />
+                   <Image
+                   rounded={10}
+                    h={"20%"}
+                    w={"40%"}
+                    mt={"30px"}
+                    align={"center"}  
+                    position={"absolute"}
+                    zIndex={4}
+                    size={{base : "lg", sm: "xl", md: "xl", lg: "2xl"}}
+                    src={isEdit == true ? (selectedFile ? image : photo_discount_url) : image}
+                    transition={"1s"}
+                    _hover={{
+                      borderColor: "#9d9c45",
+                      boxShadow: "dark-lg",
+                    }}
+                    onClick={() => {
+                      inputFileRef.current.click();
+                    }}
+                  />
+                 Tambah Foto Diskon
+              </Center>
+              {/* </Flex> */}
+             
+              <FormControl mt={"60px"}>
                 <FormLabel>Judul</FormLabel>
                 <Input
                   defaultValue={isEdit ? title : ""}
@@ -369,8 +421,9 @@ export default function DiscountAddModal(props) {
 
           <Flex justifyContent={"center"} mt={"50px"}>
             <Button
-              onClick={formik.handleSubmit}
+              onClick={() => { formik.handleSubmit() }}
               m={"20px"}
+              isLoading={loading}
               w={"40%"}
               cursor={"pointer"}
               bgGradient="linear(to-r, #9d9c45, #f0ee93 )"
@@ -397,6 +450,7 @@ export default function DiscountAddModal(props) {
             selectedId={selectedId}
             setSelectedId={setSelectedId}
             dtStock={dtStock}
+            dtDisSelected={dtDisSelected}
             isEdit={props.isEdit}
           />
         </ModalContent>

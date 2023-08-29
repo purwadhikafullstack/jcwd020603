@@ -3,28 +3,16 @@ import {
   Center,
   Flex,
   Icon,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Select,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { api } from "../api/api";
-import { BiSearch, BiSolidChevronDown, BiSolidChevronUp } from "react-icons/bi";
+import {api} from "../api/api"
 import "../css/indexG.css";
 import "../css/indexR.css";
-import { FaPeopleGroup } from "react-icons/fa6";
-import { FaStore } from "react-icons/fa";
-import { IoReorderThreeSharp } from "react-icons/io5";
-import { MdOutlinePayments, MdArrowBackIosNew } from "react-icons/md";
-import { Chart, registerables, scales } from "chart.js";
-import Pagination from "./pagination";
+import { FaStore, } from "react-icons/fa";
+import { BiSolidHot, } from "react-icons/bi";
+import { LuPackageCheck, } from "react-icons/lu";
+import { MdOutlinePayments } from "react-icons/md";
+import { Chart, registerables } from 'chart.js';
 import ChartSalesReportProduct from "./Chart-SalesReport-product";
 import ChartSalesReportUser from "./Chart-SalesReport-user";
 import { useSelector } from "react-redux";

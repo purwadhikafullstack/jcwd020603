@@ -103,6 +103,7 @@ export default function ProfileData() {
         console.log(error);
       }
     },
+
   });
 
   const inputHandler = (e) => {
@@ -169,7 +170,7 @@ export default function ProfileData() {
             >
               {formik.errors.user_name}
             </Flex>
-          </FormControl>
+          </FormControl> 
 
           <FormControl>
             <FormLabel>Email</FormLabel>

@@ -10,9 +10,9 @@ export default function ChartSalesReportProduct(props) {
   const prepareChartData = () => {
     const dateCountMap = {};
     const dateRevenueMap = {};
-
-    props.dtSumQtyProd.forEach((item) => {
-      const name = item.Stock?.Product?.product_name;
+  
+    props?.dtSumQtyProd?.forEach((item) => {
+      const name = item?.Stock?.Product?.product_name;
       if (dateCountMap[name]) {
         dateCountMap[name]++;
         dateRevenueMap[name] += item.total_qty;

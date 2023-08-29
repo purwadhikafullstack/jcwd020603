@@ -10,6 +10,7 @@ import { api } from "../api/api";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import * as XLSX from "xlsx"
 import { Chart, registerables, scales } from 'chart.js';
 import SalesReportTransactionContent from "./Sales-report-transaction-content";
 Chart.register(...registerables);
@@ -29,7 +30,9 @@ export default function SalesReport() {
   const [search, setSearch] = useState()
   const [ascModeDate, setAscModeDate] = useState(true)
   const [ascModePrice, setAscModePrice] = useState(true)
+  const [isDownloadTriggered, setIsDownloadTriggered] = useState(false)
   const [getBranch_name, setGetBranch_name] = useState([])
+  const [dtForDownload, setDtForDownload] = useState([])
   const [inputBranch_name, setInputBranch_name] = useState()
   const [pages, setPages] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
@@ -51,6 +54,8 @@ export default function SalesReport() {
     setInputBranch_name(e.target.value)
   }
   const branch_id = userSelector.role =="ADMIN" ? userSelector.branch_id : inputBranch_name
+
+  const itemPerPage = 3
   const pageHandler = () => {
     const output = []
     for (let i = 1; i <= totalPages; i++) {
@@ -86,6 +91,7 @@ export default function SalesReport() {
           .post("/sales-report/all", sendBody)
           .then((res) => {
             setdtSalesReport(res.data.data);
+            setDtForDownload(res.data.data)
             transaksi = res.data.data
           });
       } catch (error) {
@@ -115,6 +121,37 @@ export default function SalesReport() {
       }
   }
   // fetch data
+
+  // download ke excel
+const handleDownloadExcel = () => {
+  console.log(isDownloadTriggered, "ini trigernya");
+  // if(isDownloadTriggered == true){
+    const excelData = dtForDownload.map((item, index) => ({
+      No : index+1,
+      "Kode Transaksi": item.order_number,
+      "Tanggal Transaksi": item.date.split("T")[0],
+      "Nama Pembeli": item.User.user_name,
+      "Nama Cabang": item.Branch.branch_name,
+      "Lokasi Cabang (Kota - Provinsi)": `${item.Branch.City.city_name} - ${item.Branch.province}`,
+      "Total Harga": formatCurrency(item.total),
+     }));
+   
+     const ws = XLSX.utils.json_to_sheet(excelData);
+     const wb = XLSX.utils.book_new();
+     XLSX.utils.book_append_sheet(wb, ws, 'SalesReport');
+     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+     const url = URL.createObjectURL(blob);
+     
+     const link = document.createElement('a');
+     link.href = url;
+     link.download = 'sales_report_transaksi.xlsx';
+     link.click();
+
+    //  setIsDownloadTriggered(false)
+  // }
+  
+};
   // useEffect
   useEffect(() => {
     pageHandler()
@@ -179,13 +216,13 @@ export default function SalesReport() {
       </Box>
       <Flex className="flex1R-salesReportTrans">
         {/* =========================================================== */}
-        <SalesReportTransactionContent dtSalesReport={dtSalesReport} setdtSalesReport={setdtSalesReport} searchRef={searchRef} roleOfUSer={roleOfUSer}
-        dtSalesReportFilter={dtSalesReportFilter} setdtSalesReportFilter={setdtSalesReportFilter} allData={allData} setAllData={setAllData}
+        <SalesReportTransactionContent dtSalesReport={dtSalesReport} setdtSalesReport={setdtSalesReport} searchRef={searchRef} roleOfUSer={roleOfUSer} itemPerPage = {itemPerPage}
+        dtSalesReportFilter={dtSalesReportFilter} setdtSalesReportFilter={setdtSalesReportFilter} allData={allData} setAllData={setAllData} handleDownloadExcel={handleDownloadExcel}
         totalPrice={totalPrice} setTotalPrice={setTotalPrice} total={total} setTotal={setTotal} selectedSortBy={selectedSortBy} setSelectedSortBy={setSelectedSortBy}
         selectedOrderBy={selectedOrderBy} setSelectedOrderBy={setSelectedOrderBy} search={search} setSearch={setSearch} ascModeDate={ascModeDate} setAscModeDate={setAscModeDate}
         ascModePrice={ascModePrice} setAscModePrice={setAscModePrice} getBranch_name={getBranch_name} setGetBranch_name={setGetBranch_name} inputBranch_name={inputBranch_name} setInputBranch_name={setInputBranch_name}
         pages={pages} setPages={setPages} totalPages={totalPages} setTotalPages={setTotalPages} shown={shown} setShown={setShown} date={date} setDate={setDate}
-        inputHandler={inputHandler} inputHandlerBranch_name={inputHandlerBranch_name} pageHandler={pageHandler} formatCurrency={formatCurrency}/>
+        inputHandler={inputHandler} inputHandlerBranch_name={inputHandlerBranch_name} pageHandler={pageHandler} formatCurrency={formatCurrency} setIsDownloadTriggered={setIsDownloadTriggered}/>
         {/* ============================================================ */}
       </Flex>
     </>

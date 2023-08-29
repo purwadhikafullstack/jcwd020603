@@ -11,8 +11,8 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import { Chart, registerables, scales } from 'chart.js';
-import SalesReportProductContent from "./Sales-report-product-content";
 import SalesReportUserContent from "./Sales-report-user-content";
+import * as XLSX from "xlsx"
 Chart.register(...registerables);
 
 export default function SalesReportUser() {
@@ -31,6 +31,7 @@ export default function SalesReportUser() {
   const [dtSumQtyUser, setDtSumQtyUser] = useState([])
   const [dtSumQtyUserPagination, setDtSumQtyUserPagination] = useState([])
   const [getBranch_name, setGetBranch_name] = useState([])
+  const [dtForDownload, setDtForDownload] = useState([])
   const [inputBranch_name, setInputBranch_name] = useState("")
   const [pages, setPages] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
@@ -89,6 +90,7 @@ export default function SalesReportUser() {
         console.log(res.data.dataTransByDate);
         setDtSumQtyUserAll(res.data.allData)
         setDtSumQtyUser(res.data.dataTransByDate)
+        setDtForDownload(res.data.dataTransByDate)
       })
     } catch (error) {
       console.log(error.message);
@@ -119,13 +121,61 @@ export default function SalesReportUser() {
       console.log(error.message);
     }
   }
-
-  console.log(dtSumQtyUser);
-  console.log(dtSumQtyUserAll);
-  console.log(dtSumQtyUserPagination);
-  console.log(dtSumQtyUserAllPagination);
-
   // fetch data
+      // download ke excel
+      const handleDownloadExcel = () => {
+        const excelData = dtForDownload.map((item, index) => {
+          let dtDetail = [];
+          if (item.dataUser) {
+            dtDetail = item.dataUser.map((val, detailIndex) => ({
+              "No": detailIndex + 1,
+              "Nama Pembeli": val.user_name,
+              "Jumlah Transaksi": val.jumlah_transaksi,
+            }));
+          }
+          return {
+            "No": index + 1,
+            "Tanggal": item?.date,
+            "Total Transaksi": item?.total_transaksi,
+            "Jumlah Pembeli": item?.dataUser.length,
+            "Detail": dtDetail,
+          };
+        });
+        const flattenedExcelData = excelData.flatMap((item) => {
+          if (item.Detail.length === 0) {
+            return [item];
+          } else {
+            return [
+              item,
+              ...item.Detail.map((detailItem) => ({
+                "No": "",
+                "Tanggal": "",
+                "Total Transaksi": "",
+                "Jumlah Pembeli": "",
+                "Detail": "",
+                ...detailItem,
+              })),
+            ];
+          }
+        });
+        const ws = XLSX.utils.json_to_sheet(flattenedExcelData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "SalesReport");
+        const excelBuffer = XLSX.write(wb, {
+          bookType: "xlsx",
+          type: "buffer",
+        });
+        const blob = new Blob([excelBuffer], {
+          type:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "sales_report_user.xlsx";
+        link.click();
+      };
+
   // useEffect
   useEffect(() => {
     pageHandler()
@@ -161,7 +211,7 @@ export default function SalesReportUser() {
       </Box>
       <Flex className="flex1R-salesReportTrans">
         {/* =========================================================== */}
-        <SalesReportUserContent dtSumQtyUserPagination={dtSumQtyUserPagination} dtSumQtyUserAllPagination={dtSumQtyUserAllPagination} 
+        <SalesReportUserContent dtSumQtyUserPagination={dtSumQtyUserPagination} dtSumQtyUserAllPagination={dtSumQtyUserAllPagination} handleDownloadExcel={handleDownloadExcel}
         searchRef={searchRef} roleOfUSer={roleOfUSer}  dtSumQtyUser={dtSumQtyUser} dtSumQtyUserAll={dtSumQtyUserAll} setInputBranch_name={setInputBranch_name}
         total={total} setTotal={setTotal} selectedSortBy={selectedSortBy} setSelectedSortBy={setSelectedSortBy} inputBranch_name={inputBranch_name}
         selectedOrderBy={selectedOrderBy} setSelectedOrderBy={setSelectedOrderBy} search={search} setSearch={setSearch} ascModeDate={ascModeDate} 

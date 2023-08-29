@@ -19,7 +19,6 @@ import { Link } from "react-router-dom";
 
 export default function ProfileFotoAlamat() {
   const userSelector = useSelector((state) => state.auth);
-  console.log(userSelector);
   const [selectedFile, setSelectedFile] = useState(null);
   const [image, setImage] = useState(userSelector.avatar_url);
   const [loading, setLoading] = useState(false);
@@ -134,6 +133,7 @@ export default function ProfileFotoAlamat() {
             </Button>
           </Flex>
         </Flex>
+       
         <Flex
           w={"100%"}
           h={"100%"}

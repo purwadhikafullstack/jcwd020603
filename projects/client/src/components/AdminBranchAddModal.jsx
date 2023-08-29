@@ -1,6 +1,8 @@
 import {
+  Avatar,
   Box,
   Button,
+  Center,
   Flex,
   FormControl,
   FormLabel,
@@ -17,11 +19,12 @@ import logo from "../assets/SVG/4.svg";
 import AddUser from "./AdminBranchAddModal-user";
 import AddBranch from "./AdminBranchAddModal-branch";
 import { api } from "../api/api";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import YupPassword from "yup-password";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function AddAdminBranch(props) {
   const toast = useToast();
@@ -165,6 +168,40 @@ export default function AddAdminBranch(props) {
       }
     },
   });
+  const userSelector = useSelector((state) => state.auth);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [image, setImage] = useState(userSelector.avatar_url);
+  const [loading, setLoading] = useState(false);
+  const inputFileRef = useRef(null);
+  const dispatch = useDispatch();
+
+  const handleFile = (e) => {
+    setSelectedFile(e.target.files[0]);
+    setImage(URL.createObjectURL(e.target.files[0]));
+  };
+
+  const updateAvatar = async () => {
+    const formData = new FormData();
+    formData.append("Avatar", selectedFile);
+    console.log(formData);
+    let avatar;
+    await api()
+      .patch("/user/avatar/" + userSelector.id, formData)
+      .then((res) => (avatar = res.data));
+
+    if (avatar) {
+      dispatch({
+        type: "login",
+        payload: avatar,
+      });
+    }
+    // toast({
+    //   title: "Data berhasil di ubah",
+    //   status: "success",
+    //   duration: 3000,
+    //   isClosable: true,
+    // });
+  };
 
   const [province, setProvince] = useState([]);
 
@@ -222,6 +259,31 @@ export default function AddAdminBranch(props) {
             {/* <AddUser/> */}
             <Flex className="flex3R-input_user-addbranch">
               <Box className="flex3R-input-box-addbranch">Karyawan</Box>
+              <Flex w={"100%"} >
+          <Center cursor={"pointer"}>
+            <Input
+              accept="image/png , image/jpg, image/gif"
+              onChange={handleFile}
+              ref={inputFileRef}
+              type="file"
+              display={"none"}
+              bgColor={"red.200"}
+            />
+            <Avatar
+              mt={"20px"}
+              mb={"20px"}
+              ml={{base:"38%", sm:"45%", md: "40%", lg:"18%"}}
+              align={"center"}
+              position={"absolute"}
+              zIndex={4}
+              size={{base : "md", sm: "md", md: "md", lg: "md"}}
+              src={image}
+              onClick={() => {
+                inputFileRef.current.click();
+              }}
+            />
+          </Center>
+              </Flex>
               <FormControl>
                 <FormLabel>Nama</FormLabel>
                 <Input
@@ -309,7 +371,9 @@ export default function AddAdminBranch(props) {
               alignItems={"center"}
             >
               <Box className="flex3R-box-addbranch"></Box>
-              <Image src={logo} w={"100%"} h={"20%"}></Image>
+              <Flex h={"125px"} w={"100%"}>
+              <Image src={logo} display={{base : "none", sm: "none",md:"flex", lg: "flex", xl: "flex"}} w={"100%"} h={"90%"}></Image>
+              </Flex>
               <Box className="flex3R-box-addbranch"></Box>
             </Flex>
 
@@ -426,7 +490,14 @@ export default function AddAdminBranch(props) {
 
           <Flex justifyContent={"center"}>
             <Button
-              onClick={formik.handleSubmit}
+              onClick={() => {
+                setLoading(true);
+                setTimeout(() => {
+                  setLoading(false);
+                  updateAvatar();
+                  formik.handleSubmit()
+                }, 1000);
+              }}
               m={"20px"}
               w={"40%"}
               cursor={"pointer"}
@@ -437,7 +508,7 @@ export default function AddAdminBranch(props) {
                 bgGradient: "linear(to-l, #9d9c45, #f0ee93 )",
               }}
             >
-              Simpan
+              Tambah
             </Button>
           </Flex>
         </Flex>
