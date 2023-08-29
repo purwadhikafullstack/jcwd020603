@@ -40,7 +40,7 @@ export default function ProfilePage() {
             ) : (
               <SidebarMini navLeft={navLeft} />
             )}
-            <DashboardNavbar toggleSidebar={toggleSidebar} />
+            {/* <DashboardNavbar toggleSidebar={toggleSidebar} /> */}
             <Profile />
           </Flex>
         </Center>

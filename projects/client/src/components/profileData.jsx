@@ -64,12 +64,11 @@ export default function ProfileData() {
             params: { getall: dtUser.email } && { getall: dtUser.user_name },
           })
           .then((res) => (cekuser = res.data));
-        console.log(cekuser);
+        console.log("ini", cekuser);
         console.log(dtUser);
-        console.log(cekuser.user_name);
-        console.log(userSelector.user_name);
+        console.log("itu", (cekuser.id !== userSelector.id) == false);
 
-        if (!cekuser) {
+        if (cekuser.length === 0 || cekuser.id === userSelector.id) {
           let updated;
           await api()
             .patch("user/" + userSelector.id, dtUser)
@@ -114,7 +113,12 @@ export default function ProfileData() {
 
   return (
     <>
-      <Flex flexDir={"column"} justifyContent={"space-between"} w={"50%"}>
+      <Flex
+        flexDir={"column"}
+        justifyContent={"space-between"}
+        w={"100%"}
+        rowGap={"20px"}
+      >
         <Flex
           w={"100%"}
           h={"68%"}
@@ -122,7 +126,7 @@ export default function ProfileData() {
           p={6}
           boxShadow={"lg"}
           flexDir={"column"}
-          gap={"2%"}
+          rowGap={"10px"}
           bgColor={"gray.100"}
           justifyContent={"space-between"}
         >
@@ -136,7 +140,6 @@ export default function ProfileData() {
             <Icon as={HiMiniPencilSquare} h={"100%"} cursor={"pointer"}></Icon>
             Edit
           </Flex>
-
           <Flex
             className="flex2R"
             display={edit == false ? "flex" : "none"}

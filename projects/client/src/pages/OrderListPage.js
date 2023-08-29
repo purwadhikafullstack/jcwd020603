@@ -8,13 +8,15 @@ export default function OrderListPage() {
   return (
     <>
       {windowWidth > 600 ? (
-        <Center borderRight={"1px solid lightgrey"}>
-          <Flex
-            maxWidth={"1160px"}
-            w={"100%"}
-            borderRight={"1px solid lightgrey"}
-          >
-            {windowWidth > 750 ? <Sidebar /> : <SidebarMini />}
+        <Center>
+          <Flex maxWidth={"1160px"} w={"100%"}>
+            {windowWidth > 750 ? (
+              <Flex maxW={"250px"} w={"100%"}>
+                <Sidebar />
+              </Flex>
+            ) : (
+              <SidebarMini />
+            )}
 
             <ContentPesanan />
           </Flex>

@@ -19,6 +19,7 @@ export default function NavbarPesanan() {
         position={"fixed"}
         top="0"
         zIndex={10}
+        borderRight={"1px solid lightgrey"}
       >
         <Center
           w={"40px"}
