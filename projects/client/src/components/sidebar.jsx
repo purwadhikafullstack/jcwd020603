@@ -27,7 +27,6 @@ export default function Sidebar(props) {
   const userSelector = useSelector((state) => state.auth);
   const user = JSON.parse(localStorage.getItem("auth"));
   const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
-  console.log("sidebar", nearestBranch);
   const {
     isOpen: isOpenModal1,
     onOpen: onOpenModal1,
@@ -46,7 +45,6 @@ export default function Sidebar(props) {
   const [Clicked, setClicked] = useState("");
 
   const akunnav = () => {
-    console.log(user);
     if (user) {
       nav("/profile");
     } else {
@@ -70,7 +68,6 @@ export default function Sidebar(props) {
       .get("/cart", { params: { branch_id: nearestBranch } })
       .then((res) => {
         setLengthCart(res.data.total);
-        console.log(res.data.result);
       });
   };
   //menyimpan alamat yang dipilih

@@ -26,9 +26,7 @@ const voucherController = {
     const trans = await db.sequelize.transaction();
     try {
       const { limit } = req.query;
-      console.log("QUERY LIMIT", limit);
       const newLimit = limit - 1;
-      console.log("INI LIMIT", newLimit);
       const patch = await db.Voucher.update(
         {
           limit: newLimit,
