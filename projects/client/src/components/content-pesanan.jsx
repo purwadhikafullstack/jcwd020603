@@ -212,6 +212,7 @@ export default function ContentPesanan() {
                                       }
                                       borderRadius={"10px"}
                                       border={"2px solid white"}
+                                      w={"100%"}
                                     />
                                   </Flex>
                                 </>

@@ -17,9 +17,7 @@ export default function AdminOrderPage() {
             <Flex w={"250px"}>
               <AdminSidebar />
             </Flex>
-            <Flex>
-              <AdminOrderList />
-            </Flex>
+            <AdminOrderList />
           </Flex>
         </Center>
       ) : (

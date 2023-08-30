@@ -2,7 +2,7 @@ import { Flex, Center, Grid, Image, Button } from "@chakra-ui/react";
 import bgSS from "../assets/logo/bg.jpg";
 import "../css/indexB.css";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function CardCategory(props) {
   const navigate = useNavigate();
@@ -20,7 +20,13 @@ export function CardCategory(props) {
 
   return (
     <>
-      <Flex className="cardCategoryB" onClick={handleClick}>
+      <Flex
+        className="cardCategoryB"
+        value={props.category_name}
+        onClick={() => {
+          handleClick();
+        }}
+      >
         <Center flex="1">
           <Image id="categoryImageB" src={photo_category_url} />
         </Center>
