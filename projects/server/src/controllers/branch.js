@@ -25,11 +25,11 @@ const branchController = {
       ];
     }
     let order = [];
-    if (ordering === "user_name") {
+    if (sort === "user_name") {
       order = [[sort, ordering]];
     }
-    if (ordering === "branch_name") {
-      order = [{ model: db.Branch, as: "Branch" }, "branch_name", ordering];
+    if (sort === "branch_name") {
+      order = [[{ model: db.Branch, as: "Branch" }, "branch_name", ordering]];
     }
     try {
       const branch = await db.User.findAndCountAll({
@@ -93,6 +93,15 @@ const branchController = {
       });
       res.status(200).send({ message: "List Branches", Data: branch });
       return branch;
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  countBranch: async (req, res) => {
+    try {
+      const branch = await db.Branch.findAll();
+      res.status(200).send({ message: "List Branches", data: branch });
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
@@ -214,7 +223,7 @@ const branchController = {
       const branch = await db.User.findOne({
         where: {
           branch_id: branch_id,
-          user_id: user_id,
+          id: user_id,
         },
         include: [
           {
@@ -248,7 +257,7 @@ const branchController = {
         {
           where: {
             id: user_id,
-            branch_id: branch_id && !null,
+            branch_id: branch_id,
           },
         },
         transaction
@@ -257,7 +266,7 @@ const branchController = {
       await db.Branch.update(
         {
           branch_name,
-          branch_address,
+          branch_address: address,
           district,
           city_id,
           province,

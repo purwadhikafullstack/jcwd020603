@@ -140,10 +140,12 @@ export default function ResetPass() {
     >
       <Box
         w={"22%"}
-        h={"100vh"}
+        h={"auto"}
         justifyContent={"center"}
         alignItems={"center"}
         className="logo_samping"
+        onClick={()=> {nav("/")}}
+        cursor={"pointer"}
       >
         <Image src={logo2} className="logo_samping"></Image>
       </Box>
@@ -167,7 +169,8 @@ export default function ResetPass() {
           columnGap={"20%"}
           justifyContent={"space-between"}
         >
-          <Image src={logo} w={"100%"} h={"40%"} className="logo_atas"></Image>
+          <Image src={logo} w={"100%"} h={"40%"} className="logo_atas" onClick={() => {nav("/")}}
+        cursor={"pointer"}></Image>
           <Stack spacing={4} mt={"20px"}>
             <Heading fontSize={30} textAlign={"center"}>
               Ganti Password

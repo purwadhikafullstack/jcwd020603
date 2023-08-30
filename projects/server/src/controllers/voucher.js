@@ -5,7 +5,11 @@ const voucherController = {
   getAllVoucher: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {
-      const fetch = await db.Voucher.findAll();
+      const fetch = await db.Voucher.findAll({
+        where: {
+          branch_id: req.query.branch_id,
+        },
+      });
       await trans.commit();
       res.send({
         message: "OK",
@@ -47,45 +51,43 @@ const voucherController = {
     }
   },
   getAllFilter: async (req, res) => {
-    const {branch_id, sort, ordering, search, page} = req.body
-    let order = []
-    if(sort === "valid_start"){
-      order = [[sort, ordering]]
-    } else if(sort === "valid_to" ){
-      order = [[sort, ordering]]
-    } else if(sort === "nominal"){
-      order = [[sort, ordering]]
+    const { branch_id, sort, ordering, search, page } = req.body;
+    let order = [];
+    if (sort === "valid_start") {
+      order = [[sort, ordering]];
+    } else if (sort === "valid_to") {
+      order = [[sort, ordering]];
+    } else if (sort === "nominal") {
+      order = [[sort, ordering]];
     }
 
-    let where = {
-    }
-    if(branch_id){
-      where.branch_id = branch_id
+    let where = {};
+    if (branch_id) {
+      where.branch_id = branch_id;
     }
 
-    if(search){
+    if (search) {
       where[Op.or] = [
-        { "$title$": { [Op.like]: `%${search}%` } },
-        { "$valid_start$": { [Op.like]: `%${search}%` } },
-        { "$valid_to$": { [Op.like]: `%${search}%` } },
-        { "$nominal$": { [Op.like]: `%${search}%` } },
-        { "$voucher_code$": { [Op.like]: `%${search}%` } },
+        { $title$: { [Op.like]: `%${search}%` } },
+        { $valid_start$: { [Op.like]: `%${search}%` } },
+        { $valid_to$: { [Op.like]: `%${search}%` } },
+        { $nominal$: { [Op.like]: `%${search}%` } },
+        { $voucher_code$: { [Op.like]: `%${search}%` } },
       ];
-    
     }
     try {
       const fetchVoucher = await db.Voucher.findAndCountAll({
-        where : where,
-        order : order,
-        limit : 3,
-        offset : 3 * page
+        where: where,
+        order: order,
+        limit: 3,
+        offset: 3 * page,
       });
-      res.status(200).send({ 
-        message: "Ini data voucher", 
+      res.status(200).send({
+        message: "Ini data voucher",
         Data: fetchVoucher.rows,
-        total : Math.ceil(fetchVoucher.count / 3),
-        jumlah_data : fetchVoucher.count
-       });
+        total: Math.ceil(fetchVoucher.count / 3),
+        jumlah_data: fetchVoucher.count,
+      });
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
@@ -111,7 +113,7 @@ const voucherController = {
         minimal_order,
         limit,
         desc,
-        branch_id
+        branch_id,
       } = req.body;
       const tambahVoucher = await db.Voucher.create({
         title,
@@ -122,7 +124,7 @@ const voucherController = {
         minimal_order,
         limit,
         desc,
-        branch_id
+        branch_id,
       });
       res.status(200).send({
         message: "Data voucher berhasil ditambahkan",
@@ -145,7 +147,7 @@ const voucherController = {
         minimal_order,
         limit,
         desc,
-        branch_id
+        branch_id,
       } = req.body;
       const editVoucher = await db.Voucher.update(
         {

@@ -4,6 +4,7 @@ const { nanoid } = require("nanoid");
 const { Op, where } = require("sequelize");
 const payment_image = process.env.payment_image;
 const fs = require("fs");
+const path = require("path");
 
 const orderController = {
   getAll: async (req, res) => {
@@ -31,6 +32,7 @@ const orderController = {
               {
                 model: db.Stock,
                 as: "Stock",
+                paranoid: false,
                 include: [
                   {
                     model: db.Product,
@@ -248,60 +250,73 @@ const orderController = {
         address_id,
         discount_voucher,
       } = req.body;
-      console.log("ongkir", shipping_cost);
-      const order = await db.Order.create(
-        {
-          date: moment().add(15, "minutes"),
-          total: total,
-          status: status,
-          user_id: req.user.id,
-          shipping_cost: shipping_cost,
-          address_id,
-          discount_voucher: discount_voucher,
-          branch_id: selectedItems[0].Stock?.branch_id,
+      const checkVerif = await db.User.findOne({
+        where: {
+          id: req.user.id,
+          verification: true,
         },
-        { transaction: trans }
-      );
-      console.log("select", selectedItems?.Stock?.Product?.price);
-      const arrInput = selectedItems.map((val) => {
-        console.log(!val?.discounted_price);
-        return {
-          quantity: val.qty,
-          order_id: order.id,
-          stock_id: val.stock_id,
-          current_price: val?.discounted_price
-            ? val?.discounted_price
-            : val?.Stock?.Product?.price,
-        };
       });
-      console.log("arr", arrInput);
-      await db.OrderDetail.bulkCreate(arrInput, { transaction: trans });
-      for (item of selectedItems) {
-        const check = await db.Stock.findOne({
-          where: {
-            id: item.stock_id,
-          },
-        });
-        const arrStockHistory = [
+      if (checkVerif) {
+        const order = await db.Order.create(
           {
-            status: "DECREMENT",
-            status_quantity: item.qty,
-            feature: "Pemesanan Konsumen",
-            stock_id: item.stock_id,
-            quantity_before: check.quantity_stock,
-            quantity_after: check.quantity_stock - item.qty,
+            date: moment().add(15, "minutes"),
+            total: total,
+            status: status,
+            user_id: req.user.id,
+            shipping_cost: shipping_cost,
+            address_id,
+            discount_voucher: discount_voucher,
+            branch_id: selectedItems[0].Stock?.branch_id,
           },
-        ];
-        await db.StockHistory.bulkCreate(arrStockHistory, {
-          transaction: trans,
+          { transaction: trans }
+        );
+        console.log("select", selectedItems?.Stock?.Product?.price);
+        const arrInput = selectedItems.map((val) => {
+          console.log(!val?.discounted_price);
+          return {
+            quantity: val.qty,
+            order_id: order.id,
+            stock_id: val.stock_id,
+            current_price: val?.discounted_price
+              ? val?.discounted_price
+              : val?.Stock?.Product?.price,
+          };
         });
-        check.quantity_stock -= item.qty;
-        await check.save({ transaction: trans });
+        console.log("arr", arrInput);
+        await db.OrderDetail.bulkCreate(arrInput, { transaction: trans });
+        for (item of selectedItems) {
+          const check = await db.Stock.findOne({
+            where: {
+              id: item.stock_id,
+            },
+          });
+          const arrStockHistory = [
+            {
+              status: "DECREMENT",
+              status_quantity: item.qty,
+              feature: "Pemesanan Konsumen",
+              stock_id: item.stock_id,
+              quantity_before: check.quantity_stock,
+              quantity_after: check.quantity_stock - item.qty,
+            },
+          ];
+          await db.StockHistory.bulkCreate(arrStockHistory, {
+            transaction: trans,
+          });
+          check.quantity_stock -= item.qty;
+          await check.save({ transaction: trans });
+        }
+        await trans.commit();
+        return res.status(200).send({
+          message: "Silahkan selesaikan pembayaran",
+        });
+      } else {
+        await trans.rollback();
+        return res.status(404).send({
+          message: "Akun Belum Terverifikasi",
+          description: "Verifikasi akun pada menu Akun",
+        });
       }
-      await trans.commit();
-      return res.status(200).send({
-        message: "Silahkan selesaikan pembayaran",
-      });
     } catch (err) {
       await trans.rollback();
       return res.status(500).send({
@@ -366,10 +381,12 @@ const orderController = {
       );
       for (item of orderDetVal) {
         const check = await db.Stock.findOne({
+          paranoid: false,
           where: {
             id: item.stock_id,
           },
         });
+        console.log(item.stock_id);
         console.log("checkcok", check);
         const arrStockHistory = [
           {
@@ -535,9 +552,12 @@ const orderController = {
       if (req.body.status == "Menunggu Pembayaran") {
         update.date = moment().add(1, "hour");
         fs.unlinkSync(
-          `${__dirname}/../public/paymentImg/${
-            findPayment.order_transfer_url.split("/")[4]
-          }`
+          path.join(
+            __dirname,
+            `../public/paymentImg/${
+              findPayment.order_transfer_url.split("/")[4]
+            }`
+          )
         );
       }
       const patch = await db.Order.update(update, {

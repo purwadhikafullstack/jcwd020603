@@ -74,16 +74,24 @@ export default function LandingPage() {
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});
   const getSelectedAddress = async () => {
+    // setIsLoaded(true);
+    console.log("masuk");
     const primary = await api().get("/addressG/primary");
     const selected = await api().get("/addressG/current");
     if (selected.data.result) {
       setSelectedAddress(selected.data.result);
+      return setIsLoaded(true);
     } else {
       setSelectedAddress(primary.data.result);
+      return setIsLoaded(true);
     }
   };
   useEffect(() => {
-    getSelectedAddress();
+    if (userSelector?.email) {
+      getSelectedAddress();
+    } else {
+      setIsLoaded(true);
+    }
   }, [userSelector?.email]);
   //menyimpan length cart
   const [lengthCart, setLengthCart] = useState(0);
@@ -190,6 +198,7 @@ export default function LandingPage() {
       if (nearestBranch) {
         setNearestBranch(nearestBranch.id);
         setBranchName(nearestBranch.branch_name);
+        // setIsLoaded(true);
       } else {
       }
     })

@@ -3,7 +3,7 @@ import { api } from "../api/api";
 import "../css/indexG.css";
 import "../css/indexR.css";
 import { FaStore } from "react-icons/fa";
-import { BiSolidHot } from "react-icons/bi";
+import { BiFoodMenu, BiSolidHot } from "react-icons/bi";
 import { LuPackageCheck } from "react-icons/lu";
 import { MdOutlinePayments } from "react-icons/md";
 import { Chart, registerables } from "chart.js";
@@ -14,6 +14,7 @@ import ChartSalesReportTransactions from "./Chart-SalesReport-transaction";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import AdminNavbar from "./AdminNavbar";
+import { BsGraphUpArrow } from "react-icons/bs";
 Chart.register(...registerables);
 
 export default function DashboardAdminContent() {
@@ -25,6 +26,7 @@ export default function DashboardAdminContent() {
   const [dtSumQtyUser, setDtSumQtyUser] = useState([]);
   const [dtAllProduct, setDtAllProduct] = useState([]);
   const [dtStockBranch, setDtStockBranch] = useState([]);
+  const [dtCountBranch, setDtCountBranch] = useState([]);
   const [dtCtgory, setDtCtgory] = useState([]);
   const [totalPrice, setTotalPrice] = useState([]);
   const [total, setTotal] = useState();
@@ -98,6 +100,12 @@ export default function DashboardAdminContent() {
       });
   };
 
+  const countBranch = async () => {
+    const count = await api().get("/branch/count");
+    setDtCountBranch(count.data.data);
+    console.log(count.data.data);
+  };
+
   const getAllProduct = async () => {
     try {
       await api()
@@ -125,13 +133,11 @@ export default function DashboardAdminContent() {
       console.log(error.message);
     }
   };
-  function cariBranchName(id = userSelector.branch_id) {
-    if (dtUserBranch) {
-      return dtUserBranch.filter((item) => item.branch_id === id);
+  function cariBranchName() {
+    if (dtCountBranch) {
+      return dtCountBranch.filter((item) => item.id === userSelector.branch_id);
     }
   }
-  const getBranchName = cariBranchName();
-
   const cariBestSeller = () => {
     const totalTertinggi = Math.max(
       ...dtSumQtyProd.map((val) => parseInt(val.total_qty))
@@ -151,14 +157,14 @@ export default function DashboardAdminContent() {
   console.log(userSelector.branch_id);
   console.log(date.dateFrom);
   console.log(date.dateTo);
-  console.log(dtSumQtyProd);
+  console.log("datanya", dtSumQtyProd);
   console.log(dtSalesReport);
   console.log(dtSumQtyUser);
   console.log(dtUserBranch);
   console.log(dtAllProduct);
   console.log(dtStockBranch);
   console.log(dtCtgory);
-  console.log(getBranchName[0]?.Branch?.branch_name);
+  // console.log(getBranchName[0]?.Branch?.branch_name);
 
   // menyimpan nilai total pembayaran pertransaksi(distinc)
   useEffect(() => {
@@ -193,6 +199,7 @@ export default function DashboardAdminContent() {
     getSalesReportTrans();
     getSalesReportProduct();
     getUserAndBranch();
+    countBranch();
     getSalesReportUser();
     getAllProduct();
     getStockBranch();
@@ -236,7 +243,7 @@ export default function DashboardAdminContent() {
             w={"100%"}
           >
             <Flex
-              className="menuTotalG"
+              className="menuTotalDashboardG"
               justifyContent={"center"}
               transition="transform 1s, box-shadow 1s"
               _hover={{ transform: "scale(1.05)" }}
@@ -244,24 +251,34 @@ export default function DashboardAdminContent() {
               <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#fdefce"}>
                 <Icon as={FaStore} fontSize={"30px"} color={"#ffb21c"} />
               </Center>
-              <Flex flexDir={"column"}>
+              <Flex
+                flexDir={"column"}
+                maxW={"105px"}
+                w={"100%"}
+                paddingRight={"20px"}
+              >
                 <Flex
-                  fontSize={"20px"}
+                  fontSize={"14px"}
                   fontWeight={"extrabold"}
+                  textAlign={"center"}
                   _loading={true}
                 >
                   {userSelector.role == "SUPER ADMIN"
-                    ? dtUserBranch.length
-                    : getBranchName?.Branch?.branch_name}
+                    ? dtCountBranch?.length
+                    : cariBranchName()[0]?.branch_name}
                 </Flex>
-                <Flex color={"grey"} fontWeight={"semibold"}>
+                <Center
+                  color={"grey"}
+                  fontWeight={"semibold"}
+                  textAlign={"center"}
+                >
                   Cabang
-                </Flex>
+                </Center>
               </Flex>
             </Flex>
 
             <Flex
-              className="menuTotalG"
+              className="menuTotalDashboardG"
               transition="transform 1s, box-shadow 1s"
               _hover={{ transform: "scale(1.05)" }}
             >
@@ -286,12 +303,12 @@ export default function DashboardAdminContent() {
               </Flex>
             </Flex>
             <Flex
-              className="menuTotalG"
+              className="menuTotalDashboardG"
               transition="transform 1s, box-shadow 1s"
               _hover={{ transform: "scale(1.05)" }}
             >
-              <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#cbe4fb"}>
-                <Icon as={FaStore} fontSize={"30px"} color={"#007bfe"} />
+              <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#ebf5e9"}>
+                <Icon as={BiFoodMenu} fontSize={"30px"} color={"#2a960c"} />
               </Center>
               <Flex flexDir={"column"}>
                 <Flex
@@ -309,17 +326,18 @@ export default function DashboardAdminContent() {
               </Flex>
             </Flex>
             <Flex
-              className="menuTotalG"
+              className="menuTotalDashboardG"
               transition="transform 1s, box-shadow 1s"
               _hover={{ transform: "scale(1.05)" }}
             >
-              <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#cbe4fb"}>
-                <Icon as={FaStore} fontSize={"30px"} color={"#007bfe"} />
+              <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#f7d1d5"}>
+                <Icon as={BsGraphUpArrow} fontSize={"30px"} color={"red"} />
               </Center>
               <Flex flexDir={"column"}>
                 <Flex
                   fontSize={"14px"}
                   fontWeight={"extrabold"}
+                  textAlign={"center"}
                   _loading={true}
                 >
                   {product_nameBestSeller}

@@ -24,9 +24,7 @@ export default function ContentKeranjang(props) {
   const { prodCart } = props;
   const nav = useNavigate();
   const nearestBranch = localStorage.getItem("nearestBranch");
-  useEffect(() => {
-    console.log(prodCart);
-  }, [prodCart]);
+  useEffect(() => {}, [prodCart]);
   const [selectedItems, setSelectedItems] = useState([]);
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});
@@ -46,13 +44,15 @@ export default function ContentKeranjang(props) {
   useEffect(() => {
     getSelectedAddress();
   }, []);
-  console.log(selectedAddress);
 
   //count total harga belanja
   const totalBelanja = selectedItems.map((val, idx) => {
     const price = selectedItems[idx]?.Stock?.Discount
       ? selectedItems[idx]?.Stock?.Discount?.nominal == 50
-        ? Number(selectedItems[idx].Stock.Product.price)
+        ? Number(
+            selectedItems[idx].Stock.Product.price *
+              ((100 - selectedItems[idx]?.Stock?.Discount?.nominal) / 100)
+          )
         : Number(
             selectedItems[idx].Stock.Product.price *
               ((100 - selectedItems[idx]?.Stock?.Discount?.nominal) / 100)
@@ -76,7 +76,6 @@ export default function ContentKeranjang(props) {
   const [courier, setCourier] = useState("");
   const [shipCost, setShipCost] = useState([]);
   const [courierName, setCourierName] = useState("");
-  console.log(courierName);
   const [isLoading, setIsLoading] = useState(false);
   const inputCost = {
     origin: prodCart[0]?.Stock.Branch?.city_id,
@@ -84,7 +83,6 @@ export default function ContentKeranjang(props) {
     weight: weightTotal,
     courier: courier,
   };
-  console.log(inputCost);
   const getCost = async () => {
     try {
       await api()
@@ -102,8 +100,6 @@ export default function ContentKeranjang(props) {
     getCost();
   }, [courier]);
   useEffect(() => {
-    console.log(selectedItems);
-    console.log(totalBelanja);
     totalWeight();
   }, [selectedItems]);
   //menyimpan biaya pengiriman
@@ -118,7 +114,6 @@ export default function ContentKeranjang(props) {
       const update = await api().patch(
         `/voucher/${getVoucher?.id}?limit=${getVoucher.limit}`
       );
-      console.log(update.data);
     } catch (err) {
       console.log(err);
     }
@@ -288,6 +283,7 @@ export default function ContentKeranjang(props) {
                 totalBelanja={totalBelanja}
                 getVoucher={getVoucher}
                 setGetVoucher={setGetVoucher}
+                nearestBranch={nearestBranch}
               />
             </Flex>
             <Flex>

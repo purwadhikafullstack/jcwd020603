@@ -107,40 +107,13 @@ export default function AddAdminBranch(props) {
           province,
         };
 
-        const cekMail = await api()
-          .get("/user/", {
-            params: { getall: newBranchAdmin.email } || {
-              getall: newBranchAdmin.user_name,
-            },
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.email) {
-              return true;
-            } else {
-              return false;
-            }
-          });
+        const cekMailResponse = await api().get("/user/", {
+          params: { getall: newBranchAdmin.email },
+        });
 
-        const cekBranch = await api()
-          .get("/branch/all-by-branch", {
-            params: { getAll: newBranchAdmin.branch_name } || {
-              getAll: newBranchAdmin.branch_address,
-            },
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.Data) {
-              return true;
-            } else {
-              return false;
-            }
-          });
-
-        if (cekMail || cekBranch) {
+        if (cekMailResponse.data.data.length > 0) {
           return toast({
-            title:
-              "Email / Username / nama cabang / alamat cabang sudah digunakan, silahkan gunakan selain itu",
+            title: "Email sudah terdaftar, silahkan gunakan email lain",
             status: "warning",
             duration: 3000,
             isClosable: true,
@@ -163,43 +136,53 @@ export default function AddAdminBranch(props) {
         console.log(err);
       }
     },
+
+    // ========================================
+
+    // const cekMail = await api()
+    //   .get("/user/", {
+    //     params: { getall: newBranchAdmin.email } || {
+    //       getall: newBranchAdmin.user_name,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     if (res.data.email) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   });
+
+    // const cekBranch = await api()
+    //   .get("/branch/all-by-branch", {
+    //     params: { getAll: newBranchAdmin.branch_name } || {
+    //       getAll: newBranchAdmin.branch_address,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     if (res.data.Data) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   });
+
+    // console.log(cekBranch);
+    // console.log(cekMail);
+
+    // if (cekMail || cekBranch) {
+    //   return toast({
+    //     title:
+    //       "Email / Username / nama cabang / alamat cabang sudah digunakan, silahkan gunakan selain itu",
+    //     status: "warning",
+    //     duration: 3000,
+    //     isClosable: true,
+    //   });
+    // } else {
   });
-  const userSelector = useSelector((state) => state.auth);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [image, setImage] = useState(userSelector.avatar_url);
-  const [loading, setLoading] = useState(false);
-  const inputFileRef = useRef(null);
-  const dispatch = useDispatch();
-
-  const handleFile = (e) => {
-    setSelectedFile(e.target.files[0]);
-    setImage(URL.createObjectURL(e.target.files[0]));
-  };
-
-  const updateAvatar = async () => {
-    const formData = new FormData();
-    formData.append("Avatar", selectedFile);
-    let avatar;
-    await api()
-      .patch("/user/avatar/" + userSelector.id, formData)
-      .then((res) => (avatar = res.data));
-
-    if (avatar) {
-      dispatch({
-        type: "login",
-        payload: avatar,
-      });
-    }
-    // toast({
-    //   title: "Data berhasil di ubah",
-    //   status: "success",
-    //   duration: 3000,
-    //   isClosable: true,
-    // });
-  };
-
   const [province, setProvince] = useState([]);
-
   async function getProv() {
     try {
       await api()
@@ -250,31 +233,6 @@ export default function AddAdminBranch(props) {
             {/* <AddUser/> */}
             <Flex className="flex3R-input_user-addbranch">
               <Box className="flex3R-input-box-addbranch">Karyawan</Box>
-              <Flex w={"100%"}>
-                <Center cursor={"pointer"}>
-                  <Input
-                    accept="image/png , image/jpg, image/gif"
-                    onChange={handleFile}
-                    ref={inputFileRef}
-                    type="file"
-                    display={"none"}
-                    bgColor={"red.200"}
-                  />
-                  <Avatar
-                    mt={"20px"}
-                    mb={"20px"}
-                    ml={{ base: "38%", sm: "45%", md: "40%", lg: "18%" }}
-                    align={"center"}
-                    position={"absolute"}
-                    zIndex={4}
-                    size={{ base: "md", sm: "md", md: "md", lg: "md" }}
-                    src={image}
-                    onClick={() => {
-                      inputFileRef.current.click();
-                    }}
-                  />
-                </Center>
-              </Flex>
               <FormControl>
                 <FormLabel>Nama</FormLabel>
                 <Input
@@ -492,14 +450,7 @@ export default function AddAdminBranch(props) {
 
           <Flex justifyContent={"center"}>
             <Button
-              onClick={() => {
-                setLoading(true);
-                setTimeout(() => {
-                  setLoading(false);
-                  updateAvatar();
-                  formik.handleSubmit();
-                }, 1000);
-              }}
+              onClick={formik.handleSubmit}
               m={"20px"}
               w={"40%"}
               cursor={"pointer"}

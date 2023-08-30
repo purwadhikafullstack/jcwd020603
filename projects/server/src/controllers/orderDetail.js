@@ -18,6 +18,7 @@ const orderDetailController = {
           {
             model: db.Stock,
             as: "Stock",
+            paranoid: false,
             include: [
               {
                 model: db.Product,

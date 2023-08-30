@@ -72,7 +72,7 @@ const discountController = {
       branch_id,
       discount_id,
     } = req.body;
-    console.log(req.body);
+    console.log(req.body, "ini body seleteddddddddddzzzzzzzzzzzzzzzzzzzzz");
     try {
       const dtStockBydiscountId = await db.Stock.findAll({
         where: {
@@ -187,6 +187,7 @@ const discountController = {
   deleteDiscount: async (req, res) => {
     try {
       const { discount_id } = req.body;
+      console.log(req.body, "ini diskon id nya");
       await db.Discount.destroy({
         where: {
           id: discount_id,
@@ -208,7 +209,6 @@ const discountController = {
       res.status(500).send({ message: error.message });
     }
   },
-
   getDiscountB: async (req, res) => {
     try {
       const discount = await db.Discount.findAll();

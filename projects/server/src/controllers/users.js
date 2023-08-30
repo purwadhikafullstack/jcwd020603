@@ -116,12 +116,13 @@ const userController = {
   getUser: async (req, res) => {
     try {
       const { getall } = req.query;
-      const user = await db.User.findOne({
+      console.log(req.query);
+      const user = await db.User.findAll({
         where: {
           [Op.or]: [{ email: getall }, { user_name: getall }, { role: getall }],
         },
       });
-      return res.status(200).send(user);
+      return res.status(200).send({message : "ini datauser", data : user});
     } catch (err) {
       console.log(err.message);
       res.status(500).send({ message: err.message });
@@ -348,7 +349,7 @@ const userController = {
   editUser: async (req, res) => {
     try {
       const { user_name, email, gender, birth_date } = req.body;
-      await db.User.update(
+     const dtUpdate =  await db.User.update(
         {
           user_name,
           email,
@@ -360,11 +361,11 @@ const userController = {
             id: req.params.id,
           },
         }
-      ).then((result) =>
-        res.status(200).send({
+      )
+        res.status(200).send({ 
           message: "Perubahan Data Berhasil",
-          data: result.dataValues,
-        })
+          data: dtUpdate,
+        }
       );
     } catch (error) {
       res.status(500).send({ message: error.message });

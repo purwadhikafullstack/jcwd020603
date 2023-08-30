@@ -161,7 +161,7 @@ export default function Voucher() {
 
   useEffect(() => {
     fetchAll();
-  }, [inputBranch_name, search, shown, sorted]);
+  }, [inputBranch_name, search, shown, sorted, ordered]);
 
   const [numberIdx, setNumberIdx] = useState(0);
 
@@ -293,9 +293,9 @@ export default function Voucher() {
                     <Flex w={"100px"}>
                       <Flex w={"70%"}>Tanggal Mulai</Flex>
                       {ascMOdeStart ? (
-                        <MdArrowBackIosNew size={"8%"} id="descendingB" />
+                        <MdArrowBackIosNew size={"15px"} id="descendingB" />
                       ) : (
-                        <MdArrowBackIosNew id="ascendingB" size={"8%"} />
+                        <MdArrowBackIosNew id="ascendingB" size={"15px"} />
                       )}
                     </Flex>
                   </Th>
@@ -311,9 +311,9 @@ export default function Voucher() {
                     <Flex w={"100px"}>
                       <Flex w={"70%"}>Tanggal Akhir</Flex>
                       {ascMOdeTo ? (
-                        <MdArrowBackIosNew size={"8%"} id="descendingB" />
+                        <MdArrowBackIosNew size={"15px"} id="descendingB" />
                       ) : (
-                        <MdArrowBackIosNew id="ascendingB" size={"8%"} />
+                        <MdArrowBackIosNew id="ascendingB" size={"15px"} />
                       )}
                     </Flex>
                   </Th>
@@ -329,9 +329,9 @@ export default function Voucher() {
                     <Flex w={"100px"}>
                       <Flex w={"70%"}>Nominal </Flex>
                       {ascMOdeNominal ? (
-                        <MdArrowBackIosNew size={"8%"} id="descendingB" />
+                        <MdArrowBackIosNew size={"15"} id="descendingB" />
                       ) : (
-                        <MdArrowBackIosNew id="ascendingB" size={"8%"} />
+                        <MdArrowBackIosNew id="ascendingB" size={"15"} />
                       )}
                     </Flex>
                   </Th>
