@@ -48,12 +48,12 @@ export default function TopBar2({
   useEffect(() => {
     getFormattedAddress();
     if (!address) {
-      setIsLoaded(true);
+      // setIsLoaded(true);
     }
   }, [address]);
   useEffect(() => {
     if (district) {
-      setIsLoaded(true);
+      // setIsLoaded(true);
     }
   }, [district]);
   return (

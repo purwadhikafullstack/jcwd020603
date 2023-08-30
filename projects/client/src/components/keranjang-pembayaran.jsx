@@ -2,7 +2,6 @@ import { Flex, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
 
 export default function RincianPembayaran(props) {
-  console.log(props.getVoucher);
   //get biaya pengiriman
   const shippingCost =
     props.cost !== undefined &&
@@ -20,7 +19,6 @@ export default function RincianPembayaran(props) {
     Object.keys(props.getVoucher).length !== 0
       ? (props.getVoucher?.nominal).toLocaleString("id-ID")
       : 0;
-  console.log(subtotal);
   const totalPembayaran =
     (Number(subtotal) + Number(shippingCost) - Number(potongan)) * 1000;
   //setPembayaran

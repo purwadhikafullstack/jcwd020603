@@ -30,20 +30,20 @@ export default function ContentDetailPesanan() {
   const [peraturan, setPeraturan] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const getLatestOrder = async () => {
-    setIsLoading(true);
-    const order = await api().get("/order/specific", {
-      params: { order_number: order_number.order_number },
-    });
-    setPeraturan(order.data.result);
-    console.log(order.data.result);
-
-    console.log(order.data.result.id);
-    const orderDetail = await api().get("/order-detail/", {
-      params: { id: order.data.result.id || order.data.result[0].id },
-    });
-    setOrderDetVal(orderDetail.data.result);
-    console.log(orderDetail.data.result);
-    return setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const order = await api().get("/order/specific", {
+        params: { order_number: order_number.order_number },
+      });
+      setPeraturan(order.data.result);
+      const orderDetail = await api().get("/order-detail/", {
+        params: { id: order.data.result.id || order.data.result[0].id },
+      });
+      setOrderDetVal(orderDetail.data.result);
+      return setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     getLatestOrder();

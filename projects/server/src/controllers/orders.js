@@ -21,7 +21,6 @@ const orderController = {
           [Op.or]: [{ [Op.eq]: status1 }, { [Op.eq]: status2 }],
         };
       }
-      console.log(whereClause);
       const get = await db.Order.findAndCountAll({
         where: whereClause,
         include: [
@@ -73,7 +72,6 @@ const orderController = {
       const time2 = req.query.time2 || null;
       const status = req.query.status || "";
       const branch_id = req.query.branch_id;
-      console.log("page", page);
       let where = {};
       if (time && time2) {
         where.createdAt = {
@@ -97,7 +95,6 @@ const orderController = {
       if (status) {
         where.status = { [Op.like]: `%${status}%` };
       }
-      console.log(where);
       const get = await db.Order.findAndCountAll({
         where: where,
         include: [
@@ -153,7 +150,6 @@ const orderController = {
       if (req.query.order_number) {
         whereClause.order_number = req.query.order_number;
       }
-      console.log(whereClause);
       const order = await db.Order.findAll({
         where: whereClause,
         limit: 1,
@@ -250,14 +246,12 @@ const orderController = {
         address_id,
         discount_voucher,
       } = req.body;
-      console.log(req.user.id);
       const checkVerif = await db.User.findOne({
         where: {
           id: req.user.id,
           verification: true,
         },
       });
-      console.log("ini cek verif", checkVerif);
       if (checkVerif) {
         const order = await db.Order.create(
           {
@@ -272,9 +266,7 @@ const orderController = {
           },
           { transaction: trans }
         );
-        console.log("select", selectedItems?.Stock?.Product?.price);
         const arrInput = selectedItems.map((val) => {
-          console.log(!val?.discounted_price);
           return {
             quantity: val.qty,
             order_id: order.id,
@@ -284,7 +276,6 @@ const orderController = {
               : val?.Stock?.Product?.price,
           };
         });
-        console.log("arr", arrInput);
         await db.OrderDetail.bulkCreate(arrInput, { transaction: trans });
         for (item of selectedItems) {
           const check = await db.Stock.findOne({
@@ -344,7 +335,6 @@ const orderController = {
         }
       );
       for (item of orderDetVal) {
-        console.log(item.id);
         await db.Cart.destroy({
           where: {
             user_id: req.user.id,
@@ -388,8 +378,6 @@ const orderController = {
             id: item.stock_id,
           },
         });
-        console.log(item.stock_id);
-        console.log("checkcok", check);
         const arrStockHistory = [
           {
             status: "INCREMENT",
@@ -400,14 +388,11 @@ const orderController = {
             quantity_after: (check.quantity_stock += item.quantity),
           },
         ];
-        console.log(arrStockHistory);
         const post = await db.StockHistory.bulkCreate(arrStockHistory, {
           transaction: trans,
         });
-        console.log("check", check.dataValues.quantity_stock);
-        console.log("item", item.quantity);
         const newQuantity = check.dataValues.quantity_stock;
-        console.log("newQuantity", newQuantity);
+
         check.setDataValue("quantity_stock", newQuantity);
         await check.save({ transaction: trans });
       }
@@ -425,7 +410,6 @@ const orderController = {
   },
   cancelOrderAutomatically: async () => {
     const trans = await db.sequelize.transaction();
-    console.log("udah jalan");
     try {
       const currentTime = moment().utc();
       const findOrder = await db.Order.findAll({
@@ -466,7 +450,7 @@ const orderController = {
               transaction: trans,
             }
           );
-          console.log(patch);
+
           if (patch[0] === 1) {
             for (const item of order?.Order) {
               const check = await db.Stock.findOne({
@@ -487,9 +471,9 @@ const orderController = {
               const post = await db.StockHistory.bulkCreate(arrStockHistory, {
                 transaction: trans,
               });
-              console.log("post", post);
+
               const newQuantity = check.dataValues.quantity_stock;
-              console.log("newQuantity", newQuantity);
+
               check.setDataValue("quantity_stock", newQuantity);
               await check.save({ transaction: trans });
             }
@@ -508,7 +492,6 @@ const orderController = {
   },
   doneOrderAutomatically: async () => {
     const trans = await db.sequelize.transaction();
-    console.log("ini juga jalan");
     try {
       const afterAWeek = moment().utc().add(-5, "minute");
       const findOrder = await db.Order.findAll({

@@ -12,8 +12,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { MdLocationPin } from "react-icons/md";
-import logo from "../assets/logo/horizontal.png";
-
 import "../css/indexB.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

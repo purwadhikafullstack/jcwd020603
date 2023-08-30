@@ -49,7 +49,6 @@ export default function ContentPesanan() {
       const get = await api().get("/order", { params: { ...params } });
       setAllOrders(get.data.result);
       setTotalPages(get.data.total);
-      console.log(get.data.result);
       setIsLoading(false);
     } catch (err) {
       console.log(err);

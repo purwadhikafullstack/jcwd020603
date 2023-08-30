@@ -13,11 +13,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import {
-  BiRadioCircle,
-  BiRadioCircleMarked,
-  BiChevronRight,
-} from "react-icons/bi";
+import { BiRadioCircle, BiRadioCircleMarked } from "react-icons/bi";
 import { SlOptionsVertical } from "react-icons/sl";
 import ModalEditAddress from "./modal-edit-address";
 import { api } from "../api/api";

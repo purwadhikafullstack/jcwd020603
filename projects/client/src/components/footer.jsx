@@ -36,7 +36,6 @@ export default function Footer(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   //function login
   const akunnav = () => {
-    console.log(user);
     if (user) {
       nav("/profile");
     } else {
@@ -58,7 +57,6 @@ export default function Footer(props) {
       .then((res) => {
         setCountAll(res.data.total);
         setLengthCart(res.data.total);
-        console.log(res.data.result);
       });
   };
   //menyimpan alamat yang dipilih

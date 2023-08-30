@@ -25,7 +25,6 @@ export default function MetodePengiriman({
   //mendapatkan biaya
   const handleCost = (idx) => {
     setCost(shipCost[idx]);
-    console.log(shipCost[idx]);
   };
   return (
     <>
