@@ -34,7 +34,7 @@ export default function EditAdminBranch(props) {
   YupPassword(Yup);
   const formik = useFormik({
     initialValues: {
-      user_id : props.dtBranch[props.number].id,
+      user_id: props.dtBranch[props.number].id,
       user_name: props.dtBranch[props.number].user_name,
       email: props.dtBranch[props.number].email,
       role: "ADMIN",
@@ -102,7 +102,7 @@ export default function EditAdminBranch(props) {
           branch_id,
         } = formik.values;
         const newBranchAdmin = {
-          user_id : props.dtBranch[props.number].id,
+          user_id: props.dtBranch[props.number].id,
           user_name,
           email,
           password,
@@ -152,6 +152,7 @@ export default function EditAdminBranch(props) {
           return toast({
             title:
               "Email / Username sudah digunakan, silahkan gunakan selain itu",
+            position: "top",
             status: "warning",
             duration: 3000,
             isClosable: true,
@@ -163,6 +164,7 @@ export default function EditAdminBranch(props) {
             .then((res) => {
               return toast({
                 title: "Admin dan Cabang berhasil di edit",
+                position: "top",
                 status: "success",
                 duration: 3000,
                 isClosable: true,
@@ -335,7 +337,18 @@ export default function EditAdminBranch(props) {
               alignItems={"center"}
             >
               <Box className="flex3R-box-addbranch"></Box>
-              <Image src={logo} display={{base : "none", sm: "none",md:"flex", lg: "flex", xl: "flex"}} w={"100%"} h={"20%"}></Image>
+              <Image
+                src={logo}
+                display={{
+                  base: "none",
+                  sm: "none",
+                  md: "flex",
+                  lg: "flex",
+                  xl: "flex",
+                }}
+                w={"100%"}
+                h={"20%"}
+              ></Image>
               <Box className="flex3R-box-addbranch"></Box>
             </Flex>
 
@@ -395,7 +408,9 @@ export default function EditAdminBranch(props) {
               <FormControl>
                 <FormLabel>Kelurahan</FormLabel>
                 <Input
-                  defaultValue={props?.dtBranch[props?.number]?.Branch?.district}
+                  defaultValue={
+                    props?.dtBranch[props?.number]?.Branch?.district
+                  }
                   onChange={inputHandler}
                   id="district"
                   transition={"1s"}

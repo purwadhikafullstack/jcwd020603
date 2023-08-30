@@ -250,12 +250,14 @@ const orderController = {
         address_id,
         discount_voucher,
       } = req.body;
+      console.log(req.user.id);
       const checkVerif = await db.User.findOne({
         where: {
           id: req.user.id,
           verification: true,
         },
       });
+      console.log("ini cek verif", checkVerif);
       if (checkVerif) {
         const order = await db.Order.create(
           {
@@ -551,6 +553,7 @@ const orderController = {
       };
       if (req.body.status == "Menunggu Pembayaran") {
         update.date = moment().add(1, "hour");
+        update.order_transfer_url = null;
         fs.unlinkSync(
           path.join(
             __dirname,

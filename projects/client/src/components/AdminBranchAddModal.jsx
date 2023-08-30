@@ -108,91 +108,82 @@ export default function AddAdminBranch(props) {
           province,
         };
 
-
         const cekMailResponse = await api().get("/user/", {
           params: { getall: newBranchAdmin.email },
         });
-    
-        if (cekMailResponse.data.data.length > 0 ) {
+
+        if (cekMailResponse.data.data.length > 0) {
           return toast({
             title: "Email sudah terdaftar, silahkan gunakan email lain",
             status: "warning",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
         } else {
           await api()
-          .post("/branch/", newBranchAdmin)
-          .then((res) => {
-            return toast({
-              title: "Admin dan Cabang berhasil ditambahkan",
-              status: "success",
-              duration: 3000,
-              isClosable: true,
+            .post("/branch/", newBranchAdmin)
+            .then((res) => {
+              return toast({
+                title: "Admin dan Cabang berhasil ditambahkan",
+                position: "top",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+              });
             });
-          });
-        props.fetchAll();
-        return props.onClose();
+          props.fetchAll();
+          return props.onClose();
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  },
-        
+    },
 
+    // ========================================
 
+    // const cekMail = await api()
+    //   .get("/user/", {
+    //     params: { getall: newBranchAdmin.email } || {
+    //       getall: newBranchAdmin.user_name,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     if (res.data.email) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   });
 
+    // const cekBranch = await api()
+    //   .get("/branch/all-by-branch", {
+    //     params: { getAll: newBranchAdmin.branch_name } || {
+    //       getAll: newBranchAdmin.branch_address,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     if (res.data.Data) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   });
 
+    // console.log(cekBranch);
+    // console.log(cekMail);
 
-
-
-
-
-        // ========================================
-
-        // const cekMail = await api()
-        //   .get("/user/", {
-        //     params: { getall: newBranchAdmin.email } || {
-        //       getall: newBranchAdmin.user_name,
-        //     },
-        //   })
-        //   .then((res) => {
-        //     console.log(res.data);
-        //     if (res.data.email) {
-        //       return true;
-        //     } else {
-        //       return false;
-        //     }
-        //   });
-
-        // const cekBranch = await api()
-        //   .get("/branch/all-by-branch", {
-        //     params: { getAll: newBranchAdmin.branch_name } || {
-        //       getAll: newBranchAdmin.branch_address,
-        //     },
-        //   })
-        //   .then((res) => {
-        //     console.log(res.data);
-        //     if (res.data.Data) {
-        //       return true;
-        //     } else {
-        //       return false;
-        //     }
-        //   });
-
-        // console.log(cekBranch);
-        // console.log(cekMail);
-
-        // if (cekMail || cekBranch) {
-        //   return toast({
-        //     title:
-        //       "Email / Username / nama cabang / alamat cabang sudah digunakan, silahkan gunakan selain itu",
-        //     status: "warning",
-        //     duration: 3000,
-        //     isClosable: true,
-        //   });
-        // } else {
-         
+    // if (cekMail || cekBranch) {
+    //   return toast({
+    //     title:
+    //       "Email / Username / nama cabang / alamat cabang sudah digunakan, silahkan gunakan selain itu",
+    //     status: "warning",
+    //     duration: 3000,
+    //     isClosable: true,
+    //   });
+    // } else {
   });
   const [province, setProvince] = useState([]);
   async function getProv() {
@@ -337,7 +328,18 @@ export default function AddAdminBranch(props) {
             >
               <Box className="flex3R-box-addbranch"></Box>
               <Flex h={"125px"} w={"100%"}>
-              <Image src={logo} display={{base : "none", sm: "none",md:"flex", lg: "flex", xl: "flex"}} w={"100%"} h={"90%"}></Image>
+                <Image
+                  src={logo}
+                  display={{
+                    base: "none",
+                    sm: "none",
+                    md: "flex",
+                    lg: "flex",
+                    xl: "flex",
+                  }}
+                  w={"100%"}
+                  h={"90%"}
+                ></Image>
               </Flex>
               <Box className="flex3R-box-addbranch"></Box>
             </Flex>

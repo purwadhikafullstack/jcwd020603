@@ -31,6 +31,7 @@ export default function LandingPage() {
             return toast({
               title: "Silahkan cek email Anda untuk link verifikasi",
               status: "success",
+              position: "top",
               duration: 3000,
               isClosable: true,
             });
@@ -39,6 +40,7 @@ export default function LandingPage() {
         return toast({
           title: "Akun Anda sudah terverifikasi",
           status: "warning",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });

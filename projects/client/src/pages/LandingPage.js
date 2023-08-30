@@ -47,7 +47,7 @@ export default function LandingPage() {
         title: "Akses Lokasi",
         description: "Anda menolak untuk mengakses lokasi saat ini",
         status: "error",
-        position: "bottom",
+        position: "top",
         duration: 5000,
         isClosable: true,
       });

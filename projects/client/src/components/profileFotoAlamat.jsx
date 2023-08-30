@@ -48,6 +48,7 @@ export default function ProfileFotoAlamat() {
     toast({
       title: "Data berhasil di ubah",
       status: "success",
+      position: "top",
       duration: 3000,
       isClosable: true,
     });
@@ -133,10 +134,11 @@ export default function ProfileFotoAlamat() {
             </Button>
           </Flex>
         </Flex>
-       
+
         <Flex
           w={"100%"}
           h={"100%"}
+          maxH={"200px"}
           boxShadow={"lg"}
           flexDir={"column"}
           rowGap={"20px"}

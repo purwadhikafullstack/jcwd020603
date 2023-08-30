@@ -36,12 +36,20 @@ export default function DiscountAddModal(props) {
   const [selectedId, setSelectedId] = useState([]);
   const [getDiscountId, setGetDiscountId] = useState([]);
   const { dtDis, fetchAll, numberIdx, isEdit, dtDisSelected } = props;
-  const { title, valid_start, valid_to, nominal, id, discount_id, photo_discount_url  } = dtDis[numberIdx];
+  const {
+    title,
+    valid_start,
+    valid_to,
+    nominal,
+    id,
+    discount_id,
+    photo_discount_url,
+  } = dtDis[numberIdx];
   const valid_startConvert = moment(valid_start).format("YYYY-MM-DD");
   const valid_toConvert = moment(valid_to).format("YYYY-MM-DD");
   const [selectedFile, setSelectedFile] = useState(null);
   const [image, setImage] = useState(null);
-  const [sendDiscount_id, setSendDiscount_id] = useState()
+  const [sendDiscount_id, setSendDiscount_id] = useState();
   const [loading, setLoading] = useState(false);
   const inputFileRef = useRef(null);
   const dispatch = useDispatch();
@@ -99,22 +107,24 @@ export default function DiscountAddModal(props) {
             valid_start,
             valid_to,
             nominal,
-            branch_id : userSelector.branch_id,
+            branch_id: userSelector.branch_id,
             product_id: [...selectedId],
             discount_id: id,
           };
-         const editDiskon =  await api()
-            .patch("/discount", dataDiscountEdit)
-              console.log(editDiskon.data);
-            if(editDiskon && selectedFile){
-              const formData = new FormData();
-              formData.append("PhotoDiscount", selectedFile);
-              await api()
-                .patch(`/discount/photo-discount/${dataDiscountEdit.discount_id}`, formData)
-            }
+          const editDiskon = await api().patch("/discount", dataDiscountEdit);
+          console.log(editDiskon.data);
+          if (editDiskon && selectedFile) {
+            const formData = new FormData();
+            formData.append("PhotoDiscount", selectedFile);
+            await api().patch(
+              `/discount/photo-discount/${dataDiscountEdit.discount_id}`,
+              formData
+            );
+          }
           toast({
             title: "Data diskon berhasil diubah",
             status: "success",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
@@ -140,23 +150,28 @@ export default function DiscountAddModal(props) {
             valid_start,
             valid_to,
             nominal,
-            branch_id : userSelector.branch_id,
+            branch_id: userSelector.branch_id,
             product_id: [...selectedId],
-            discount_id
+            discount_id,
           };
-        const tambahDiskon =  await api()
-            .post("/discount", dataDiscountTambah)
-              console.log(tambahDiskon.data.data);
-              setGetDiscountId(tambahDiskon.data.data)
-            if( tambahDiskon.data.data.id && selectedFile){
-              const formData = new FormData();
-              formData.append("PhotoDiscount", selectedFile);
-              await api()
-                .patch(`/discount/photo-discount/${tambahDiskon.data.data.id}`, formData)
-            }
+          const tambahDiskon = await api().post(
+            "/discount",
+            dataDiscountTambah
+          );
+          console.log(tambahDiskon.data.data);
+          setGetDiscountId(tambahDiskon.data.data);
+          if (tambahDiskon.data.data.id && selectedFile) {
+            const formData = new FormData();
+            formData.append("PhotoDiscount", selectedFile);
+            await api().patch(
+              `/discount/photo-discount/${tambahDiskon.data.data.id}`,
+              formData
+            );
+          }
           toast({
             title: "Data diskon berhasil ditambahkan",
             status: "success",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
@@ -170,7 +185,6 @@ export default function DiscountAddModal(props) {
     },
   });
 
- 
   function inputHandler(event) {
     const { value, id } = event.target;
     if (id === "nominal") {
@@ -184,7 +198,6 @@ export default function DiscountAddModal(props) {
     console.log(formik.values);
   }
 
-  
   const getStock = async () => {
     const getData = await api()
       .get("/stock/byBranch", { params: { branch_id: userSelector.branch_id } })
@@ -195,13 +208,14 @@ export default function DiscountAddModal(props) {
   };
   const getStockByDiscount = async () => {
     const stockByDiscount = await api()
-      .get("/stock/byDiscount", { params: { discount_id: id, branch_id: userSelector.branch_id } })
+      .get("/stock/byDiscount", {
+        params: { discount_id: id, branch_id: userSelector.branch_id },
+      })
       .then((result) => {
         console.log(result.data);
         if (isEdit == true) {
           setSelectedProducts(result.data.data);
         }
-       
       });
   };
   console.log(selectedFile);
@@ -215,7 +229,7 @@ export default function DiscountAddModal(props) {
 
   useEffect(() => {
     getStock();
-    getStockByDiscount()
+    getStockByDiscount();
   }, []);
 
   return (
@@ -226,37 +240,43 @@ export default function DiscountAddModal(props) {
             <Flex className="flex3R-input_user-disvoc" gap={"20px"}>
               <Box className="flex3R-input-box-addbranch">Tambah Discount</Box>
               {/* <Flex w={"40%"} > */}
-               <Center cursor={"pointer"} w={"100%"} mt={"30px"}>
-                  <Input
-                    accept="image/png , image/jpg, image/gif"
-                    onChange={handleFile}
-                    ref={inputFileRef}
-                    type="file"
-                    display={"none"}
-                  />
-                   <Image
-                   rounded={10}
-                    h={"20%"}
-                    w={"40%"}
-                    mt={"30px"}
-                    align={"center"}  
-                    position={"absolute"}
-                    zIndex={4}
-                    size={{base : "lg", sm: "xl", md: "xl", lg: "2xl"}}
-                    src={isEdit == true ? (selectedFile ? image : photo_discount_url) : image}
-                    transition={"1s"}
-                    _hover={{
-                      borderColor: "#9d9c45",
-                      boxShadow: "dark-lg",
-                    }}
-                    onClick={() => {
-                      inputFileRef.current.click();
-                    }}
-                  />
-                 Tambah Foto Diskon
+              <Center cursor={"pointer"} w={"100%"} mt={"30px"}>
+                <Input
+                  accept="image/png , image/jpg, image/gif"
+                  onChange={handleFile}
+                  ref={inputFileRef}
+                  type="file"
+                  display={"none"}
+                />
+                <Image
+                  rounded={10}
+                  h={"20%"}
+                  w={"40%"}
+                  mt={"30px"}
+                  align={"center"}
+                  position={"absolute"}
+                  zIndex={4}
+                  size={{ base: "lg", sm: "xl", md: "xl", lg: "2xl" }}
+                  src={
+                    isEdit == true
+                      ? selectedFile
+                        ? image
+                        : photo_discount_url
+                      : image
+                  }
+                  transition={"1s"}
+                  _hover={{
+                    borderColor: "#9d9c45",
+                    boxShadow: "dark-lg",
+                  }}
+                  onClick={() => {
+                    inputFileRef.current.click();
+                  }}
+                />
+                Tambah Foto Diskon
               </Center>
               {/* </Flex> */}
-             
+
               <FormControl mt={"60px"}>
                 <FormLabel>Judul</FormLabel>
                 <Input
@@ -421,7 +441,9 @@ export default function DiscountAddModal(props) {
 
           <Flex justifyContent={"center"} mt={"50px"}>
             <Button
-              onClick={() => { formik.handleSubmit() }}
+              onClick={() => {
+                formik.handleSubmit();
+              }}
               m={"20px"}
               isLoading={loading}
               w={"40%"}

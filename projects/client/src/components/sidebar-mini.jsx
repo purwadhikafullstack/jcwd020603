@@ -53,6 +53,7 @@ export default function SidebarMini(props) {
       toast({
         title: "Maaf Anda belum login, silahkan login dulu",
         status: "warning",
+        position: "top",
         duration: 3000,
         isClosable: true,
       });
@@ -174,6 +175,7 @@ export default function SidebarMini(props) {
                   toast({
                     title: "Tentukan alamat pengiriman terlebih dahulu",
                     status: "warning",
+                    position: "top",
                     duration: 3000,
                     isClosable: true,
                   });
