@@ -251,13 +251,9 @@ export default function DashboardAdminContent() {
               <Center w={"60px"} h={"60px"} borderRadius={"50%"} bg={"#fdefce"}>
                 <Icon as={FaStore} fontSize={"30px"} color={"#ffb21c"} />
               </Center>
-              <Flex
-                flexDir={"column"}
-                maxW={"105px"}
-                w={"100%"}
-                paddingRight={"20px"}
-              >
+              <Flex flexDir={"column"} w={"100px"}>
                 <Flex
+                  justifyContent={"center"}
                   fontSize={"14px"}
                   fontWeight={"extrabold"}
                   textAlign={"center"}
@@ -267,11 +263,7 @@ export default function DashboardAdminContent() {
                     ? dtCountBranch?.length
                     : cariBranchName()[0]?.branch_name}
                 </Flex>
-                <Center
-                  color={"grey"}
-                  fontWeight={"semibold"}
-                  textAlign={"center"}
-                >
+                <Center color={"grey"} fontWeight={"semibold"}>
                   Cabang
                 </Center>
               </Flex>

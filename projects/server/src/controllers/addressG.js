@@ -21,7 +21,6 @@ const addressController = {
       });
       if (!checkAddress) {
         const coordinate = await openCage(req.body);
-        console.log(coordinate.data.results[0].geometry);
         await db.Address.create(
           {
             address: address,
@@ -41,7 +40,6 @@ const addressController = {
             user_id: req.user.id,
           },
         });
-        console.log(jumlahAlamat);
         if (jumlahAlamat == 0) {
           await db.Address.update(
             {
@@ -68,7 +66,6 @@ const addressController = {
       });
     }
   },
-
   getAllAddress: async (req, res) => {
     try {
       const get = await db.Address.findAll({
@@ -234,7 +231,6 @@ const addressController = {
           transaction: trans,
         }
       );
-      console.log(up);
       await trans.commit();
       return res.send({
         message: "alamat utama berhasil diedit",

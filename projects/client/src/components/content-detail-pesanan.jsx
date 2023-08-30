@@ -30,21 +30,20 @@ export default function ContentDetailPesanan() {
   const [peraturan, setPeraturan] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const getLatestOrder = async () => {
-    console.log("masuk");
-    setIsLoading(true);
-    const order = await api().get("/order/specific", {
-      params: { order_number: order_number.order_number },
-    });
-    setPeraturan(order.data.result);
-    console.log("ORDER VALUE", order.data.result);
-
-    console.log(order.data.result.id);
-    const orderDetail = await api().get("/order-detail/", {
-      params: { id: order.data.result.id || order.data.result[0].id },
-    });
-    setOrderDetVal(orderDetail.data.result);
-    console.log(orderDetail.data.result);
-    return setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const order = await api().get("/order/specific", {
+        params: { order_number: order_number.order_number },
+      });
+      setPeraturan(order.data.result);
+      const orderDetail = await api().get("/order-detail/", {
+        params: { id: order.data.result.id || order.data.result[0].id },
+      });
+      setOrderDetVal(orderDetail.data.result);
+      return setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     getLatestOrder();
@@ -52,7 +51,6 @@ export default function ContentDetailPesanan() {
   // menyimpan shipping_cost
   const [shippingCost, setShippingCost] = useState({});
   const [calculateSubtotal, setCalculateSubtotal] = useState(0);
-  console.log("ini val peraturan", peraturan);
   useEffect(() => {
     if (Object.keys(peraturan).length > 0) {
       const parsedShippingCost = JSON.parse(peraturan?.shipping_cost);
@@ -70,8 +68,6 @@ export default function ContentDetailPesanan() {
       return setCalculateSubtotal(0);
     }
   }, [shippingCost]);
-  console.log(calculateSubtotal);
-  console.log("load", isLoading);
   return (
     <>
       <Box>

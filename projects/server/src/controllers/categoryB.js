@@ -78,6 +78,7 @@ const categoryController = {
       });
     }
   },
+
   insertCategory: async (req, res) => {
     const trans = await db.sequelize.transaction();
 

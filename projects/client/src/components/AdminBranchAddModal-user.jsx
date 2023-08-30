@@ -57,7 +57,6 @@ export default function AddUser() {
         const cekMail = await api()
           .get("/user/", { params: { getall: account.email } })
           .then((res) => {
-            console.log(res.data.email);
             if (res.data.email) {
               return true;
             } else {
@@ -68,6 +67,7 @@ export default function AddUser() {
           return toast({
             title: "Email sudah terdaftar, siilahkan gunakan email yang lain",
             status: "warning",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
@@ -78,6 +78,7 @@ export default function AddUser() {
               toast({
                 title: "Register berhasil",
                 status: "success",
+                position: "top",
                 duration: 3000,
                 isClosable: true,
               });

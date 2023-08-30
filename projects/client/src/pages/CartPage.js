@@ -13,12 +13,15 @@ export default function CartPage() {
   // function get all cart
   const [prodCart, setProdCart] = useState([]);
   const getAll = async () => {
-    await api()
-      .get("/cart", { params: { branch_id: nearestBranch } })
-      .then((res) => {
-        setProdCart(res.data.result);
-        console.log(res.data.result);
-      });
+    try {
+      await api()
+        .get("/cart", { params: { branch_id: nearestBranch } })
+        .then((res) => {
+          setProdCart(res.data.result);
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     getAll();

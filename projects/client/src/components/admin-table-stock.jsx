@@ -64,7 +64,7 @@ export function AdminTableStock({
       <Tr id="SACategoryB">
         <Td> {indexOfLastProduct - productsPerPage + idx + 1}</Td>
         <Td className="SAImgCategoryB">
-          <Image maxH={"43px"} minH={"43px"} src={url} />
+          <Image maxH={"43px"} minH={"43px"} width={"60px"} src={url} />
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">

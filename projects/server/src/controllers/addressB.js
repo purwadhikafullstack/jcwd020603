@@ -16,14 +16,12 @@ const addressControllerB = {
         },
       }
     );
-    console.log(response.data.results[0].geometry);
     res.send(response.data.results[0].geometry);
   },
 
   getAddress: async (req, res) => {
     const { latitude, longitude } = req.query;
-    console.log(latitude);
-    console.log(longitude);
+
     try {
       const response = await axios.get(
         "https://api.opencagedata.com/geocode/v1/json",
@@ -36,7 +34,6 @@ const addressControllerB = {
           },
         }
       );
-      console.log(response?.data?.results[0].formatted);
       res.send(response?.data?.results[0].formatted);
     } catch (error) {
       console.log(error);

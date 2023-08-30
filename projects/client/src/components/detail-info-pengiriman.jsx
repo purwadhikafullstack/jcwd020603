@@ -43,7 +43,9 @@ export default function DetailPengiriman(props) {
               shippingCost.cost &&
               shippingCost.cost.length > 0 && (
                 <Flex fontWeight={"400"}>
-                  Estimasi tiba dalam {shippingCost?.cost[0]?.etd} Hari
+                  {shippingCost?.name === "POS Indonesia (POS)"
+                    ? `Estimasi tiba dalam ${shippingCost?.cost[0]?.etd}`
+                    : `Estimasi tiba dalam ${shippingCost?.cost[0]?.etd} Hari`}
                 </Flex>
               )}
           </Flex>

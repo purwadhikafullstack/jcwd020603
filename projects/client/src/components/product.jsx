@@ -20,6 +20,10 @@ export default function Product({ nearestBranch }) {
 
   const [productSearchResults, setProductSearchResults] = useState([]);
 
+  const satu = nearestBranch;
+  const dua = JSON.parse(localStorage.getItem("nearestBranch"));
+  console.log("satu & dua", satu, dua);
+
   const performSearch = (searchTerm) => {
     api()
       .get("/stock/search", {
@@ -42,7 +46,7 @@ export default function Product({ nearestBranch }) {
     await api()
       .get("/stock/s-category", {
         params: {
-          category_name: category_name || "Daging",
+          category_name: category_name,
           branch_id:
             nearestBranch || JSON.parse(localStorage.getItem("nearestBranch")),
         },
@@ -68,26 +72,12 @@ export default function Product({ nearestBranch }) {
         console.error(error);
       });
     getCategory();
-    // api()
-    //   .get("/stock", {
-    //     params: {
-    //       branch_id:
-    //         nearestBranch || JSON.parse(localStorage.getItem("nearestBranch")),
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setStocks(response.data.result);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
   }, []);
 
   const combinedSearchResults = [...productSearchResults];
-
-  console.log(category_name);
-  console.log(searchResults);
-  console.log("ini combine", combinedSearchResults);
+  // console.log(category_name);
+  // console.log(searchResults);
+  // console.log("ini combine", combinedSearchResults);
 
   return (
     <>

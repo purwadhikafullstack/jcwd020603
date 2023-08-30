@@ -1,13 +1,23 @@
-import { Button, Flex, useToast } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
+import ModalLogoutAdmin from "./modal-logout-admin";
 
 export default function ProfileVeriPass() {
   const nav = useNavigate();
   const toast = useToast();
   const userSelector = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const logout = () => {
     dispatch({ type: "logout" });
     localStorage.removeItem("auth");
@@ -24,6 +34,7 @@ export default function ProfileVeriPass() {
         toast({
           title: "Silahkan cek email Anda untuk link verifikasi",
           status: "success",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });
@@ -34,6 +45,7 @@ export default function ProfileVeriPass() {
         return toast({
           title: "Akun Anda sudah terverifikasi",
           status: "warning",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });
@@ -54,7 +66,7 @@ export default function ProfileVeriPass() {
         flexDir={"column"}
         rowGap={"10px"}
         bgColor={"gray.100"}
-        justifyContent={"space-around"}
+        justifyContent={"space-evenly"}
       >
         <Button
           onClick={() => {
@@ -85,7 +97,7 @@ export default function ProfileVeriPass() {
         </Button>
 
         <Button
-          onClick={logout}
+          onClick={onOpen}
           bgColor={"#118925"}
           color={"white"}
           fontWeight={"bold"}
@@ -97,6 +109,12 @@ export default function ProfileVeriPass() {
           Keluar{" "}
         </Button>
       </Flex>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent w={"100%"} maxW={"430px"} borderRadius={"15px"}>
+          <ModalLogoutAdmin onClose={onClose} />
+        </ModalContent>
+      </Modal>
     </>
   );
 }

@@ -27,7 +27,6 @@ export default function TopBar2({
   minDistance,
 }) {
   const userSelector = useSelector((state) => state.auth);
-  console.log("test", branchName);
   const nav = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [district, setDistrict] = useState("");
@@ -49,13 +48,12 @@ export default function TopBar2({
   useEffect(() => {
     getFormattedAddress();
     if (!address) {
-      setIsLoaded(true);
+      // setIsLoaded(true);
     }
   }, [address]);
-  console.log(district);
   useEffect(() => {
     if (district) {
-      setIsLoaded(true);
+      // setIsLoaded(true);
     }
   }, [district]);
   return (

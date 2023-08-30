@@ -12,11 +12,10 @@
 .responsiveProfile {
   width: 100%;
   max-width: 910px;
-  height: 100%;
+  height: 100vh;
   box-shadow: lightgray;
   gap: 20px;
   padding: 20px;
-  margin-top: 10%;
 }
 
 @media (max-width: 600px) {

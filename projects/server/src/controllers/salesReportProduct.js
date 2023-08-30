@@ -220,6 +220,7 @@ const salesReportProductController = {
               {
                 model: db.Product,
                 as: "Product",
+                paranoid: false,
               },
             ],
           },

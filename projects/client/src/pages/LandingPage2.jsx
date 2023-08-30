@@ -17,10 +17,8 @@ export default function LandingPage() {
 
   const verify = async () => {
     try {
-      console.log(userSelector);
       const email = userSelector.email;
       const verifcek = userSelector.verification;
-      console.log(verifcek);
 
       if (!verifcek) {
         await api()
@@ -31,6 +29,7 @@ export default function LandingPage() {
             return toast({
               title: "Silahkan cek email Anda untuk link verifikasi",
               status: "success",
+              position: "top",
               duration: 3000,
               isClosable: true,
             });
@@ -39,6 +38,7 @@ export default function LandingPage() {
         return toast({
           title: "Akun Anda sudah terverifikasi",
           status: "warning",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });

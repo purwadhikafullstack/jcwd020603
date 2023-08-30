@@ -53,6 +53,7 @@ export default function Sidebar(props) {
       toast({
         title: "Maaf Anda belum login, silahkan login dulu",
         status: "warning",
+        position: "top",
         duration: 3000,
         isClosable: true,
       });
@@ -117,6 +118,7 @@ export default function Sidebar(props) {
           onClick={(e) => {
             handleClick(e);
             nav("/");
+            localStorage.removeItem("searchTerm");
           }}
           bg={Clicked == "beranda" ? "#ECFFF4" : "white"}
           color={Clicked == "beranda" ? "#199950" : "black"}
@@ -189,6 +191,7 @@ export default function Sidebar(props) {
                   toast({
                     title: "Tentukan alamat pengiriman terlebih dahulu",
                     status: "warning",
+                    position: "top",
                     duration: 3000,
                     isClosable: true,
                   });

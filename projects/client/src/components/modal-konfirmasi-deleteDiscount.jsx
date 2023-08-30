@@ -14,6 +14,7 @@ export default function ModalKonfirmasiDeletDiscount(props) {
         toast({
           title: "Discount berhasil dihapus",
           status: "success",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });

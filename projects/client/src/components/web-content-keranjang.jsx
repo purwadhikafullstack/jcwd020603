@@ -24,29 +24,29 @@ export default function WebKeranjang(props) {
   const { prodCart } = props;
   const nearestBranch = localStorage.getItem("nearestBranch");
   const nav = useNavigate();
-  useEffect(() => {
-    console.log(prodCart);
-  }, [prodCart]);
   const [selectedItems, setSelectedItems] = useState([]);
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});
   const [isLoading2, setIsLoading2] = useState(false);
   const getSelectedAddress = async () => {
-    setIsLoading2(true);
-    const primary = await api().get("/addressG/primary");
-    const selected = await api().get("/addressG/current");
-    if (selected.data.result) {
-      setSelectedAddress(selected.data.result);
-      setIsLoading2(false);
-    } else {
-      setSelectedAddress(primary.data.result);
-      setIsLoading2(false);
+    try {
+      setIsLoading2(true);
+      const primary = await api().get("/addressG/primary");
+      const selected = await api().get("/addressG/current");
+      if (selected.data.result) {
+        setSelectedAddress(selected.data.result);
+        setIsLoading2(false);
+      } else {
+        setSelectedAddress(primary.data.result);
+        setIsLoading2(false);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
   useEffect(() => {
     getSelectedAddress();
   }, []);
-  console.log(selectedAddress);
 
   //count total harga belanja
   const totalBelanja = selectedItems.map((val, idx) => {
@@ -63,7 +63,6 @@ export default function WebKeranjang(props) {
       : Number(selectedItems[idx].Stock.Product.price);
     return price * Number(selectedItems[idx].qty);
   });
-  console.log("perhitungan", selectedItems[0]?.Stock?.Discount?.nominal / 100);
   //count berat belanja
   const [weightTotal, setWeightTotal] = useState(0);
   const itungWeight = selectedItems.map(
@@ -80,7 +79,6 @@ export default function WebKeranjang(props) {
   const [courier, setCourier] = useState("");
   const [shipCost, setShipCost] = useState([]);
   const [courierName, setCourierName] = useState("");
-  console.log(courier);
   const [isLoading, setIsLoading] = useState(false);
   const inputCost = {
     origin: prodCart[0]?.Stock.Branch?.city_id,
@@ -88,7 +86,6 @@ export default function WebKeranjang(props) {
     weight: weightTotal,
     courier: courier,
   };
-  console.log(inputCost);
   const getCost = async () => {
     try {
       await api()
@@ -106,8 +103,6 @@ export default function WebKeranjang(props) {
     getCost();
   }, [courier]);
   useEffect(() => {
-    console.log(selectedItems);
-    console.log(totalBelanja);
     totalWeight();
   }, [selectedItems]);
   //menyimpan biaya pengiriman
@@ -122,7 +117,6 @@ export default function WebKeranjang(props) {
       const update = await api().patch(
         `/voucher/${getVoucher?.id}?limit=${getVoucher.limit}`
       );
-      console.log(update.data);
     } catch (err) {
       console.log(err);
     }
@@ -150,10 +144,16 @@ export default function WebKeranjang(props) {
       });
       return nav("/payment");
     } catch (err) {
-      console.log(err);
+      setIsLoading(false);
+      toast({
+        title: err.response.data.message,
+        description: err.response.data.description,
+        status: "warning",
+        position: "top",
+        duration: 3000,
+      });
     }
   };
-  console.log("cost", cost);
 
   return (
     <>

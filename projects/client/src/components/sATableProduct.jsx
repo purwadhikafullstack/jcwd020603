@@ -82,7 +82,7 @@ export function SATableProduct({
       <Tr id="SACategoryB">
         <Td> {indexOfLastProduct - productsPerPage + idx + 1}</Td>
         <Td className="SAImgCategoryB">
-          <Image maxH={"43px"} minH={"43px"} src={url} />
+          <Image maxH={"40px"} minH={"40px"} width={"58px"} src={url} />
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">

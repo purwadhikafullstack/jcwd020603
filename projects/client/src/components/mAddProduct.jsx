@@ -13,6 +13,7 @@ import {
   Icon,
   Center,
   Select,
+  useToast,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
 import { TbPhotoSearch } from "react-icons/tb";
@@ -22,6 +23,7 @@ export function AddProduct(props) {
   const [selectedFile, setSelectedFile] = useState(null);
   const { selectedOption, setSelectedOption } = useState("");
   const [imgUrl, setImgUrl] = useState();
+  const toast = useToast();
 
   const [product, setProduct] = useState({
     product_name: "",
@@ -48,7 +50,6 @@ export function AddProduct(props) {
     const tempProduct = { ...product };
     tempProduct[id] = value;
     setProduct(tempProduct);
-    console.log(tempProduct);
   };
 
   const productImage = async () => {
@@ -56,7 +57,6 @@ export function AddProduct(props) {
       alert("Please select an image and enter a product desc.");
       return;
     }
-    console.log(product);
     const formData = new FormData();
     formData.append("productImg", selectedFile);
     formData.append("product_name", product.product_name);
@@ -66,19 +66,30 @@ export function AddProduct(props) {
     formData.append("weight", product.weight);
 
     try {
-      console.log(formData);
       await api()
         .post("/product/v1", formData)
-        .then((result) => {
-          console.log(result.data);
-        });
-      alert("Posting success");
+        .then((result) => {});
+      toast({
+        title: "Success",
+        description: "Produk baru berhasil dibuat",
+        status: "success",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
       setSelectedFile(null);
       setProduct("");
       props.onClose();
     } catch (error) {
       console.error(error);
-      alert("Posting failed");
+      toast({
+        title: "Error",
+        description: "Produk baru gagal dibuat",
+        status: "error",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 

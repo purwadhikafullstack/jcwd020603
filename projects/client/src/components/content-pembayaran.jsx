@@ -9,10 +9,8 @@ import {
   Modal,
   ModalContent,
   ModalOverlay,
-  Select,
   Spinner,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import NavbarPembayaran from "./navbar-pembayaran";
 import PembayaranProduk from "./pembayaran-produk";
@@ -40,13 +38,11 @@ export default function ContentPembayaran() {
         params: { order_number: order_number.order_number || "" },
       });
       setOrderValue(order.data.result);
-      console.log(order.data.result);
       const orderDetail = await api().get("/order-detail/", {
         params: { id: order.data.result[0]?.id },
       });
       setOrderDetVal(orderDetail.data.result);
       setIsLoading(false);
-      console.log(orderDetail.data.result);
     } catch (err) {
       console.log(err);
     }
@@ -60,7 +56,6 @@ export default function ContentPembayaran() {
   useEffect(() => {
     if (orderValue.length > 0) {
       const parsedShippingCost = JSON.parse(orderValue[0]?.shipping_cost);
-      console.log(parsedShippingCost);
       setShippingCost(parsedShippingCost);
     }
   }, [orderValue]);
@@ -132,12 +127,10 @@ export default function ContentPembayaran() {
     const formData = new FormData();
     formData.append("paymentImg", selectedFile);
     formData.append("orderDetVal", JSON.stringify(orderDetVal));
-    console.log(orderValue[0]?.id);
     const post = await api().patch(
       `/order/image/${orderValue[0]?.id}`,
       formData
     );
-    console.log(post.data);
     nav(`/orders/${orderValue[0]?.order_number}`);
   };
   //cancel order
@@ -146,7 +139,6 @@ export default function ContentPembayaran() {
       const cancel = await api().patch(`/order/cancel/${orderValue[0]?.id}`, {
         orderDetVal,
       });
-      console.log(cancel.data);
       return nav("/orders");
     } catch (err) {
       console.log(err);

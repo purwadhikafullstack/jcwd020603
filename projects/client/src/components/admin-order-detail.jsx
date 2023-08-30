@@ -57,7 +57,6 @@ export default function AdminOrderDetail() {
         params: { order_number: order_number.order_number },
       });
       setOrderValue(get.data.result);
-      console.log(get.data.result);
 
       const getDetail = await api().get("/order-detail/", {
         params: { id: get.data.result.id },
@@ -74,7 +73,6 @@ export default function AdminOrderDetail() {
   // menyimpan shipping_cost
   const [shippingCost, setShippingCost] = useState({});
   const [calculateSubtotal, setCalculateSubtotal] = useState(0);
-  console.log("ini val orderValue", orderValue);
   useEffect(() => {
     if (Object.keys(orderValue).length > 0) {
       const parsedShippingCost = JSON.parse(orderValue?.shipping_cost);
@@ -92,17 +90,13 @@ export default function AdminOrderDetail() {
       return setCalculateSubtotal(0);
     }
   }, [shippingCost]);
-  console.log(calculateSubtotal);
-  console.log("ORDER VALUE", orderValue);
-  console.log("ORDER DETAIL", orderDetVal);
   // cancel order
   const cancelOrder = async () => {
     try {
       const cancel = await api().patch(`/order/cancel/${orderValue?.id}`, {
         orderDetVal,
       });
-      console.log(cancel.data);
-      return nav("/admin/orders");
+      fetchOrder();
     } catch (err) {
       console.log(err);
     }
@@ -114,7 +108,6 @@ export default function AdminOrderDetail() {
       const status = await api().patch(`/order/status/${orderValue?.id}`, {
         status: valueStatus,
       });
-      console.log(status.data);
       fetchOrder();
     } catch (err) {
       console.log(err);
@@ -196,7 +189,11 @@ export default function AdminOrderDetail() {
                         color={"gray"}
                         onClick={() => {
                           setChangeStatus(!changeStatus);
-                          statusOrder();
+                          if (valueStatus == "Dibatalkan") {
+                            cancelOrder();
+                          } else {
+                            statusOrder();
+                          }
                         }}
                       >
                         UBAH
@@ -244,7 +241,11 @@ export default function AdminOrderDetail() {
                     padding={"10px"}
                   >
                     {orderValue?.order_transfer_url ? (
-                      <Image src={orderValue.order_transfer_url} />
+                      <Image
+                        src={orderValue.order_transfer_url}
+                        w={"100%"}
+                        maxW={"300px"}
+                      />
                     ) : (
                       <Center textAlign={"center"} fontWeight={600}>
                         Tidak ada gambar Bukti Pembayaran
@@ -356,7 +357,9 @@ export default function AdminOrderDetail() {
                 gap={"20px"}
                 padding={"5px 0px"}
               >
-                <Flex w={"20%"}>Data Pemesan</Flex>
+                <Flex w={"20%"} minW={"72px"}>
+                  Data Pemesan
+                </Flex>
                 <Flex w={"100%"} flexDir={"column"}>
                   <Flex fontWeight={"500"}>{orderValue.User?.user_name}</Flex>
                   <Flex>{orderValue.User?.phone_number}</Flex>
@@ -368,7 +371,9 @@ export default function AdminOrderDetail() {
                 gap={"20px"}
                 padding={"5px 0px"}
               >
-                <Flex w={"20%"}>Kurir Pengiriman</Flex>
+                <Flex w={"20%"} minW={"72px"}>
+                  Kurir Pengiriman
+                </Flex>
                 <Flex w={"100%"} flexDir={"column"}>
                   <Flex fontWeight={"500"}>{shippingCost?.name}</Flex>
                   <Flex>
@@ -378,7 +383,9 @@ export default function AdminOrderDetail() {
                     shippingCost.cost &&
                     shippingCost.cost.length > 0 && (
                       <Flex fontWeight={"400"}>
-                        Estimasi tiba dalam {shippingCost?.cost[0]?.etd} Hari
+                        {shippingCost?.name === "POS Indonesia (POS)"
+                          ? `Estimasi tiba dalam ${shippingCost?.cost[0]?.etd}`
+                          : `Estimasi tiba dalam ${shippingCost?.cost[0]?.etd} Hari`}
                       </Flex>
                     )}
                 </Flex>
@@ -389,7 +396,9 @@ export default function AdminOrderDetail() {
                 gap={"20px"}
                 padding={"5px 0px"}
               >
-                <Flex w={"20%"}>Alamat Penerima</Flex>
+                <Flex w={"20%"} minW={"72px"}>
+                  Alamat Penerima
+                </Flex>
                 <Flex w={"100%"} flexDir={"column"}>
                   <Flex fontWeight={"500"}>
                     {orderValue.Address?.address_name}

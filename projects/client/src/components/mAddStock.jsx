@@ -13,6 +13,8 @@ import {
   Icon,
   Center,
   Image,
+  Toast,
+  useToast,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
 import { useState, useRef, useEffect } from "react";
@@ -22,7 +24,7 @@ import { useSelector } from "react-redux";
 export function AddStock(props) {
   const { selectedOption, setSelectedOption } = useState("");
   const userSelector = useSelector((state) => state.auth);
-
+  const toast = useToast();
   const [stock, setStock] = useState({
     branch_id: userSelector.branch_id,
     product_id: "",
@@ -34,26 +36,44 @@ export function AddStock(props) {
     const tempStock = { ...stock };
     tempStock[id] = value;
     setStock(tempStock);
-    console.log(tempStock);
   };
 
   const addStock = async () => {
     if (!stock) {
-      alert("Please input a stock details");
+      toast({
+        title: "Error",
+        description: "Please input a stock details",
+        status: "warning",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
       return;
     }
-    console.log(stock);
     try {
       await api()
         .post("/stock/v1", stock)
-        .then((result) => {
-          console.log(result.data);
-        });
-      alert("Posting success");
+        .then((result) => {});
+      props.fetchData();
+      toast({
+        title: "Success",
+        description: "Stok berhasil ditambahkan",
+        status: "success",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
       props.onClose();
     } catch (error) {
       console.log(error);
-      alert("Posting failed");
+      toast({
+        title: "Error",
+        description: "Stok gagal ditambahkan",
+        status: "error",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
@@ -85,9 +105,6 @@ export function AddStock(props) {
         console.error(error);
       });
   }, [stock]);
-
-  console.log("ini produkk", dataProduct.product_name);
-  console.log("ini produkk", dataProduct);
 
   return (
     <>
@@ -160,7 +177,7 @@ export function AddStock(props) {
               colorScheme="green"
               onClick={() => {
                 addStock();
-                props.fetchData();
+                // props.fetchData();
               }}
             >
               Save

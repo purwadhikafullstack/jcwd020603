@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 export default function DetailPembayaran(props) {
   const { shippingCost, calculateSubtotal, peraturan } = props;
-  console.log(shippingCost);
   return (
     <>
       <Flex

@@ -25,14 +25,14 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BsHandIndexFill } from "react-icons/bs";
 
 export default function EditAdminBranch(props) {
-  const getBranch_id = props.dtBranch[props.number].branch_id;;
+  const getBranch_id = props.dtBranch[props.number].branch_id;
   const toast = useToast();
   const [seePass, setSeePass] = useState(false);
   const [data, setData] = useState({});
   YupPassword(Yup);
   const formik = useFormik({
     initialValues: {
-      user_id : props.dtBranch[props.number].id,
+      user_id: props.dtBranch[props.number].id,
       user_name: props.dtBranch[props.number].user_name,
       email: props.dtBranch[props.number].email,
       role: "ADMIN",
@@ -99,7 +99,7 @@ export default function EditAdminBranch(props) {
           branch_id,
         } = formik.values;
         const newBranchAdmin = {
-          user_id : props.dtBranch[props.number].id,
+          user_id: props.dtBranch[props.number].id,
           user_name,
           email,
           password,
@@ -129,6 +129,7 @@ export default function EditAdminBranch(props) {
             .then((res) => {
               return toast({
                 title: "Admin dan Cabang berhasil di edit",
+                position: "top",
                 status: "success",
                 duration: 3000,
                 isClosable: true,
@@ -294,7 +295,18 @@ export default function EditAdminBranch(props) {
               alignItems={"center"}
             >
               <Box className="flex3R-box-addbranch"></Box>
-              <Image src={logo} display={{base : "none", sm: "none",md:"flex", lg: "flex", xl: "flex"}} w={"100%"} h={"20%"}></Image>
+              <Image
+                src={logo}
+                display={{
+                  base: "none",
+                  sm: "none",
+                  md: "flex",
+                  lg: "flex",
+                  xl: "flex",
+                }}
+                w={"100%"}
+                h={"20%"}
+              ></Image>
               <Box className="flex3R-box-addbranch"></Box>
             </Flex>
 
@@ -354,7 +366,9 @@ export default function EditAdminBranch(props) {
               <FormControl>
                 <FormLabel>Kelurahan</FormLabel>
                 <Input
-                  defaultValue={props?.dtBranch[props?.number]?.Branch?.district}
+                  defaultValue={
+                    props?.dtBranch[props?.number]?.Branch?.district
+                  }
                   onChange={inputHandler}
                   id="district"
                   transition={"1s"}

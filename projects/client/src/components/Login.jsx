@@ -59,6 +59,7 @@ export default function Login() {
         toast({
           title: "Selamat Datang di Sahabat Sembako",
           status: "success",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });
@@ -78,6 +79,7 @@ export default function Login() {
         return toast({
           title: "Maaf Login gagal, pastikan email/password benar ",
           status: "error",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });
@@ -91,6 +93,7 @@ export default function Login() {
       toast({
         title: "Silahkan cek email Anda untuk link reset password",
         status: "success",
+        position: "top",
         duration: 3000,
         isClosable: true,
       });
@@ -107,6 +110,7 @@ export default function Login() {
       toast({
         title: "Masukkan alamat Email Anda",
         status: "warning",
+        position: "top",
         duration: 3000,
         isClosable: true,
       });

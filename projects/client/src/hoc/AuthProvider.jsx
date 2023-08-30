@@ -19,7 +19,6 @@ export default function AuthProvider({ children }) {
           })
           .then((res) => res.data);
         if (dataUser) {
-          console.log(dataUser);
           dispatch({
             type: "login",
             payload: dataUser,

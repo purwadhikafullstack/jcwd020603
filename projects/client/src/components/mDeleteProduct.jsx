@@ -16,11 +16,12 @@ export function DeleteProduct(props) {
   const deleteProduct = async () => {
     await api().delete("/product/v3/" + props.id);
     toast({
-      title: "Product Deleted",
+      title: "Success",
+      description: "Produk berhasil dihapus",
       status: "success",
-      position: "top-right",
+      position: "top",
       duration: 3000,
-      isClosable: false,
+      isClosable: true,
     });
     props.onClose();
   };

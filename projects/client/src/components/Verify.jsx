@@ -49,6 +49,7 @@ export default function Verify() {
             toast({
               title: "Selamat.. verifikasi akun kamu berhasil.",
               status: "success",
+              position: "top",
               duration: "3000",
               isClosable: true,
             });
@@ -59,6 +60,7 @@ export default function Verify() {
         toast({
           title: "Verifikasi gagal.. Akun ini sudah terverifikasi",
           status: "error",
+          position: "top",
           duration: "3000",
           isClosable: true,
         });
@@ -69,6 +71,7 @@ export default function Verify() {
       toast({
         title: "Maaf link ini telah expired, silahkan verifikasi ulang",
         status: "error",
+        position: "top",
         duration: "3000",
         isClosable: true,
       });
