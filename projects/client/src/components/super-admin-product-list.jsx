@@ -107,7 +107,7 @@ export default function SuperAdminProductList() {
     }
   }, [shown]);
 
-  const productsPerPage = 6;
+  const productsPerPage = 5;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   //get selector branch

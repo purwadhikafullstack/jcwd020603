@@ -72,26 +72,12 @@ export default function Product({ nearestBranch }) {
         console.error(error);
       });
     getCategory();
-    // api()
-    //   .get("/stock", {
-    //     params: {
-    //       branch_id:
-    //         nearestBranch || JSON.parse(localStorage.getItem("nearestBranch")),
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setStocks(response.data.result);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
   }, []);
 
   const combinedSearchResults = [...productSearchResults];
-
-  console.log(category_name);
-  console.log(searchResults);
-  console.log("ini combine", combinedSearchResults);
+  // console.log(category_name);
+  // console.log(searchResults);
+  // console.log("ini combine", combinedSearchResults);
 
   return (
     <>
