@@ -45,6 +45,13 @@ export default function TopBar({
       nav("/address");
     }
   };
+
+  useEffect(() => {
+    getFormattedAddress();
+    if (!address) {
+      // setIsLoaded(true);
+    }
+  }, [address]);
   return (
     <>
       <Flex id="containerTopBarB" justifyContent={"center"}>
