@@ -38,7 +38,6 @@ export default function Discount() {
   const fetchDtBranch = async() => {
     try {
       await api().get("/sales-report/dt-branch").then((res) => {
-        console.log(res.data.data);
         setGetBranch_name(res.data.data)
       })
     } catch (error) {
@@ -46,7 +45,6 @@ export default function Discount() {
     }
   }
   const inputHandlerBranch_name = (e) => {
-    console.log(e.target.value);
     setInputBranch_name(e.target.value)
   }
   let ini_namanya = null
@@ -80,11 +78,9 @@ export default function Discount() {
       branch_id : branch_id || "",
       discount_id : numberIdx || ""
     }
-    console.log(sendDataselect);
     try {
       await api().post("/discount/stock-selected", sendDataselect)
       .then((res) => {
-        console.log(res.data);
         setDtDisSelected(res.data)
       })
     } catch (error) {
@@ -99,12 +95,10 @@ export default function Discount() {
       ordering : ordered || "ASC",
       page : shown.page -1 || "0"
     }
-    console.log(sendData);
     try {
       await api()
         .post("/discount/stock-discount", sendData)
         .then((res) => {
-          console.log(res.data);
           setDtDis(res.data.Data);
           setTotalPages(res.data.total)
           setTotalDiscount(res.data.jumlah_discount)

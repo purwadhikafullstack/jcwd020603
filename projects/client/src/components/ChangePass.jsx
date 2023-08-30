@@ -89,7 +89,6 @@ export default function ChangePass() {
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
   }
 
   const respass = async () => {

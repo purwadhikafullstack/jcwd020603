@@ -67,7 +67,6 @@ export default function Voucher() {
   const fetchDtBranch = async() => {
     try {
       await api().get("/sales-report/dt-branch").then((res) => {
-        console.log(res.data.data);
         setGetBranch_name(res.data.data)
       })
     } catch (error) {
@@ -76,11 +75,9 @@ export default function Voucher() {
   }
 
   const inputHandlerBranch_name = (e) => {
-    console.log(e.target.value);
     setInputBranch_name(e.target.value)
   }
 
-  console.log(getBranch_name);
 
   let ini_namanya = null
   const branch_namenya = () => {
@@ -108,8 +105,6 @@ export default function Voucher() {
   }
 
   const branch_id = userSelector.role == "ADMIN" ? userSelector.branch_id : inputBranch_name
-  console.log(branch_id);
-  console.log(inputBranch_name);
   // ambil data
   const fetchAll = async () => {
     const sendBody = {
@@ -119,11 +114,9 @@ export default function Voucher() {
       sort : sorted || "ASC", 
       page : shown.page -1 || "0"}
     try {
-      console.log(sendBody);
       const voucher = await api()
         .post("/voucher/all-filter", sendBody)
         .then((res) => {
-          console.log(res.data);
           setDtVocer(res.data.Data);
           setTotalPages(res.data.total)
           setTotalData(res.data.jumlah_data)
@@ -132,10 +125,6 @@ export default function Voucher() {
       console.log(error.message);
     }
   };
-
-  console.log(dtVocer);
-  console.log(totalData);
-
   const itemPerPage = 3
   const pageHandler = () => {
     const output = []
@@ -290,7 +279,7 @@ export default function Voucher() {
                   <Th>Limit</Th>
                   <Th>Minimal Order</Th>
                   <Th>Keterangan</Th>
-                  <Th display={roleOfUSer == "ADMIN" ? "flex" : "none"}  >Aksi</Th>
+                  <Th display={roleOfUSer == "ADMIN" ? "" : "none"}  >Aksi</Th>
                 </Tr>
               </Thead>
 

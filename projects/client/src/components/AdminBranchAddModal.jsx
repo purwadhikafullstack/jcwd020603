@@ -84,7 +84,6 @@ export default function AddAdminBranch(props) {
 
     onSubmit: async () => {
       try {
-        console.log("masuk dlu");
         const {
           user_name,
           email,
@@ -138,61 +137,6 @@ export default function AddAdminBranch(props) {
       console.log(err);
     }
   },
-        
-
-
-
-
-
-
-
-
-
-        // ========================================
-
-        // const cekMail = await api()
-        //   .get("/user/", {
-        //     params: { getall: newBranchAdmin.email } || {
-        //       getall: newBranchAdmin.user_name,
-        //     },
-        //   })
-        //   .then((res) => {
-        //     console.log(res.data);
-        //     if (res.data.email) {
-        //       return true;
-        //     } else {
-        //       return false;
-        //     }
-        //   });
-
-        // const cekBranch = await api()
-        //   .get("/branch/all-by-branch", {
-        //     params: { getAll: newBranchAdmin.branch_name } || {
-        //       getAll: newBranchAdmin.branch_address,
-        //     },
-        //   })
-        //   .then((res) => {
-        //     console.log(res.data);
-        //     if (res.data.Data) {
-        //       return true;
-        //     } else {
-        //       return false;
-        //     }
-        //   });
-
-        // console.log(cekBranch);
-        // console.log(cekMail);
-
-        // if (cekMail || cekBranch) {
-        //   return toast({
-        //     title:
-        //       "Email / Username / nama cabang / alamat cabang sudah digunakan, silahkan gunakan selain itu",
-        //     status: "warning",
-        //     duration: 3000,
-        //     isClosable: true,
-        //   });
-        // } else {
-         
   });
   const [province, setProvince] = useState([]);
   async function getProv() {
@@ -200,7 +144,6 @@ export default function AddAdminBranch(props) {
       await api()
         .get("/province/")
         .then((res) => {
-          console.log(res.data.result);
           setProvince(res.data.result);
         });
     } catch (error) {
@@ -214,13 +157,11 @@ export default function AddAdminBranch(props) {
 
   const [city, setCity] = useState([]);
   const [provId, setProvId] = useState("");
-  console.log(provId);
   async function getCity() {
     try {
       await api()
         .get(`/city/${provId}`)
         .then((res) => {
-          console.log(res.data.result);
           setCity(res.data.result);
         });
     } catch (error) {
@@ -230,15 +171,12 @@ export default function AddAdminBranch(props) {
 
   useEffect(() => {
     getCity();
-    console.log(city);
   }, [provId]);
 
-  console.log(city);
 
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
   }
 
   return (

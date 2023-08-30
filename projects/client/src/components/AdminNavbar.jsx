@@ -15,9 +15,11 @@ import AdminSidebar from "./admin-sidebar"
 import "../css/indexG.css";
 import { useSelector } from "react-redux";
 import ModalLogoutAdmin from "./modal-logout-admin";
+import { useNavigate } from "react-router";
 
 export default function AdminNavbar() {
   const userSelector = useSelector((state) => state.auth);
+  const nav = useNavigate()
   const windowWidth = window.innerWidth;
   const {
     isOpen: isOpenModal1,
@@ -60,8 +62,10 @@ export default function AdminNavbar() {
           fontWeight={"500"}
           gap={"20px"}
           alignItems={"center"}
+          cursor={"pointer"}
+          onClick={()=> {nav("/profile-admin")}}
         >
-          <Avatar w={"40px"} h={"40px"} />
+          <Avatar w={"40px"} h={"40px"} src={userSelector.avatar_url} />
           {userSelector.user_name}
           <Icon
             as={HiOutlineLogout}

@@ -32,7 +32,6 @@ const discountController = {
         ];
       
       }
-      console.log(order, "ini order");
       try {
        const dtStockDiscount =  await db.Discount.findAndCountAll({
           where : where,
@@ -66,7 +65,6 @@ const discountController = {
 
     getAllSelected : async (req,res) => {
       const {title, valid_start, valid_to, nominal, product_id, branch_id, discount_id} = req.body
-      console.log(req.body, "ini body seleteddddddddddzzzzzzzzzzzzzzzzzzzzz");
       try {
         const dtStockBydiscountId = await db.Stock.findAll({
           where : {
@@ -82,7 +80,6 @@ const discountController = {
 
     addDiscount : async (req,res) => {
       const {title, valid_start, valid_to, nominal, product_id, branch_id, discount_id} = req.body
-      console.log(req.body);
       try {
        const newDiscount = await db.Discount.create({
           title, valid_start, valid_to, nominal, branch_id
@@ -111,9 +108,6 @@ const discountController = {
     uploadFotoDiscount: async (req, res) => {
       try {
         const { filename } = req.file;
-        console.log(url_foto_diskon, "ini url nya diskon");
-        console.log(req.file, "ini req.file nya diskon"); 
-        console.log(req.params, "ini req.params nya loh");
         await db.Discount.update(
           {
             photo_discount_url : url_foto_diskon + filename,
@@ -131,7 +125,6 @@ const discountController = {
 
     updateDiscount : async(req,res) => {
       const {title, valid_start, valid_to, nominal, product_id, discount_id} = req.body
-      console.log(req.body, "ini bodynya");
       try {
         await db.Discount.update(
         {
@@ -156,7 +149,6 @@ const discountController = {
     deleteDiscount : async(req,res) => {
       try {
         const {discount_id} = req.body
-        console.log(req.body, "ini diskon id nya");
         await db.Discount.destroy({
           where : {
             id : discount_id
@@ -182,7 +174,6 @@ const discountController = {
         const discount = await db.Discount.findAll();
         return res.send(discount);
       } catch (err) {
-        console.log(err.message);
         res.status(500).send({
           message: err.message,
         });

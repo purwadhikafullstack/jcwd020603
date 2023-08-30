@@ -136,10 +136,8 @@ const branchController = {
         city_id,
         province,
       } = req.body;
-      console.log(req.body, "req bodynya admin bbranch");
       const hashedPass = await bcrypt.hash(password, 10);
       const coordinate = await openCage(req.body);
-      console.log(coordinate);
       const newBranch = await db.Branch.create({
         branch_name,
         branch_address: address,
@@ -170,7 +168,6 @@ const branchController = {
   deleteBranchAdmin: async (req, res) => {
     // const updateData = await getAll()
     const { branch_id } = req.body;
-    console.log("sini", req.body);
     const transaction = await db.sequelize.transaction();
     try {
       await db.User.destroy({
@@ -221,7 +218,6 @@ const branchController = {
       branch_id,
       user_id,
     } = req.body;
-    console.log(req.body);
     const transaction = await db.sequelize.transaction();
     const hashedPass = await bcrypt.hash(password, 10);
     try {
@@ -313,7 +309,6 @@ const branchController = {
       const branch = await db.Branch.findAll();
       return res.send(branch);
     } catch (error) {
-      console.log(error.message);
       res.status(500).send({ message: error.message });
     }
   },

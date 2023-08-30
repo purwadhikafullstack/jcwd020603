@@ -44,12 +44,6 @@ export default function SalesReportUserDetailModal(props) {
   const [selectedId, setSelectedId] = useState([]);
   const { isOpen, onClose, dtSumQtyUser, dtSumQtyUserAll, indexnya, indexModalnya } = props;
 
-  console.log(indexModalnya + indexnya);
- console.log(dtSumQtyUser[indexModalnya + indexnya].dataUser);
- console.log(dtSumQtyUser);
- console.log(dtSumQtyUserAll);
-//  console.log();
-
   return (
     <>
       <Flex>

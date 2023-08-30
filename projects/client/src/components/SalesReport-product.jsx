@@ -62,14 +62,12 @@ export default function SalesReportProduct() {
   const fetchDtBranch = async() => {
     try {
       await api().get("/sales-report/dt-branch").then((res) => {
-        console.log(res.data.data);
         setGetBranch_name(res.data.data)
       })
     } catch (error) {
       console.log(error.message);
     }
   }
-  console.log(branch_id);
   const fetchSumQtyProduct = async() => {
     const sendDataBody = {
       dateFrom : date.dateFrom ? date.dateFrom : moment().subtract(1, "weeks").format("YYYY-MM-DD"), 
@@ -80,10 +78,8 @@ export default function SalesReportProduct() {
       search : search ? search : ""
     }
     try {
-      console.log(sendDataBody);
       await api()
       .post("sales-report/sumqty", sendDataBody).then((res) => {
-        console.log(res.data.data);
         setDtSumQtyProd(res.data.data)
         setDtForDownload(res.data.data)  
       })
@@ -91,7 +87,6 @@ export default function SalesReportProduct() {
       console.log(error.message);
     }
   }
-  console.log(dtSumQtyProd);
   const fetchSumQtyProductForPagination = async() => {
     const sendDataBodyPagination = {
       dateFrom : date.dateFrom ? date.dateFrom : moment().subtract(1, "weeks").format("YYYY-MM-DD"), 
@@ -102,11 +97,9 @@ export default function SalesReportProduct() {
       page : shown.page - 1 ? shown.page - 1 : '0', 
       search : search ? search : ""
     }
-    console.log(sendDataBodyPagination);
     try {
       await api()
       .post("sales-report/sumqty-forpage", sendDataBodyPagination).then((res) => {
-        console.log(res.data);
         setDtSumQtyProdPagination(res.data.data)
         setTotalPages(res.data.total)
       })
@@ -182,7 +175,6 @@ const handleDownloadExcel = () => {
   useEffect(() => {
     fetchDtBranch()
   }, []);
-  console.log(getBranch_name);
   // useEffect
   // untuk merubah angka ke currency
   function formatCurrency(number) {

@@ -33,6 +33,7 @@ import PromoPage from "../pages/PromoPage";
 import SalesReportProductPage from "../pages/SalesReportProductPage";
 import SalesReportUserPage from "../pages/SalesReportUserPage";
 import DashboardAdminPage from "../pages/Dashboard-Admin-Page";
+import ProfileAdminPage from "../pages/ProfileAdminPage";
 
 const routes = [
   <Route
@@ -191,6 +192,16 @@ const routes = [
       </ProtectedPage>
     }
   ></Route>,
+
+  <Route
+  path="/profile-admin"
+  element={
+    <ProtectedPage needLogin={true} adminOnly={true}>
+      <ProfileAdminPage />
+    </ProtectedPage>
+  }
+></Route>,
+
   <Route
     path="/admin-branch"
     element={

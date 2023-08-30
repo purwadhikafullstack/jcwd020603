@@ -46,13 +46,6 @@ export default function DiscountAddModal(props) {
   const inputFileRef = useRef(null);
   const dispatch = useDispatch();
   YupPassword(Yup);
-  console.log(props.isEdit);
-  console.log(title);
-  console.log(dtDis);
-  console.log(id);
-  console.log(discount_id);
-  console.log(numberIdx);
-
   const handleFile = (e) => {
     setSelectedFile(e.target.files[0]);
     setImage(URL.createObjectURL(e.target.files[0]));
@@ -105,7 +98,6 @@ export default function DiscountAddModal(props) {
           };
          const editDiskon =  await api()
             .patch("/discount", dataDiscountEdit)
-              console.log(editDiskon.data);
             if(editDiskon && selectedFile){
               const formData = new FormData();
               formData.append("PhotoDiscount", selectedFile);
@@ -146,7 +138,6 @@ export default function DiscountAddModal(props) {
           };
         const tambahDiskon =  await api()
             .post("/discount", dataDiscountTambah)
-              console.log(tambahDiskon.data.data);
               setGetDiscountId(tambahDiskon.data.data)
             if( tambahDiskon.data.data.id && selectedFile){
               const formData = new FormData();
@@ -181,7 +172,6 @@ export default function DiscountAddModal(props) {
     } else {
       formik.setFieldValue(id, value);
     }
-    console.log(formik.values);
   }
 
   
@@ -189,7 +179,6 @@ export default function DiscountAddModal(props) {
     const getData = await api()
       .get("/stock/byBranch", { params: { branch_id: userSelector.branch_id } })
       .then((res) => {
-        console.log(res.data);
         setDtStock(res.data.data);
       });
   };
@@ -197,22 +186,12 @@ export default function DiscountAddModal(props) {
     const stockByDiscount = await api()
       .get("/stock/byDiscount", { params: { discount_id: id, branch_id: userSelector.branch_id } })
       .then((result) => {
-        console.log(result.data);
         if (isEdit == true) {
           setSelectedProducts(result.data.data);
         }
        
       });
   };
-  console.log(selectedFile);
-  console.log(image);
-  console.log(userSelector);
-  console.log(userSelector.branch_id);
-  console.log(selectedProducts);
-  console.log(dtStock);
-  console.log(selectedId);
-  console.log(dtDisSelected);
-
   useEffect(() => {
     getStock();
     getStockByDiscount()

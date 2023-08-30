@@ -48,7 +48,6 @@ export default function SalesReportUser() {
     setDate(tempDate)
   }
   const inputHandlerBranch_name = (e) => {
-    console.log(e.target.value);
     setInputBranch_name(e.target.value)
   }
   const branch_id = userSelector.role =="ADMIN" ? userSelector.branch_id : inputBranch_name
@@ -64,14 +63,12 @@ export default function SalesReportUser() {
   const fetchDtBranch = async() => {
     try {
       await api().get("/sales-report/dt-branch").then((res) => {
-        console.log(res.data.data);
         setGetBranch_name(res.data.data)
       })
     } catch (error) {
       console.log(error.message);
     }
   }
-  console.log(branch_id);
 
   const fetchSumQtyUserAll = async() => {
     const sendDataBody = {
@@ -83,11 +80,8 @@ export default function SalesReportUser() {
       search : search ? search : ""
     }
     try {
-      console.log(sendDataBody);
       await api()
       .post("sales-report/sum-userall", sendDataBody).then((res) => {
-        console.log(res.data);
-        console.log(res.data.dataTransByDate);
         setDtSumQtyUserAll(res.data.allData)
         setDtSumQtyUser(res.data.dataTransByDate)
         setDtForDownload(res.data.dataTransByDate)
@@ -108,11 +102,8 @@ export default function SalesReportUser() {
       search : search ? search : ""
     }
     try {
-      console.log(sendDataBody);
       await api()
       .post("sales-report/sum-userall-pagination", sendDataBody).then((res) => {
-        console.log(res.data);
-        console.log(res.data.dataTransByDate);
         setDtSumQtyUserAllPagination(res.data.allData)
         setDtSumQtyUserPagination(res.data.dataTransByDate)
         setTotalPages(res.data.total)
@@ -184,10 +175,7 @@ export default function SalesReportUser() {
     if(shown.page > 0 && shown.page <= totalPages){
       setPages(shown.page)
     }
-  }, [shown])
-
-  console.log(shown.page);
-  
+  }, [shown])  
   useEffect(() => {
     fetchDtBranch()
     fetchSumQtyUserAll()
@@ -201,7 +189,6 @@ export default function SalesReportUser() {
     fetchDtBranch()
     fetchSumQtyUserAllPagination()
   }, [date, inputBranch_name, selectedOrderBy, selectedSortBy, search, shown]);
-  console.log(getBranch_name);
   // useEffect
 
   return (

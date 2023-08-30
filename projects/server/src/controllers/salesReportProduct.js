@@ -46,7 +46,6 @@ const salesReportProductController = {
 
   getProductBySUMqty: async (req, res) => {
     const { dateFrom, dateTo, branch_id, sort, ordering, search } = req.body;
-    console.log(req.body, "ini body nya");
     let order = [];
     if (sort === "product_name") {
       order = [
@@ -75,6 +74,7 @@ const salesReportProductController = {
         [Op.in]: ["Dikirim", "Pesanan Dikonfirmasi"],
       },
       "$Order.createdAt$": { [Op.between]: [dateFrom, dateTo] },
+      "$Order.id$" : {[Op.ne] : null}
     };
     if (branch_id) {
       where["$Order.Branch.id$"] = branch_id;
@@ -84,9 +84,6 @@ const salesReportProductController = {
         { "$Stock.Product.product_name$": { [Op.like]: `%${search}%` } },
       ];
     }
-
-    console.log(where, "ini where nya product");
-    console.log(order, "ini order nya product");
     try {
       const sumQtyProduct = await db.OrderDetail.findAll({
         attributes: [
@@ -135,9 +132,7 @@ const salesReportProductController = {
         order: order,
       });
       sumQtyProduct.forEach((result) => {
-        console.log(`stock_id ${result.stock_id} qty = ${result.total_qty}`);
       });
-      console.log(sumQtyProduct, "ini result nya");
       res
         .status(200)
         .send({ message: "Summary qty each product", data: sumQtyProduct });
@@ -149,7 +144,6 @@ const salesReportProductController = {
   getProductBySUMqtyForPagination: async (req, res) => {
     const { dateFrom, dateTo, branch_id, sort, ordering, page, search } =
       req.body;
-    console.log(req.body, "ini body nya pagination");
     let order = [];
     if (sort === "product_name") {
       order = [
@@ -187,9 +181,6 @@ const salesReportProductController = {
         { "$Stock.Product.product_name$": { [Op.like]: `%${search}%` } },
       ];
     }
-
-    console.log(where, "ini where nya product pagination");
-    console.log(order, "ini order nya product pagination");
     try {
       const sumQtyProductPagination = await db.OrderDetail.findAndCountAll({
         attributes: [
@@ -238,7 +229,6 @@ const salesReportProductController = {
         limit: 3,
         offset: 3 * page,
       });
-      console.log(sumQtyProductPagination, "ini result nya yang pagination");
       res.status(200).send({
         message: "Summary qty each product",
         data: sumQtyProductPagination.rows,

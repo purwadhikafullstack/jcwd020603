@@ -21,7 +21,7 @@ import "../css/profileR.css";
 import moment from "moment";
 import { update } from "lodash";
 
-export default function ProfileData() {
+export default function ProfileDataAdmin() {
   const userSelector = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(true);
@@ -118,13 +118,13 @@ export default function ProfileData() {
       >
         <Flex
           w={"100%"}
-          h={"68%"}
+          h={"100%"}
           rounded={10}
           p={6}
           boxShadow={"lg"}
           flexDir={"column"}
           rowGap={"10px"}
-          bgColor={"gray.100"}
+          bgColor={"grey.100"}
           justifyContent={"space-between"}
         >
           <Flex
@@ -240,7 +240,6 @@ export default function ProfileData() {
             </Flex>
           </FormControl>
         </Flex>
-        <ProfileVeriPass />
       </Flex>
     </>
   );

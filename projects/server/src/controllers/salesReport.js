@@ -121,7 +121,6 @@ const salesReportController = {
         offset: 3 * page,
       });
       const count = await db.Order.count();
-      console.log(dtTransFilter, "ini response  nya");
       res.status(200).send({
         message: "data trans",
         data: dtTransFilter.rows,

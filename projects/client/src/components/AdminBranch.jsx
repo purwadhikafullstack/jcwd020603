@@ -68,11 +68,10 @@ export default function AdminBranch() {
     const sendData = {
       branch_id : inpurBranch_name || "",
       search : search || "",
-      sort : sorted || "user_name",
+      sort : sorted || "createdAt",
       ordering : ordered || "ASC",
       page : shown.page - 1 || 0
     }
-    console.log(sendData);
     try { 
       const branch = await api()
         .post("/branch/all-branch-filter",sendData)

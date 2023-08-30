@@ -17,11 +17,8 @@ export default function ProfileVeriPass() {
 
   const verify = async () => {
     try {
-      console.log(userSelector);
       const email = userSelector.email;
-      console.log(email);
       const verifcek = userSelector.verification;
-      console.log(verifcek);
 
       if (!verifcek) {
         toast({

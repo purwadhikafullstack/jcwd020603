@@ -124,7 +124,6 @@ export default function SalesReport() {
 
   // download ke excel
 const handleDownloadExcel = () => {
-  console.log(isDownloadTriggered, "ini trigernya");
   // if(isDownloadTriggered == true){
     const excelData = dtForDownload.map((item, index) => ({
       No : index+1,
