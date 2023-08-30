@@ -40,7 +40,7 @@ export default function CartPage() {
             {windowWidth >= 700 ? (
               <WebKeranjang prodCart={prodCart} getAll={getAll} />
             ) : (
-              <ContentKeranjang />
+              <ContentKeranjang prodCart={prodCart} getAll={getAll} />
             )}
           </Flex>
         </Center>

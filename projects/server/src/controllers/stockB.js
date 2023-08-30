@@ -12,7 +12,7 @@ const stockControllerB = {
       const getbydiscount = await db.Stock.findAll({
         where: {
           discount_id,
-          branch_id
+          branch_id,
         },
         include: [
           {
@@ -117,7 +117,7 @@ const stockControllerB = {
       if (lastId > 0) {
         whereClause.id = { [Op.gt]: lastId };
       }
-
+      console.log("where product", whereClause);
       const stocks = await db.Stock.findAll({
         where: whereClause,
         include: [
@@ -274,6 +274,21 @@ const stockControllerB = {
       const { search_query, branch_id } = req.query;
       console.log("s", search_query);
       console.log(branch_id);
+      const whereClause = {};
+      if (branch_id) {
+        whereClause.branch_id = branch_id;
+      }
+      if (search_query) {
+        whereClause[Op.or] = [
+          { "$Product.product_name$": { [Op.like]: `%${search_query}%` } },
+          { "$Product.desc$": { [Op.like]: `%${search_query}%` } },
+          {
+            "$Product.Category.category_name$": {
+              [Op.like]: `%${search_query}%`,
+            },
+          },
+        ];
+      }
 
       if (search_query) {
         const stocks = await db.Stock.findAll({
@@ -298,18 +313,7 @@ const stockControllerB = {
             },
           ],
 
-          where: {
-            branch_id: branch_id,
-            [Op.or]: [
-              { "$Product.product_name$": { [Op.like]: `%${search_query}%` } },
-              { "$Product.desc$": { [Op.like]: `%${search_query}%` } },
-              {
-                "$Product.Category.category_name$": {
-                  [Op.like]: `%${search_query}%`,
-                },
-              },
-            ],
-          },
+          where: whereClause,
         });
 
         res.send(stocks);
@@ -497,10 +501,12 @@ const stockControllerB = {
   getAllStockByCategory: async (req, res) => {
     try {
       const { category_name, branch_id } = req.query;
+      const whereClause = {};
+      if (branch_id) {
+        whereClause.branch_id = branch_id;
+      }
       const get = await db.Stock.findAll({
-        where: {
-          branch_id: branch_id,
-        },
+        where: whereClause,
         include: [
           {
             model: db.Product,

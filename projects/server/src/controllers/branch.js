@@ -13,18 +13,17 @@ const branchController = {
 
   getAllFilter : async (req,res) => {
     const {branch_id, search, sort, ordering, page} = req.body
-    console.log(req.body, "ini reqbodybranchdvfvdfvfvddfvdvdv");
     let where = {
-      role : "ADMIN"
+      role: "ADMIN",
+    };
+    if (branch_id) {
+      where.branch_id = branch_id;
     }
-    if(branch_id){
-      where.branch_id = branch_id
-    }
-    if(search){
+    if (search) {
       where[Op.or] = [
-        { "$user_name$" : { [Op.like]: `%${search}%` } },
-        { "$Branch.branch_name$" : { [Op.like]: `%${search}%` } }
-        ];
+        { $user_name$: { [Op.like]: `%${search}%` } },
+        { "$Branch.branch_name$": { [Op.like]: `%${search}%` } },
+      ];
     }
     let order = []
     if(sort === "user_name"){
@@ -48,17 +47,17 @@ const branchController = {
             ],
           }
         ],
-        where : where,
-        order : order,
-        limit : 3,
-        offset : 3 * page
+        where: where,
+        order: order,
+        limit: 3,
+        offset: 3 * page,
       });
       // const noFilterBranch = await db.User.fin
-      res.status(200).send({ 
-        message: "List Branches", 
+      res.status(200).send({
+        message: "List Branches",
         Data: branch.rows,
-        total : Math.ceil(branch.count / 3),
-        jumlahBranch : branch.count
+        total: Math.ceil(branch.count / 3),
+        jumlahBranch: branch.count,
       });
       return branch;
     } catch (error) {
@@ -95,6 +94,15 @@ const branchController = {
       });
       res.status(200).send({ message: "List Branches", Data: branch });
       return branch;
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  countBranch: async (req, res) => {
+    try {
+      const branch = await db.Branch.findAll();
+      res.status(200).send({ message: "List Branches", data: branch });
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
@@ -383,13 +391,13 @@ const branchController = {
         where: {
           id: req.params.id,
         },
-      }).then((result) => res.status(200).send({message : "uoload foto", data: result}));
+      }).then((result) =>
+        res.status(200).send({ message: "uoload foto", data: result })
+      );
     } catch (err) {
       return res.status(500).send({ message: err.message });
     }
   },
-
-
 };
 
 module.exports = branchController;

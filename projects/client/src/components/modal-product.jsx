@@ -60,16 +60,7 @@ export default function ModalProduct(props) {
   useEffect(() => {
     insertQty();
   }, [count]);
-  //get jumlah keranjang
-  // const [countAll, setCountAll] = useState(0);
-  // const getCount = async () => {
-  //   await api()
-  //     .get("/cart")
-  //     .then((res) => {
-  //       setCountAll(res.data.total);
-  //       console.log(res.data.result);
-  //     });
-  // };
+
   console.log("prodVal", prodVal);
   //function cek update post produk ke cart
   const toast = useToast();

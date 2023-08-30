@@ -4,6 +4,7 @@ const { nanoid } = require("nanoid");
 const { Op, where } = require("sequelize");
 const payment_image = process.env.payment_image;
 const fs = require("fs");
+const path = require("path");
 
 const orderController = {
   getAll: async (req, res) => {
@@ -31,6 +32,7 @@ const orderController = {
               {
                 model: db.Stock,
                 as: "Stock",
+                paranoid: false,
                 include: [
                   {
                     model: db.Product,
@@ -535,9 +537,12 @@ const orderController = {
       if (req.body.status == "Menunggu Pembayaran") {
         update.date = moment().add(1, "hour");
         fs.unlinkSync(
-          `${__dirname}/../public/paymentImg/${
-            findPayment.order_transfer_url.split("/")[4]
-          }`
+          path.join(
+            __dirname,
+            `../public/paymentImg/${
+              findPayment.order_transfer_url.split("/")[4]
+            }`
+          )
         );
       }
       const patch = await db.Order.update(update, {

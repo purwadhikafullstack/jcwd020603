@@ -83,16 +83,24 @@ export default function LandingPage() {
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});
   const getSelectedAddress = async () => {
+    // setIsLoaded(true);
+    console.log("masuk");
     const primary = await api().get("/addressG/primary");
     const selected = await api().get("/addressG/current");
     if (selected.data.result) {
       setSelectedAddress(selected.data.result);
+      return setIsLoaded(true);
     } else {
       setSelectedAddress(primary.data.result);
+      return setIsLoaded(true);
     }
   };
   useEffect(() => {
-    getSelectedAddress();
+    if (userSelector?.email) {
+      getSelectedAddress();
+    } else {
+      setIsLoaded(true);
+    }
   }, [userSelector?.email]);
   console.log(selectedAddress);
   //menyimpan length cart
@@ -123,7 +131,6 @@ export default function LandingPage() {
   async function getGeoloc2() {
     return new Promise((resolve, reject) => {
       if (!selectedAddress?.address) {
-        console.log("masuk");
         const success = (position) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
@@ -204,6 +211,7 @@ export default function LandingPage() {
       if (nearestBranch) {
         setNearestBranch(nearestBranch.id);
         setBranchName(nearestBranch.branch_name);
+        // setIsLoaded(true);
       } else {
         console.log("No branches found.");
       }
