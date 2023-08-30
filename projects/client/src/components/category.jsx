@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Flex, Center, Grid, Image, Box, Icon } from "@chakra-ui/react";
+import {
+  Flex,
+  Center,
+  Grid,
+  Image,
+  Box,
+  Icon,
+  Spinner,
+} from "@chakra-ui/react";
 import "../css/indexB.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -11,7 +19,7 @@ import { api } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { async } from "q";
+import loading from "../assets/loading.webp";
 
 export default function Category({
   lengthCart,
@@ -141,10 +149,9 @@ export default function Category({
           next={fetchMore}
           hasMore={hasMore}
           loader={
-            <h4>Loading...</h4>
-            // <Flex justifyContent={"center"}>
-            //   <Image src={loading} w={"30px"} h={"30px"} />
-            // </Flex>
+            <Flex justifyContent={"center"}>
+              <Image src={loading} w={"30px"} h={"30px"} />
+            </Flex>
           }
         >
           <Grid id="productB">

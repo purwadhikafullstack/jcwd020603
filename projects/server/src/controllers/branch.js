@@ -10,27 +10,26 @@ const { openCage } = require("../service/location.service");
 dotenv.config();
 
 const branchController = {
-
-  getAllFilter : async (req,res) => {
-    const {branch_id, search, sort, ordering, page} = req.body
+  getAllFilter: async (req, res) => {
+    const { branch_id, search, sort, ordering, page } = req.body;
     let where = {
-      role : "ADMIN"
+      role: "ADMIN",
+    };
+    if (branch_id) {
+      where.branch_id = branch_id;
     }
-    if(branch_id){
-      where.branch_id = branch_id
-    }
-    if(search){
+    if (search) {
       where[Op.or] = [
-        { "$user_name$" : { [Op.like]: `%${search}%` } },
-        { "$Branch.branch_name$" : { [Op.like]: `%${search}%` } }
-        ];
+        { $user_name$: { [Op.like]: `%${search}%` } },
+        { "$Branch.branch_name$": { [Op.like]: `%${search}%` } },
+      ];
     }
-    let order = []
-    if(ordering === "user_name"){
-      order = [[sort, ordering]]
+    let order = [];
+    if (ordering === "user_name") {
+      order = [[sort, ordering]];
     }
-    if(ordering === "branch_name"){
-      order = [{model : db.Branch, as: "Branch"}, "branch_name", ordering]
+    if (ordering === "branch_name") {
+      order = [{ model: db.Branch, as: "Branch" }, "branch_name", ordering];
     }
     try {
       const branch = await db.User.findAndCountAll({
@@ -47,17 +46,17 @@ const branchController = {
             ],
           },
         ],
-        where : where,
-        order : order,
-        limit : 3,
-        offset : 3 * page
+        where: where,
+        order: order,
+        limit: 3,
+        offset: 3 * page,
       });
       // const noFilterBranch = await db.User.fin
-      res.status(200).send({ 
-        message: "List Branches", 
+      res.status(200).send({
+        message: "List Branches",
         Data: branch.rows,
-        total : Math.ceil(branch.count / 3),
-        jumlahBranch : branch.count
+        total: Math.ceil(branch.count / 3),
+        jumlahBranch: branch.count,
       });
       return branch;
     } catch (error) {
@@ -94,6 +93,15 @@ const branchController = {
       });
       res.status(200).send({ message: "List Branches", Data: branch });
       return branch;
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  },
+
+  countBranch: async (req, res) => {
+    try {
+      const branch = await db.Branch.findAll();
+      res.status(200).send({ message: "List Branches", data: branch });
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
@@ -219,7 +227,7 @@ const branchController = {
       const branch = await db.User.findOne({
         where: {
           branch_id: branch_id,
-          user_id : user_id
+          user_id: user_id,
         },
         include: [
           {
@@ -252,7 +260,7 @@ const branchController = {
         },
         {
           where: {
-            id : user_id,
+            id: user_id,
             branch_id: branch_id && !null,
           },
         },
@@ -382,13 +390,13 @@ const branchController = {
         where: {
           id: req.params.id,
         },
-      }).then((result) => res.status(200).send({message : "uoload foto", data: result}));
+      }).then((result) =>
+        res.status(200).send({ message: "uoload foto", data: result })
+      );
     } catch (err) {
       return res.status(500).send({ message: err.message });
     }
   },
-
-
 };
 
 module.exports = branchController;

@@ -52,7 +52,10 @@ export default function WebKeranjang(props) {
   const totalBelanja = selectedItems.map((val, idx) => {
     const price = selectedItems[idx]?.Stock?.Discount
       ? selectedItems[idx]?.Stock?.Discount?.nominal == 50
-        ? Number(selectedItems[idx].Stock.Product.price)
+        ? Number(
+            selectedItems[idx].Stock.Product.price *
+              ((100 - selectedItems[idx]?.Stock?.Discount?.nominal) / 100)
+          )
         : Number(
             selectedItems[idx].Stock.Product.price *
               ((100 - selectedItems[idx]?.Stock?.Discount?.nominal) / 100)
@@ -261,6 +264,7 @@ export default function WebKeranjang(props) {
             totalBelanja={totalBelanja}
             getVoucher={getVoucher}
             setGetVoucher={setGetVoucher}
+            nearestBranch={nearestBranch}
           />
         </Flex>
         <Flex

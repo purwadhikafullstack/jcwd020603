@@ -4,14 +4,16 @@ import { RxCross2 } from "react-icons/rx";
 import { api } from "../api/api";
 
 export default function VoucherPromo(props) {
-  const { totalBelanja, setGetVoucher } = props;
+  const { totalBelanja, setGetVoucher, nearestBranch } = props;
   const [inputCode, setInputCode] = useState("");
   // klik 'Pakai Kode Voucher'
   const [isClicked, setIsClicked] = useState(false);
   //get all voucher
   const [voucher, setVoucher] = useState([]);
   const fetchAll = async () => {
-    const fetch = await api().get("/voucher");
+    const fetch = await api().get("/voucher", {
+      params: { branch_id: nearestBranch },
+    });
     setVoucher(fetch.data.result);
     console.log(fetch.data.result);
   };
@@ -105,6 +107,13 @@ export default function VoucherPromo(props) {
                   flexDir={"column"}
                   paddingLeft={"20px"}
                   gap={"10px"}
+                  maxH={"350px"}
+                  overflowY={"scroll"}
+                  css={{
+                    "&::-webkit-scrollbar": {
+                      display: "none",
+                    },
+                  }}
                 >
                   {voucher.map((val) => {
                     return (

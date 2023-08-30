@@ -13,6 +13,7 @@ export default function Product({ nearestBranch }) {
   const location = useLocation();
   const [categories, setCategories] = useState([]);
   const [stocks, setStocks] = useState([]);
+  console.log("stock product", stocks);
 
   const category_name = location.state?.category_name;
   const discount_id = location.state?.discount_id;
@@ -41,7 +42,7 @@ export default function Product({ nearestBranch }) {
     await api()
       .get("/stock/s-category", {
         params: {
-          category_name: category_name,
+          category_name: category_name || "Daging",
           branch_id:
             nearestBranch || JSON.parse(localStorage.getItem("nearestBranch")),
         },
@@ -53,7 +54,6 @@ export default function Product({ nearestBranch }) {
         console.error(error);
       });
   };
-
   useEffect(() => {
     getCategory();
   }, [category_name, discount_id]);
@@ -67,22 +67,27 @@ export default function Product({ nearestBranch }) {
       .catch((error) => {
         console.error(error);
       });
-
-    api()
-      .get("/stock")
-      .then((response) => {
-        setStocks(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    getCategory();
+    // api()
+    //   .get("/stock", {
+    //     params: {
+    //       branch_id:
+    //         nearestBranch || JSON.parse(localStorage.getItem("nearestBranch")),
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setStocks(response.data.result);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   }, []);
 
   const combinedSearchResults = [...productSearchResults];
 
   console.log(category_name);
   console.log(searchResults);
-  console.log(productSearchResults);
+  console.log("ini combine", combinedSearchResults);
 
   return (
     <>
@@ -113,6 +118,7 @@ export default function Product({ nearestBranch }) {
               price={val.Product?.price}
               desc={val.Product?.desc}
               discount={val.Discount?.nominal}
+              quantity_stock={val.quantity_stock}
               weight={val.Product?.weight}
               stock_id={val.id}
             />

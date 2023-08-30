@@ -331,8 +331,8 @@ export default function AdminOrderList() {
                     page: 1,
                     order: "DESC",
                     search: "",
-                    time: "",
-                    time2: "",
+                    time: moment().startOf("W").format("YYYY-MM-DD"),
+                    time2: moment().format("YYYY-MM-DD"),
                     status: "",
                     branch_id: userSelector.branch_id || "",
                   });
