@@ -87,7 +87,7 @@ export default function AdminOrderList() {
   useEffect(() => {
     getAllOrders();
   }, [filtering]);
-  console.log(allBranchOrder);
+
   //pagination
   const [pages, setPages] = useState([]);
 

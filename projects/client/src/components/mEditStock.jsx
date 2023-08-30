@@ -9,12 +9,14 @@ import {
   ModalCloseButton,
   Button,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
 import { useState, useRef, useEffect } from "react";
 
 export function EditStock(props) {
   const { selectedOption, setSelectedOption } = useState("");
+  const toast = useToast();
   const [stock, setStock] = useState({
     quantity_before: props.stock.quantity_stock,
     status: "",
@@ -40,17 +42,28 @@ export function EditStock(props) {
 
   const editStock = async () => {
     try {
-      console.log(stock);
       await api()
         .patch("/stock/v2/" + props.id, stock)
-        .then((result) => {
-          console.log(result.data);
-        });
-      alert("Posting success");
+        .then((result) => {});
+      toast({
+        title: "Success",
+        description: "Stok berhasil disunting",
+        status: "success",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
       props.onClose();
     } catch (error) {
       console.error(error);
-      alert("Posting failed");
+      toast({
+        title: "Error",
+        description: "Stok gagal disunting",
+        status: "Error",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 

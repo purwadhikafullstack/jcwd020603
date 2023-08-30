@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import { Flex, Center, Grid, Image, Box, Icon } from "@chakra-ui/react";
 import "../css/indexB.css";
 import { Carousel } from "react-responsive-carousel";
@@ -20,7 +21,6 @@ export default function Category({
   minDistance,
   nearestBranch,
 }) {
-  console.log("cat", nearestBranch);
   const [categories, setCategories] = useState([]);
   const [discounts, setDiscounts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,25 +30,25 @@ export default function Category({
   const [hasMore, setHasMore] = useState(true);
   const [lastId, setLastId] = useState(0);
   const [tempId, setTempId] = useState(0);
-
+  const discountIds = stocks
+    .map((stock) => stock.discount_id)
+    .filter((discountId) => discountId !== null);
+  const uniqueDiscountIds = Array.from(new Set(discountIds));
   const dispatch = useDispatch();
-
   const performSearch = (searchTerm) => {
     const searchResults = stocks.filter((val) =>
       val.Product.product_name.includes(searchTerm)
     );
     dispatch(setSearchResults(searchResults));
   };
-  console.log("stockss", stocks);
+
   const fetchStock = async () => {
     try {
       const endpoint =
         minDistance > 65
           ? `/stock?lastId=${lastId}`
           : `/stock?nearestBranch=${nearestBranch}&&lastId=${lastId}`;
-      // console.log("endpoint", endpoint);
       const get = await api().get(endpoint);
-      console.log("iniiiii", get.data.result);
       if (lastId) {
         setStocks((prevStocks) => [...prevStocks, ...get.data.result]);
       } else {
@@ -56,7 +56,6 @@ export default function Category({
       }
       setHasMore(get.data.hasMore);
       setTempId(get.data.lastId);
-      console.log(get.data);
     } catch (err) {
       console.error(err);
     }
@@ -67,7 +66,6 @@ export default function Category({
   }, [nearestBranch, lastId]);
 
   const fetchMore = () => {
-    console.log("reload infinite Scroll");
     setLastId(tempId);
   };
 
@@ -123,16 +121,21 @@ export default function Category({
             ))}
           </Flex>
         </Flex>
-        <Flex id="carouselB">
-          <Carousel autoPlay interval={3000} infiniteLoop>
-            {discounts.map((val) => (
-              <CardCarousel
-                discount_id={val.id}
-                photo_discount_url={val.photo_discount_url}
-                nearestBranch={nearestBranch}
-                key={val.url}
-              />
-            ))}
+        <Flex id="carouselB" paddingTop={"10px"} display={"none"}>
+          <Carousel autoPlay interval={5000} infiniteLoop></Carousel>
+        </Flex>
+        <Flex id="carouselB" paddingTop={"10px"}>
+          <Carousel autoPlay interval={5000} infiniteLoop>
+            {discounts
+              .filter((val) => uniqueDiscountIds.includes(val.id))
+              .map((val) => (
+                <CardCarousel
+                  discount_id={val.id}
+                  photo_discount_url={val.photo_discount_url}
+                  nearestBranch={nearestBranch}
+                  key={val.url}
+                />
+              ))}
           </Carousel>
         </Flex>
         <Flex id="headB">PRODUK</Flex>

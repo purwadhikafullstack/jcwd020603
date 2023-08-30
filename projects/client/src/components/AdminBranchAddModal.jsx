@@ -84,7 +84,6 @@ export default function AddAdminBranch(props) {
 
     onSubmit: async () => {
       try {
-        console.log("masuk dlu");
         const {
           user_name,
           email,
@@ -138,9 +137,6 @@ export default function AddAdminBranch(props) {
             }
           });
 
-        console.log(cekBranch);
-        console.log(cekMail);
-
         if (cekMail || cekBranch) {
           return toast({
             title:
@@ -183,7 +179,6 @@ export default function AddAdminBranch(props) {
   const updateAvatar = async () => {
     const formData = new FormData();
     formData.append("Avatar", selectedFile);
-    console.log(formData);
     let avatar;
     await api()
       .patch("/user/avatar/" + userSelector.id, formData)
@@ -210,7 +205,6 @@ export default function AddAdminBranch(props) {
       await api()
         .get("/province/")
         .then((res) => {
-          console.log(res.data.result);
           setProvince(res.data.result);
         });
     } catch (error) {
@@ -224,13 +218,11 @@ export default function AddAdminBranch(props) {
 
   const [city, setCity] = useState([]);
   const [provId, setProvId] = useState("");
-  console.log(provId);
   async function getCity() {
     try {
       await api()
         .get(`/city/${provId}`)
         .then((res) => {
-          console.log(res.data.result);
           setCity(res.data.result);
         });
     } catch (error) {
@@ -248,7 +240,6 @@ export default function AddAdminBranch(props) {
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
   }
 
   return (
@@ -259,30 +250,30 @@ export default function AddAdminBranch(props) {
             {/* <AddUser/> */}
             <Flex className="flex3R-input_user-addbranch">
               <Box className="flex3R-input-box-addbranch">Karyawan</Box>
-              <Flex w={"100%"} >
-          <Center cursor={"pointer"}>
-            <Input
-              accept="image/png , image/jpg, image/gif"
-              onChange={handleFile}
-              ref={inputFileRef}
-              type="file"
-              display={"none"}
-              bgColor={"red.200"}
-            />
-            <Avatar
-              mt={"20px"}
-              mb={"20px"}
-              ml={{base:"38%", sm:"45%", md: "40%", lg:"18%"}}
-              align={"center"}
-              position={"absolute"}
-              zIndex={4}
-              size={{base : "md", sm: "md", md: "md", lg: "md"}}
-              src={image}
-              onClick={() => {
-                inputFileRef.current.click();
-              }}
-            />
-          </Center>
+              <Flex w={"100%"}>
+                <Center cursor={"pointer"}>
+                  <Input
+                    accept="image/png , image/jpg, image/gif"
+                    onChange={handleFile}
+                    ref={inputFileRef}
+                    type="file"
+                    display={"none"}
+                    bgColor={"red.200"}
+                  />
+                  <Avatar
+                    mt={"20px"}
+                    mb={"20px"}
+                    ml={{ base: "38%", sm: "45%", md: "40%", lg: "18%" }}
+                    align={"center"}
+                    position={"absolute"}
+                    zIndex={4}
+                    size={{ base: "md", sm: "md", md: "md", lg: "md" }}
+                    src={image}
+                    onClick={() => {
+                      inputFileRef.current.click();
+                    }}
+                  />
+                </Center>
               </Flex>
               <FormControl>
                 <FormLabel>Nama</FormLabel>
@@ -372,7 +363,18 @@ export default function AddAdminBranch(props) {
             >
               <Box className="flex3R-box-addbranch"></Box>
               <Flex h={"125px"} w={"100%"}>
-              <Image src={logo} display={{base : "none", sm: "none",md:"flex", lg: "flex", xl: "flex"}} w={"100%"} h={"90%"}></Image>
+                <Image
+                  src={logo}
+                  display={{
+                    base: "none",
+                    sm: "none",
+                    md: "flex",
+                    lg: "flex",
+                    xl: "flex",
+                  }}
+                  w={"100%"}
+                  h={"90%"}
+                ></Image>
               </Flex>
               <Box className="flex3R-box-addbranch"></Box>
             </Flex>
@@ -495,7 +497,7 @@ export default function AddAdminBranch(props) {
                 setTimeout(() => {
                   setLoading(false);
                   updateAvatar();
-                  formik.handleSubmit()
+                  formik.handleSubmit();
                 }, 1000);
               }}
               m={"20px"}

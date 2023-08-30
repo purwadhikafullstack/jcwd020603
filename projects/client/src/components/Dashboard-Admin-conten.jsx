@@ -1,18 +1,12 @@
-import {
-  Box,
-  Center,
-  Flex,
-  Icon,
-  useDisclosure,
-} from "@chakra-ui/react";
-import {api} from "../api/api"
+import { Box, Center, Flex, Icon, useDisclosure } from "@chakra-ui/react";
+import { api } from "../api/api";
 import "../css/indexG.css";
 import "../css/indexR.css";
-import { FaStore, } from "react-icons/fa";
-import { BiSolidHot, } from "react-icons/bi";
-import { LuPackageCheck, } from "react-icons/lu";
+import { FaStore } from "react-icons/fa";
+import { BiSolidHot } from "react-icons/bi";
+import { LuPackageCheck } from "react-icons/lu";
 import { MdOutlinePayments } from "react-icons/md";
-import { Chart, registerables } from 'chart.js';
+import { Chart, registerables } from "chart.js";
 import ChartSalesReportProduct from "./Chart-SalesReport-product";
 import ChartSalesReportUser from "./Chart-SalesReport-user";
 import { useSelector } from "react-redux";

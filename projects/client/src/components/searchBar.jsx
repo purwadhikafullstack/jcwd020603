@@ -30,7 +30,6 @@ export function SearchBar(props) {
   useEffect(() => {
     if (localStorage.getItem("searchTerm")) {
       const search = JSON.parse(localStorage.getItem("searchTerm"));
-      console.log(search);
       if (search) {
         autoSearch(search);
       }

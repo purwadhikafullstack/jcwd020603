@@ -17,10 +17,8 @@ export default function LandingPage() {
 
   const verify = async () => {
     try {
-      console.log(userSelector);
       const email = userSelector.email;
       const verifcek = userSelector.verification;
-      console.log(verifcek);
 
       if (!verifcek) {
         await api()

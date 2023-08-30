@@ -57,7 +57,6 @@ export default function AddUser() {
         const cekMail = await api()
           .get("/user/", { params: { getall: account.email } })
           .then((res) => {
-            console.log(res.data.email);
             if (res.data.email) {
               return true;
             } else {

@@ -53,7 +53,6 @@ export default function AdminOrderDetail() {
         params: { order_number: order_number.order_number },
       });
       setOrderValue(get.data.result);
-      console.log(get.data.result);
 
       const getDetail = await api().get("/order-detail/", {
         params: { id: get.data.result.id },
@@ -69,7 +68,6 @@ export default function AdminOrderDetail() {
   // menyimpan shipping_cost
   const [shippingCost, setShippingCost] = useState({});
   const [calculateSubtotal, setCalculateSubtotal] = useState(0);
-  console.log("ini val orderValue", orderValue);
   useEffect(() => {
     if (Object.keys(orderValue).length > 0) {
       const parsedShippingCost = JSON.parse(orderValue?.shipping_cost);
@@ -87,16 +85,13 @@ export default function AdminOrderDetail() {
       return setCalculateSubtotal(0);
     }
   }, [shippingCost]);
-  console.log(calculateSubtotal);
-  console.log("ORDER VALUE", orderValue);
-  console.log("ORDER DETAIL", orderDetVal);
+
   // cancel order
   const cancelOrder = async () => {
     try {
       const cancel = await api().patch(`/order/cancel/${orderValue?.id}`, {
         orderDetVal,
       });
-      console.log(cancel.data);
       return nav("/admin/orders");
     } catch (err) {
       console.log(err);
@@ -109,7 +104,6 @@ export default function AdminOrderDetail() {
       const status = await api().patch(`/order/status/${orderValue?.id}`, {
         status: valueStatus,
       });
-      console.log(status.data);
       fetchOrder();
     } catch (err) {
       console.log(err);
