@@ -24,7 +24,7 @@ export function SearchBar(props) {
     setSearchTerm(search);
     setTimeout(() => {
       handleSearch(search);
-    }, 500);
+    }, 300);
   }
 
   useEffect(() => {

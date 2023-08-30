@@ -46,7 +46,7 @@ export default function Product({ nearestBranch }) {
     await api()
       .get("/stock/s-category", {
         params: {
-          category_name: category_name || "Daging",
+          category_name: category_name,
           branch_id:
             nearestBranch || JSON.parse(localStorage.getItem("nearestBranch")),
         },
