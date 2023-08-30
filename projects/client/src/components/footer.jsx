@@ -36,13 +36,13 @@ export default function Footer(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   //function login
   const akunnav = () => {
-    console.log(user);
     if (user) {
       nav("/profile");
     } else {
       toast({
         title: "Maaf Anda belum login, silahkan login dulu",
         status: "warning",
+        position: "top",
         duration: 3000,
         isClosable: true,
       });
@@ -57,7 +57,6 @@ export default function Footer(props) {
       .then((res) => {
         setCountAll(res.data.total);
         setLengthCart(res.data.total);
-        console.log(res.data.result);
       });
   };
   //menyimpan alamat yang dipilih
@@ -93,6 +92,7 @@ export default function Footer(props) {
               onClick={(e) => {
                 handleClick(e);
                 nav("/");
+                localStorage.removeItem("searchTerm");
               }}
               zIndex={2}
             >
@@ -125,6 +125,7 @@ export default function Footer(props) {
                   toast({
                     title: "Tentukan alamat pengiriman terlebih dahulu",
                     status: "warning",
+                    position: "top",
                     duration: 3000,
                     isClosable: true,
                   });

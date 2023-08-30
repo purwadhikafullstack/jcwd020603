@@ -86,6 +86,7 @@ export default function DiscountAddModal(props) {
         toast({
           title: "Data diskon berhasil ditambahkan",
           status: "success",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });

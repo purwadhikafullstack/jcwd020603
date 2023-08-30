@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const transport = nodemailer.createTransport({
   auth: {
@@ -6,6 +7,9 @@ const transport = nodemailer.createTransport({
     pass: process.env.nodemai_pass,
   },
   host: "smtp.gmail.com",
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 const mailer = async ({ subject, html, to, text }) => {

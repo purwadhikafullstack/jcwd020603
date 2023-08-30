@@ -24,8 +24,8 @@ export default function ModalAdminDikirim(props) {
             TIDAK
           </Button>
           <Button
-            bg={" #f7d1d5"}
-            color={"red"}
+            bg={"#ebf5e9"}
+            color={"#2a960c"}
             onClick={() => {
               props.acceptOrder();
               props.onClose();

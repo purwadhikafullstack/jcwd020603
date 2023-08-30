@@ -44,16 +44,7 @@ import { useSelector } from "react-redux";
 export default function DiscountAddProductModal(props) {
   const userSelector = useSelector((state) => state.auth);
   const branch_id = userSelector.branch_id;
-  const {selectedProducts, setSelectedProducts, dtStock, selectedId, setSelectedId, isEdit} = props
-
-
-  console.log(dtStock); 
-  console.log(selectedProducts);
-  console.log(selectedId);
-
-
-
-  
+  const {selectedProducts, setSelectedProducts, dtStock, selectedId, setSelectedId, isEdit, dtDisSelected} = props
   const  checkboxHandler = (index) => {
     const selectedProduct = dtStock[index];
   

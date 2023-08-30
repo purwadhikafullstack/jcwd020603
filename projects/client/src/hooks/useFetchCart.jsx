@@ -17,7 +17,6 @@ export const useFetchCart = () => {
         type: "cart",
         payload: { total: res.data.total },
       });
-      console.log("tot", res.data.total);
     } catch (err) {
       console.log(err);
     }

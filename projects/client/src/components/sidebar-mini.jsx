@@ -27,7 +27,6 @@ export default function SidebarMini(props) {
   const userSelector = useSelector((state) => state.auth);
   const user = JSON.parse(localStorage.getItem("auth"));
   const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
-  console.log("sidebar", nearestBranch);
   const {
     isOpen: isOpenModal1,
     onOpen: onOpenModal1,
@@ -46,13 +45,13 @@ export default function SidebarMini(props) {
   const [Clicked, setClicked] = useState("");
 
   const akunnav = () => {
-    console.log(user);
     if (user) {
       nav("/profile");
     } else {
       toast({
         title: "Maaf Anda belum login, silahkan login dulu",
         status: "warning",
+        position: "top",
         duration: 3000,
         isClosable: true,
       });
@@ -69,7 +68,6 @@ export default function SidebarMini(props) {
       .get("/cart", { params: { branch_id: nearestBranch } })
       .then((res) => {
         setLengthCart(res.data.total);
-        console.log(res.data.result);
       });
   };
   //menyimpan alamat yang dipilih
@@ -106,6 +104,7 @@ export default function SidebarMini(props) {
           onClick={(e) => {
             handleClick(e);
             nav("/");
+            localStorage.removeItem("searchTerm");
           }}
           bg={Clicked == "beranda" ? "#ECFFF4" : "white"}
           color={Clicked == "beranda" ? "#199950" : "black"}
@@ -174,6 +173,7 @@ export default function SidebarMini(props) {
                   toast({
                     title: "Tentukan alamat pengiriman terlebih dahulu",
                     status: "warning",
+                    position: "top",
                     duration: 3000,
                     isClosable: true,
                   });

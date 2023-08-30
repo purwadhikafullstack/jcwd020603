@@ -25,7 +25,6 @@ export default function Invoice() {
     });
     setOrdervalue(order.data.result);
   };
-  console.log(orderValue);
   useEffect(() => {
     getOrder();
   }, []);

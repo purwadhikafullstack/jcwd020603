@@ -33,20 +33,15 @@ export default function Verify() {
   const nav = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(userSelector);
-
   const verify = async () => {
     try {
       const { pathname } = location;
-      console.log(pathname);
       const token = pathname.split("/")[2];
-      console.log(userSelector.verification);
 
       if (userSelector.verification == false) {
         await api()
           .patch("user/verify?token=" + token, null)
           .then((result) => {
-            console.log(result.data);
             dispatch({
               type: "login",
               payload: result.data,
@@ -54,6 +49,7 @@ export default function Verify() {
             toast({
               title: "Selamat.. verifikasi akun kamu berhasil.",
               status: "success",
+              position: "top",
               duration: "3000",
               isClosable: true,
             });
@@ -64,6 +60,7 @@ export default function Verify() {
         toast({
           title: "Verifikasi gagal.. Akun ini sudah terverifikasi",
           status: "error",
+          position: "top",
           duration: "3000",
           isClosable: true,
         });
@@ -74,6 +71,7 @@ export default function Verify() {
       toast({
         title: "Maaf link ini telah expired, silahkan verifikasi ulang",
         status: "error",
+        position: "top",
         duration: "3000",
         isClosable: true,
       });
@@ -91,7 +89,7 @@ export default function Verify() {
     >
       <Box
         w={"22%"}
-        h={"100vh"}
+        h={"auto"}
         justifyContent={"center"}
         alignItems={"center"}
         className="logo_samping"

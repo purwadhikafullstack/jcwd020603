@@ -2,27 +2,28 @@ import { Flex, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
 
 export default function RincianPembayaran(props) {
-  console.log(props.getVoucher);
   //get biaya pengiriman
   const shippingCost =
     props.cost !== undefined &&
     props.cost !== null &&
     Object.keys(props.cost).length !== 0
-      ? (props.cost?.cost[0]?.value).toLocaleString("id-ID")
+      ? props.cost?.cost[0]?.value
       : 0;
   //get harga total belanja
   const subtotal = props.totalBelanja.length
-    ? props.totalBelanja.reduce((a, b) => a + b).toLocaleString("id-ID")
+    ? props.totalBelanja.reduce((a, b) => a + b)
     : 0;
   const potongan =
     props.getVoucher !== undefined &&
     props.getVoucher !== null &&
     Object.keys(props.getVoucher).length !== 0
-      ? (props.getVoucher?.nominal).toLocaleString("id-ID")
+      ? props.getVoucher?.nominal
       : 0;
-  console.log(subtotal);
   const totalPembayaran =
-    (Number(subtotal) + Number(shippingCost) - Number(potongan)) * 1000;
+    Number(subtotal) + Number(shippingCost) - Number(potongan);
+  console.log("harga", Number(shippingCost));
+  console.log("test", Number(subtotal));
+
   //setPembayaran
   useEffect(() => {
     props.setPembayaran(totalPembayaran);
@@ -56,11 +57,15 @@ export default function RincianPembayaran(props) {
           </Flex>
           <Flex w={"100%"} justifyContent={"space-between"} fontSize={"14px"}>
             <Flex>Subtotal</Flex>
-            <Flex fontWeight={"500"}>Rp {subtotal}</Flex>
+            <Flex fontWeight={"500"}>
+              Rp {subtotal?.toLocaleString("id-ID")}
+            </Flex>
           </Flex>
           <Flex w={"100%"} justifyContent={"space-between"} fontSize={"14px"}>
             <Flex>Biaya Pengiriman</Flex>
-            <Flex fontWeight={"500"}>Rp {shippingCost}</Flex>
+            <Flex fontWeight={"500"}>
+              Rp {shippingCost?.toLocaleString("id-ID")}
+            </Flex>
           </Flex>
           <Flex
             w={"100%"}
@@ -71,7 +76,7 @@ export default function RincianPembayaran(props) {
           >
             <Flex>Potongan Harga</Flex>
             <Flex fontWeight={"500"} paddingBottom={"16px"}>
-              Rp {potongan.toLocaleString("id-ID")}
+              Rp {potongan?.toLocaleString("id-ID")}
             </Flex>
           </Flex>
           <Flex w={"100%"} justifyContent={"space-between"} fontSize={"16px"}>

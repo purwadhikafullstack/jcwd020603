@@ -29,6 +29,7 @@ import { AdminTableStock } from "./admin-table-stock";
 import { AddStock } from "./mAddStock";
 import Pagination from "./pagination";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
 export default function AdminStockList() {
   const windowWidth = window.innerWidth;
@@ -52,13 +53,14 @@ export default function AdminStockList() {
 
   //get all stock
   const [shown, setShown] = useState({ page: 1 });
+  const [search, setSearch] = useState();
   const [filtering, setFiltering] = useState({
     page: shown.page,
     search: "",
     branch_id: "",
     category_id: "",
     time1: "",
-    time2: "",
+    time2: moment().format("YYYY-MM-DD"),
     order: "DESC",
     sort: "createdAt",
   });
@@ -111,7 +113,7 @@ export default function AdminStockList() {
     }
   }, [shown]);
 
-  const productsPerPage = 6;
+  const productsPerPage = 4;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
@@ -148,7 +150,7 @@ export default function AdminStockList() {
                 placeholder="Pilih Tanggal"
                 bg={"white"}
                 type="date"
-                value={filtering.time}
+                value={filtering.time1}
                 maxW={"200px"}
                 onChange={(e) => {
                   setFiltering({ ...filtering, time1: e.target.value });
@@ -170,6 +172,8 @@ export default function AdminStockList() {
               <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
                   placeholder="pencarian"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   bg={"white"}
                   ref={searchRef}
                 ></Input>
@@ -193,12 +197,18 @@ export default function AdminStockList() {
                 display={userSelector.role == "SUPER ADMIN" ? "none" : "flex"}
               >
                 {<Icon as={AiOutlinePlus} fontSize={"28px"} />}
-                <AddStock id={addStock} isOpen={isOpen} onClose={onClose} />
+                <AddStock
+                  id={addStock}
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  fetchData={fetchData}
+                />
               </Button>
             </Flex>
             <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
               <Select
                 placeholder="Kategori"
+                value={filtering.category_id}
                 h={"41px"}
                 bg={"white"}
                 onChange={(e) => {
@@ -211,6 +221,7 @@ export default function AdminStockList() {
               </Select>
               <Select
                 placeholder="Cabang"
+                value={filtering.branch_id}
                 bg={"white"}
                 display={userSelector.role == "ADMIN" ? "none" : "flex"}
                 onChange={(e) => {
@@ -232,14 +243,15 @@ export default function AdminStockList() {
                   order: "DESC",
                   sort: "createdAt",
                   search: "",
-                  time: "",
-                  time2: "",
+                  time1: "",
+                  time2: moment().format("YYYY-MM-DD"),
                   status: "",
                   branch_id: userSelector.branch_id || "",
                   category_id: "",
                   feature: "",
                 });
                 setShown({ page: 1 });
+                setSearch("");
               }}
             >
               Reset Filter
@@ -258,29 +270,41 @@ export default function AdminStockList() {
                   ref={tableHeadRef}
                 >
                   <Tr className="tableHeadMenuG">
-                    <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"}>Gambar</Th>
-                    <Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      No
+                    </Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      Gambar
+                    </Th>
+                    <Th bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Nama Produk{" "}
                       </Flex>
                     </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         <Flex>Kategori</Flex>
                       </Flex>
                     </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Harga{" "}
                       </Flex>
                     </Th>
-                    <Th textAlign={"center"} className="thProductB">
+                    <Th
+                      textAlign={"center"}
+                      bgcolor="#ffb21c"
+                      className="thProductB"
+                    >
                       Keterangan{" "}
                     </Th>
-                    <Th className="thProductB">Berat </Th>
-                    <Th className="thProductB">Qty </Th>
-                    <Th className="thProductB">
+                    <Th className="thProductB" bgcolor="#ffb21c">
+                      Berat{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
+                      Qty{" "}
+                    </Th>
+                    <Th className="thProductB" bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Tanggal{" "}
                         <Flex flexDirection="column">
@@ -303,8 +327,9 @@ export default function AdminStockList() {
                     </Th>
                     <Th
                       textAlign={"center"}
+                      bgcolor="#ffb21c"
                       display={
-                        userSelector.role == "SUPER ADMIN" ? "none" : "flex"
+                        userSelector.role == "SUPER ADMIN" ? "none" : "column"
                       }
                     >
                       Tindakan

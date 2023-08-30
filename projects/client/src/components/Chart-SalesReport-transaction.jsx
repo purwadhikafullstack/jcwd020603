@@ -57,7 +57,7 @@ const prepareChartData = () => {
   
     return (
       <Flex w={windowWidth <= 500 ? "800px" : null} h={windowWidth <= 500 ? "400px" : null}>
-      <Bar data={data} options={options} />
+      <Bar data={data} options={options} style={{minHeight : "360px"}} />
       </Flex>
     );
   };

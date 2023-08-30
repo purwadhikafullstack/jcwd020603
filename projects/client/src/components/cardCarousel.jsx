@@ -15,11 +15,11 @@ export function CardCarousel(props) {
   };
   return (
     <>
-      <Flex className="cardCarouselB" flexDir="column" onClick={handleClick}>
+      <div className="cardCarouselB" flexDir="column" onClick={handleClick}>
         <Center flex="1">
           <Image id="imageCarousel" src={props.photo_discount_url} />
         </Center>
-      </Flex>
+      </div>
     </>
   );
 }

@@ -5,8 +5,6 @@ import { api } from "../api/api";
 export default function ModalKonfirmasiDeletAdmin(props) {
   const nav = useNavigate();
   const toast = useToast();
-
-  console.log(props.dtBranch[props.number].branch_id);
   const branch_id = props.dtBranch[props.number];
   const handleDelete = async (branch_id) => {
     await api()
@@ -17,6 +15,7 @@ export default function ModalKonfirmasiDeletAdmin(props) {
         toast({
           title: "Admin dan Cabang berhasil dihapus",
           status: "success",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });

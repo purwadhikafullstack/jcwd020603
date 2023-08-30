@@ -24,36 +24,42 @@ export default function WebKeranjang(props) {
   const { prodCart } = props;
   const nearestBranch = localStorage.getItem("nearestBranch");
   const nav = useNavigate();
-  useEffect(() => {
-    console.log(prodCart);
-  }, [prodCart]);
   const [selectedItems, setSelectedItems] = useState([]);
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});
   const [isLoading2, setIsLoading2] = useState(false);
   const getSelectedAddress = async () => {
-    setIsLoading2(true);
-    const primary = await api().get("/addressG/primary");
-    const selected = await api().get("/addressG/current");
-    if (selected.data.result) {
-      setSelectedAddress(selected.data.result);
-      setIsLoading2(false);
-    } else {
-      setSelectedAddress(primary.data.result);
-      setIsLoading2(false);
+    try {
+      setIsLoading2(true);
+      const primary = await api().get("/addressG/primary");
+      const selected = await api().get("/addressG/current");
+      if (selected.data.result) {
+        setSelectedAddress(selected.data.result);
+        setIsLoading2(false);
+      } else {
+        setSelectedAddress(primary.data.result);
+        setIsLoading2(false);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
   useEffect(() => {
     getSelectedAddress();
   }, []);
-  console.log(selectedAddress);
 
   //count total harga belanja
   const totalBelanja = selectedItems.map((val, idx) => {
-    const price = selectedItems[idx].discounted_price
-      ? selectedItems[idx].discounted_price == 50
-        ? Number(selectedItems[idx].Stock.Product.price)
-        : Number(selectedItems[idx].discounted_price)
+    const price = selectedItems[idx]?.Stock?.Discount
+      ? selectedItems[idx]?.Stock?.Discount?.nominal == 50
+        ? Number(
+            selectedItems[idx].Stock.Product.price *
+              ((100 - selectedItems[idx]?.Stock?.Discount?.nominal) / 100)
+          )
+        : Number(
+            selectedItems[idx].Stock.Product.price *
+              ((100 - selectedItems[idx]?.Stock?.Discount?.nominal) / 100)
+          )
       : Number(selectedItems[idx].Stock.Product.price);
     return price * Number(selectedItems[idx].qty);
   });
@@ -73,7 +79,6 @@ export default function WebKeranjang(props) {
   const [courier, setCourier] = useState("");
   const [shipCost, setShipCost] = useState([]);
   const [courierName, setCourierName] = useState("");
-  console.log(courierName);
   const [isLoading, setIsLoading] = useState(false);
   const inputCost = {
     origin: prodCart[0]?.Stock.Branch?.city_id,
@@ -81,7 +86,6 @@ export default function WebKeranjang(props) {
     weight: weightTotal,
     courier: courier,
   };
-  console.log(inputCost);
   const getCost = async () => {
     try {
       await api()
@@ -99,8 +103,6 @@ export default function WebKeranjang(props) {
     getCost();
   }, [courier]);
   useEffect(() => {
-    console.log(selectedItems);
-    console.log(totalBelanja);
     totalWeight();
   }, [selectedItems]);
   //menyimpan biaya pengiriman
@@ -115,7 +117,6 @@ export default function WebKeranjang(props) {
       const update = await api().patch(
         `/voucher/${getVoucher?.id}?limit=${getVoucher.limit}`
       );
-      console.log(update.data);
     } catch (err) {
       console.log(err);
     }
@@ -143,7 +144,14 @@ export default function WebKeranjang(props) {
       });
       return nav("/payment");
     } catch (err) {
-      console.log(err);
+      setIsLoading(false);
+      toast({
+        title: err.response.data.message,
+        description: err.response.data.description,
+        status: "warning",
+        position: "top",
+        duration: 3000,
+      });
     }
   };
 
@@ -256,6 +264,7 @@ export default function WebKeranjang(props) {
             totalBelanja={totalBelanja}
             getVoucher={getVoucher}
             setGetVoucher={setGetVoucher}
+            nearestBranch={nearestBranch}
           />
         </Flex>
         <Flex
@@ -298,8 +307,26 @@ export default function WebKeranjang(props) {
             boxShadow={"0px -4px 10px rgb(0,0,0,0.3)"}
             isLoading={isLoading}
             onClick={() => {
-              updateLimit();
-              postOrder();
+              if (selectedItems.length > 0) {
+                if (cost.service) {
+                  updateLimit();
+                  postOrder();
+                } else {
+                  toast({
+                    title: "Tidak ada opsi pengiriman yang dipilih",
+                    status: "warning",
+                    position: "top",
+                    duratio: 3000,
+                  });
+                }
+              } else {
+                toast({
+                  title: "Tidak ada produk yang ingin di pesan",
+                  status: "warning",
+                  position: "top",
+                  duratio: 3000,
+                });
+              }
             }}
           >
             PESAN SEKARANG

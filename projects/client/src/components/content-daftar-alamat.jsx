@@ -32,7 +32,6 @@ export default function ContentDaftarAlamat() {
   const nav = useNavigate();
   //click radio untuk pilih alamt
   const [Clicked, setClicked] = useState({});
-  console.log(Clicked);
   const {
     isOpen: isOpenModal1,
     onOpen: onOpenModal1,
@@ -42,18 +41,19 @@ export default function ContentDaftarAlamat() {
   //getAll address
   const [allAddress, setAllAddress] = useState([]);
   const getAddress = async () => {
-    await api()
-      .get("/addressG")
-      .then((res) => {
-        console.log(res.data.result);
-        setAllAddress(res.data.result);
-      });
+    try {
+      await api()
+        .get("/addressG")
+        .then((res) => {
+          setAllAddress(res.data.result);
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
   //edit current address yang dipilih
   const setAddress = async () => {
     const find = await api().patch(`/addressG/current/${Clicked.id}`);
-
-    console.log(find.data);
   };
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});

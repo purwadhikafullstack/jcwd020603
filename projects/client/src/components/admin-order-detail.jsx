@@ -3,11 +3,13 @@ import {
   Button,
   Center,
   Flex,
+  Icon,
   Image,
   Modal,
   ModalContent,
   ModalOverlay,
   Select,
+  Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
 import AdminNavbarOrder from "./admin-navbar-order";
@@ -19,8 +21,10 @@ import ModalAdminDikirim from "./modal-admin-dikirim";
 import ModalAdminDitolak from "./modal-admin-ditolak";
 import { useSelector } from "react-redux";
 import AdminNavbar from "./AdminNavbar";
+import { MdArrowBack } from "react-icons/md";
 
 export default function AdminOrderDetail() {
+  const windowWidth = window.innerWidth;
   const order_number = useParams();
   const userSelector = useSelector((state) => state.auth);
   const nav = useNavigate();
@@ -44,19 +48,21 @@ export default function AdminOrderDetail() {
   //get orderValue
   const [orderValue, setOrderValue] = useState({});
   const [orderDetVal, setOrderDetVal] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchOrder = async () => {
+    setIsLoading(true);
     try {
       const get = await api().get("/order/specific", {
         params: { order_number: order_number.order_number },
       });
       setOrderValue(get.data.result);
-      console.log(get.data.result);
 
       const getDetail = await api().get("/order-detail/", {
         params: { id: get.data.result.id },
       });
       setOrderDetVal(getDetail.data.result);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -67,7 +73,6 @@ export default function AdminOrderDetail() {
   // menyimpan shipping_cost
   const [shippingCost, setShippingCost] = useState({});
   const [calculateSubtotal, setCalculateSubtotal] = useState(0);
-  console.log("ini val orderValue", orderValue);
   useEffect(() => {
     if (Object.keys(orderValue).length > 0) {
       const parsedShippingCost = JSON.parse(orderValue?.shipping_cost);
@@ -85,22 +90,13 @@ export default function AdminOrderDetail() {
       return setCalculateSubtotal(0);
     }
   }, [shippingCost]);
-  console.log(calculateSubtotal);
-  console.log("ORDER VALUE", orderValue);
-  console.log("ORDER DETAIL", orderDetVal);
-  //rincian pembayaran
-  // const totalBelanja =
-  //   orderValue.total - (orderValue.shipping_cost - orderValue.discount_voucher);
-  // const totalPembayaran =
-  //   totalBelanja + orderValue.shipping_cost - orderValue.discount_voucher;
   // cancel order
   const cancelOrder = async () => {
     try {
       const cancel = await api().patch(`/order/cancel/${orderValue?.id}`, {
         orderDetVal,
       });
-      console.log(cancel.data);
-      return nav("/admin/orders");
+      fetchOrder();
     } catch (err) {
       console.log(err);
     }
@@ -112,7 +108,6 @@ export default function AdminOrderDetail() {
       const status = await api().patch(`/order/status/${orderValue?.id}`, {
         status: valueStatus,
       });
-      console.log(status.data);
       fetchOrder();
     } catch (err) {
       console.log(err);
@@ -132,219 +127,294 @@ export default function AdminOrderDetail() {
         rowGap={"20px"}
         borderTopLeftRadius={"20px"}
       >
-        <Flex fontSize={"24px"} fontWeight={"700"}>
-          Order {orderValue?.order_number}
-        </Flex>
-        <Flex className="adminOrderDetailBox">
-          <Flex
-            w={"100%"}
-            borderRadius={"10px"}
-            bg={"white"}
-            flexDir={"column"}
-            rowGap={"10px"}
-            fontSize={"16px"}
-            padding={"10px"}
-          >
-            <Flex flexDir={"column"} rowGap={"10px"}>
-              <Flex fontWeight={"700"}>Status</Flex>
-              {changeStatus ? (
-                <Flex justifyContent={"space-between"} alignItems={"center"}>
-                  <Select
-                    w={"70%"}
-                    placeholder=" Pilih Status Pesanan"
-                    defaultValue={orderValue?.status}
-                    onClick={(e) => {
-                      setValueStatus(e.target.value);
-                    }}
-                  >
-                    {SelectorValue.map((val) => {
-                      return (
-                        <>
-                          <option value={val.value}>{val.name}</option>;
-                        </>
-                      );
-                    })}
-                  </Select>
-                  <Flex
-                    fontSize={"10px"}
-                    color={"gray"}
-                    onClick={() => {
-                      setChangeStatus(!changeStatus);
-                      statusOrder();
-                    }}
-                  >
-                    UBAH
-                  </Flex>
+        {isLoading ? (
+          <Center h={"100vh"}>
+            <Spinner />
+          </Center>
+        ) : (
+          <>
+            <Flex fontSize={"24px"} fontWeight={"700"} gap={"20px"}>
+              <Flex
+                alignItems={"center"}
+                onClick={() => {
+                  nav("/admin/orders");
+                }}
+              >
+                <Icon as={MdArrowBack} />
+              </Flex>
+              <Flex
+                flexDir={windowWidth > 600 ? "row" : "column"}
+                alignItems={"left"}
+                gap={"5px"}
+              >
+                <Flex> Order </Flex>
+                <Flex>{orderValue?.order_number}</Flex>
+              </Flex>
+            </Flex>
+            <Flex className="adminOrderDetailBox">
+              <Flex
+                w={"100%"}
+                borderRadius={"10px"}
+                bg={"white"}
+                flexDir={"column"}
+                rowGap={"10px"}
+                fontSize={"16px"}
+                padding={"10px"}
+              >
+                <Flex flexDir={"column"} rowGap={"10px"}>
+                  <Flex fontWeight={"700"}>Status</Flex>
+                  {changeStatus ? (
+                    <Flex
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                    >
+                      <Select
+                        w={"70%"}
+                        placeholder=" Pilih Status Pesanan"
+                        defaultValue={orderValue?.status}
+                        onClick={(e) => {
+                          setValueStatus(e.target.value);
+                        }}
+                      >
+                        {SelectorValue.map((val) => {
+                          return (
+                            <>
+                              <option value={val.value}>{val.name}</option>;
+                            </>
+                          );
+                        })}
+                      </Select>
+                      <Flex
+                        fontSize={"10px"}
+                        color={"gray"}
+                        onClick={() => {
+                          setChangeStatus(!changeStatus);
+                          if (valueStatus == "Dibatalkan") {
+                            cancelOrder();
+                          } else {
+                            statusOrder();
+                          }
+                        }}
+                      >
+                        UBAH
+                      </Flex>
+                    </Flex>
+                  ) : (
+                    <Flex
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                    >
+                      <Flex color={"red"} fontWeight={"500"}>
+                        {orderValue.status}
+                      </Flex>
+                      <Flex
+                        fontSize={"10px"}
+                        color={"gray"}
+                        onClick={() => {
+                          setChangeStatus(!changeStatus);
+                        }}
+                        display={
+                          userSelector.role == "SUPER ADMIN" ||
+                          orderValue.status == "Dikirim"
+                            ? "none"
+                            : "flex"
+                        }
+                      >
+                        UBAH STATUS
+                      </Flex>
+                    </Flex>
+                  )}
                 </Flex>
-              ) : (
-                <Flex justifyContent={"space-between"} alignItems={"center"}>
-                  <Flex color={"red"} fontWeight={"500"}>
-                    {orderValue.status}
-                  </Flex>
+                <Flex
+                  w={"100%"}
+                  alignItems={"center"}
+                  fontSize={"16px"}
+                  flexDir={"column"}
+                  rowGap={"10px"}
+                >
+                  <Flex fontWeight={"500"}>Bukti Pembayaran</Flex>
+                  <Center
+                    w={"70%"}
+                    h={"300px"}
+                    border={"2px solid gray"}
+                    borderRadius={"10px"}
+                    padding={"10px"}
+                  >
+                    {orderValue?.order_transfer_url ? (
+                      <Image
+                        src={orderValue.order_transfer_url}
+                        w={"100%"}
+                        maxW={"300px"}
+                      />
+                    ) : (
+                      <Center textAlign={"center"} fontWeight={600}>
+                        Tidak ada gambar Bukti Pembayaran
+                      </Center>
+                    )}
+                  </Center>
                   <Flex
-                    fontSize={"10px"}
-                    color={"gray"}
-                    onClick={() => {
-                      setChangeStatus(!changeStatus);
-                    }}
+                    w={"100%"}
+                    gap={"30px"}
+                    justifyContent={"center"}
                     display={
-                      userSelector.role == "SUPER ADMIN" ? "none" : "flex"
+                      userSelector.role == "SUPER ADMIN" ||
+                      orderValue?.status != "Menunggu Konfirmasi Pembayaran"
+                        ? "none"
+                        : "flex"
                     }
                   >
-                    UBAH STATUS
+                    <Button
+                      colorScheme="green"
+                      w={"81px"}
+                      onClick={onOpenModal1}
+                    >
+                      Terima
+                    </Button>
+                    <Button colorScheme="red" w={"81px"} onClick={onOpenModal2}>
+                      Tolak
+                    </Button>
                   </Flex>
                 </Flex>
-              )}
+              </Flex>
+              <Flex
+                w={"100%"}
+                borderRadius={"10px"}
+                bg={"white"}
+                flexDir={"column"}
+                rowGap={"10px"}
+                fontSize={"16px"}
+                padding={"10px"}
+              >
+                <Flex fontWeight={"700"}>List Pesanan</Flex>
+                <Flex flexDir={"column"} rowGap={"20px"}>
+                  {orderDetVal &&
+                    orderDetVal.length > 0 &&
+                    orderDetVal.map((val, idx) => {
+                      return (
+                        <PembayaranProduk key={idx} index={idx} {...val} />
+                      );
+                    })}
+                  <Flex
+                    w={"100%"}
+                    fontSize={"16px"}
+                    fontWeight={"500"}
+                    flexDir={"column"}
+                  >
+                    <Flex justifyContent={"space-between"} w={"100%"}>
+                      <Flex>Total Belanja</Flex>
+                      <Flex>
+                        Rp {calculateSubtotal.toLocaleString("id-ID")}
+                      </Flex>
+                    </Flex>
+                    <Flex justifyContent={"space-between"} w={"100%"}>
+                      <Flex>Biaya Pengiriman</Flex>
+                      {shippingCost &&
+                        shippingCost.cost &&
+                        shippingCost.cost.length > 0 && (
+                          <Flex fontWeight={"500"}>
+                            Rp{" "}
+                            {shippingCost.cost[0].value.toLocaleString("id-ID")}
+                          </Flex>
+                        )}
+                    </Flex>
+                    <Flex
+                      justifyContent={"space-between"}
+                      w={"100%"}
+                      color={"#2A960C"}
+                    >
+                      <Flex>Potongan</Flex>
+                      <Flex>
+                        - Rp{" "}
+                        {orderValue.discount_voucher
+                          ? orderValue.discount_voucher.toLocaleString("id-ID")
+                          : 0}
+                      </Flex>
+                    </Flex>
+                    <Flex justifyContent={"space-between"} w={"100%"}>
+                      <Flex>Total Pembayaran</Flex>
+                      <Flex>
+                        Rp{" "}
+                        {orderValue?.total
+                          ? orderValue?.total.toLocaleString("id-ID")
+                          : 0}
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
             </Flex>
             <Flex
               w={"100%"}
-              alignItems={"center"}
-              fontSize={"16px"}
+              borderRadius={"10px"}
+              bg={"white"}
+              padding={"10px"}
               flexDir={"column"}
-              rowGap={"10px"}
             >
-              <Flex fontWeight={"500"}>Bukti Pembayaran</Flex>
-              <Center
-                w={"70%"}
-                h={"300px"}
-                border={"2px solid gray"}
-                borderRadius={"10px"}
-                padding={"10px"}
-              >
-                {orderValue?.order_transfer_url ? (
-                  <Image src={orderValue.order_transfer_url} />
-                ) : (
-                  <Center textAlign={"center"} fontWeight={600}>
-                    Tidak ada gambar Bukti Pembayaran
-                  </Center>
-                )}
-              </Center>
+              <Flex fontWeight={"700"}>Informasi Pengiriman</Flex>
               <Flex
                 w={"100%"}
-                gap={"30px"}
-                justifyContent={"center"}
-                display={
-                  userSelector.role == "SUPER ADMIN" ||
-                  orderValue?.status != "Menunggu Konfirmasi Pembayaran"
-                    ? "none"
-                    : "flex"
-                }
+                fontSize={"14px"}
+                gap={"20px"}
+                padding={"5px 0px"}
               >
-                <Button colorScheme="green" w={"81px"} onClick={onOpenModal1}>
-                  Terima
-                </Button>
-                <Button colorScheme="red" w={"81px"} onClick={onOpenModal2}>
-                  Tolak
-                </Button>
-              </Flex>
-            </Flex>
-          </Flex>
-          <Flex
-            w={"100%"}
-            borderRadius={"10px"}
-            bg={"white"}
-            flexDir={"column"}
-            rowGap={"10px"}
-            fontSize={"16px"}
-            padding={"10px"}
-          >
-            <Flex fontWeight={"700"}>List Pesanan</Flex>
-            <Flex flexDir={"column"} rowGap={"20px"}>
-              {orderDetVal &&
-                orderDetVal.length > 0 &&
-                orderDetVal.map((val, idx) => {
-                  return <PembayaranProduk key={idx} index={idx} {...val} />;
-                })}
-              <Flex
-                w={"100%"}
-                fontSize={"16px"}
-                fontWeight={"500"}
-                flexDir={"column"}
-              >
-                <Flex justifyContent={"space-between"} w={"100%"}>
-                  <Flex>Total Belanja</Flex>
-                  <Flex>Rp {calculateSubtotal.toLocaleString("id-ID")}</Flex>
+                <Flex w={"20%"} minW={"72px"}>
+                  Data Pemesan
                 </Flex>
-                <Flex justifyContent={"space-between"} w={"100%"}>
-                  <Flex>Biaya Pengiriman</Flex>
+                <Flex w={"100%"} flexDir={"column"}>
+                  <Flex fontWeight={"500"}>{orderValue.User?.user_name}</Flex>
+                  <Flex>{orderValue.User?.phone_number}</Flex>
+                </Flex>
+              </Flex>
+              <Flex
+                w={"100%"}
+                fontSize={"14px"}
+                gap={"20px"}
+                padding={"5px 0px"}
+              >
+                <Flex w={"20%"} minW={"72px"}>
+                  Kurir Pengiriman
+                </Flex>
+                <Flex w={"100%"} flexDir={"column"}>
+                  <Flex fontWeight={"500"}>{shippingCost?.name}</Flex>
+                  <Flex>
+                    {shippingCost?.description} ({shippingCost?.service})
+                  </Flex>
                   {shippingCost &&
                     shippingCost.cost &&
                     shippingCost.cost.length > 0 && (
-                      <Flex fontWeight={"500"}>
-                        Rp {shippingCost.cost[0].value.toLocaleString("id-ID")}
+                      <Flex fontWeight={"400"}>
+                        {shippingCost?.name === "POS Indonesia (POS)"
+                          ? `Estimasi tiba dalam ${shippingCost?.cost[0]?.etd}`
+                          : `Estimasi tiba dalam ${shippingCost?.cost[0]?.etd} Hari`}
                       </Flex>
                     )}
                 </Flex>
-                <Flex
-                  justifyContent={"space-between"}
-                  w={"100%"}
-                  color={"#2A960C"}
-                >
-                  <Flex>Potongan</Flex>
-                  <Flex>
-                    - Rp{" "}
-                    {orderValue.discount_voucher
-                      ? orderValue.discount_voucher.toLocaleString("id-ID")
-                      : 0}
+              </Flex>
+              <Flex
+                w={"100%"}
+                fontSize={"14px"}
+                gap={"20px"}
+                padding={"5px 0px"}
+              >
+                <Flex w={"20%"} minW={"72px"}>
+                  Alamat Penerima
+                </Flex>
+                <Flex w={"100%"} flexDir={"column"}>
+                  <Flex fontWeight={"500"}>
+                    {orderValue.Address?.address_name}
+                  </Flex>
+                  <Flex>{orderValue.Address?.address_phone}</Flex>
+                  <Flex fontWeight={"500"}>
+                    {orderValue.Address?.address},{" "}
+                    {orderValue.Address?.district},{" "}
+                    {orderValue.Address?.City?.type}{" "}
+                    {orderValue.Address?.City?.city_name}, Jawa Barat
                   </Flex>
                 </Flex>
-                <Flex justifyContent={"space-between"} w={"100%"}>
-                  <Flex>Total Pembayaran</Flex>
-                  <Flex>
-                    Rp{" "}
-                    {orderValue?.total
-                      ? orderValue?.total.toLocaleString("id-ID")
-                      : 0}
-                  </Flex>
-                </Flex>
               </Flex>
             </Flex>
-          </Flex>
-        </Flex>
-        <Flex
-          w={"100%"}
-          borderRadius={"10px"}
-          bg={"white"}
-          padding={"10px"}
-          flexDir={"column"}
-        >
-          <Flex fontWeight={"700"}>Informasi Pengiriman</Flex>
-          <Flex w={"100%"} fontSize={"14px"} gap={"20px"} padding={"5px 0px"}>
-            <Flex w={"20%"}>Data Pemesan</Flex>
-            <Flex w={"100%"} flexDir={"column"}>
-              <Flex fontWeight={"500"}>{orderValue.User?.user_name}</Flex>
-              <Flex>{orderValue.User?.phone_number}</Flex>
-            </Flex>
-          </Flex>
-          <Flex w={"100%"} fontSize={"14px"} gap={"20px"} padding={"5px 0px"}>
-            <Flex w={"20%"}>Kurir Pengiriman</Flex>
-            <Flex w={"100%"} flexDir={"column"}>
-              <Flex fontWeight={"500"}>{shippingCost?.name}</Flex>
-              <Flex>
-                {shippingCost?.description} ({shippingCost?.service})
-              </Flex>
-              {shippingCost &&
-                shippingCost.cost &&
-                shippingCost.cost.length > 0 && (
-                  <Flex fontWeight={"400"}>
-                    Estimasi tiba dalam {shippingCost?.cost[0]?.etd} Hari
-                  </Flex>
-                )}
-            </Flex>
-          </Flex>
-          <Flex w={"100%"} fontSize={"14px"} gap={"20px"} padding={"5px 0px"}>
-            <Flex w={"20%"}>Alamat Penerima</Flex>
-            <Flex w={"100%"} flexDir={"column"}>
-              <Flex fontWeight={"500"}>{orderValue.Address?.address_name}</Flex>
-              <Flex>{orderValue.Address?.address_phone}</Flex>
-              <Flex fontWeight={"500"}>
-                {orderValue.Address?.address}, {orderValue.Address?.district},{" "}
-                {orderValue.Address?.City?.type}{" "}
-                {orderValue.Address?.City?.city_name}, Jawa Barat
-              </Flex>
-            </Flex>
-          </Flex>
-        </Flex>
+          </>
+        )}
       </Flex>
       <Modal isOpen={isOpenModal1} isCentered>
         <ModalOverlay />
@@ -363,7 +433,8 @@ export default function AdminOrderDetail() {
           <ModalAdminDitolak
             isOpen={isOpenModal2}
             onClose={onCloseModal2}
-            cancelOrder={cancelOrder}
+            setValueStatus={setValueStatus}
+            refuseOrder={statusOrder}
           />
         </ModalContent>
       </Modal>

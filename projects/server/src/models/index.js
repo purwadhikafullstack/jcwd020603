@@ -145,6 +145,16 @@ db.Branch.belongsTo(db.City, {
   target: "city_id",
 });
 
+db.Discount.belongsTo(db.Branch, {
+  foreignKey: "branch_id",
+  as: "Branch",
+});
+
+db.Voucher.belongsTo(db.Branch, {
+  foreignKey: "branch_id",
+  as: "Branch",
+});
+
 db.User.belongsTo(db.Branch, {
   foreignKey: "branch_id",
   as: "Branch",
@@ -158,15 +168,6 @@ db.Order.belongsTo(db.Address, {
 db.Order.hasMany(db.OrderDetail, {
   foreignKey: "order_id",
   as: "Order",
-});
-
-db.Discount.belongsTo(db.Branch, {
-  foreignKey: "branch_id",
-  as: "Branch",
-});
-db.Voucher.belongsTo(db.Branch, {
-  foreignKey: "branch_id",
-  as: "Branch",
 });
 
 module.exports = db;

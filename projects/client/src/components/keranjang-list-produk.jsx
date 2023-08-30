@@ -23,6 +23,7 @@ export default function KeranjangList(props) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { Product, Discount } = props.Stock;
+  console.log("helo", props.prodCart);
   const { fetch } = useFetchCart();
   useEffect(() => {
     console.log(props.prodCart);
@@ -90,7 +91,7 @@ export default function KeranjangList(props) {
             isChecked={isChecked}
           ></Checkbox>
         </Flex>
-        <Flex w={"10%"}>
+        <Flex w={"10%"} minW={"38px"}>
           <Box boxSize={"38px"}>
             <Image
               src={Product.photo_product_url}
@@ -123,7 +124,7 @@ export default function KeranjangList(props) {
             justifyContent={"space-between"}
             alignItems={"center"}
           >
-            {!props?.discounted_price ? (
+            {!Discount ? (
               <Flex alignItems={"center"}>
                 <Flex fontSize={"12px"} fontWeight={"700"} color={"#F25F0C"}>
                   Rp. {Product?.price?.toLocaleString("id-ID")}
@@ -132,7 +133,12 @@ export default function KeranjangList(props) {
             ) : Discount?.nominal == 50 ? (
               <Flex alignItems={"center"} gap={"10px"}>
                 <Flex fontSize={"12px"} fontWeight={"700"} color={"#F25F0C"}>
-                  Rp {(props?.discounted_price * 2).toLocaleString("id-ID")}
+                  Rp{" "}
+                  {(
+                    Product?.price *
+                    ((100 - Discount.nominal) / 100) *
+                    2
+                  ).toLocaleString("id-ID")}
                 </Flex>
                 <Flex>
                   <Center
@@ -150,7 +156,11 @@ export default function KeranjangList(props) {
             ) : (
               <Flex flexDir={"column"} maxW={"200px"} w={"100%"}>
                 <Flex fontSize={"12px"} fontWeight={"700"} color={"#F25F0C"}>
-                  Rp {props.discounted_price.toLocaleString("id-ID")}
+                  Rp{" "}
+                  {(
+                    Product?.price *
+                    ((100 - Discount.nominal) / 100)
+                  ).toLocaleString("id-ID")}
                 </Flex>
                 <Flex w={"50%"} fontSize={"10px"} gap={"10px"}>
                   <Center

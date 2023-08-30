@@ -12,6 +12,7 @@ import {
   Input,
   Icon,
   Center,
+  useToast,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
 import { useDispatch } from "react-redux";
@@ -21,7 +22,7 @@ import { useState, useRef, useEffect } from "react";
 
 export function EditCategory(props) {
   const [selectedFile, setSelectedFile] = useState(null);
-
+  const toast = useToast();
   const [imgUrl, setImgUrl] = useState(props.category.photo_category_url);
   const [category, setCategory] = useState(props.category.category_name);
 
@@ -51,19 +52,30 @@ export function EditCategory(props) {
     formData.append("category_name", category);
 
     try {
-      console.log(formData);
       await api()
         .patch("/category/v2/" + props.id, formData)
-        .then((result) => {
-          console.log(result.data);
-        });
-      alert("Posting success");
+        .then((result) => {});
+      toast({
+        title: "Success",
+        description: "Kategori berhasil disunting",
+        status: "success",
+        position: "top",
+        duration: 3000,
+        isClosable: true,
+      });
       setSelectedFile(null);
       setCategory("");
       props.onClose();
     } catch (error) {
       console.error(error);
-      alert("Posting failed");
+      toast({
+        title: "Error",
+        description: "Kategori gagal disunting",
+        status: "error",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 

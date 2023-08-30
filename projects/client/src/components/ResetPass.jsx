@@ -59,7 +59,6 @@ export default function ResetPass() {
       if (userSelector.id) {
         try {
           const { pathname } = location;
-          console.log(pathname, "atas");
           const token = pathname.split("/")[2];
           const { password } = formik.values;
           const account = { password, token };
@@ -67,7 +66,6 @@ export default function ResetPass() {
           await api()
             .patch("/user/reset-pass/" + userSelector.id, account)
             .then((res) => {
-              console.log(res.data);
               dispatch({
                 type: "login",
                 payload: res.data,
@@ -75,6 +73,7 @@ export default function ResetPass() {
               toast({
                 title: "Ganti Password Berhasil",
                 status: "success",
+                position: "top",
                 duration: 3000,
                 isClosable: true,
               });
@@ -84,6 +83,7 @@ export default function ResetPass() {
           toast({
             title: `Maaf link ini telah expired, tekan "forgot-password" untuk mendapatkan link baru`,
             status: "warning",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
@@ -98,7 +98,6 @@ export default function ResetPass() {
           await api()
             .patch("user/reset-pass-login?token=" + token, account)
             .then((result) => {
-              console.log(result.data);
               dispatch({
                 type: "login",
                 payload: result.data,
@@ -106,6 +105,7 @@ export default function ResetPass() {
               toast({
                 title: "Ganti Password Berhasil",
                 status: "success",
+                position: "top",
                 duration: 3000,
                 isClosable: true,
               });
@@ -115,6 +115,7 @@ export default function ResetPass() {
           toast({
             title: `Maaf link ini telah expired, tekan "forgot-password" untuk mendapatkan link baru`,
             status: "warning",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
@@ -127,7 +128,6 @@ export default function ResetPass() {
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    // console.log(formik.values);
   }
 
   return (
@@ -140,10 +140,14 @@ export default function ResetPass() {
     >
       <Box
         w={"22%"}
-        h={"100vh"}
+        h={"auto"}
         justifyContent={"center"}
         alignItems={"center"}
         className="logo_samping"
+        onClick={() => {
+          nav("/");
+        }}
+        cursor={"pointer"}
       >
         <Image src={logo2} className="logo_samping"></Image>
       </Box>
@@ -167,7 +171,16 @@ export default function ResetPass() {
           columnGap={"20%"}
           justifyContent={"space-between"}
         >
-          <Image src={logo} w={"100%"} h={"40%"} className="logo_atas"></Image>
+          <Image
+            src={logo}
+            w={"100%"}
+            h={"40%"}
+            className="logo_atas"
+            onClick={() => {
+              nav("/");
+            }}
+            cursor={"pointer"}
+          ></Image>
           <Stack spacing={4} mt={"20px"}>
             <Heading fontSize={30} textAlign={"center"}>
               Ganti Password

@@ -8,6 +8,7 @@ import {
   InputGroup,
   InputRightElement,
   Select,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -55,8 +56,8 @@ export default function AdminOrderList() {
     sort: "createdAt",
     order: "DESC",
     search: "",
-    time: "",
-    time2: "",
+    time: moment().startOf("W").format("YYYY-MM-DD"),
+    time2: moment().format("YYYY-MM-DD"),
     status: "",
     branch_id: "",
   });
@@ -65,20 +66,25 @@ export default function AdminOrderList() {
   const [countOrder, setCountOrder] = useState(0);
   const [doneOrder, setDoneOrder] = useState(0);
   const [undoneOrder, setUndoneOrder] = useState(0);
+  const [search, setSearch] = useState("");
 
   const getAllOrders = async () => {
-    const params = { ...filtering };
-    if (userSelector.branch_id !== null) {
-      params.branch_id = userSelector.branch_id;
+    try {
+      const params = { ...filtering };
+      if (userSelector.branch_id !== null) {
+        params.branch_id = userSelector.branch_id;
+      }
+      const get = await api().get("/order/admin", {
+        params: { ...params },
+      });
+      setAllBranchOrder(get.data.result);
+      setTotalPages(get.data.total);
+      setCountOrder(get.data.count);
+      setDoneOrder(get.data.done);
+      setUndoneOrder(get.data.undone);
+    } catch (err) {
+      console.log(err);
     }
-    const get = await api().get("/order/admin", {
-      params: { ...params },
-    });
-    setAllBranchOrder(get.data.result);
-    setTotalPages(get.data.total);
-    setCountOrder(get.data.count);
-    setDoneOrder(get.data.done);
-    setUndoneOrder(get.data.undone);
   };
   useEffect(() => {
     getAllOrders();
@@ -87,7 +93,7 @@ export default function AdminOrderList() {
   useEffect(() => {
     getAllOrders();
   }, [filtering]);
-  console.log(allBranchOrder);
+
   //pagination
   const [pages, setPages] = useState([]);
 
@@ -212,7 +218,13 @@ export default function AdminOrderList() {
           <Flex justifyContent={"space-between"} w={"100%"} gap={"20px"}>
             <Flex minW={"140px"}>List Pesanan</Flex>
             <InputGroup maxW={"300px"} w={"100%"}>
-              <Input placeholder="search" bg={"white"} ref={searchRef}></Input>
+              <Input
+                placeholder="pencarian"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                bg={"white"}
+                ref={searchRef}
+              ></Input>
               <InputRightElement
                 as={BiSearch}
                 w={"30px"}
@@ -237,8 +249,12 @@ export default function AdminOrderList() {
                 value={filtering.time}
                 maxW={"200px"}
                 onChange={(e) => {
-                  setFiltering({ ...filtering, time: e.target.value });
-                  setShown({ page: 1 });
+                  if (
+                    moment(e.target.value).isBefore(moment(filtering.time2))
+                  ) {
+                    setFiltering({ ...filtering, time: e.target.value });
+                    setShown({ page: 1 });
+                  }
                 }}
               ></Input>
               -
@@ -249,8 +265,10 @@ export default function AdminOrderList() {
                 maxW={"200px"}
                 value={filtering.time2}
                 onChange={(e) => {
-                  setFiltering({ ...filtering, time2: e.target.value });
-                  setShown({ page: 1 });
+                  if (moment(e.target.value).isAfter(moment(filtering.time))) {
+                    setFiltering({ ...filtering, time2: e.target.value });
+                    setShown({ page: 1 });
+                  }
                 }}
               ></Input>
             </Flex>
@@ -269,6 +287,7 @@ export default function AdminOrderList() {
               </Select>
               <Select
                 placeholder="Pilih Status"
+                value={filtering.status}
                 bg={"white"}
                 fontSize={"14px"}
                 onChange={(e) =>
@@ -290,12 +309,13 @@ export default function AdminOrderList() {
                 page: 1,
                 order: "DESC",
                 search: "",
-                time: "",
-                time2: "",
+                time: moment().startOf("W").format("YYYY-MM-DD"),
+                time2: moment().format("YYYY-MM-DD"),
                 status: "",
                 branch_id: userSelector.branch_id || "",
               });
               setShown({ page: 1 });
+              setSearch("");
             }}
           >
             Reset Filter
@@ -348,31 +368,39 @@ export default function AdminOrderList() {
               onScroll={handleTableRowScroll}
               border={"2px solid grey"}
             >
-              {allBranchOrder.map((val) => {
-                return (
-                  <>
-                    <Tr
-                      justifyContent={"space-between"}
-                      w={"100%"}
-                      minW={"808px"}
-                      _hover={{ backgroundColor: "lightgray" }}
-                      onClick={() => {
-                        nav(`/admin/orders/${val.order_number}`);
-                      }}
-                    >
-                      <Td textAlign={"center"}>{val.order_number}</Td>
-                      <Td textAlign={"center"}>{val.User?.user_name}</Td>
-                      <Td textAlign={"center"}>{val.status}</Td>
-                      <Td textAlign={"center"}>
-                        {moment(val.createdAt).format("ll")}
-                      </Td>
-                      <Td textAlign={"center"}>
-                        Rp {val.total?.toLocaleString("id-ID")}
-                      </Td>
-                    </Tr>
-                  </>
-                );
-              })}
+              {allBranchOrder.length > 0 ? (
+                allBranchOrder.map((val) => {
+                  return (
+                    <>
+                      <Tr
+                        justifyContent={"space-between"}
+                        w={"100%"}
+                        minW={"808px"}
+                        _hover={{ backgroundColor: "lightgray" }}
+                        onClick={() => {
+                          nav(`/admin/orders/${val.order_number}`);
+                        }}
+                      >
+                        <Td textAlign={"center"}>{val.order_number}</Td>
+                        <Td textAlign={"center"}>{val.User?.user_name}</Td>
+                        <Td textAlign={"center"}>{val.status}</Td>
+                        <Td textAlign={"center"}>
+                          {moment(val.createdAt).format("ll")}
+                        </Td>
+                        <Td textAlign={"center"}>
+                          Rp {val.total?.toLocaleString("id-ID")}
+                        </Td>
+                      </Tr>
+                    </>
+                  );
+                })
+              ) : (
+                <Tr>
+                  <Td colSpan={5} textAlign={"center"}>
+                    Data Tidak Ditemukan
+                  </Td>
+                </Tr>
+              )}
             </Tbody>
           </Table>
         </TableContainer>
@@ -381,9 +409,15 @@ export default function AdminOrderList() {
           flexDir={"column"}
           rowGap={"10px"}
         >
-          {allBranchOrder.map((val) => {
-            return <AdminOrderCard val={val} />;
-          })}
+          {allBranchOrder.length > 0 ? (
+            allBranchOrder.map((val) => {
+              return <AdminOrderCard val={val} />;
+            })
+          ) : (
+            <Flex w={"100%"} justifyContent={"center"} fontWeight={"600"}>
+              Data Tidak Ditemukan
+            </Flex>
+          )}
         </Flex>
 
         <Flex justifyContent={"end"}>

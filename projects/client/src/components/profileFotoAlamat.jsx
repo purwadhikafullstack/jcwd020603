@@ -19,7 +19,6 @@ import { Link } from "react-router-dom";
 
 export default function ProfileFotoAlamat() {
   const userSelector = useSelector((state) => state.auth);
-  console.log(userSelector);
   const [selectedFile, setSelectedFile] = useState(null);
   const [image, setImage] = useState(userSelector.avatar_url);
   const [loading, setLoading] = useState(false);
@@ -49,6 +48,7 @@ export default function ProfileFotoAlamat() {
     toast({
       title: "Data berhasil di ubah",
       status: "success",
+      position: "top",
       duration: 3000,
       isClosable: true,
     });
@@ -62,7 +62,6 @@ export default function ProfileFotoAlamat() {
   useEffect(() => {
     getPrimary();
   }, []);
-  console.log(primaryAddress);
 
   return (
     <>
@@ -134,9 +133,11 @@ export default function ProfileFotoAlamat() {
             </Button>
           </Flex>
         </Flex>
+
         <Flex
           w={"100%"}
           h={"100%"}
+          maxH={"200px"}
           boxShadow={"lg"}
           flexDir={"column"}
           rowGap={"20px"}

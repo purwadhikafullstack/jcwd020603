@@ -26,13 +26,13 @@ import { BsHandIndexFill } from "react-icons/bs";
 
 export default function EditAdminBranch(props) {
   const getBranch_id = props.dtBranch[props.number].branch_id;
-  console.log(getBranch_id);
   const toast = useToast();
   const [seePass, setSeePass] = useState(false);
   const [data, setData] = useState({});
   YupPassword(Yup);
   const formik = useFormik({
     initialValues: {
+      user_id: props.dtBranch[props.number].id,
       user_name: props.dtBranch[props.number].user_name,
       email: props.dtBranch[props.number].email,
       role: "ADMIN",
@@ -54,7 +54,6 @@ export default function EditAdminBranch(props) {
         .required("Gagal disimpan.. kolom ini tidak boleh kosong")
         .email("Invalid. Write like this example@mail.com"),
       password: Yup.string()
-        .required("Gagal disimpan.. kolom ini tidak boleh kosong")
         .min(8, "Your Password too short.")
         .matches(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*$/,
@@ -86,8 +85,8 @@ export default function EditAdminBranch(props) {
 
     onSubmit: async () => {
       try {
-        console.log("masuk dlu");
         const {
+          user_id,
           user_name,
           email,
           password,
@@ -98,9 +97,9 @@ export default function EditAdminBranch(props) {
           city_id,
           province,
           branch_id,
-          // user_id
         } = formik.values;
         const newBranchAdmin = {
+          user_id: props.dtBranch[props.number].id,
           user_name,
           email,
           password,
@@ -113,54 +112,24 @@ export default function EditAdminBranch(props) {
           branch_id: props?.dtBranch[props?.number]?.branch_id,
         };
 
-        const cekMail = await api()
-          .get("/user/", {
-            params: { getall: newBranchAdmin.email } || {
-              getall: newBranchAdmin.user_name,
-            },
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.email) {
-              return true;
-            } else {
-              return false;
-            }
-          });
-
-        const cekBranch = await api()
-          .get("/branch/all-by-branch", {
-            params: { getAll: newBranchAdmin?.branch_name } || {
-              getAll: newBranchAdmin?.branch_address,
-            },
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.Data) {
-              return true;
-            } else {
-              return false;
-            }
-          });
-
-        console.log(cekBranch);
-        console.log(cekMail);
-
-        if (cekMail.user_name || cekMail.email) {
+        const cekMailResponse = await api().get("/user/", {
+          params: { getall: newBranchAdmin.email },
+        });
+    
+        if (cekMailResponse.data.data.length > 0 ) {
           return toast({
-            title:
-              "Email / Username sudah digunakan, silahkan gunakan selain itu",
+            title: "Email sudah terdaftar, silahkan gunakan email lain",
             status: "warning",
             duration: 3000,
             isClosable: true,
           });
         } else {
-          console.log(props?.dtBranch[props?.number]?.branch_id);
           await api()
             .patch("/branch/", newBranchAdmin)
             .then((res) => {
               return toast({
                 title: "Admin dan Cabang berhasil di edit",
+                position: "top",
                 status: "success",
                 duration: 3000,
                 isClosable: true,
@@ -182,7 +151,6 @@ export default function EditAdminBranch(props) {
       await api()
         .get("/province/")
         .then((res) => {
-          console.log(res.data.result);
           setProvince(res.data.result);
         });
     } catch (error) {
@@ -196,13 +164,11 @@ export default function EditAdminBranch(props) {
 
   const [city, setCity] = useState([]);
   const [provId, setProvId] = useState("");
-  console.log(provId);
   async function getCity() {
     try {
       await api()
         .get(`/city/${provId}`)
         .then((res) => {
-          console.log(res.data.result);
           setCity(res.data.result);
         });
     } catch (error) {
@@ -212,15 +178,11 @@ export default function EditAdminBranch(props) {
 
   useEffect(() => {
     getCity();
-    console.log(city);
   }, [provId]);
-
-  console.log(city);
 
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
   }
 
   return (
@@ -333,7 +295,18 @@ export default function EditAdminBranch(props) {
               alignItems={"center"}
             >
               <Box className="flex3R-box-addbranch"></Box>
-              <Image src={logo} w={"100%"} h={"20%"}></Image>
+              <Image
+                src={logo}
+                display={{
+                  base: "none",
+                  sm: "none",
+                  md: "flex",
+                  lg: "flex",
+                  xl: "flex",
+                }}
+                w={"100%"}
+                h={"20%"}
+              ></Image>
               <Box className="flex3R-box-addbranch"></Box>
             </Flex>
 
@@ -393,7 +366,9 @@ export default function EditAdminBranch(props) {
               <FormControl>
                 <FormLabel>Kelurahan</FormLabel>
                 <Input
-                  defaultValue={props?.dtBranch[props?.number]?.Branch?.district}
+                  defaultValue={
+                    props?.dtBranch[props?.number]?.Branch?.district
+                  }
                   onChange={inputHandler}
                   id="district"
                   transition={"1s"}
@@ -476,7 +451,7 @@ export default function EditAdminBranch(props) {
                 bgGradient: "linear(to-l, #9d9c45, #f0ee93 )",
               }}
             >
-              Simpan
+              Simpan Perubahan
             </Button>
           </Flex>
         </Flex>

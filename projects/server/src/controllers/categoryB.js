@@ -78,12 +78,34 @@ const categoryController = {
       });
     }
   },
+
   insertCategory: async (req, res) => {
     const trans = await db.sequelize.transaction();
 
     try {
       const { category_name } = req.body;
       const { filename } = req.file;
+
+      // Check if any required parameter is empty
+      if (!category_name || !filename) {
+        await trans.rollback();
+        return res.status(400).send({
+          message: "Semua parameter harus diisi pada form.",
+        });
+      }
+
+      // Check if the category_name already exists
+      const existingCategory = await db.Category.findOne({
+        where: { category_name },
+        transaction: trans,
+      });
+
+      if (existingCategory) {
+        await trans.rollback();
+        return res.status(500).send({
+          message: "Nama kategori yang Anda input sudah ada",
+        });
+      }
 
       await db.Category.create(
         {
@@ -94,10 +116,12 @@ const categoryController = {
           transaction: trans,
         }
       );
+
       await trans.commit();
-      return await db.Category.findAll().then((result) => {
-        res.send(result);
-      });
+
+      // Return the updated list of categories
+      const categories = await db.Category.findAll();
+      res.send(categories);
     } catch (err) {
       console.log(err);
       await trans.rollback();
@@ -117,13 +141,32 @@ const categoryController = {
         where: {
           id: req.params.id,
         },
+        transaction: trans,
       });
+
+      // Check if the edited category_name already exists
+      if (category_name !== kategori.dataValues.category_name) {
+        const existingCategory = await db.Category.findOne({
+          where: { category_name },
+          transaction: trans,
+        });
+
+        if (existingCategory) {
+          await trans.rollback();
+          return res.status(400).send({
+            message: "Nama kategori yang Anda input sudah ada",
+          });
+        }
+      }
+
       const cat_nm = category_name
         ? category_name
         : kategori.dataValues.category_name;
+
       const cat_img = req.file
         ? category_image + req.file.filename
         : kategori.dataValues.photo_category_url;
+
       await db.Category.update(
         {
           category_name: cat_nm,
@@ -136,12 +179,16 @@ const categoryController = {
           transaction: trans,
         }
       );
+
       await trans.commit();
-      return await db.Category.findOne({
+
+      const updatedCategory = await db.Category.findOne({
         where: {
           id: req.params.id,
         },
-      }).then((result) => res.send(result));
+      });
+
+      res.send(updatedCategory);
     } catch (err) {
       console.log(err.message);
       await trans.rollback();

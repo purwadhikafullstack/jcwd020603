@@ -33,6 +33,7 @@ import PromoPage from "../pages/PromoPage";
 import SalesReportProductPage from "../pages/SalesReportProductPage";
 import SalesReportUserPage from "../pages/SalesReportUserPage";
 import DashboardAdminPage from "../pages/Dashboard-Admin-Page";
+import ProfileAdminPage from "../pages/ProfileAdminPage";
 
 const routes = [
   <Route
@@ -74,7 +75,7 @@ const routes = [
   <Route
     path="/verify/:token"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage >
         <VerifyPage />
       </ProtectedPage>
     }
@@ -83,7 +84,7 @@ const routes = [
   <Route
     path="/forgot-password/:token"
     element={
-      <ProtectedPage guestOnly={true}>
+      <ProtectedPage >
         <ResetPass />
       </ProtectedPage>
     }
@@ -191,8 +192,18 @@ const routes = [
       </ProtectedPage>
     }
   ></Route>,
+
   <Route
-    path="/ab"
+  path="/profile-admin"
+  element={
+    <ProtectedPage needLogin={true} adminOnly={true}>
+      <ProfileAdminPage />
+    </ProtectedPage>
+  }
+></Route>,
+
+  <Route
+    path="/admin-branch"
     element={
       <ProtectedPage>
         <DashboardBranch needLogin={true} adminOnly={true} />

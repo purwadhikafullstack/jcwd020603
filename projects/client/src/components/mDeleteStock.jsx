@@ -22,15 +22,14 @@ export function DeleteStock(props) {
     try {
       await api()
         .delete("/stock/v3/" + props.id, { params: stock })
-        .then((result) => {
-          console.log(result.data);
-        });
+        .then((result) => {});
       toast({
-        title: "Stock Deleted",
+        title: "Success",
+        description: "Stok berhasil dihapus",
         status: "success",
-        position: "top-right",
+        position: "top",
         duration: 3000,
-        isClosable: false,
+        isClosable: true,
       });
       props.onClose();
     } catch (error) {

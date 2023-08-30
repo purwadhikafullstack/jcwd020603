@@ -24,13 +24,12 @@ export function SearchBar(props) {
     setSearchTerm(search);
     setTimeout(() => {
       handleSearch(search);
-    }, 500);
+    }, 300);
   }
 
   useEffect(() => {
     if (localStorage.getItem("searchTerm")) {
       const search = JSON.parse(localStorage.getItem("searchTerm"));
-      console.log(search);
       if (search) {
         autoSearch(search);
       }

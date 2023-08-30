@@ -64,7 +64,7 @@ export function AdminTableStock({
       <Tr id="SACategoryB">
         <Td> {indexOfLastProduct - productsPerPage + idx + 1}</Td>
         <Td className="SAImgCategoryB">
-          <Image src={url} />
+          <Image maxH={"43px"} minH={"43px"} width={"60px"} src={url} />
         </Td>
         <Td className="SACategoryNameB">
           <Flex alignItems="center" id="tableNameB">
@@ -104,7 +104,7 @@ export function AdminTableStock({
         <Td
           className="SACategoryActionB"
           isNumeric
-          display={userSelector.role == "SUPER ADMIN" ? "none" : "flex"}
+          display={userSelector.role == "SUPER ADMIN" ? "none" : "column"}
         >
           <Stack>
             <HStack display={"flex"} align={"center"} justifyContent={"center"}>

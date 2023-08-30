@@ -173,18 +173,23 @@ export default function SuperAdminCategoryList() {
                   ref={tableHeadRef}
                 >
                   <Tr className="tableHeadMenuG">
-                    <Th textAlign={"center"}>No</Th>
-                    <Th textAlign={"center"}>Gambar</Th>
-                    <Th>
+                    <Th textAlign={"center"} bgcolor="#ffb21c">
+                      No
+                    </Th>
+                    <Th bgcolor="#ffb21c" textAlign={"start"}>
+                      Gambar
+                    </Th>
+                    <Th bgcolor="#ffb21c">
                       <Flex alignItems="center" id="tableNameB">
                         Kategori{" "}
                       </Flex>
                     </Th>
                     <Th
+                      bgcolor="#ffb21c"
                       alignItems="center"
                       id="tableNameB"
                       textAlign={"center"}
-                      display={userSelector.role == "ADMIN" ? "none" : "flex"}
+                      display={userSelector.role == "ADMIN" ? "none" : "column"}
                     >
                       Tindakan
                     </Th>

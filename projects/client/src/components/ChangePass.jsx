@@ -68,6 +68,7 @@ export default function ChangePass() {
           .then((res) => {
             toast({
               title: "Ganti Password Berhasil",
+              position: "top",
               status: "success",
               duration: 3000,
               isClosable: true,
@@ -77,6 +78,7 @@ export default function ChangePass() {
       } catch (err) {
         toast({
           title: "Old Password salah",
+          position: "top",
           status: "warning",
           duration: 3000,
           isClosable: true,
@@ -89,7 +91,6 @@ export default function ChangePass() {
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
   }
 
   const respass = async () => {
@@ -97,6 +98,7 @@ export default function ChangePass() {
     try {
       toast({
         title: "Silahkan cek email Anda untuk link reset password",
+        position: "top",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -116,11 +118,15 @@ export default function ChangePass() {
       justifyContent={"center"}
     >
       <Box
-        w={"22%"}
-        h={"100vh"}
+        w={"25%"}
+        h={"auto"}
         justifyContent={"center"}
         alignItems={"center"}
         className="logo_samping"
+        onClick={() => {
+          nav("/");
+        }}
+        cursor={"pointer"}
       >
         <Image
           src={logo2}
@@ -150,7 +156,16 @@ export default function ChangePass() {
           columnGap={"20%"}
           justifyContent={"space-between"}
         >
-          <Image src={logo} w={"100%"} h={"40%"} className="logo_atas"></Image>
+          <Image
+            src={logo}
+            w={"100%"}
+            h={"40%"}
+            className="logo_atas"
+            onClick={() => {
+              nav("/");
+            }}
+            cursor={"pointer"}
+          ></Image>
           <Stack spacing={4}>
             <Heading fontSize={30} textAlign={"center"}>
               Ganti Password

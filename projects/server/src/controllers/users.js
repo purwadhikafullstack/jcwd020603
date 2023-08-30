@@ -12,6 +12,7 @@ const url_bg = process.env.bg_url;
 
 const userController = {
   register: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
       const { user_name, email, password, phone_number } = req.body;
       const hashPassword = await bcrypt.hash(password, 10);
@@ -54,7 +55,6 @@ const userController = {
               status: "LOGIN",
             },
           });
-          console.log(cektok);
           if (cektok) {
             const token = await db.Token.update(
               {
@@ -115,27 +115,25 @@ const userController = {
   getUser: async (req, res) => {
     try {
       const { getall } = req.query;
-      const user = await db.User.findOne({
+      const user = await db.User.findAll({
         where: {
           [Op.or]: [{ email: getall }, { user_name: getall }, { role: getall }],
         },
       });
-      return res.status(200).send(user);
+      return res.status(200).send({ message: "ini datauser", data: user });
     } catch (err) {
-      console.log(err.message);
       res.status(500).send({ message: err.message });
     }
   },
 
   getIdByToken: async (req, res, next) => {
     try {
-      let token
-      if (req.headers.authorization){
-         token = req.headers.authorization.split(" ")[1];
+      let token;
+      if (req.headers.authorization) {
+        token = req.headers.authorization.split(" ")[1];
       } else {
-         token = req.query.token
+        token = req.query.token;
       }
-      console.log(token);
       const findToken = await db.Token.findOne({
         where: {
           [Op.and]: [
@@ -151,7 +149,6 @@ const userController = {
           ],
         },
       });
-
 
       if (!findToken) {
         throw new Error("token expired");
@@ -225,11 +222,10 @@ const userController = {
       const { id } = req.user;
 
       const findToken = await db.Token.findOne({
-        where : {
-          token
-        }
-      })
-
+        where: {
+          token,
+        },
+      });
 
       if (findToken.valid == true) {
         await db.User.update(
@@ -242,7 +238,7 @@ const userController = {
             },
           }
         );
-  
+
         await db.Token.update(
           {
             valid: false,
@@ -254,7 +250,7 @@ const userController = {
             },
           }
         );
-  
+
         await db.User.findOne({
           where: {
             id: id,
@@ -262,33 +258,31 @@ const userController = {
         }).then((result) => {
           res.send(result);
         });
-   
       } else {
-        res.status(500).send({message : "token sudah tidak valid"})
+        res.status(500).send({ message: "token sudah tidak valid" });
       }
     } catch (err) {
       res.status(500).send({
         message: err.message,
       });
     }
-      
   },
 
-  resetPassLogin : async (req, res) => {
+  resetPassLogin: async (req, res) => {
     try {
-    const { token } = req.query;
-    const { id } = req.user
-    const {password} = req.body
-    const hashedpass = await bcrypt.hash(password, 10)
-    
-      const findToken = await db.Token.findOne({
-        where : {
-          token : token,
-          status : "FORGOT-PASSWORD"
-        }
-      })
+      const { token } = req.query;
+      const { id } = req.user;
+      const { password } = req.body;
+      const hashedpass = await bcrypt.hash(password, 10);
 
-      if (findToken.valid == true){
+      const findToken = await db.Token.findOne({
+        where: {
+          token: token,
+          status: "FORGOT-PASSWORD",
+        },
+      });
+
+      if (findToken.valid == true) {
         await db.User.update(
           {
             password: hashedpass,
@@ -299,7 +293,7 @@ const userController = {
             },
           }
         );
-  
+
         await db.Token.update(
           {
             valid: false,
@@ -310,12 +304,11 @@ const userController = {
               status: "FORGOT-PASSWORD",
             },
           }
-        )
-        res.status(200).send({message : "password berhasil di ubah"})
+        );
+        res.status(200).send({ message: "password berhasil di ubah" });
       } else {
-        res.status(500).send({message : "token sudah tidak valid"})
+        res.status(500).send({ message: "token sudah tidak valid" });
       }
-      
     } catch (err) {
       res.status(500).send({
         message: err.message,
@@ -329,7 +322,6 @@ const userController = {
       await db.User.update(
         {
           avatar_url: url_avatar + filename,
-          bg_url: url_bg + filename,
         },
         {
           where: {
@@ -342,7 +334,9 @@ const userController = {
         where: {
           id: req.params.id,
         },
-      }).then((result) => res.send(result));
+      }).then((result) =>
+        res.status(200).send({ message: "uoload foto", data: result })
+      );
     } catch (err) {
       return res.status(500).send({ message: err.message });
     }
@@ -351,7 +345,7 @@ const userController = {
   editUser: async (req, res) => {
     try {
       const { user_name, email, gender, birth_date } = req.body;
-      await db.User.update(
+      const dtUpdate = await db.User.update(
         {
           user_name,
           email,
@@ -363,12 +357,11 @@ const userController = {
             id: req.params.id,
           },
         }
-      ).then((result) =>
-        res.status(200).send({
-          message: "Perubahan Data Berhasil",
-          data: result.dataValues,
-        })
       );
+      res.status(200).send({
+        message: "Perubahan Data Berhasil",
+        data: dtUpdate,
+      });
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
@@ -388,8 +381,6 @@ const userController = {
           old_password,
           user.dataValues.password
         );
-
-        console.log(cekPass, "ini cekpass");
         if (cekPass) {
           await db.User.update(
             {
@@ -448,7 +439,7 @@ const userController = {
           status: "FORGOT-PASSWORD",
           payload: JSON.stringify(payload),
         });
-        
+
         await mailer({
           subject: "RESET PASSWORD",
           to: user.dataValues.email,
@@ -465,7 +456,7 @@ const userController = {
 
   resetPass: async (req, res) => {
     try {
-      const { password, token} = req.body;
+      const { password, token } = req.body;
       const hashpass = await bcrypt.hash(password, 10);
 
       const findToken = await db.Token.findOne({
@@ -473,8 +464,6 @@ const userController = {
           token : token
         }
       })
-      console.log(findToken, "tokennya");
-      console.log(findToken.valid, "validnya");
       if(findToken.valid == true){
         await db.User.update(
           {
@@ -485,26 +474,26 @@ const userController = {
               id: req.params.id,
             },
           }
-        )
-        
-        await db.Token.update({
-          valid : false
-        },
-        {
-          where : {
-            token : token,
-            status : "FORGOT-PASSWORD"
-          }
-        })
-          res.status(200).send({
-            message: "Password berhasil diganti",
-            data: res.dataValues,
-          })
-      
-      } else {
-        res.status(500).send({message : "token sudah tidak valid"})
-      }
+        );
 
+        await db.Token.update(
+          {
+            valid: false,
+          },
+          {
+            where: {
+              token: token,
+              status: "FORGOT-PASSWORD",
+            },
+          }
+        );
+        res.status(200).send({
+          message: "Password berhasil diganti",
+          data: res.dataValues,
+        });
+      } else {
+        res.status(500).send({ message: "token sudah tidak valid" });
+      }
     } catch (error) {
       res.status(500).send({ message: error.message });
     }

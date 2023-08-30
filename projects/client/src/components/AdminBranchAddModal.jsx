@@ -14,10 +14,8 @@ import {
 } from "@chakra-ui/react";
 import "../css/adminBranchR.css";
 import logo from "../assets/SVG/4.svg";
-import AddUser from "./AdminBranchAddModal-user";
-import AddBranch from "./AdminBranchAddModal-branch";
 import { api } from "../api/api";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import YupPassword from "yup-password";
@@ -81,7 +79,6 @@ export default function AddAdminBranch(props) {
 
     onSubmit: async () => {
       try {
-        console.log("masuk dlu");
         const {
           user_name,
           email,
@@ -105,44 +102,15 @@ export default function AddAdminBranch(props) {
           province,
         };
 
-        const cekMail = await api()
-          .get("/user/", {
-            params: { getall: newBranchAdmin.email } || {
-              getall: newBranchAdmin.user_name,
-            },
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.email) {
-              return true;
-            } else {
-              return false;
-            }
-          });
+        const cekMailResponse = await api().get("/user/", {
+          params: { getall: newBranchAdmin.email },
+        });
 
-        const cekBranch = await api()
-          .get("/branch/all-by-branch", {
-            params: { getAll: newBranchAdmin.branch_name } || {
-              getAll: newBranchAdmin.branch_address,
-            },
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.Data) {
-              return true;
-            } else {
-              return false;
-            }
-          });
-
-        console.log(cekBranch);
-        console.log(cekMail);
-
-        if (cekMail || cekBranch) {
+        if (cekMailResponse.data.data.length > 0) {
           return toast({
-            title:
-              "Email / Username / nama cabang / alamat cabang sudah digunakan, silahkan gunakan selain itu",
+            title: "Email sudah terdaftar, silahkan gunakan email lain",
             status: "warning",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
@@ -152,6 +120,7 @@ export default function AddAdminBranch(props) {
             .then((res) => {
               return toast({
                 title: "Admin dan Cabang berhasil ditambahkan",
+                position: "top",
                 status: "success",
                 duration: 3000,
                 isClosable: true,
@@ -163,17 +132,16 @@ export default function AddAdminBranch(props) {
       } catch (err) {
         console.log(err);
       }
-    },
-  });
+  }
+})
+
 
   const [province, setProvince] = useState([]);
-
   async function getProv() {
     try {
       await api()
         .get("/province/")
         .then((res) => {
-          console.log(res.data.result);
           setProvince(res.data.result);
         });
     } catch (error) {
@@ -187,13 +155,11 @@ export default function AddAdminBranch(props) {
 
   const [city, setCity] = useState([]);
   const [provId, setProvId] = useState("");
-  console.log(provId);
   async function getCity() {
     try {
       await api()
         .get(`/city/${provId}`)
         .then((res) => {
-          console.log(res.data.result);
           setCity(res.data.result);
         });
     } catch (error) {
@@ -203,15 +169,12 @@ export default function AddAdminBranch(props) {
 
   useEffect(() => {
     getCity();
-    console.log(city);
   }, [provId]);
 
-  console.log(city);
 
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
   }
 
   return (
@@ -309,7 +272,20 @@ export default function AddAdminBranch(props) {
               alignItems={"center"}
             >
               <Box className="flex3R-box-addbranch"></Box>
-              <Image src={logo} w={"100%"} h={"20%"}></Image>
+              <Flex h={"125px"} w={"100%"}>
+                <Image
+                  src={logo}
+                  display={{
+                    base: "none",
+                    sm: "none",
+                    md: "flex",
+                    lg: "flex",
+                    xl: "flex",
+                  }}
+                  w={"100%"}
+                  h={"90%"}
+                ></Image>
+              </Flex>
               <Box className="flex3R-box-addbranch"></Box>
             </Flex>
 
@@ -437,7 +413,7 @@ export default function AddAdminBranch(props) {
                 bgGradient: "linear(to-l, #9d9c45, #f0ee93 )",
               }}
             >
-              Simpan
+              Tambah
             </Button>
           </Flex>
         </Flex>

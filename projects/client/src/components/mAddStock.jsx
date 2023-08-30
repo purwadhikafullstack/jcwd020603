@@ -10,15 +10,21 @@ import {
   Button,
   Input,
   Select,
+  Icon,
+  Center,
+  Image,
+  Toast,
+  useToast,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
 import { useState, useRef, useEffect } from "react";
+import { TbPhotoSearch } from "react-icons/tb";
 import { useSelector } from "react-redux";
 
 export function AddStock(props) {
   const { selectedOption, setSelectedOption } = useState("");
   const userSelector = useSelector((state) => state.auth);
-
+  const toast = useToast();
   const [stock, setStock] = useState({
     branch_id: userSelector.branch_id,
     product_id: "",
@@ -30,26 +36,44 @@ export function AddStock(props) {
     const tempStock = { ...stock };
     tempStock[id] = value;
     setStock(tempStock);
-    console.log(tempStock);
   };
 
   const addStock = async () => {
     if (!stock) {
-      alert("Please input a stock details");
+      toast({
+        title: "Error",
+        description: "Please input a stock details",
+        status: "warning",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
       return;
     }
-    console.log(stock);
     try {
       await api()
         .post("/stock/v1", stock)
-        .then((result) => {
-          console.log(result.data);
-        });
-      alert("Posting success");
+        .then((result) => {});
+      props.fetchData();
+      toast({
+        title: "Success",
+        description: "Stok berhasil ditambahkan",
+        status: "success",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
       props.onClose();
     } catch (error) {
       console.log(error);
-      alert("Posting failed");
+      toast({
+        title: "Error",
+        description: "Stok gagal ditambahkan",
+        status: "error",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
@@ -70,6 +94,18 @@ export function AddStock(props) {
       });
   }, []);
 
+  const [dataProduct, setDataProduct] = useState([]);
+  useEffect(() => {
+    api()
+      .get("/product/" + stock.product_id)
+      .then((response) => {
+        setDataProduct(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [stock]);
+
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -79,25 +115,60 @@ export function AddStock(props) {
           <ModalCloseButton />
           <ModalBody>
             <Flex className="containerAddProduct">
-              <Select
-                className="inputAddProduct"
-                value={selectedOption}
-                id="product_id"
-                onClick={inputHandler}
-                placeholder="Produk"
-              >
-                {product.map((product) => (
-                  <option key={product.id} value={`${product.id}`}>
-                    {product.product_name}
-                  </option>
-                ))}
-              </Select>
-              <Input
-                className="inputAddProduct"
-                placeholder="Jumlah Stock"
-                id="quantity_stock"
-                onChange={inputHandler}
-              />
+              <Center w={"100%"} h={"100%"}>
+                {dataProduct ? (
+                  <Flex flexDir={"column"}>
+                    <Image
+                      src={dataProduct.photo_product_url}
+                      // w={"100%"}
+                      h={"200px"}
+                      objectFit={"contain"}
+                    />
+                    <Select
+                      className="inputAddProduct"
+                      value={selectedOption}
+                      id="product_id"
+                      onClick={inputHandler}
+                      placeholder="Produk"
+                    >
+                      {product.map((product) => (
+                        <option key={product.id} value={`${product.id}`}>
+                          {product.product_name}
+                        </option>
+                      ))}
+                    </Select>
+                    <Input
+                      className="inputAddProduct"
+                      placeholder="Jumlah Stock"
+                      id="quantity_stock"
+                      onChange={inputHandler}
+                    />
+                  </Flex>
+                ) : (
+                  <Flex flexDir={"column"}>
+                    <Icon as={TbPhotoSearch} fontSize={"100px"} />
+                    <Select
+                      className="inputAddProduct"
+                      value={selectedOption}
+                      id="product_id"
+                      onClick={inputHandler}
+                      placeholder="Produk"
+                    >
+                      {product.map((product) => (
+                        <option key={product.id} value={`${product.id}`}>
+                          {product.product_name}
+                        </option>
+                      ))}
+                    </Select>
+                    <Input
+                      className="inputAddProduct"
+                      placeholder="Jumlah Stock"
+                      id="quantity_stock"
+                      onChange={inputHandler}
+                    />
+                  </Flex>
+                )}
+              </Center>
             </Flex>
           </ModalBody>
           <ModalFooter justifyContent="center">

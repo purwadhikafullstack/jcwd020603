@@ -42,12 +42,7 @@ export default function SalesReportUserDetailModal(props) {
   const [dtStock, setDtStock] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
-  const { isOpen, onClose, dtSumQtyUser, dtSumQtyUserAll, indexnya } = props;
-
-  console.log(indexnya);
- console.log(dtSumQtyUser[indexnya].dataUser);
- console.log(dtSumQtyUser);
- console.log(dtSumQtyUserAll);
+  const { isOpen, onClose, dtSumQtyUser, dtSumQtyUserAll, indexnya, indexModalnya } = props;
 
   return (
     <>
@@ -57,14 +52,14 @@ export default function SalesReportUserDetailModal(props) {
             <Flex className="flex3R-input_user-disvoc" gap={"20px"} px={5} py={5}>
               <Flex alignItems={"center"} justifyContent={"center"} fontWeight={"extrabold"} fontSize={"30px"}>Detail</Flex>
               <Flex borderBottom={"3px double #9d9c45"} pb={"3%"} fontWeight={"bolder"} justifyContent={"space-evenly"}>
-              <Flex> Tanggal   : {dtSumQtyUser[indexnya].date}</Flex>
-              <Flex> Jumlah Pembeli : {dtSumQtyUser[indexnya].dataUser.length}</Flex>
+              <Flex> Tanggal   : {dtSumQtyUser[indexModalnya + indexnya].date}</Flex>
+              <Flex> Jumlah Pembeli : {dtSumQtyUser[indexModalnya + indexnya].dataUser.length}</Flex>
               </Flex>
               {/* <Flex fontWeight={"extrabold"}> Data Pembeli :</Flex> */}
-                {dtSumQtyUser[indexnya].dataUser.map((val,index) => (
-              <Flex pb={"5%"} justifyContent={"center"} alignItems={"center"} flexDir={"column"} border={"1 px solid green"}>
-              <Flex >Nama : {val.user_name}</Flex>
-              <Flex >Jumlah transaksi : {val.jumlah_transaksi}</Flex>
+                {dtSumQtyUser[indexModalnya + indexnya].dataUser.map((val,index) => (
+              <Flex key={index} pb={"5%"} justifyContent={"center"} alignItems={"center"} flexDir={"column"} border={"1 px solid green"}>
+              <Flex >Nama : {val?.user_name}</Flex>
+              <Flex >Jumlah transaksi : {val?.jumlah_transaksi}</Flex>
               </Flex>
                 ))}
             </Flex>

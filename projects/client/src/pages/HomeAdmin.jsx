@@ -32,6 +32,7 @@ export default function HomeAdmin() {
             toast({
               title: "Silahkan cek email kamu untuk link verifikasi",
               status: "success",
+              position: "top",
               duration: 5000,
               isClosable: true,
             });
@@ -40,6 +41,7 @@ export default function HomeAdmin() {
         return toast({
           title: "Akun Anda sudah terverifikasi",
           status: "warning",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });

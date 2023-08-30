@@ -45,14 +45,12 @@ export default function Profile() {
   const uploadFile = async () => {
     const formData = new FormData();
     formData.append("avatar", selectedFile);
-    console.log("ini", formData);
     let avatar;
     await api()
       .post("avatar/" + userSelector.id, selectedFile)
       .then((res) => {
         avatar = res.data;
       });
-    console.log(avatar);
 
     if (avatar) {
       dispatch({

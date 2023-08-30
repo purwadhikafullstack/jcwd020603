@@ -5,8 +5,6 @@ import { api } from "../api/api";
 export default function ModalKonfirmasiDeletDiscount(props) {
   const nav = useNavigate();
   const toast = useToast();
-  console.log(props.dtDis);
-  console.log(props.dtDis[props.numberIdx]);
   const discount_id = props.dtDis[props.numberIdx].id;
 
   const handleDelete = async () => {
@@ -16,6 +14,7 @@ export default function ModalKonfirmasiDeletDiscount(props) {
         toast({
           title: "Discount berhasil dihapus",
           status: "success",
+          position: "top",
           duration: 3000,
           isClosable: true,
         });
