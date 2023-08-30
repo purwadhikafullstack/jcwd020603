@@ -42,7 +42,6 @@ export default function ContentPesanan() {
     status: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  console.log(filter);
   const getOrders = async () => {
     const params = { ...filter };
     try {
@@ -71,7 +70,6 @@ export default function ContentPesanan() {
     }
     setPages(output);
   }
-  console.log("halaman", pages);
   useEffect(() => {
     pageHandler();
   }, [allOrders]);

@@ -32,7 +32,6 @@ export default function ContentDaftarAlamat() {
   const nav = useNavigate();
   //click radio untuk pilih alamt
   const [Clicked, setClicked] = useState({});
-  console.log(Clicked);
   const {
     isOpen: isOpenModal1,
     onOpen: onOpenModal1,
@@ -52,8 +51,6 @@ export default function ContentDaftarAlamat() {
   //edit current address yang dipilih
   const setAddress = async () => {
     const find = await api().patch(`/addressG/current/${Clicked.id}`);
-
-    console.log(find.data);
   };
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});

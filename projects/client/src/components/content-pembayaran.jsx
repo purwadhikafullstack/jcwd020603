@@ -60,7 +60,6 @@ export default function ContentPembayaran() {
   useEffect(() => {
     if (orderValue.length > 0) {
       const parsedShippingCost = JSON.parse(orderValue[0]?.shipping_cost);
-      console.log(parsedShippingCost);
       setShippingCost(parsedShippingCost);
     }
   }, [orderValue]);
@@ -132,7 +131,6 @@ export default function ContentPembayaran() {
     const formData = new FormData();
     formData.append("paymentImg", selectedFile);
     formData.append("orderDetVal", JSON.stringify(orderDetVal));
-    console.log(orderValue[0]?.id);
     const post = await api().patch(
       `/order/image/${orderValue[0]?.id}`,
       formData
