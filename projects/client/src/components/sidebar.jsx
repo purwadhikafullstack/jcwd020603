@@ -64,15 +64,11 @@ export default function Sidebar(props) {
   };
   //get jumlah keranjang
   const getCount = async () => {
-    try {
-      await api()
-        .get("/cart", { params: { branch_id: nearestBranch } })
-        .then((res) => {
-          setLengthCart(res.data.total);
-        });
-    } catch (err) {
-      console.log(err);
-    }
+    await api()
+      .get("/cart", { params: { branch_id: nearestBranch } })
+      .then((res) => {
+        setLengthCart(res.data.total);
+      });
   };
   //menyimpan alamat yang dipilih
   const [selectedAddress, setSelectedAddress] = useState({});

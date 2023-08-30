@@ -1,8 +1,6 @@
 import {
-  Avatar,
   Box,
   Button,
-  Center,
   Flex,
   FormControl,
   FormLabel,
@@ -16,15 +14,12 @@ import {
 } from "@chakra-ui/react";
 import "../css/adminBranchR.css";
 import logo from "../assets/SVG/4.svg";
-import AddUser from "./AdminBranchAddModal-user";
-import AddBranch from "./AdminBranchAddModal-branch";
 import { api } from "../api/api";
 import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import YupPassword from "yup-password";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
 
 export default function AddAdminBranch(props) {
   const toast = useToast();

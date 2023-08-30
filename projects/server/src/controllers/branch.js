@@ -123,6 +123,7 @@ const branchController = {
   },
 
   addBranchAdmin: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
       const {
         user_name,
@@ -145,7 +146,8 @@ const branchController = {
         province,
         latitude: coordinate.data.results[0].geometry.lat,
         longitude: coordinate.data.results[0].geometry.lng,
-      });
+      },
+      {transaction : trans});
       const newAdmin = await db.User.create({
         user_name,
         email,
@@ -153,19 +155,22 @@ const branchController = {
         password: hashedPass,
         phone_number,
         branch_id: newBranch.id,
-      });
+      },
+      {transaction : trans});
+      await trans.commit();
       return res.status(200).send({
         message: "Data Admin dan Cabang berhasil ditambahkan",
         Data: newBranch,
         newAdmin,
       });
     } catch (error) {
+      trans.rollback()
       res.status(500).send({ message: error.message });
     }
   },
 
   deleteBranchAdmin: async (req, res) => {
-    // const updateData = await getAll()
+    const trans = await db.sequelize.transaction();
     const { branch_id } = req.body;
     const transaction = await db.sequelize.transaction();
     try {
@@ -174,7 +179,7 @@ const branchController = {
           role: "ADMIN",
           branch_id: branch_id,
         },
-        transaction,
+        
       });
 
       const cekUser = await db.User.count({
@@ -182,7 +187,7 @@ const branchController = {
           branch_id: branch_id,
           role: "ADMIN",
         },
-        transaction,
+       
       });
 
       if (cekUser === 0) {
@@ -190,19 +195,20 @@ const branchController = {
           where: {
             id: branch_id,
           },
-          transaction,
+          
         });
       }
 
-      await transaction.commit();
+      await trans.commit();
       res.status(200).send({ message: "Admin dan Branch berhasil dihapus" });
     } catch (error) {
-      await transaction.rollback();
+      await trans.rollback();
       res.status(500).send({ message: error.message });
     }
   },
 
   updateAdminBranch: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     const {
       user_name,
       email,
@@ -217,7 +223,6 @@ const branchController = {
       branch_id,
       user_id,
     } = req.body;
-    const transaction = await db.sequelize.transaction();
     const hashedPass = await bcrypt.hash(password, 10);
     try {
       const branch = await db.User.findOne({
@@ -260,7 +265,7 @@ const branchController = {
             branch_id: branch_id,
           },
         },
-        transaction
+        
       );
 
       await db.Branch.update(
@@ -276,7 +281,7 @@ const branchController = {
             id: branch_id,
           },
         },
-        transaction
+        
       );
 
       await db.Branch.update(
@@ -292,13 +297,12 @@ const branchController = {
             id: branch_id,
           },
         },
-        transaction
+        
       );
-
-      await transaction.commit();
+      await trans.commit();
       res.status(200).send({ message: "Admin dan Branch berhasil di edit" });
     } catch (error) {
-      await transaction.rollback();
+      await trans.rollback();
       res.status(500).send({ message: error.message });
     }
   },
@@ -368,6 +372,7 @@ const branchController = {
   },
 
   uploadAvatar: async (req, res) => {
+    const trans = await db.sequelize.transaction();
     try {
       const { filename } = req.file;
       await db.User.update(
@@ -381,14 +386,15 @@ const branchController = {
         }
       );
 
-      await db.User.findOne({
+     const dtUserOne = await db.User.findOne({
         where: {
           id: req.params.id,
         },
-      }).then((result) =>
-        res.status(200).send({ message: "uoload foto", data: result })
-      );
+      })
+      await trans.commit()
+      res.status(200).send({ message: "uoload foto", data: dtUserOne })
     } catch (err) {
+      await trans.rollback();
       return res.status(500).send({ message: err.message });
     }
   },

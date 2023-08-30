@@ -45,17 +45,6 @@ export default function TopBar({
       nav("/address");
     }
   };
-  useEffect(() => {
-    getFormattedAddress();
-    if (!address) {
-      // setIsLoaded(true);
-    }
-  }, [address]);
-  useEffect(() => {
-    if (district) {
-      // setIsLoaded(true);
-    }
-  }, [district]);
   return (
     <>
       <Flex id="containerTopBarB" justifyContent={"center"}>
@@ -63,12 +52,6 @@ export default function TopBar({
           <Flex className="flexSideBarB" cursor={"pointer"} onClick={checkUser}>
             <Icon id="iconLocationB" as={MdLocationPin} />
             <Skeleton height={"30px"} isLoaded={isLoaded}>
-              {/* {isLoaded ? (
-              <Center w={"180px"}>
-                <Spinner />
-              </Center>
-            ) : (
-              <> */}
               <Flex w={"100%"} flexDir={"column"}>
                 <Flex id="alamatTopBarB">
                   {address ? (
@@ -130,8 +113,6 @@ export default function TopBar({
                   )}
                 </Flex>
               </Flex>
-              {/* </>
-            )} */}
             </Skeleton>
           </Flex>
         </Flex>
