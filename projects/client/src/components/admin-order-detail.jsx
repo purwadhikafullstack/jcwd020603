@@ -74,7 +74,6 @@ export default function AdminOrderDetail() {
   // menyimpan shipping_cost
   const [shippingCost, setShippingCost] = useState({});
   const [calculateSubtotal, setCalculateSubtotal] = useState(0);
-  console.log("ini val orderValue", orderValue);
   useEffect(() => {
     if (Object.keys(orderValue).length > 0) {
       const parsedShippingCost = JSON.parse(orderValue?.shipping_cost);
@@ -92,17 +91,14 @@ export default function AdminOrderDetail() {
       return setCalculateSubtotal(0);
     }
   }, [shippingCost]);
-  console.log(calculateSubtotal);
-  console.log("ORDER VALUE", orderValue);
-  console.log("ORDER DETAIL", orderDetVal);
   // cancel order
   const cancelOrder = async () => {
     try {
       const cancel = await api().patch(`/order/cancel/${orderValue?.id}`, {
         orderDetVal,
       });
+      fetchOrder();
       console.log(cancel.data);
-      return nav("/admin/orders");
     } catch (err) {
       console.log(err);
     }
@@ -196,7 +192,11 @@ export default function AdminOrderDetail() {
                         color={"gray"}
                         onClick={() => {
                           setChangeStatus(!changeStatus);
-                          statusOrder();
+                          if (valueStatus == "Dibatalkan") {
+                            cancelOrder();
+                          } else {
+                            statusOrder();
+                          }
                         }}
                       >
                         UBAH
@@ -244,7 +244,11 @@ export default function AdminOrderDetail() {
                     padding={"10px"}
                   >
                     {orderValue?.order_transfer_url ? (
-                      <Image src={orderValue.order_transfer_url} />
+                      <Image
+                        src={orderValue.order_transfer_url}
+                        w={"100%"}
+                        maxW={"300px"}
+                      />
                     ) : (
                       <Center textAlign={"center"} fontWeight={600}>
                         Tidak ada gambar Bukti Pembayaran
