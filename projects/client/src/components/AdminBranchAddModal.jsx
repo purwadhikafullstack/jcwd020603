@@ -115,6 +115,7 @@ export default function AddAdminBranch(props) {
           return toast({
             title: "Email sudah terdaftar, silahkan gunakan email lain",
             status: "warning",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
@@ -124,6 +125,7 @@ export default function AddAdminBranch(props) {
             .then((res) => {
               return toast({
                 title: "Admin dan Cabang berhasil ditambahkan",
+                position: "top",
                 status: "success",
                 duration: 3000,
                 isClosable: true,

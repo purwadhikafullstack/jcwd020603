@@ -146,6 +146,7 @@ export default function EditAdminBranch(props) {
           return toast({
             title:
               "Email / Username sudah digunakan, silahkan gunakan selain itu",
+            position: "top",
             status: "warning",
             duration: 3000,
             isClosable: true,
@@ -156,6 +157,7 @@ export default function EditAdminBranch(props) {
             .then((res) => {
               return toast({
                 title: "Admin dan Cabang berhasil di edit",
+                position: "top",
                 status: "success",
                 duration: 3000,
                 isClosable: true,

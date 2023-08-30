@@ -68,6 +68,7 @@ export default function ChangePass() {
           .then((res) => {
             toast({
               title: "Ganti Password Berhasil",
+              position: "top",
               status: "success",
               duration: 3000,
               isClosable: true,
@@ -77,6 +78,7 @@ export default function ChangePass() {
       } catch (err) {
         toast({
           title: "Old Password salah",
+          position: "top",
           status: "warning",
           duration: 3000,
           isClosable: true,
@@ -97,6 +99,7 @@ export default function ChangePass() {
     try {
       toast({
         title: "Silahkan cek email Anda untuk link reset password",
+        position: "top",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -121,7 +124,9 @@ export default function ChangePass() {
         justifyContent={"center"}
         alignItems={"center"}
         className="logo_samping"
-        onClick={() => {nav("/")}}
+        onClick={() => {
+          nav("/");
+        }}
         cursor={"pointer"}
       >
         <Image
@@ -152,8 +157,16 @@ export default function ChangePass() {
           columnGap={"20%"}
           justifyContent={"space-between"}
         >
-          <Image src={logo} w={"100%"} h={"40%"} className="logo_atas" onClick={() => {nav("/")}}
-        cursor={"pointer"}></Image>
+          <Image
+            src={logo}
+            w={"100%"}
+            h={"40%"}
+            className="logo_atas"
+            onClick={() => {
+              nav("/");
+            }}
+            cursor={"pointer"}
+          ></Image>
           <Stack spacing={4}>
             <Heading fontSize={30} textAlign={"center"}>
               Ganti Password

@@ -81,6 +81,7 @@ export default function Register() {
           return toast({
             title: "Email sudah terdaftar, siilahkan gunakan email yang lain",
             status: "warning",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
@@ -91,6 +92,7 @@ export default function Register() {
               toast({
                 title: "Register berhasil",
                 status: "success",
+                position: "top",
                 duration: 3000,
                 isClosable: true,
               });

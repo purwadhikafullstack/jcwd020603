@@ -8,6 +8,7 @@ export default function ModalLogoutAdmin(props) {
   const logout = () => {
     dispatch({ type: "logout" });
     localStorage.removeItem("auth");
+    localStorage.removeItem("nearestBranch");
     return nav("/login");
   };
 

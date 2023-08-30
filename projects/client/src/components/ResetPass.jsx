@@ -75,6 +75,7 @@ export default function ResetPass() {
               toast({
                 title: "Ganti Password Berhasil",
                 status: "success",
+                position: "top",
                 duration: 3000,
                 isClosable: true,
               });
@@ -84,6 +85,7 @@ export default function ResetPass() {
           toast({
             title: `Maaf link ini telah expired, tekan "forgot-password" untuk mendapatkan link baru`,
             status: "warning",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
@@ -106,6 +108,7 @@ export default function ResetPass() {
               toast({
                 title: "Ganti Password Berhasil",
                 status: "success",
+                position: "top",
                 duration: 3000,
                 isClosable: true,
               });
@@ -115,6 +118,7 @@ export default function ResetPass() {
           toast({
             title: `Maaf link ini telah expired, tekan "forgot-password" untuk mendapatkan link baru`,
             status: "warning",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
@@ -144,7 +148,9 @@ export default function ResetPass() {
         justifyContent={"center"}
         alignItems={"center"}
         className="logo_samping"
-        onClick={()=> {nav("/")}}
+        onClick={() => {
+          nav("/");
+        }}
         cursor={"pointer"}
       >
         <Image src={logo2} className="logo_samping"></Image>
@@ -169,8 +175,16 @@ export default function ResetPass() {
           columnGap={"20%"}
           justifyContent={"space-between"}
         >
-          <Image src={logo} w={"100%"} h={"40%"} className="logo_atas" onClick={() => {nav("/")}}
-        cursor={"pointer"}></Image>
+          <Image
+            src={logo}
+            w={"100%"}
+            h={"40%"}
+            className="logo_atas"
+            onClick={() => {
+              nav("/");
+            }}
+            cursor={"pointer"}
+          ></Image>
           <Stack spacing={4} mt={"20px"}>
             <Heading fontSize={30} textAlign={"center"}>
               Ganti Password

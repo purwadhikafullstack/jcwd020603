@@ -57,39 +57,52 @@ export default function ProfileData() {
     onSubmit: async () => {
       try {
         const { user_name, email, gender, birth_date } = formik.values;
-        const dtUser = { user_name, email: email ? email : userSelector.email, gender, birth_date };
-    
+        const dtUser = {
+          user_name,
+          email: email ? email : userSelector.email,
+          gender,
+          birth_date,
+        };
+
         // Cek apakah email yang diinputkan sudah ada di database selain email user saat ini
         const cekMailResponse = await api().get("/user/", {
           params: { getall: dtUser.email },
         });
-    
-        if (cekMailResponse.data.data.length > 0 && cekMailResponse.data.data[0].email !== userSelector.email) {
+
+        if (
+          cekMailResponse.data.data.length > 0 &&
+          cekMailResponse.data.data[0].email !== userSelector.email
+        ) {
           return toast({
             title: "Email sudah terdaftar, silahkan gunakan email lain",
             status: "warning",
             duration: 3000,
+            position: "top",
             isClosable: true,
           });
         } else {
-          const updateUserResponse = await api().patch("user/" + userSelector.id, dtUser);
+          const updateUserResponse = await api().patch(
+            "user/" + userSelector.id,
+            dtUser
+          );
           const updatedUser = updateUserResponse.data.data;
-    
+
           if (updatedUser) {
             dispatch({
               type: "login",
               payload: updatedUser,
             });
           }
-    
+
           toast({
             title: "Data berhasil diubah",
             status: "success",
+            position: "top",
             duration: 3000,
             isClosable: true,
           });
-          
-          setUser(updatedUser)
+
+          setUser(updatedUser);
           setEdit(true);
           // getUser(); // Pastikan Anda memiliki fungsi getUser yang sesuai
         }

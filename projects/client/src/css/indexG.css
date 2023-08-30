@@ -629,4 +629,5 @@ th {
   align-items: center;
   background: white;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+  justify-content: center;
 }

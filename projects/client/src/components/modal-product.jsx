@@ -186,6 +186,7 @@ export default function ModalProduct(props) {
                   toast({
                     title: "Tentukan alamat pengiriman terlebih dahulu",
                     status: "warning",
+                    position: "top",
                     duration: 3000,
                     isClosable: true,
                   });
