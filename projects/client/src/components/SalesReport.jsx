@@ -126,9 +126,7 @@ export default function SalesReport() {
   // fetch data
 
   // download ke excel
-  const handleDownloadExcel = () => {
-    console.log(isDownloadTriggered, "ini trigernya");
-    // if(isDownloadTriggered == true){
+const handleDownloadExcel = () => {
     const excelData = dtForDownload.map((item, index) => ({
       No: index + 1,
       "Kode Transaksi": item.order_number,
@@ -152,11 +150,7 @@ export default function SalesReport() {
     link.href = url;
     link.download = "sales_report_transaksi.xlsx";
     link.click();
-
-    //  setIsDownloadTriggered(false)
-    // }
   };
-  // useEffect
   useEffect(() => {
     pageHandler();
   }, [dtSalesReportFilter]);

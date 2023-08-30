@@ -308,7 +308,6 @@ const branchController = {
       const branch = await db.Branch.findAll();
       return res.send(branch);
     } catch (error) {
-      console.log(error.message);
       res.status(500).send({ message: error.message });
     }
   },

@@ -104,7 +104,6 @@ export default function VoucherAddUpdateModal(props) {
           await api()
             .patch("/voucher", dataEditVoucher)
             .then((result) => {
-              console.log(result.data);
             });
           toast({
             title: "Data diskon berhasil diubah",
@@ -145,7 +144,6 @@ export default function VoucherAddUpdateModal(props) {
           await api()
             .post("/voucher", dataInputVoucher)
             .then((result) => {
-              console.log(result.data);
             });
           toast({
             title: "Data diskon berhasil ditambahkan",
@@ -163,13 +161,6 @@ export default function VoucherAddUpdateModal(props) {
       }
     },
   });
-
-  // function inputHandler(event) {
-  //   const { value, id } = event.target;
-  //   formik.setFieldValue(id, value);
-  //   console.log(formik.values);
-  // }
-
   function inputHandler(event) {
     const { value, id } = event.target;
     if (id === "nominal" || id === "minimal_order" || id === "limit") {
@@ -183,7 +174,6 @@ export default function VoucherAddUpdateModal(props) {
     } else {
       formik.setFieldValue(id, value);
     }
-    console.log(formik.values);
   }
 
   return (

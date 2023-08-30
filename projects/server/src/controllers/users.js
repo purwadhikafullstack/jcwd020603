@@ -55,7 +55,6 @@ const userController = {
               status: "LOGIN",
             },
           });
-          console.log(cektok);
           if (cektok) {
             const token = await db.Token.update(
               {
@@ -116,7 +115,6 @@ const userController = {
   getUser: async (req, res) => {
     try {
       const { getall } = req.query;
-      console.log(req.query);
       const user = await db.User.findAll({
         where: {
           [Op.or]: [{ email: getall }, { user_name: getall }, { role: getall }],
@@ -124,7 +122,6 @@ const userController = {
       });
       return res.status(200).send({message : "ini datauser", data : user});
     } catch (err) {
-      console.log(err.message);
       res.status(500).send({ message: err.message });
     }
   },
@@ -137,7 +134,6 @@ const userController = {
       } else {
         token = req.query.token;
       }
-      console.log(token);
       const findToken = await db.Token.findOne({
         where: {
           [Op.and]: [
@@ -386,8 +382,6 @@ const userController = {
           old_password,
           user.dataValues.password
         );
-
-        console.log(cekPass, "ini cekpass");
         if (cekPass) {
           await db.User.update(
             {
@@ -467,13 +461,11 @@ const userController = {
       const hashpass = await bcrypt.hash(password, 10);
 
       const findToken = await db.Token.findOne({
-        where: {
-          token: token,
-        },
-      });
-      console.log(findToken, "tokennya");
-      console.log(findToken.valid, "validnya");
-      if (findToken.valid == true) {
+        where : {
+          token : token
+        }
+      })
+      if(findToken.valid == true){
         await db.User.update(
           {
             password: hashpass,

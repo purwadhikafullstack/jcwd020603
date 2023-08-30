@@ -5,8 +5,6 @@ import { api } from "../api/api";
 export default function ModalKonfirmasiDeleteVoucher(props) {
   const nav = useNavigate();
   const toast = useToast();
-  console.log(props.dtVocer);
-  console.log(props.dtVocer[props.numberIdx]);
   const id = props.dtVocer[props.numberIdx].id;
 
   const handleDelete = async () => {

@@ -15,6 +15,7 @@ import {
   Image,
   Box,
   InputGroup,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
 import "../css/indexR.css";
@@ -26,12 +27,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import ProfileFotoAlamat from "./profileFotoAlamat";
 import ProfileData from "./profileData";
+import ProfileFotoAlamatAdmin from "./profileFotoAlamatAdmin";
+import ProfileDataAdmin from "./profileDataAdmin";
+import AdminNavbar from "./AdminNavbar";
 
-export default function Profile() {
+export default function ProfileAdmin() {
   const userSelector = useSelector((state) => state.auth);
   // const bd = userSelector.birth_date.spil("T", 0);
   const dispatch = useDispatch();
   const inputFileRef = useRef(null);
+  const {isOpen, onOpen, onClose} = useDisclosure()
   const [image, setImage] = useState(userSelector.avatar_url);
   const [bgimage, setBgimage] = useState(userSelector.bg_url);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -68,9 +73,14 @@ export default function Profile() {
   }, [selectedFile]);
 
   return (
-    <Flex className="responsiveProfile">
-      <ProfileFotoAlamat />
-      <ProfileData />
+   <>
+    <Box>
+        <AdminNavbar onOpen={onOpen} />
+      </Box>
+      <Flex className="flex1R-salesReportTrans" gap={"20PX"} w={"100vw"} h={"100vh"} flexDir={"row"}pt={"50px"}>
+      <ProfileFotoAlamatAdmin />
+      {/* <ProfileDataAdmin /> */}
     </Flex>
+   </>
   );
 }

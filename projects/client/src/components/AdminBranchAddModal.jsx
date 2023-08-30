@@ -137,53 +137,10 @@ export default function AddAdminBranch(props) {
       } catch (err) {
         console.log(err);
       }
-    },
+  }
+})
 
-    // ========================================
 
-    // const cekMail = await api()
-    //   .get("/user/", {
-    //     params: { getall: newBranchAdmin.email } || {
-    //       getall: newBranchAdmin.user_name,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     if (res.data.email) {
-    //       return true;
-    //     } else {
-    //       return false;
-    //     }
-    //   });
-
-    // const cekBranch = await api()
-    //   .get("/branch/all-by-branch", {
-    //     params: { getAll: newBranchAdmin.branch_name } || {
-    //       getAll: newBranchAdmin.branch_address,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     if (res.data.Data) {
-    //       return true;
-    //     } else {
-    //       return false;
-    //     }
-    //   });
-
-    // console.log(cekBranch);
-    // console.log(cekMail);
-
-    // if (cekMail || cekBranch) {
-    //   return toast({
-    //     title:
-    //       "Email / Username / nama cabang / alamat cabang sudah digunakan, silahkan gunakan selain itu",
-    //     status: "warning",
-    //     duration: 3000,
-    //     isClosable: true,
-    //   });
-    // } else {
-  });
   const [province, setProvince] = useState([]);
   async function getProv() {
     try {
@@ -217,10 +174,8 @@ export default function AddAdminBranch(props) {
 
   useEffect(() => {
     getCity();
-    console.log(city);
   }, [provId]);
 
-  console.log(city);
 
   function inputHandler(event) {
     const { value, id } = event.target;

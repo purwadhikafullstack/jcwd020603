@@ -112,41 +112,13 @@ export default function EditAdminBranch(props) {
           branch_id: props?.dtBranch[props?.number]?.branch_id,
         };
 
-        const cekMail = await api()
-          .get("/user/", {
-            params: { getall: newBranchAdmin.email } || {
-              getall: newBranchAdmin.user_name,
-            },
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.email) {
-              return true;
-            } else {
-              return false;
-            }
-          });
-
-        const cekBranch = await api()
-          .get("/branch/all-by-branch", {
-            params: { getAll: newBranchAdmin?.branch_name } || {
-              getAll: newBranchAdmin?.branch_address,
-            },
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.Data) {
-              return true;
-            } else {
-              return false;
-            }
-          });
-
-        if (cekMail.user_name || cekMail.email) {
+        const cekMailResponse = await api().get("/user/", {
+          params: { getall: newBranchAdmin.email },
+        });
+    
+        if (cekMailResponse.data.data.length > 0 ) {
           return toast({
-            title:
-              "Email / Username sudah digunakan, silahkan gunakan selain itu",
-            position: "top",
+            title: "Email sudah terdaftar, silahkan gunakan email lain",
             status: "warning",
             duration: 3000,
             isClosable: true,
@@ -192,7 +164,6 @@ export default function EditAdminBranch(props) {
 
   const [city, setCity] = useState([]);
   const [provId, setProvId] = useState("");
-  console.log(provId);
   async function getCity() {
     try {
       await api()
@@ -207,10 +178,7 @@ export default function EditAdminBranch(props) {
 
   useEffect(() => {
     getCity();
-    console.log(city);
   }, [provId]);
-
-  console.log(city);
 
   function inputHandler(event) {
     const { value, id } = event.target;

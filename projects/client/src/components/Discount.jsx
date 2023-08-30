@@ -35,21 +35,17 @@ export default function Discount() {
   const [numberIdx, setNumberIdx] = useState(0);
   const fetchDtBranch = async () => {
     try {
-      await api()
-        .get("/sales-report/dt-branch")
-        .then((res) => {
-          console.log(res.data.data);
-          setGetBranch_name(res.data.data);
-        });
+      await api().get("/sales-report/dt-branch").then((res) => {
+        setGetBranch_name(res.data.data)
+      })
     } catch (error) {
       console.log(error.message);
     }
   };
   const inputHandlerBranch_name = (e) => {
-    console.log(e.target.value);
-    setInputBranch_name(e.target.value);
-  };
-  let ini_namanya = null;
+    setInputBranch_name(e.target.value)
+  }
+  let ini_namanya = null
   const branch_namenya = () => {
     if (roleOfUSer == "SUPER ADMIN") {
       if (inputBranch_name) {
@@ -78,35 +74,30 @@ export default function Discount() {
   // ambil data discount
   const fetchDtSelected = async () => {
     const sendDataselect = {
-      branch_id: branch_id || "",
-      discount_id: numberIdx || "",
-    };
-    console.log(sendDataselect);
+      branch_id : branch_id || "",
+      discount_id : numberIdx || ""
+    }
     try {
-      await api()
-        .post("/discount/stock-selected", sendDataselect)
-        .then((res) => {
-          console.log(res.data);
-          setDtDisSelected(res.data);
-        });
+      await api().post("/discount/stock-selected", sendDataselect)
+      .then((res) => {
+        setDtDisSelected(res.data)
+      })
     } catch (error) {
       console.log(error.message);
     }
   };
   const fetchAll = async () => {
     const sendData = {
-      branch_id: branch_id || "",
-      search: search || "",
-      sort: sorted || "createdAt",
-      ordering: ordered || "ASC",
-      page: shown.page - 1 || "0",
-    };
-    console.log(sendData);
+      branch_id : branch_id || "",
+      search : search || "",
+      sort : sorted || "createdAt",
+      ordering : ordered || "ASC",
+      page : shown.page -1 || "0"
+    }
     try {
       await api()
         .post("/discount/stock-discount", sendData)
         .then((res) => {
-          console.log(res.data);
           setDtDis(res.data.Data);
           setTotalPages(res.data.total);
           setTotalDiscount(res.data.jumlah_discount);

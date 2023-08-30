@@ -17,7 +17,7 @@ import { GrDocumentUpdate } from "react-icons/gr";
 import logoPro from "../assets/PNG/bgProfile3.png";
 import { Link } from "react-router-dom";
 
-export default function ProfileFotoAlamat() {
+export default function ProfileFotoAlamatAdmin() {
   const userSelector = useSelector((state) => state.auth);
   const [selectedFile, setSelectedFile] = useState(null);
   const [image, setImage] = useState(userSelector.avatar_url);
@@ -48,7 +48,6 @@ export default function ProfileFotoAlamat() {
     toast({
       title: "Data berhasil di ubah",
       status: "success",
-      position: "top",
       duration: 3000,
       isClosable: true,
     });
@@ -68,13 +67,15 @@ export default function ProfileFotoAlamat() {
       <Flex flexDir={"column"} w={"100%"} rowGap={"20px"}>
         <Flex
           w={"100%"}
-          h={"100%"}
-          boxShadow={"lg"}
+          h={"90%"}
           flexDir={"column"}
           rowGap={"20px"}
-          bgColor={"gray.100"}
           padding={"20px"}
-          borderRadius={"10px"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          // boxShadow={"lg"}
+          // bgColor={"gray.100"}
+          // borderRadius={"10px"}
         >
           <Flex
             w={"100%"}
@@ -131,76 +132,6 @@ export default function ProfileFotoAlamat() {
             >
               <Icon as={GrDocumentUpdate} mr={"10%"}></Icon> Simpan
             </Button>
-          </Flex>
-        </Flex>
-
-        <Flex
-          w={"100%"}
-          h={"100%"}
-          maxH={"200px"}
-          boxShadow={"lg"}
-          flexDir={"column"}
-          rowGap={"20px"}
-          bgColor={"gray.100"}
-          padding={"20px"}
-          borderRadius={"10px"}
-        >
-          <Flex
-            w={"100%"}
-            h={"100%"}
-            justifyContent={"space-around"}
-            alignItems={"center"}
-            rounded={10}
-            boxShadow={"dark-lg"}
-            padding={"5px"}
-          >
-            <Icon
-              textAlign={"center"}
-              as={FaMapMarkerAlt}
-              w={"8%"}
-              h={"30px"}
-              color={"red.600"}
-            ></Icon>
-            <Flex
-              flexDir={"column"}
-              w={"80%"}
-              h={"80%"}
-              justifyContent={"center"}
-              alignItems={"center"}
-            >
-              {primaryAddress && Object.keys(primaryAddress).length > 0 ? (
-                <Box fontSize={"14px"} fontWeight={"bold"} cursor={"pointer"}>
-                  {primaryAddress?.address}, {primaryAddress?.district},{" "}
-                  {primaryAddress?.City?.type} {primaryAddress?.City?.city_name}{" "}
-                  - {primaryAddress?.City?.province}
-                </Box>
-              ) : (
-                <Flex fontSize={"14px"} fontWeight={"bold"} cursor={"pointer"}>
-                  {" "}
-                  Atur Alamat Utama{" "}
-                  <Link to={"/address"}>
-                    <Flex color={"green"} paddingLeft={"3px"}>
-                      disini
-                    </Flex>
-                  </Link>
-                </Flex>
-              )}
-
-              {/* <Box border={"1px solid gray"} w={"100%"}></Box> */}
-              {/* <Button
-              w={"100%"}
-              h={"30%"}
-              fontWeight={"bold"}
-              bgColor={"#118925"}
-              color={"white"}
-              _hover={{
-                color: "black",
-                bgColor: "green.200",
-              }}
-            >
-              Edit Alamat
-            </Button> */}
-            </Flex>
           </Flex>
         </Flex>
       </Flex>

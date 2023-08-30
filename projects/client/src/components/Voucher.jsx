@@ -66,21 +66,19 @@ export default function Voucher() {
 
   const fetchDtBranch = async () => {
     try {
-      await api()
-        .get("/sales-report/dt-branch")
-        .then((res) => {
-          setGetBranch_name(res.data.data);
-        });
+      await api().get("/sales-report/dt-branch").then((res) => {
+        setGetBranch_name(res.data.data)
+      })
     } catch (error) {
       console.log(error.message);
     }
   };
 
   const inputHandlerBranch_name = (e) => {
-    setInputBranch_name(e.target.value);
-  };
+    setInputBranch_name(e.target.value)
+  }
 
-  let ini_namanya = null;
+  let ini_namanya = null
   const branch_namenya = () => {
     if (roleOfUSer == "SUPER ADMIN") {
       if (inputBranch_name) {
@@ -103,11 +101,9 @@ export default function Voucher() {
       }
       return ini_namanya;
     }
-  };
-
-  const branch_id =
-    userSelector.role == "ADMIN" ? userSelector.branch_id : inputBranch_name;
-
+  }
+  
+  const branch_id = userSelector.role == "ADMIN" ? userSelector.branch_id : inputBranch_name
   // ambil data
   const fetchAll = async () => {
     const sendBody = {
@@ -129,8 +125,7 @@ export default function Voucher() {
       console.log(error.message);
     }
   };
-
-  const itemPerPage = 3;
+  const itemPerPage = 3
   const pageHandler = () => {
     const output = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -338,9 +333,7 @@ export default function Voucher() {
                   <Th>Limit</Th>
                   <Th>Minimal Order</Th>
                   <Th>Keterangan</Th>
-                  <Th display={roleOfUSer == "ADMIN" ? "flex" : "none"}>
-                    Aksi
-                  </Th>
+                  <Th display={roleOfUSer == "ADMIN" ? "" : "none"}  >Aksi</Th>
                 </Tr>
               </Thead>
 

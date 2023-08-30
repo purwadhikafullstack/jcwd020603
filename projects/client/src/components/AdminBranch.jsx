@@ -66,14 +66,13 @@ export default function AdminBranch() {
   const [dtBranch, setDtBranch] = useState([]);
   const fetchAll = async () => {
     const sendData = {
-      branch_id: inpurBranch_name || "",
-      search: search || "",
-      sort: sorted || "user_name",
-      ordering: ordered || "ASC",
-      page: shown.page - 1 || 0,
-    };
-    console.log(sendData);
-    try {
+      branch_id : inpurBranch_name || "",
+      search : search || "",
+      sort : sorted || "createdAt",
+      ordering : ordered || "ASC",
+      page : shown.page - 1 || 0
+    }
+    try { 
       const branch = await api()
         .post("/branch/all-branch-filter", sendData)
         .then((res) => {

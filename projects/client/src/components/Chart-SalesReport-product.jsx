@@ -10,20 +10,16 @@ export default function ChartSalesReportProduct(props) {
   const prepareChartData = () => {
     const dateCountMap = {};
     const dateRevenueMap = {};
-  
     props?.dtSumQtyProd?.forEach((item) => {
       const name = item?.Stock?.Product?.product_name;
       if (dateCountMap[name]) {
         dateCountMap[name]++;
-        dateRevenueMap[name] += item.total_qty;
+        dateRevenueMap[name] += parseInt(item.total_qty);
       } else {
         dateCountMap[name] = 1;
-        dateRevenueMap[name] = item.total_qty;
+        dateRevenueMap[name] = parseInt(item.total_qty);
       }
     });
-
-    console.log(dateCountMap);
-    console.log(dateRevenueMap);
     const dates = Object.keys(dateCountMap);
     const revenues = Object.values(dateRevenueMap);
     const labels = dates.map(

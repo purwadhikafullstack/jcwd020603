@@ -70,7 +70,6 @@ export default function Register() {
         const cekMail = await api()
           .get("/user/", { params: { getall: account.email } })
           .then((res) => {
-            console.log(res.data.email);
             if (res.data.email) {
               return true;
             } else {
@@ -108,7 +107,6 @@ export default function Register() {
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
   }
 
   return (

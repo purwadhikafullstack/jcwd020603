@@ -59,7 +59,6 @@ export default function ResetPass() {
       if (userSelector.id) {
         try {
           const { pathname } = location;
-          console.log(pathname, "atas");
           const token = pathname.split("/")[2];
           const { password } = formik.values;
           const account = { password, token };
@@ -67,7 +66,6 @@ export default function ResetPass() {
           await api()
             .patch("/user/reset-pass/" + userSelector.id, account)
             .then((res) => {
-              console.log(res.data);
               dispatch({
                 type: "login",
                 payload: res.data,
@@ -100,7 +98,6 @@ export default function ResetPass() {
           await api()
             .patch("user/reset-pass-login?token=" + token, account)
             .then((result) => {
-              console.log(result.data);
               dispatch({
                 type: "login",
                 payload: result.data,
@@ -131,7 +128,6 @@ export default function ResetPass() {
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    // console.log(formik.values);
   }
 
   return (

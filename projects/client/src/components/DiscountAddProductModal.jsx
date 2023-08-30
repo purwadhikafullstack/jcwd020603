@@ -45,12 +45,6 @@ export default function DiscountAddProductModal(props) {
   const userSelector = useSelector((state) => state.auth);
   const branch_id = userSelector.branch_id;
   const {selectedProducts, setSelectedProducts, dtStock, selectedId, setSelectedId, isEdit, dtDisSelected} = props
-
-  console.log(dtStock); 
-  console.log(dtDisSelected);
-  console.log(selectedProducts);
-  console.log(selectedId);
-
   const  checkboxHandler = (index) => {
     const selectedProduct = dtStock[index];
   
