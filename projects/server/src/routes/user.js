@@ -32,6 +32,6 @@ router.patch(
 
 router.patch("/:id", userController.editUser);
 router.patch("/change-pass/:id", userController.changePass);
-router.patch("/reset-pass/:id",  userController.resetPass);
+router.patch("/reset-pass/:id", userController.resetPass);
 
 module.exports = router;

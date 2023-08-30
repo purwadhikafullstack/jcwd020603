@@ -19,7 +19,6 @@ import * as Yup from "yup";
 import ProfileVeriPass from "./profileVeriPass";
 import "../css/profileR.css";
 import moment from "moment";
-import { update } from "lodash";
 
 export default function ProfileData() {
   const userSelector = useSelector((state) => state.auth);

@@ -120,7 +120,7 @@ const userController = {
           [Op.or]: [{ email: getall }, { user_name: getall }, { role: getall }],
         },
       });
-      return res.status(200).send({message : "ini datauser", data : user});
+      return res.status(200).send({ message: "ini datauser", data: user });
     } catch (err) {
       res.status(500).send({ message: err.message });
     }
@@ -345,7 +345,7 @@ const userController = {
   editUser: async (req, res) => {
     try {
       const { user_name, email, gender, birth_date } = req.body;
-     const dtUpdate =  await db.User.update(
+      const dtUpdate = await db.User.update(
         {
           user_name,
           email,
@@ -357,12 +357,11 @@ const userController = {
             id: req.params.id,
           },
         }
-      )
-        res.status(200).send({ 
-          message: "Perubahan Data Berhasil",
-          data: dtUpdate,
-        }
       );
+      res.status(200).send({
+        message: "Perubahan Data Berhasil",
+        data: dtUpdate,
+      });
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
