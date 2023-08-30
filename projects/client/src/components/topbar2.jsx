@@ -56,6 +56,8 @@ export default function TopBar2({
       // setIsLoaded(true);
     }
   }, [district]);
+
+  console.log("district", district);
   return (
     <>
       <Flex id="containerTopBarB" justifyContent={"center"}>
