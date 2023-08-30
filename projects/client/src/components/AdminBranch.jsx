@@ -30,7 +30,7 @@ import { BiEdit } from "react-icons/bi";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { FaStore } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
-import { RiDeleteBin6Fill } from "react-icons/ri";
+import { RiDeleteBin6Fill,RiRefreshFill } from "react-icons/ri";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import AddAdminBranch from "./AdminBranchAddModal";
 import EditAdminBranch from "./AdminBranchEditModal";
@@ -46,7 +46,8 @@ export default function AdminBranch() {
   const [ascModeUserName, setAscModeUserName] = useState(true)
   const [ascModeBranchName, setAscModeBranchName] = useState(true)
   const [search, setSearch] = useState()
-  const [jumlahBranch, setJumlahBranch] = useState()
+  const [inputValue, setInputValue] = useState("");
+  const [onFilter, setOnfilter] = useState(true)
   const [pages, setPages] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [shown, setShown] = useState({page : 1})
@@ -63,9 +64,6 @@ export default function AdminBranch() {
     onClose: onCloseDel,
   } = useDisclosure();
   const [dtBranch, setDtBranch] = useState([]);
-
-
-  // ambil data
   const fetchAll = async () => {
     const sendData = {
       branch_id : inpurBranch_name || "",
@@ -81,7 +79,6 @@ export default function AdminBranch() {
         .then((res) => {
           setDtBranch(res.data.Data);
           setTotalPages(res.data.total)
-          setJumlahBranch(res.data.jumlahBranch)
         });
     } catch (error) {
       console.log(error.message);
@@ -108,14 +105,18 @@ export default function AdminBranch() {
   }
   const fetchDtBranch = async() => {
     try {
-      await api().get("/sales-report/dt-branch").then((res) => {
-        console.log(res.data.data);
-        setGetBranch_name(res.data.data)
-      })
+     const dtBranch = await api().get("/sales-report/dt-branch")
+        setGetBranch_name(dtBranch.data.data)
     } catch (error) {
       console.log(error.message);
     }
   }
+
+ const reset = () => {
+  setSearch()
+  setInputBranch_name()
+  setOnfilter(false)
+ }
 
   useEffect(() => {
     fetchAll();
@@ -124,7 +125,7 @@ export default function AdminBranch() {
 
   useEffect(() => {
     fetchAll();
-  }, [inpurBranch_name, search, shown]);
+  }, [inpurBranch_name, search, shown, sorted, ordered]);
 
 
   const [number, setNumber] = useState(0);
@@ -158,7 +159,7 @@ export default function AdminBranch() {
             </Center>
             <Flex flexDir={"column"}>
               <Flex fontSize={"24px"} fontWeight={"extrabold"}>
-                {jumlahBranch}
+                {getBranch_name.length}
               </Flex>
               <Flex color={"grey"} fontWeight={"semibold"}>
                 Total Karyawan
@@ -172,7 +173,7 @@ export default function AdminBranch() {
             </Center>
             <Flex flexDir={"column"}>
               <Flex fontSize={"24px"} fontWeight={"extrabold"}>
-                {jumlahBranch}
+                {getBranch_name.length}
               </Flex>
               <Flex color={"grey"} fontWeight={"semibold"}>
                 Total Cabang
@@ -211,11 +212,11 @@ export default function AdminBranch() {
                 bg={"white"}
               >
                 {getBranch_name.map((val, index) => (
-                  <option key={index} value={val.id}>{val.branch_name}</option>
+                  <option key={index} value={val.id}>{onFilter ? val.branch_name : ""}</option>
                 ))}
               </Select>
               <InputGroup>
-                <Input placeholder="search" ref={searchRef} bg={"white"}></Input>
+                <Input placeholder="search" ref={searchRef} bg={"white"} onChange={(e) => {setInputValue(e.target.value)}}></Input>
                 <InputRightElement
                   as={BiSearch}
                   w={"30px"}
@@ -225,6 +226,21 @@ export default function AdminBranch() {
                   onClick={()=> {setSearch(searchRef.current.value)}}
                 />
               </InputGroup>
+              <Flex flexDir={"column"} gap={"5%"} fontSize={"15px"}>
+              <Button
+                bgColor={"#9d9c45"}
+                gap={"10px"}
+                cursor={"pointer"}
+                onClick={() => {
+                  reset();
+                  
+                  setInputValue("")
+                }}
+              >
+                <RiRefreshFill/>
+                Reset
+              </Button>
+             </Flex>
             </Flex>
           </Flex>
 
@@ -239,24 +255,22 @@ export default function AdminBranch() {
             <Thead w={"100%"} bg={"#ffb21c"} fontSize={"12px"}>
               <Tr>
                 <Th>No</Th>
-                {/* <Th>Nama</Th> */}
                 <Th cursor={"pointer"} onClick={()=> {
                   setSorted("user_name")
                   setOrdered(ascModeUserName ? "ASC" : "DESC")
                   setAscModeUserName(!ascModeUserName)
                 }}><Flex w={"100%"} gap={"10%"} alignItems={"center"}>Nama
-                {ascModeUserName ? <MdArrowBackIosNew size={"8%"} id="descendingB"/> : 
-                <MdArrowBackIosNew id="ascendingB" size={"8%"}/>}</Flex></Th>
+                {ascModeUserName ? <MdArrowBackIosNew size={"20px"} id="descendingB"/> : 
+                <MdArrowBackIosNew id="ascendingB" size={"20px"}/>}</Flex></Th>
                 <Th>Email </Th>
                 <Th>Nomor HP</Th>
-                {/* <Th>Nama Branch</Th> */}
                 <Th cursor={"pointer"} onClick={()=> {
                   setSorted("branch_name")
                   setOrdered(ascModeBranchName ? "ASC" : "DESC")
                   setAscModeBranchName(!ascModeBranchName)
                 }}><Flex w={"100%"} gap={"10%"} alignItems={"center"}>Nama Cabang
-                {ascModeBranchName ? <MdArrowBackIosNew size={"8%"} id="descendingB"/> : 
-                <MdArrowBackIosNew id="ascendingB" size={"8%"}/>}</Flex></Th>
+                {ascModeBranchName ? <MdArrowBackIosNew size={"20px"} id="descendingB"/> : 
+                <MdArrowBackIosNew id="ascendingB" size={"20px"}/>}</Flex></Th>
                 <Th>Alamat Cabang</Th>
                 <Th>Kota - Provinsi</Th>
                 <Th>Aksi</Th>

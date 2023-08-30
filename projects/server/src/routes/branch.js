@@ -17,7 +17,7 @@ router.get(
 
 router.post(
   "/all-branch-filter",
-  roleController.checkAllAdmin,
+  // roleController.checkAllAdmin,
   branchController.getAllFilter
 );
 

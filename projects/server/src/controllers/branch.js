@@ -10,8 +10,9 @@ const { openCage } = require("../service/location.service");
 dotenv.config();
 
 const branchController = {
-  getAllFilter: async (req, res) => {
-    const { branch_id, search, sort, ordering, page } = req.body;
+
+  getAllFilter : async (req,res) => {
+    const {branch_id, search, sort, ordering, page} = req.body
     let where = {
       role: "ADMIN",
     };
@@ -24,12 +25,12 @@ const branchController = {
         { "$Branch.branch_name$": { [Op.like]: `%${search}%` } },
       ];
     }
-    let order = [];
-    if (ordering === "user_name") {
-      order = [[sort, ordering]];
+    let order = []
+    if(sort === "user_name"){
+      order = [[sort, ordering]]
     }
-    if (ordering === "branch_name") {
-      order = [{ model: db.Branch, as: "Branch" }, "branch_name", ordering];
+    if(sort === "branch_name"){
+      order = [[{model : db.Branch, as: "Branch"}, "branch_name", ordering]]
     }
     try {
       const branch = await db.User.findAndCountAll({
@@ -44,7 +45,7 @@ const branchController = {
                 attributes: ["city_name", "type", "postal_code"],
               },
             ],
-          },
+          }
         ],
         where: where,
         order: order,
@@ -227,7 +228,7 @@ const branchController = {
       const branch = await db.User.findOne({
         where: {
           branch_id: branch_id,
-          user_id: user_id,
+          id : user_id
         },
         include: [
           {
@@ -260,8 +261,8 @@ const branchController = {
         },
         {
           where: {
-            id: user_id,
-            branch_id: branch_id && !null,
+            id : user_id,
+            branch_id: branch_id,
           },
         },
         transaction
@@ -270,7 +271,7 @@ const branchController = {
       await db.Branch.update(
         {
           branch_name,
-          branch_address,
+          branch_address : address,
           district,
           city_id,
           province,

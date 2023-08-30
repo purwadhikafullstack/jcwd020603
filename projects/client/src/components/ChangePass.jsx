@@ -116,11 +116,13 @@ export default function ChangePass() {
       justifyContent={"center"}
     >
       <Box
-        w={"22%"}
-        h={"100vh"}
+        w={"25%"}
+        h={"auto"}
         justifyContent={"center"}
         alignItems={"center"}
         className="logo_samping"
+        onClick={() => {nav("/")}}
+        cursor={"pointer"}
       >
         <Image
           src={logo2}
@@ -150,7 +152,8 @@ export default function ChangePass() {
           columnGap={"20%"}
           justifyContent={"space-between"}
         >
-          <Image src={logo} w={"100%"} h={"40%"} className="logo_atas"></Image>
+          <Image src={logo} w={"100%"} h={"40%"} className="logo_atas" onClick={() => {nav("/")}}
+        cursor={"pointer"}></Image>
           <Stack spacing={4}>
             <Heading fontSize={30} textAlign={"center"}>
               Ganti Password
