@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSearchResults } from "../redux/searchAction";
 import InfiniteScroll from "react-infinite-scroll-component";
 import loading from "../assets/loading.webp";
+import { CardCarouselDefault } from "./cardCarouselDefault";
 
 export default function Category({
   lengthCart,
@@ -127,22 +128,25 @@ export default function Category({
             ))}
           </Flex>
         </Flex>
-        <Flex id="carouselB" paddingTop={"10px"} display={"none"}>
-          <Carousel autoPlay interval={5000} infiniteLoop></Carousel>
-        </Flex>
         <Flex id="carouselB" paddingTop={"10px"}>
-          <Carousel autoPlay interval={5000} infiniteLoop>
-            {discounts
-              .filter((val) => uniqueDiscountIds.includes(val.id))
-              .map((val) => (
-                <CardCarousel
-                  discount_id={val.id}
-                  photo_discount_url={val.photo_discount_url}
-                  nearestBranch={nearestBranch}
-                  key={val.url}
-                />
-              ))}
-          </Carousel>
+          {uniqueDiscountIds.length ? (
+            <Carousel autoPlay interval={5000} infiniteLoop>
+              {discounts
+                .filter((val) => uniqueDiscountIds.includes(val.id))
+                .map((val) => (
+                  <CardCarousel
+                    discount_id={val.id}
+                    photo_discount_url={val.photo_discount_url}
+                    nearestBranch={nearestBranch}
+                    key={val.url}
+                  />
+                ))}
+            </Carousel>
+          ) : (
+            <Carousel autoPlay interval={5000} infiniteLoop>
+              <CardCarouselDefault />
+            </Carousel>
+          )}
         </Flex>
         <Flex id="headB">PRODUK</Flex>
         <InfiniteScroll
