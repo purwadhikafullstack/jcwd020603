@@ -34,8 +34,8 @@ const productController = {
       const product = await db.Product.findAndCountAll({
         where: whereClause,
         order: [[req.query.sort, req.query.order]],
-        limit: 6,
-        offset: 6 * page,
+        limit: 5,
+        offset: 5 * page,
       });
       await trans.commit();
       return res.status(200).send({

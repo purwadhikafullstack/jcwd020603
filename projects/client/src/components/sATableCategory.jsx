@@ -39,9 +39,9 @@ export function SATableCategory({
         </Td>
         <Td className="SAImgCategoryB">
           <Image
-            maxH={"85px"}
-            minH={"85px"}
-            width={"105px"}
+            maxH={"80px"}
+            minH={"80px"}
+            width={"100px"}
             src={photo_category_url}
           />
         </Td>

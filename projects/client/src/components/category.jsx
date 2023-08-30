@@ -69,7 +69,6 @@ export default function Category({
   };
   useEffect(() => {
     fetchStock();
-    // setLastId(0);
   }, [nearestBranch, lastId]);
 
   const fetchMore = () => {

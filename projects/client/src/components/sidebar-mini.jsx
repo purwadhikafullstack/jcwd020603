@@ -107,6 +107,7 @@ export default function SidebarMini(props) {
           onClick={(e) => {
             handleClick(e);
             nav("/");
+            localStorage.removeItem("searchTerm");
           }}
           bg={Clicked == "beranda" ? "#ECFFF4" : "white"}
           color={Clicked == "beranda" ? "#199950" : "black"}

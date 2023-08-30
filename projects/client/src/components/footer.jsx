@@ -94,6 +94,7 @@ export default function Footer(props) {
               onClick={(e) => {
                 handleClick(e);
                 nav("/");
+                localStorage.removeItem("searchTerm");
               }}
               zIndex={2}
             >

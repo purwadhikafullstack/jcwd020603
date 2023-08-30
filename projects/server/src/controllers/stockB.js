@@ -247,8 +247,8 @@ const stockControllerB = {
         ],
         where: whereClause,
         order: [[req.query.sort, req.query.order]],
-        limit: 6,
-        offset: 6 * page,
+        limit: 4,
+        offset: 4 * page,
       });
 
       await trans.commit();
@@ -268,7 +268,6 @@ const stockControllerB = {
   searchStock: async (req, res) => {
     try {
       const { search_query, branch_id } = req.query;
-
       let whereClause = {};
       if (branch_id !== undefined && branch_id !== null) {
         whereClause.branch_id = branch_id;
@@ -687,6 +686,7 @@ const stockControllerB = {
       });
     }
   },
+
   getStockDiscount: async (req, res) => {
     const trans = await db.sequelize.transaction();
     try {

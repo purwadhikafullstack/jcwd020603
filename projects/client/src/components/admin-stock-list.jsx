@@ -113,7 +113,7 @@ export default function AdminStockList() {
     }
   }, [shown]);
 
-  const productsPerPage = 6;
+  const productsPerPage = 4;
   const indexOfLastProduct = shown.page * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
