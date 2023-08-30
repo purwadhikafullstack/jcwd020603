@@ -33,9 +33,6 @@ export default function LandingPage() {
   });
   const getGeoloc = () => {
     const success = (position) => {
-      // console.log(position.coords.latitude);
-      // console.log(position.coords.longitude);
-      // console.log(position);
       setLatlong({
         ...latlong,
         latitude: position.coords.latitude,
@@ -54,30 +51,24 @@ export default function LandingPage() {
     };
     navigator.geolocation.getCurrentPosition(success, error);
   };
-  console.log("latlong", latlong);
   useEffect(() => {
     getGeoloc();
-    // console.log(latlong);
   }, []);
 
   const [address, setAddress] = useState("");
   const getAddress = async () => {
     try {
-      // console.log(latlong);
       const response = await api().get(
         `/address?latitude=${latlong.latitude}&longitude=${latlong.longitude}`
       );
       setAddress(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
     if (latlong.latitude) {
       getAddress();
     }
-    // console.log(latlong);
   }, [latlong]);
 
   //menyimpan alamat yang dipilih
@@ -102,7 +93,6 @@ export default function LandingPage() {
       setIsLoaded(true);
     }
   }, [userSelector?.email]);
-  console.log(selectedAddress);
   //menyimpan length cart
   const [lengthCart, setLengthCart] = useState(0);
 
@@ -141,7 +131,6 @@ export default function LandingPage() {
         };
         navigator.geolocation.getCurrentPosition(success, error);
       } else {
-        console.log("ini masuk nya", selectedAddress);
         const latitude = selectedAddress?.latitude;
         const longitude = selectedAddress?.longitude;
         resolve({ latitude, longitude });
@@ -179,7 +168,6 @@ export default function LandingPage() {
     setMinDistance(minDistance);
     return nearestBranch;
   }
-  console.log("minmin", minDistance);
 
   // Fungsi untuk mencari branch terdekat berdasarkan latitude dan longitude user
   async function findNearestBranchForUser() {
@@ -191,7 +179,6 @@ export default function LandingPage() {
       });
 
       const branches = response.data;
-      // console.log("ini branches", branches);
       const nearestBranch = await findNearestBranch(
         latlong.latitude,
         latlong.longitude,
@@ -213,7 +200,6 @@ export default function LandingPage() {
         setBranchName(nearestBranch.branch_name);
         // setIsLoaded(true);
       } else {
-        console.log("No branches found.");
       }
     })
     .catch((error) => {
@@ -236,8 +222,6 @@ export default function LandingPage() {
       return onOpen();
     }
   }, [nearestBranch]);
-  console.log(nearestBranch);
-  console.log(branchName);
 
   return (
     <>

@@ -42,7 +42,7 @@ export default function AddressCard({
     onClose: onCloseModal2,
   } = useDisclosure();
   const address = useSelector((state) => state.address);
-  console.log(address);
+
   // Check if the current address is clicked
   const isAddressClicked = Clicked.id == val.id;
 
@@ -56,7 +56,6 @@ export default function AddressCard({
       await api()
         .delete(`/addressG/${val.id}`)
         .then((res) => {
-          console.log(res.data.message);
           getAddress();
           toast({
             title: res.data.message,

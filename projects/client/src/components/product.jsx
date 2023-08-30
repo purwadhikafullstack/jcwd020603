@@ -20,6 +20,10 @@ export default function Product({ nearestBranch }) {
 
   const [productSearchResults, setProductSearchResults] = useState([]);
 
+  const satu = nearestBranch;
+  const dua = JSON.parse(localStorage.getItem("nearestBranch"));
+  console.log("satu & dua", satu, dua);
+
   const performSearch = (searchTerm) => {
     api()
       .get("/stock/search", {

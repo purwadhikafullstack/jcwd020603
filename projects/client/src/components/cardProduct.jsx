@@ -40,11 +40,6 @@ export function CardProduct(props) {
     }).format(amount);
   };
 
-  // useEffect(() => {
-  //   console.log(props.stocks);
-  // }, []);
-  // console.log(props);
-
   //get product value
   const [prodVal, setProdVal] = useState({
     //untuk simpan value product yang di klik
@@ -79,9 +74,7 @@ export function CardProduct(props) {
       quantity_stock: quantity_stock,
     });
   };
-  useEffect(() => {
-    // console.log(prodVal);
-  }, [prodVal]);
+  useEffect(() => {}, [prodVal]);
 
   return (
     <>

@@ -176,7 +176,7 @@ export default function SuperAdminCategoryList() {
                     <Th textAlign={"center"} bgcolor="#ffb21c">
                       No
                     </Th>
-                    <Th bgcolor="#ffb21c" textAlign={"center"}>
+                    <Th bgcolor="#ffb21c" textAlign={"start"}>
                       Gambar
                     </Th>
                     <Th bgcolor="#ffb21c">

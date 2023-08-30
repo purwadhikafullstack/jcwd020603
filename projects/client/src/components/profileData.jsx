@@ -97,7 +97,6 @@ export default function ProfileData() {
         console.log(error);
       }
     },
-
   });
   useEffect(() => {
     setUser(userSelector);
@@ -167,7 +166,7 @@ export default function ProfileData() {
             >
               {formik.errors.user_name}
             </Flex>
-          </FormControl> 
+          </FormControl>
 
           <FormControl>
             <FormLabel>Email</FormLabel>

@@ -50,6 +50,7 @@ export default function SuperAdminProductList() {
 
   //get all product
   const [shown, setShown] = useState({ page: 1 });
+  const [search, setSearch] = useState();
   const [filtering, setFiltering] = useState({
     page: shown.page,
     search: "",
@@ -134,6 +135,7 @@ export default function SuperAdminProductList() {
             <Flex justifyContent={"space-between"} w={"100%"} gap={"5px"}>
               <Select
                 placeholder="Kategori"
+                value={filtering.category_id}
                 h={"41px"}
                 bg={"white"}
                 onChange={(e) => {
@@ -147,6 +149,8 @@ export default function SuperAdminProductList() {
               <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
                   placeholder="pencarian"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   bg={"white"}
                   ref={searchRef}
                 ></Input>
@@ -177,6 +181,24 @@ export default function SuperAdminProductList() {
                   fetchData={fetchData}
                 />
               </Button>
+            </Flex>
+            <Flex
+              maxW={"65px"}
+              fontSize={"12px"}
+              _hover={{ cursor: "pointer", color: "lightgrey" }}
+              onClick={() => {
+                setFiltering({
+                  page: 1,
+                  order: "DESC",
+                  sort: "createdAt",
+                  search: "",
+                  category_id: "",
+                });
+                setShown({ page: 1 });
+                setSearch();
+              }}
+            >
+              Reset Filter
             </Flex>
           </Flex>
 

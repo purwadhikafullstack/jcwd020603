@@ -16,11 +16,12 @@ export function DeleteCategory(props) {
   const deleteCategory = async () => {
     await api().delete("/category/v3/" + props.id);
     toast({
-      title: "Category Deleted",
+      title: "Success",
+      description: "Kategori berhasil dihapus",
       status: "success",
-      position: "top-right",
+      position: "top",
       duration: 3000,
-      isClosable: false,
+      isClosable: true,
     });
     props.onClose();
   };
