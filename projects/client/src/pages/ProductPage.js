@@ -48,13 +48,13 @@ export default function ProductPage() {
               )}
             </Flex>
             <Flex flexDir={"column"}>
-              <Product nearestBranch={nearestBranch} />
+              <Product />
             </Flex>
           </Flex>
         </Center>
       ) : (
         <>
-          <Product nearestBranch={nearestBranch} />
+          <Product />
           <Footer lengthCart={lengthCart} nearestBranchSet={nearestBranchSet} />
         </>
       )}
