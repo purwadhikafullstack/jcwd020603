@@ -145,24 +145,24 @@ export default function DiscountContent(props) {
                   setOrdered(ascMOdeStart ? "ASC" : "DESC")
                   setAscModeStart(!ascMOdeStart)
                 }}><Flex w={"100px"}><Flex w={"70%"}>Tanggal Mulai</Flex>
-                {ascMOdeStart ? <MdArrowBackIosNew size={"8%"} id="descendingB"/> : 
-                <MdArrowBackIosNew id="ascendingB" size={"8%"}/>}</Flex></Th>
+                {ascMOdeStart ? <MdArrowBackIosNew size={"15px"} id="descendingB"/> : 
+                <MdArrowBackIosNew id="ascendingB" size={"15px"}/>}</Flex></Th>
 
                  <Th cursor={"pointer"} onClick={()=> {
                   setSorted("valid_to")
                   setOrdered(ascMOdeTo ? "ASC" : "DESC")
                   setAscModeTo(!ascMOdeTo)
                 }}><Flex w={"100px"}><Flex w={"70%"}>Tanggal Akhir</Flex>
-                {ascMOdeTo ? <MdArrowBackIosNew size={"8%"} id="descendingB"/> : 
-                <MdArrowBackIosNew id="ascendingB" size={"8%"}/>}</Flex></Th>
+                {ascMOdeTo ? <MdArrowBackIosNew size={"15px"} id="descendingB"/> : 
+                <MdArrowBackIosNew id="ascendingB" size={"15px"}/>}</Flex></Th>
 
                  <Th cursor={"pointer"} onClick={()=> {
                   setSorted("nominal")
                   setOrdered(ascMOdeNominal ? "ASC" : "DESC")
                   setAscModeNominal(!ascMOdeNominal)
                 }}><Flex w={"100px"}><Flex w={"70%"}>Nominal (%)</Flex>
-                {ascMOdeNominal ? <MdArrowBackIosNew size={"8%"} id="descendingB"/> : 
-                <MdArrowBackIosNew id="ascendingB" size={"8%"}/>}</Flex></Th>
+                {ascMOdeNominal ? <MdArrowBackIosNew size={"15px"} id="descendingB"/> : 
+                <MdArrowBackIosNew id="ascendingB" size={"15px"}/>}</Flex></Th>
                 <Th display={roleOfUSer == "ADMIN" ? "" : "none"} alignItems={"center"} >Aksi</Th>
               </Tr>
             </Thead>

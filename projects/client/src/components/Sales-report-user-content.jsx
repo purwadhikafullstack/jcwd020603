@@ -69,6 +69,8 @@ export default function SalesReportUserContent (props) {
     }
   }
   const itemPerPage = 3
+  const indexModalnya = (shown.page -1) * itemPerPage
+
     return(
         <>
         <Flex flexDir={"row"} justifyContent={"center"} mb={"10px"} fontWeight={"extrabold"} fontSize={{base: "25px" , sm:"25px", md:"40px", lg: "50px"}}>
@@ -224,7 +226,8 @@ export default function SalesReportUserContent (props) {
         <ModalOverlay />
         <ModalContent maxW={"500px"} w={"100%"} borderRadius={"20px"}>
           <SalesReportUserDetailModal
-            isOpen={isOpen} onClose={onClose} indexnya={indexnya} dtSumQtyUser={dtSumQtyUser} dtSumQtyUserAll={dtSumQtyUserAll}
+            isOpen={isOpen} onClose={onClose} indexnya={indexnya} indexModalnya={indexModalnya}
+            dtSumQtyUser={dtSumQtyUser} dtSumQtyUserAll={dtSumQtyUserAll}
           />
         </ModalContent>
       </Modal>

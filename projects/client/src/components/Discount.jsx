@@ -76,13 +76,13 @@ export default function Discount() {
   const branch_id = userSelector.role == "ADMIN" ? userSelector.branch_id : inputBranch_name
   // ambil data discount
   const fetchDtSelected = async() => {
-    const sendData = {
-      branch_id : branch_id,
-      discount_id : numberIdx
+    const sendDataselect = {
+      branch_id : branch_id || "",
+      discount_id : numberIdx || ""
     }
-    console.log(sendData);
+    console.log(sendDataselect);
     try {
-      await api().post("/discount/stock-selected", sendData)
+      await api().post("/discount/stock-selected", sendDataselect)
       .then((res) => {
         console.log(res.data);
         setDtDisSelected(res.data)

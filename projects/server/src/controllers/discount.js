@@ -18,8 +18,7 @@ const discountController = {
         order = [[sort, ordering]]
       }
 
-      let where = {
-      }
+      let where = {}
       if(branch_id){
         where.branch_id = branch_id
       }
@@ -67,7 +66,7 @@ const discountController = {
 
     getAllSelected : async (req,res) => {
       const {title, valid_start, valid_to, nominal, product_id, branch_id, discount_id} = req.body
-      console.log(req.body);
+      console.log(req.body, "ini body seleteddddddddddzzzzzzzzzzzzzzzzzzzzz");
       try {
         const dtStockBydiscountId = await db.Stock.findAll({
           where : {

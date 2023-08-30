@@ -37,10 +37,12 @@ export default function NotFoundComp() {
     >
       <Box
         w={"22%"}
-        h={"100vh"}
+        h={"auto"}
         justifyContent={"center"}
         alignItems={"center"}
         className="logo_samping"
+        onClick={() => {nav("/")}}
+        cursor={"pointer"}
       >
         <Image
           src={logo2}
@@ -78,6 +80,8 @@ export default function NotFoundComp() {
             className="logo_atas"
             pb={4}
             borderBottom={"3px solid #199950"}
+            onClick={() => {nav("/")}}
+        cursor={"pointer"}
           ></Image>
 
           <Stack spacing={4}>
