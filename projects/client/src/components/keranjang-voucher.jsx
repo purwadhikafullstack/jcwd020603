@@ -11,11 +11,14 @@ export default function VoucherPromo(props) {
   //get all voucher
   const [voucher, setVoucher] = useState([]);
   const fetchAll = async () => {
-    const fetch = await api().get("/voucher", {
-      params: { branch_id: nearestBranch },
-    });
-    setVoucher(fetch.data.result);
-    console.log(fetch.data.result);
+    try {
+      const fetch = await api().get("/voucher", {
+        params: { branch_id: nearestBranch },
+      });
+      setVoucher(fetch.data.result);
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     fetchAll();

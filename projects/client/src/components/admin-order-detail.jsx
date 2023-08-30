@@ -97,7 +97,6 @@ export default function AdminOrderDetail() {
         orderDetVal,
       });
       fetchOrder();
-      console.log(cancel.data);
     } catch (err) {
       console.log(err);
     }
@@ -358,7 +357,9 @@ export default function AdminOrderDetail() {
                 gap={"20px"}
                 padding={"5px 0px"}
               >
-                <Flex w={"20%"}>Data Pemesan</Flex>
+                <Flex w={"20%"} minW={"72px"}>
+                  Data Pemesan
+                </Flex>
                 <Flex w={"100%"} flexDir={"column"}>
                   <Flex fontWeight={"500"}>{orderValue.User?.user_name}</Flex>
                   <Flex>{orderValue.User?.phone_number}</Flex>
@@ -370,7 +371,9 @@ export default function AdminOrderDetail() {
                 gap={"20px"}
                 padding={"5px 0px"}
               >
-                <Flex w={"20%"}>Kurir Pengiriman</Flex>
+                <Flex w={"20%"} minW={"72px"}>
+                  Kurir Pengiriman
+                </Flex>
                 <Flex w={"100%"} flexDir={"column"}>
                   <Flex fontWeight={"500"}>{shippingCost?.name}</Flex>
                   <Flex>
@@ -380,7 +383,9 @@ export default function AdminOrderDetail() {
                     shippingCost.cost &&
                     shippingCost.cost.length > 0 && (
                       <Flex fontWeight={"400"}>
-                        Estimasi tiba dalam {shippingCost?.cost[0]?.etd} Hari
+                        {shippingCost?.name === "POS Indonesia (POS)"
+                          ? `Estimasi tiba dalam ${shippingCost?.cost[0]?.etd}`
+                          : `Estimasi tiba dalam ${shippingCost?.cost[0]?.etd} Hari`}
                       </Flex>
                     )}
                 </Flex>
@@ -391,7 +396,9 @@ export default function AdminOrderDetail() {
                 gap={"20px"}
                 padding={"5px 0px"}
               >
-                <Flex w={"20%"}>Alamat Penerima</Flex>
+                <Flex w={"20%"} minW={"72px"}>
+                  Alamat Penerima
+                </Flex>
                 <Flex w={"100%"} flexDir={"column"}>
                   <Flex fontWeight={"500"}>
                     {orderValue.Address?.address_name}

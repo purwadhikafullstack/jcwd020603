@@ -24,7 +24,6 @@ export default function ModalAddAddress(props) {
       await api()
         .get("/province")
         .then((res) => {
-          console.log(res.data.result);
           setAllProvince(res.data.result);
         });
     } catch (err) {
@@ -41,7 +40,6 @@ export default function ModalAddAddress(props) {
       await api()
         .get(`/city/${provinceId}`)
         .then((res) => {
-          console.log(res.data.result);
           setAllCity(res.data.result);
         });
     } catch (err) {
@@ -55,7 +53,6 @@ export default function ModalAddAddress(props) {
   const inputHandler = async (e) => {
     const { id, value } = e.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
   };
 
   //post address ke database

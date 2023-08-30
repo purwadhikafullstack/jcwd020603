@@ -44,24 +44,26 @@ export default function ModalProduct(props) {
 
   // insert qty ke prodVal
   const insertQty = () => {
-    const check = prodVal.discount;
-    let tempObj = {};
-    if (check == 50) {
-      tempObj = { qty: count * 2 };
-    } else {
-      tempObj = { qty: count };
+    try {
+      const check = prodVal.discount;
+      let tempObj = {};
+      if (check == 50) {
+        tempObj = { qty: count * 2 };
+      } else {
+        tempObj = { qty: count };
+      }
+      setProdVal({
+        ...prodVal,
+        ...tempObj,
+      });
+    } catch (err) {
+      console.log(err);
     }
-    setProdVal({
-      ...prodVal,
-      ...tempObj,
-    });
-    console.log({ ...prodVal, ...tempObj });
   };
   useEffect(() => {
     insertQty();
   }, [count]);
 
-  console.log("prodVal", prodVal);
   //function cek update post produk ke cart
   const toast = useToast();
   const updateAdd = async () => {
@@ -106,10 +108,8 @@ export default function ModalProduct(props) {
     }
   };
   useEffect(() => {
-    console.log(prodVal);
     stockAmount();
   }, []);
-  console.log("total", countAll);
   useEffect(() => {
     dispatch({
       type: "cart",

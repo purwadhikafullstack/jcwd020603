@@ -41,12 +41,15 @@ export default function ContentDaftarAlamat() {
   //getAll address
   const [allAddress, setAllAddress] = useState([]);
   const getAddress = async () => {
-    await api()
-      .get("/addressG")
-      .then((res) => {
-        console.log(res.data.result);
-        setAllAddress(res.data.result);
-      });
+    try {
+      await api()
+        .get("/addressG")
+        .then((res) => {
+          setAllAddress(res.data.result);
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
   //edit current address yang dipilih
   const setAddress = async () => {

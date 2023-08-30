@@ -225,7 +225,7 @@ export default function LandingPage() {
 
   return (
     <>
-      {windowWidth > 850 ? (
+      {windowWidth > 750 ? (
         <Center>
           <Flex maxWidth={"1160px"} w={"100%"}>
             <Flex>

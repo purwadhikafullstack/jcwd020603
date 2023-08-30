@@ -5,7 +5,6 @@ import { useEffect } from "react";
 
 export default function ModalPesananSelesai(props) {
   const { peraturan, orderId } = props;
-  console.log("ini nih", orderId);
   const nav = useNavigate();
   const input = { status: "Pesanan Dikonfirmasi" };
   const id = peraturan?.id || orderId?.id;
@@ -13,7 +12,6 @@ export default function ModalPesananSelesai(props) {
   const changeStatus = async () => {
     try {
       const update = await api().patch(`/order/confirm/${id}`, input);
-      console.log(update.data);
       props.getOrders && props.getOrders();
       props.getLatestOrder && props.getLatestOrder();
       props.onClose();

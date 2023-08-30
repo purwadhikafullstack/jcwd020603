@@ -40,7 +40,6 @@ export default function ProfilePage() {
             ) : (
               <SidebarMini navLeft={navLeft} />
             )}
-            {/* <DashboardNavbar toggleSidebar={toggleSidebar} /> */}
             <Profile />
           </Flex>
         </Center>
@@ -51,19 +50,5 @@ export default function ProfilePage() {
         </>
       )}
     </>
-    // <>
-    //   {windowWidth > 850 ? (
-    //     <Flex className="flex1R">
-    //       <Sidebar navLeft={navLeft} />
-    //       <DashboardNavbar toggleSidebar={toggleSidebar} />
-    //       <Profile />
-    //     </Flex>
-    //   ) : (
-    //     <Flex className="flex1R">
-    //       <Profile />
-    //       <Footer />
-    //     </Flex>
-    //   )}
-    // </>
   );
 }

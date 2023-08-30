@@ -91,7 +91,7 @@ export default function KeranjangList(props) {
             isChecked={isChecked}
           ></Checkbox>
         </Flex>
-        <Flex w={"10%"}>
+        <Flex w={"10%"} minW={"38px"}>
           <Box boxSize={"38px"}>
             <Image
               src={Product.photo_product_url}

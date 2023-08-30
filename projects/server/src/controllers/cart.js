@@ -4,7 +4,6 @@ const axios = require("axios");
 const cartController = {
   cartChecker: async (req, res, next) => {
     try {
-      console.log("stock", req.params.id);
       const check = await db.Cart.findOne({
         where: {
           stock_id: req.params.id,
@@ -44,7 +43,6 @@ const cartController = {
     try {
       const { qty } = req.body;
       const { discounted_price } = req.query;
-      console.log("krecek", req.check);
       if (req.check?.dataValues?.id) {
         await db.Cart.update(
           {
@@ -97,7 +95,6 @@ const cartController = {
             },
           ],
         });
-        console.log("ini count", count);
         await trans.commit();
         return res.send({
           message: "Produk berhasil ditambahkan",

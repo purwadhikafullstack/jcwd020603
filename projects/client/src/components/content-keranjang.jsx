@@ -141,7 +141,14 @@ export default function ContentKeranjang(props) {
       });
       return nav("/payment");
     } catch (err) {
-      console.log(err);
+      setIsLoading(false);
+      toast({
+        title: err.response.data.message,
+        description: err.response.data.description,
+        status: "warning",
+        position: "top",
+        duration: 3000,
+      });
     }
   };
 

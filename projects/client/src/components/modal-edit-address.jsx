@@ -18,7 +18,6 @@ import * as Yup from "yup";
 export default function ModalEditAddress(props) {
   const [selectedProvince, setSelectedProvince] = useState(props.val.province);
   const [selectedCity, setSelectedCity] = useState(`${props.val.city_id}`);
-  const [selectedType, setSelectedType] = useState();
 
   //get all city dan province
   const [allProvince, setAllProvince] = useState([]);
@@ -27,7 +26,6 @@ export default function ModalEditAddress(props) {
       await api()
         .get("/province")
         .then((res) => {
-          console.log(res.data.result);
           setAllProvince(res.data.result);
         });
     } catch (err) {
@@ -37,17 +35,14 @@ export default function ModalEditAddress(props) {
   useEffect(() => {
     fetchProvince();
     fetchCity();
-    console.log(props.val);
   }, []);
   const [allCity, setAllCity] = useState([]);
   const [provinceId, setProvinceId] = useState(props.val.province);
   const fetchCity = async () => {
     try {
-      console.log(provinceId);
       await api()
         .get(`/city/${provinceId}`)
         .then((res) => {
-          console.log(res.data.result);
           setAllCity(res.data.result);
         });
     } catch (err) {
@@ -61,7 +56,6 @@ export default function ModalEditAddress(props) {
   const inputHandler = async (e) => {
     const { id, value } = e.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
   };
   //function edit is_primary
   const [primary, setPrimary] = useState(props.val.is_primary);
@@ -234,7 +228,6 @@ export default function ModalEditAddress(props) {
                 onChange={(e) => {
                   inputHandler(e);
                   setSelectedCity(e.target.value);
-                  console.log(`${selectedCity}`);
                 }}
                 value={`${selectedCity}`}
               >

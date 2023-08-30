@@ -1,5 +1,4 @@
 import { Center, Flex, Spinner } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export default function DaftarAlamat({ selectedAddress, isLoading2 }) {
