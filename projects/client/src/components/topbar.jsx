@@ -56,7 +56,6 @@ export default function TopBar({
       // setIsLoaded(true);
     }
   }, [district]);
-  console.log("skeleton", isLoaded);
   return (
     <>
       <Flex id="containerTopBarB" justifyContent={"center"}>

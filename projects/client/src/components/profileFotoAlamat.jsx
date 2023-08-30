@@ -62,7 +62,6 @@ export default function ProfileFotoAlamat() {
   useEffect(() => {
     getPrimary();
   }, []);
-  console.log(primaryAddress);
 
   return (
     <>
