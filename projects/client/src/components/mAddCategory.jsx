@@ -19,6 +19,8 @@ import {
   Avatar,
   InputGroup,
   InputRightElement,
+  Toast,
+  useToast,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
 import { useDispatch } from "react-redux";
@@ -33,12 +35,11 @@ export function AddCategory(props) {
   //menyimpan file gambar yang dipilih
   const [imgUrl, setImgUrl] = useState();
   const [category, setCategory] = useState("");
-
+  const toast = useToast();
   const inputFileRef = useRef(null);
   const handleFile = async (event) => {
     const file = event.target.files[0];
     setSelectedFile(event.target.files[0]);
-    // console.log();
 
     //buat ngemunculin gambar--
     const reader = new FileReader();
@@ -55,7 +56,14 @@ export function AddCategory(props) {
 
   const categoryImage = async () => {
     if (!selectedFile || !category) {
-      alert("Please select an image and enter a category name.");
+      toast({
+        title: "Error",
+        description: "Pastikan Form Gambar / Nama Kategori sudah diisi",
+        status: "warning",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
       return;
     }
 
@@ -64,19 +72,30 @@ export function AddCategory(props) {
     formData.append("category_name", category);
 
     try {
-      console.log(formData);
       await api()
         .post("/category/v1", formData)
-        .then((result) => {
-          console.log(result.data);
-        });
-      alert("Posting success");
+        .then((result) => {});
+      toast({
+        title: "Success",
+        description: "Kategori baru berhasil dibuat",
+        status: "success",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
       setSelectedFile(null);
       setCategory("");
       props.onClose();
     } catch (error) {
       console.error(error);
-      alert("Posting failed");
+      toast({
+        title: "Error",
+        description: "Kategori baru gagal dibuat",
+        status: "error",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 

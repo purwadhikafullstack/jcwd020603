@@ -26,8 +26,6 @@ import { BsHandIndexFill } from "react-icons/bs";
 
 export default function EditAdminBranch(props) {
   const getBranch_id = props.dtBranch[props.number].branch_id;
-  console.log(getBranch_id);
-  console.log(props.dtBranch[props.number]);
   const toast = useToast();
   const [seePass, setSeePass] = useState(false);
   const [data, setData] = useState({});
@@ -87,7 +85,6 @@ export default function EditAdminBranch(props) {
 
     onSubmit: async () => {
       try {
-        console.log("masuk dlu");
         const {
           user_id,
           user_name,
@@ -145,9 +142,6 @@ export default function EditAdminBranch(props) {
             }
           });
 
-        console.log(cekBranch);
-        console.log(cekMail);
-
         if (cekMail.user_name || cekMail.email) {
           return toast({
             title:
@@ -158,7 +152,6 @@ export default function EditAdminBranch(props) {
             isClosable: true,
           });
         } else {
-          console.log(props?.dtBranch[props?.number]?.branch_id);
           await api()
             .patch("/branch/", newBranchAdmin)
             .then((res) => {
@@ -186,7 +179,6 @@ export default function EditAdminBranch(props) {
       await api()
         .get("/province/")
         .then((res) => {
-          console.log(res.data.result);
           setProvince(res.data.result);
         });
     } catch (error) {
@@ -206,7 +198,6 @@ export default function EditAdminBranch(props) {
       await api()
         .get(`/city/${provId}`)
         .then((res) => {
-          console.log(res.data.result);
           setCity(res.data.result);
         });
     } catch (error) {
@@ -224,7 +215,6 @@ export default function EditAdminBranch(props) {
   function inputHandler(event) {
     const { value, id } = event.target;
     formik.setFieldValue(id, value);
-    console.log(formik.values);
   }
 
   return (

@@ -18,7 +18,6 @@ import ModalNearestBranch from "../components/modal-nearest-branch";
 
 export default function ProductPage() {
   const [nearestBranch, setNearestBranch] = useState();
-  console.log("ini nearestBranch", nearestBranch);
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("nearestBranch"))) {

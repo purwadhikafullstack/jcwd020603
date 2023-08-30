@@ -10,9 +10,8 @@ const { openCage } = require("../service/location.service");
 dotenv.config();
 
 const branchController = {
-
-  getAllFilter : async (req,res) => {
-    const {branch_id, search, sort, ordering, page} = req.body
+  getAllFilter: async (req, res) => {
+    const { branch_id, search, sort, ordering, page } = req.body;
     let where = {
       role: "ADMIN",
     };
@@ -25,12 +24,12 @@ const branchController = {
         { "$Branch.branch_name$": { [Op.like]: `%${search}%` } },
       ];
     }
-    let order = []
-    if(sort === "user_name"){
-      order = [[sort, ordering]]
+    let order = [];
+    if (sort === "user_name") {
+      order = [[sort, ordering]];
     }
-    if(sort === "branch_name"){
-      order = [[{model : db.Branch, as: "Branch"}, "branch_name", ordering]]
+    if (sort === "branch_name") {
+      order = [[{ model: db.Branch, as: "Branch" }, "branch_name", ordering]];
     }
     try {
       const branch = await db.User.findAndCountAll({
@@ -45,7 +44,7 @@ const branchController = {
                 attributes: ["city_name", "type", "postal_code"],
               },
             ],
-          }
+          },
         ],
         where: where,
         order: order,
@@ -136,10 +135,8 @@ const branchController = {
         city_id,
         province,
       } = req.body;
-      console.log(req.body, "req bodynya admin bbranch");
       const hashedPass = await bcrypt.hash(password, 10);
       const coordinate = await openCage(req.body);
-      console.log(coordinate);
       const newBranch = await db.Branch.create({
         branch_name,
         branch_address: address,
@@ -170,7 +167,6 @@ const branchController = {
   deleteBranchAdmin: async (req, res) => {
     // const updateData = await getAll()
     const { branch_id } = req.body;
-    console.log("sini", req.body);
     const transaction = await db.sequelize.transaction();
     try {
       await db.User.destroy({
@@ -221,14 +217,13 @@ const branchController = {
       branch_id,
       user_id,
     } = req.body;
-    console.log(req.body);
     const transaction = await db.sequelize.transaction();
     const hashedPass = await bcrypt.hash(password, 10);
     try {
       const branch = await db.User.findOne({
         where: {
           branch_id: branch_id,
-          id : user_id
+          id: user_id,
         },
         include: [
           {
@@ -261,7 +256,7 @@ const branchController = {
         },
         {
           where: {
-            id : user_id,
+            id: user_id,
             branch_id: branch_id,
           },
         },
@@ -271,7 +266,7 @@ const branchController = {
       await db.Branch.update(
         {
           branch_name,
-          branch_address : address,
+          branch_address: address,
           district,
           city_id,
           province,

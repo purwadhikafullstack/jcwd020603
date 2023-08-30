@@ -26,6 +26,7 @@ import { SATableStockHistory } from "./SATableStockHistory";
 import { AddProduct } from "./mAddProduct";
 import Pagination from "./pagination";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
 export default function StockHistoryList() {
   const windowWidth = window.innerWidth;
@@ -48,6 +49,7 @@ export default function StockHistoryList() {
 
   //get all stockHistory
   const [shown, setShown] = useState({ page: 1 });
+  const [search, setSearch] = useState();
   const [filtering, setFiltering] = useState({
     page: shown.page,
     search: "",
@@ -55,12 +57,11 @@ export default function StockHistoryList() {
     category_id: "",
     feature: "",
     time1: "",
-    time2: "",
+    time2: moment().format("YYYY-MM-DD"),
     order: "DESC",
     sort: "createdAt",
   });
 
-  console.log("ini filtering", filtering);
   const [totalPages, setTotalPages] = useState(0);
   const [stockHistory, setStockHistory] = useState([]);
 
@@ -156,7 +157,7 @@ export default function StockHistoryList() {
                 placeholder="Pilih Tanggal"
                 bg={"white"}
                 type="date"
-                value={filtering.time}
+                value={filtering.time1}
                 maxW={"200px"}
                 onChange={(e) => {
                   setFiltering({ ...filtering, time1: e.target.value });
@@ -178,6 +179,8 @@ export default function StockHistoryList() {
               <InputGroup maxW={"300px"} w={"100%"}>
                 <Input
                   placeholder="pencarian"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   bg={"white"}
                   ref={searchRef}
                 ></Input>
@@ -199,6 +202,7 @@ export default function StockHistoryList() {
             <Flex w={"100%"} gap={"10px"} justifyContent={"right"}>
               <Select
                 placeholder="Kategori"
+                value={filtering.category_id}
                 h={"41px"}
                 bg={"white"}
                 onChange={(e) => {
@@ -211,6 +215,7 @@ export default function StockHistoryList() {
               </Select>
               <Select
                 placeholder="Fitur"
+                value={filtering.status}
                 h={"41px"}
                 bg={"white"}
                 onChange={(e) => {
@@ -223,6 +228,7 @@ export default function StockHistoryList() {
               </Select>
               <Select
                 placeholder="Cabang"
+                value={filtering.branch_id}
                 bg={"white"}
                 display={userSelector.role == "ADMIN" ? "none" : "flex"}
                 onChange={(e) => {
@@ -244,14 +250,15 @@ export default function StockHistoryList() {
                   order: "DESC",
                   sort: "createdAt",
                   search: "",
-                  time: "",
-                  time2: "",
+                  time1: "",
+                  time2: moment().format("YYYY-MM-DD"),
                   status: "",
                   branch_id: userSelector.branch_id || "",
                   category_id: "",
                   feature: "",
                 });
                 setShown({ page: 1 });
+                setSearch();
               }}
             >
               Reset Filter

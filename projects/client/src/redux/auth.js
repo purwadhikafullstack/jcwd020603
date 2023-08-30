@@ -6,7 +6,6 @@ const init = {
 
 function userReducer(state = init, action) {
   if (action.type == "login") {
-    console.log(action.payload);
     return {
       ...state,
       ...action.payload,

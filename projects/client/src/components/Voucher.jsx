@@ -42,7 +42,7 @@ import Pagination from "./pagination";
 export default function Voucher() {
   const userSelector = useSelector((state) => state.auth);
   const roleOfUSer = userSelector.role;
-  const searchRef = useRef()
+  const searchRef = useRef();
   const { isOpen, onOpen, onClose } = useDisclosure(); //state untuk pengaturan modal add
   const {
     isOpen: isOpenDel,
@@ -51,50 +51,48 @@ export default function Voucher() {
   } = useDisclosure();
   const [dtVocer, setDtVocer] = useState([]); // state untuk menyimpan data
   const [isEdit, setIsEdit] = useState(false); //state untuk menentukan modal tambah atau edit
-  const [getBranch_name, setGetBranch_name] = useState([])
-  const [inputBranch_name,setInputBranch_name] = useState()
-  const [search,setSearch] = useState()
-  const [sorted,setSorted] = useState()
-  const [ordered,setOrdered] = useState()
-  const [totalData,setTotalData] = useState([])
-  const [pages, setPages] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
-  const [shown, setShown] = useState({page : 1})
-  const [ascMOdeStart,setAscModeStart] = useState(true)
-  const [ascMOdeTo,setAscModeTo] = useState(true)
-  const [ascMOdeNominal,setAscModeNominal] = useState(true)
+  const [getBranch_name, setGetBranch_name] = useState([]);
+  const [inputBranch_name, setInputBranch_name] = useState();
+  const [search, setSearch] = useState();
+  const [sorted, setSorted] = useState();
+  const [ordered, setOrdered] = useState();
+  const [totalData, setTotalData] = useState([]);
+  const [pages, setPages] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [shown, setShown] = useState({ page: 1 });
+  const [ascMOdeStart, setAscModeStart] = useState(true);
+  const [ascMOdeTo, setAscModeTo] = useState(true);
+  const [ascMOdeNominal, setAscModeNominal] = useState(true);
 
-  const fetchDtBranch = async() => {
+  const fetchDtBranch = async () => {
     try {
-      await api().get("/sales-report/dt-branch").then((res) => {
-        console.log(res.data.data);
-        setGetBranch_name(res.data.data)
-      })
+      await api()
+        .get("/sales-report/dt-branch")
+        .then((res) => {
+          setGetBranch_name(res.data.data);
+        });
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   const inputHandlerBranch_name = (e) => {
-    console.log(e.target.value);
-    setInputBranch_name(e.target.value)
-  }
+    setInputBranch_name(e.target.value);
+  };
 
-  console.log(getBranch_name);
-
-  let ini_namanya = null
+  let ini_namanya = null;
   const branch_namenya = () => {
-    if(roleOfUSer == "SUPER ADMIN"){
-      if(inputBranch_name){
+    if (roleOfUSer == "SUPER ADMIN") {
+      if (inputBranch_name) {
         for (const obj of getBranch_name) {
           if (obj.id == inputBranch_name) {
-             ini_namanya = obj.branch_name;
-            break; 
+            ini_namanya = obj.branch_name;
+            break;
           }
         }
-        return ini_namanya
+        return ini_namanya;
       } else {
-        return "Semua Cabang"
+        return "Semua Cabang";
       }
     } else {
       for (const obj of getBranch_name) {
@@ -103,55 +101,51 @@ export default function Voucher() {
           break;
         }
       }
-      return ini_namanya
+      return ini_namanya;
     }
-  }
+  };
 
-  const branch_id = userSelector.role == "ADMIN" ? userSelector.branch_id : inputBranch_name
-  console.log(branch_id);
-  console.log(inputBranch_name);
+  const branch_id =
+    userSelector.role == "ADMIN" ? userSelector.branch_id : inputBranch_name;
+
   // ambil data
   const fetchAll = async () => {
     const sendBody = {
-      branch_id : branch_id || "", 
-      search : search || "", 
-      ordering : ordered || "valid_start", 
-      sort : sorted || "ASC", 
-      page : shown.page -1 || "0"}
+      branch_id: branch_id || "",
+      search: search || "",
+      ordering: ordered || "valid_start",
+      sort: sorted || "ASC",
+      page: shown.page - 1 || "0",
+    };
     try {
-      console.log(sendBody);
       const voucher = await api()
         .post("/voucher/all-filter", sendBody)
         .then((res) => {
-          console.log(res.data);
           setDtVocer(res.data.Data);
-          setTotalPages(res.data.total)
-          setTotalData(res.data.jumlah_data)
+          setTotalPages(res.data.total);
+          setTotalData(res.data.jumlah_data);
         });
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  console.log(dtVocer);
-  console.log(totalData);
-
-  const itemPerPage = 3
+  const itemPerPage = 3;
   const pageHandler = () => {
-    const output = []
+    const output = [];
     for (let i = 1; i <= totalPages; i++) {
-      output.push(i)
+      output.push(i);
     }
-    setPages(output)
-  }
+    setPages(output);
+  };
   useEffect(() => {
-    pageHandler()
-  }, [dtVocer, totalPages, shown.page])
+    pageHandler();
+  }, [dtVocer, totalPages, shown.page]);
   useEffect(() => {
-    if(shown.page > 0 && shown.page <= totalPages){
-      setPages(shown.page)
+    if (shown.page > 0 && shown.page <= totalPages) {
+      setPages(shown.page);
     }
-  }, [shown])
+  }, [shown]);
 
   const activeCheck = (valid_start, valid_to) => {
     const today = moment();
@@ -162,12 +156,12 @@ export default function Voucher() {
 
   useEffect(() => {
     fetchAll();
-    fetchDtBranch()
+    fetchDtBranch();
   }, []);
 
   useEffect(() => {
     fetchAll();
-  }, [inputBranch_name, search, shown , sorted, ordered]);
+  }, [inputBranch_name, search, shown, sorted, ordered]);
 
   const [numberIdx, setNumberIdx] = useState(0);
 
@@ -177,12 +171,15 @@ export default function Voucher() {
         <AdminNavbar onOpen={onOpen} />
       </Box>
       <Flex className="flex1R-disvoc">
-      <Flex fontSize={"26px"} fontWeight={"700"} justifyContent={"center"}>
+        <Flex fontSize={"26px"} fontWeight={"700"} justifyContent={"center"}>
           Pengaturan Voucher
         </Flex>
 
-        <Flex gap={"10px"} flexDir={{base : "column", sm: "row", lg: "row", xl : "row"}} alignItems={"center"}
-        justifyContent={"space-evenly"} 
+        <Flex
+          gap={"10px"}
+          flexDir={{ base: "column", sm: "row", lg: "row", xl: "row" }}
+          alignItems={"center"}
+          justifyContent={"space-evenly"}
         >
           <Flex className="menuTotalG">
             <Center className="center1R-disvoc">
@@ -205,51 +202,72 @@ export default function Voucher() {
               <Icon as={FaStore} fontSize={"30px"} color={"#007bfe"} />
             </Center>
             <Flex flexDir={"column"}>
-              <Flex className="flex3R-disvoc" textAlign={"center"}>{branch_namenya()}</Flex>
+              <Flex className="flex3R-disvoc" textAlign={"center"}>
+                {branch_namenya()}
+              </Flex>
               <Flex color={"grey"} fontWeight={"semibold"}>
-               Nama Cabang
+                Nama Cabang
               </Flex>
             </Flex>
           </Flex>
         </Flex>
         <Flex flexDir={"column"} rowGap={"10px"}>
-          <Flex className="flex4R-disvoc" w={"100%"} justifyContent={{base : "space-evenly", sm : "space-evenly", md: "space-between", lg: "space-between"}}>
-               <Flex  w={"100%"} gap={"10px"}>
-            <Flex flexDir={"column"} gap={"5%"} fontSize={15}>
-              <Button
-                display={userSelector.role == "ADMIN" ? "flex" : "none"}
-                className="button1-disvoc"
-                bgColor={"#9d9c45"}
-                onClick={() => {
-                  setIsEdit(false);
-                  onOpen();
-                }}
-              >
-                <BsFillPersonPlusFill />
-                Tambah
-              </Button>
-            </Flex>
-            
-            <Select
+          <Flex
+            className="flex4R-disvoc"
+            w={"100%"}
+            justifyContent={{
+              base: "space-evenly",
+              sm: "space-evenly",
+              md: "space-between",
+              lg: "space-between",
+            }}
+          >
+            <Flex w={"100%"} gap={"10px"}>
+              <Flex flexDir={"column"} gap={"5%"} fontSize={15}>
+                <Button
+                  display={userSelector.role == "ADMIN" ? "flex" : "none"}
+                  className="button1-disvoc"
+                  bgColor={"#9d9c45"}
+                  onClick={() => {
+                    setIsEdit(false);
+                    onOpen();
+                  }}
+                >
+                  <BsFillPersonPlusFill />
+                  Tambah
+                </Button>
+              </Flex>
+
+              <Select
                 onChange={inputHandlerBranch_name}
                 id="branch_name"
                 w={"100%"}
                 placeholder="Pilih Lokasi Cabang"
                 bg={"white"}
-                display={() => (userSelector.role == "SUPER ADMIN" ? "flex" : "none")}
+                display={() =>
+                  userSelector.role == "SUPER ADMIN" ? "flex" : "none"
+                }
               >
                 {getBranch_name.map((val, index) => (
-                  <option key={index} value={val.id}>{val.branch_name}</option>
+                  <option key={index} value={val.id}>
+                    {val.branch_name}
+                  </option>
                 ))}
               </Select>
-              <InputGroup >
-                <Input placeholder="search" bg={"white"} ref={searchRef}></Input>
+              <InputGroup>
+                <Input
+                  placeholder="search"
+                  bg={"white"}
+                  ref={searchRef}
+                ></Input>
                 <InputRightElement
                   as={BiSearch}
                   w={"30px"}
                   h={"30px"}
                   padding={"10px 10px 0px 0px"}
-                  onClick={()=> {setSearch(searchRef.current.value)}}
+                  onClick={() => {
+                    setSearch(searchRef.current.value);
+                  }}
                 />
               </InputGroup>
             </Flex>
@@ -264,40 +282,72 @@ export default function Voucher() {
                   <Th>Judul</Th>
                   <Th>kode voucher</Th>
                   {/* <Th>Tangggal Mulai</Th> */}
-                  <Th cursor={"pointer"} onClick={()=> {
-                  setSorted("valid_start")
-                  setOrdered(ascMOdeStart ? "ASC" : "DESC")
-                  setAscModeStart(!ascMOdeStart)
-                   }}><Flex w={"100px"}><Flex w={"70%"}>Tanggal Mulai</Flex>
-                  {ascMOdeStart ? <MdArrowBackIosNew size={"15px"} id="descendingB"/> : 
-                  <MdArrowBackIosNew id="ascendingB" size={"15px"}/>}</Flex></Th>
+                  <Th
+                    cursor={"pointer"}
+                    onClick={() => {
+                      setSorted("valid_start");
+                      setOrdered(ascMOdeStart ? "ASC" : "DESC");
+                      setAscModeStart(!ascMOdeStart);
+                    }}
+                  >
+                    <Flex w={"100px"}>
+                      <Flex w={"70%"}>Tanggal Mulai</Flex>
+                      {ascMOdeStart ? (
+                        <MdArrowBackIosNew size={"15px"} id="descendingB" />
+                      ) : (
+                        <MdArrowBackIosNew id="ascendingB" size={"15px"} />
+                      )}
+                    </Flex>
+                  </Th>
 
-                  <Th cursor={"pointer"} onClick={()=> {
-                  setSorted("valid_to")
-                  setOrdered(ascMOdeTo ? "ASC" : "DESC")
-                  setAscModeTo(!ascMOdeTo)
-                }}><Flex w={"100px"}><Flex w={"70%"}>Tanggal Akhir</Flex>
-                {ascMOdeTo ? <MdArrowBackIosNew size={"15px"} id="descendingB"/> : 
-                <MdArrowBackIosNew id="ascendingB" size={"15px"}/>}</Flex></Th>
+                  <Th
+                    cursor={"pointer"}
+                    onClick={() => {
+                      setSorted("valid_to");
+                      setOrdered(ascMOdeTo ? "ASC" : "DESC");
+                      setAscModeTo(!ascMOdeTo);
+                    }}
+                  >
+                    <Flex w={"100px"}>
+                      <Flex w={"70%"}>Tanggal Akhir</Flex>
+                      {ascMOdeTo ? (
+                        <MdArrowBackIosNew size={"15px"} id="descendingB" />
+                      ) : (
+                        <MdArrowBackIosNew id="ascendingB" size={"15px"} />
+                      )}
+                    </Flex>
+                  </Th>
 
-                  <Th cursor={"pointer"} onClick={()=> {
-                  setSorted("nominal")
-                  setOrdered(ascMOdeNominal ? "ASC" : "DESC")
-                  setAscModeNominal(!ascMOdeNominal)
-                }}><Flex w={"100px"}><Flex w={"70%"}>Nominal </Flex>
-                {ascMOdeNominal ? <MdArrowBackIosNew size={"15"} id="descendingB"/> : 
-                <MdArrowBackIosNew id="ascendingB" size={"15"}/>}</Flex></Th>
+                  <Th
+                    cursor={"pointer"}
+                    onClick={() => {
+                      setSorted("nominal");
+                      setOrdered(ascMOdeNominal ? "ASC" : "DESC");
+                      setAscModeNominal(!ascMOdeNominal);
+                    }}
+                  >
+                    <Flex w={"100px"}>
+                      <Flex w={"70%"}>Nominal </Flex>
+                      {ascMOdeNominal ? (
+                        <MdArrowBackIosNew size={"15"} id="descendingB" />
+                      ) : (
+                        <MdArrowBackIosNew id="ascendingB" size={"15"} />
+                      )}
+                    </Flex>
+                  </Th>
                   <Th>Limit</Th>
                   <Th>Minimal Order</Th>
                   <Th>Keterangan</Th>
-                  <Th display={roleOfUSer == "ADMIN" ? "flex" : "none"}  >Aksi</Th>
+                  <Th display={roleOfUSer == "ADMIN" ? "flex" : "none"}>
+                    Aksi
+                  </Th>
                 </Tr>
               </Thead>
 
               <Tbody fontSize={"10px"}>
                 {dtVocer?.map((val, index) => (
                   <Tr key={val?.id} className="table-row">
-                    <Td>{((shown.page -1)*itemPerPage) + (index + 1)}</Td>
+                    <Td>{(shown.page - 1) * itemPerPage + (index + 1)}</Td>
                     <Td>
                       {activeCheck(val?.valid_start, val?.valid_to)
                         ? "Aktif"
@@ -311,7 +361,11 @@ export default function Voucher() {
                     <Td>{val?.limit}</Td>
                     <Td>{val?.minimal_order}</Td>
                     <Td>{val?.desc}</Td>
-                    <Td display={userSelector.role == "ADMIN" ? "flex" : "none"} alignItems={"center"} position={"center"}>
+                    <Td
+                      display={userSelector.role == "ADMIN" ? "flex" : "none"}
+                      alignItems={"center"}
+                      position={"center"}
+                    >
                       <Flex flexDir={"row"} w={"100%"} h={"100%"} gap={"15px"}>
                         <Button
                           bgColor={"#9d9c45"}
@@ -344,11 +398,12 @@ export default function Voucher() {
             </Table>
           </Flex>
           <Flex justifyContent={"end"}>
-          <Pagination
-            shown={shown}
-            setShown={setShown}
-            totalPages={totalPages}
-            pages={pages}/>
+            <Pagination
+              shown={shown}
+              setShown={setShown}
+              totalPages={totalPages}
+              pages={pages}
+            />
           </Flex>
         </Flex>
       </Flex>

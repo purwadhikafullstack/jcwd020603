@@ -223,6 +223,7 @@ img {
   max-width: 910px;
   flex-wrap: wrap;
   gap: 13px;
+  padding-right: 5px;
   grid-template-columns: repeat(2, 1fr);
 
   /* Media query for screens below 600px */

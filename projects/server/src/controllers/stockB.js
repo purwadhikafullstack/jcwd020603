@@ -7,7 +7,6 @@ const { createStockHistory } = require("../service/stock.service");
 const stockControllerB = {
   getAllStockByDiscount: async (req, res) => {
     const { discount_id, branch_id } = req.query;
-    console.log(req.query, "ini diskon id");
     try {
       const getbydiscount = await db.Stock.findAll({
         where: {
@@ -59,7 +58,6 @@ const stockControllerB = {
 
   getAllStockByBranch: async (req, res) => {
     const { branch_id } = req.query;
-    console.log(req.query, "ini");
     try {
       const getbybranch = await db.Stock.findAll({
         where: {
@@ -152,17 +150,15 @@ const stockControllerB = {
             ],
           },
         ],
-        limit: 4,
+        limit: 12,
       });
 
-      console.log(whereClause, "test");
-      console.log(whereClause.id, "test2");
       await trans.commit();
       return res.status(200).send({
         message: "OK",
         result: stocks,
         lastId: stocks.length ? stocks[stocks.length - 1].id : 0,
-        hasMore: stocks.length >= 4 ? true : false,
+        hasMore: stocks.length >= 12 ? true : false,
       });
     } catch (err) {
       await trans.rollback();
@@ -272,22 +268,10 @@ const stockControllerB = {
   searchStock: async (req, res) => {
     try {
       const { search_query, branch_id } = req.query;
-      console.log("s", search_query);
-      console.log(branch_id);
-      const whereClause = {};
-      if (branch_id) {
+
+      let whereClause = {};
+      if (branch_id !== undefined && branch_id !== null) {
         whereClause.branch_id = branch_id;
-      }
-      if (search_query) {
-        whereClause[Op.or] = [
-          { "$Product.product_name$": { [Op.like]: `%${search_query}%` } },
-          { "$Product.desc$": { [Op.like]: `%${search_query}%` } },
-          {
-            "$Product.Category.category_name$": {
-              [Op.like]: `%${search_query}%`,
-            },
-          },
-        ];
       }
 
       if (search_query) {
@@ -311,17 +295,36 @@ const stockControllerB = {
                 },
               ],
             },
+            {
+              model: db.Discount,
+              as: "Discount",
+              attributes: [
+                "nominal",
+                "title",
+                "valid_start",
+                "valid_to",
+                "photo_discount_url",
+              ],
+            },
           ],
-
-          where: whereClause,
+          where: {
+            ...whereClause,
+            [Op.or]: [
+              { "$Product.product_name$": { [Op.like]: `%${search_query}%` } },
+              { "$Product.desc$": { [Op.like]: `%${search_query}%` } },
+              {
+                "$Product.Category.category_name$": {
+                  [Op.like]: `%${search_query}%`,
+                },
+              },
+            ],
+          },
         });
 
         res.send(stocks);
       } else {
         const stocks = await db.Stock.findAll({
-          where: {
-            branch_id: branch_id,
-          },
+          where: whereClause,
           include: [
             {
               model: db.Product,
@@ -349,12 +352,29 @@ const stockControllerB = {
     const trans = await db.sequelize.transaction();
     try {
       const { quantity_stock, product_id, branch_id } = req.body;
-
+      console.log(
+        "re.body insert stock",
+        quantity_stock,
+        product_id,
+        branch_id
+      );
       // Check if any required parameter is empty
       if (!quantity_stock || !product_id || !branch_id) {
         await trans.rollback();
         return res.status(400).send({
           message: "Semua parameter harus diisi pada form.",
+        });
+      }
+
+      // Check if stock with the same product_id and branch_id already exists
+      const existingStock = await db.Stock.findOne({
+        where: { product_id, branch_id },
+      });
+
+      if (existingStock) {
+        await trans.rollback();
+        return res.status(400).send({
+          message: "Stock dengan product_id dan branch_id yang sama sudah ada.",
         });
       }
 
@@ -501,8 +521,8 @@ const stockControllerB = {
   getAllStockByCategory: async (req, res) => {
     try {
       const { category_name, branch_id } = req.query;
-      const whereClause = {};
-      if (branch_id) {
+      let whereClause = {};
+      if (branch_id !== undefined && branch_id !== null) {
         whereClause.branch_id = branch_id;
       }
       const get = await db.Stock.findAll({

@@ -57,7 +57,6 @@ export default function AdminOrderDetail() {
         params: { order_number: order_number.order_number },
       });
       setOrderValue(get.data.result);
-      console.log(get.data.result);
 
       const getDetail = await api().get("/order-detail/", {
         params: { id: get.data.result.id },
@@ -110,7 +109,6 @@ export default function AdminOrderDetail() {
       const status = await api().patch(`/order/status/${orderValue?.id}`, {
         status: valueStatus,
       });
-      console.log(status.data);
       fetchOrder();
     } catch (err) {
       console.log(err);

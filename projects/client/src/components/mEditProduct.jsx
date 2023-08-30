@@ -13,6 +13,7 @@ import {
   Icon,
   Center,
   Select,
+  useToast,
 } from "@chakra-ui/react";
 import { api } from "../api/api";
 import { useDispatch } from "react-redux";
@@ -23,6 +24,7 @@ import { useState, useRef, useEffect } from "react";
 export function EditProduct(props) {
   const [selectedFile, setSelectedFile] = useState(null);
   const { selectedOption, setSelectedOption } = useState("");
+  const toast = useToast();
   const [imgUrl, setImgUrl] = useState(props.product.photo_product_url);
   const [product, setProduct] = useState({
     product_name: "",
@@ -64,19 +66,30 @@ export function EditProduct(props) {
     formData.append("weight", product.weight);
 
     try {
-      // console.log(formData);
       await api()
         .patch("/product/v2/" + props.id, formData)
-        .then((result) => {
-          // console.log(result.data);
-        });
-      alert("Posting success");
+        .then((result) => {});
+      toast({
+        title: "Success",
+        description: "Produk berhasil disunting",
+        status: "success",
+        position: "top",
+        duration: 3000,
+        isClosable: true,
+      });
       setSelectedFile(null);
       setProduct("");
       props.onClose();
     } catch (error) {
       console.error(error);
-      alert("Posting failed");
+      toast({
+        title: "Error",
+        description: "Produk gagal disunting",
+        status: "error",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
