@@ -126,11 +126,6 @@ export default function Product() {
               <Image src={loading} w={"30px"} h={"30px"} />
             </Flex>
           }
-          endMessage={
-            <p style={{ textAlign: "center" }}>
-              <b>Yay! You have seen it all</b>
-            </p>
-          }
         >
           <Grid id="productB">
             {combinedSearchResults.map((val, idx) => (
