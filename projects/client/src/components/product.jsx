@@ -118,13 +118,18 @@ export default function Product() {
           </Flex>
         </Flex>
         <InfiniteScroll
-          dataLength={stocks.length}
+          dataLength={combinedSearchResults.length}
           next={fetchMore}
           hasMore={hasMore}
           loader={
             <Flex justifyContent={"center"}>
               <Image src={loading} w={"30px"} h={"30px"} />
             </Flex>
+          }
+          endMessage={
+            <p style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all</b>
+            </p>
           }
         >
           <Grid id="productB">

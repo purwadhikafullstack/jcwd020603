@@ -54,6 +54,7 @@ export default function EditAdminBranch(props) {
         .required("Gagal disimpan.. kolom ini tidak boleh kosong")
         .email("Invalid. Write like this example@mail.com"),
       password: Yup.string()
+        .required("Tulis Ulang Password")
         .min(8, "Your Password too short.")
         .matches(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*$/,
@@ -115,8 +116,8 @@ export default function EditAdminBranch(props) {
         const cekMailResponse = await api().get("/user/", {
           params: { getall: newBranchAdmin.email },
         });
-    
-        if (cekMailResponse.data.data.length > 0 ) {
+
+        if (cekMailResponse.data.data.length > 0) {
           return toast({
             title: "Email sudah terdaftar, silahkan gunakan email lain",
             status: "warning",
