@@ -118,7 +118,7 @@ export default function Product() {
           </Flex>
         </Flex>
         <InfiniteScroll
-          dataLength={stocks.length}
+          dataLength={combinedSearchResults.length}
           next={fetchMore}
           hasMore={hasMore}
           loader={

@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const db = require("./models");
 const verify = require("./middleware/verify");
-const cronJob = require("./utils/cronJob");
+// const cronJob = require("./utils/cronJob");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -51,7 +51,7 @@ app.use("/api/voucher", routes.voucherRoutes);
 app.use("/api/sales-report", routes.salesReportRoutes);
 
 // import konfigurasi cron job
-cronJob();
+// cronJob();
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
