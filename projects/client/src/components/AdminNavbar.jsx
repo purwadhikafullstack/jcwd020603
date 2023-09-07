@@ -11,7 +11,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { HiMenu, HiOutlineLogout } from "react-icons/hi";
-import AdminSidebar from "./admin-sidebar"
+import AdminSidebar from "./admin-sidebar";
 import "../css/indexG.css";
 import { useSelector } from "react-redux";
 import ModalLogoutAdmin from "./modal-logout-admin";
@@ -19,7 +19,7 @@ import { useNavigate } from "react-router";
 
 export default function AdminNavbar() {
   const userSelector = useSelector((state) => state.auth);
-  const nav = useNavigate()
+  const nav = useNavigate();
   const windowWidth = window.innerWidth;
   const {
     isOpen: isOpenModal1,
@@ -63,10 +63,15 @@ export default function AdminNavbar() {
           gap={"20px"}
           alignItems={"center"}
           cursor={"pointer"}
-          onClick={()=> {nav("/profile-admin")}}
         >
           <Avatar w={"40px"} h={"40px"} src={userSelector.avatar_url} />
-          {userSelector.user_name}
+          <Flex
+            onClick={() => {
+              nav("/profile-admin");
+            }}
+          >
+            {userSelector.user_name}
+          </Flex>
           <Icon
             as={HiOutlineLogout}
             fontSize={"25px"}

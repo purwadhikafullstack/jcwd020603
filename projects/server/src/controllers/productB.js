@@ -41,7 +41,7 @@ const productController = {
       return res.status(200).send({
         message: "OK",
         result: product.rows,
-        total: Math.ceil(product.count / 6),
+        total: Math.ceil(product.count / 5),
       });
     } catch (err) {
       await trans.rollback();

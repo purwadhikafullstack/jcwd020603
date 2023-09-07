@@ -221,7 +221,7 @@ export default function LandingPage() {
       setNearestBranchSet(true);
       return onOpen();
     }
-  }, [nearestBranch]);
+  }, [nearestBranch, minDistance]);
 
   return (
     <>

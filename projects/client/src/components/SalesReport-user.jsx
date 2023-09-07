@@ -46,9 +46,10 @@ export default function SalesReportUser() {
     setDate(tempDate);
   };
   const inputHandlerBranch_name = (e) => {
-    setInputBranch_name(e.target.value)
-  }
-  const branch_id = userSelector.role =="ADMIN" ? userSelector.branch_id : inputBranch_name
+    setInputBranch_name(e.target.value);
+  };
+  const branch_id =
+    userSelector.role == "ADMIN" ? userSelector.branch_id : inputBranch_name;
   const pageHandler = () => {
     const output = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -60,13 +61,15 @@ export default function SalesReportUser() {
   // fetch data
   const fetchDtBranch = async () => {
     try {
-      await api().get("/sales-report/dt-branch").then((res) => {
-        setGetBranch_name(res.data.data)
-      })
+      await api()
+        .get("/sales-report/dt-branch")
+        .then((res) => {
+          setGetBranch_name(res.data.data);
+        });
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   const fetchSumQtyUserAll = async () => {
     const sendDataBody = {
@@ -83,11 +86,12 @@ export default function SalesReportUser() {
     };
     try {
       await api()
-      .post("sales-report/sum-userall", sendDataBody).then((res) => {
-        setDtSumQtyUserAll(res.data.allData)
-        setDtSumQtyUser(res.data.dataTransByDate)
-        setDtForDownload(res.data.dataTransByDate)
-      })
+        .post("sales-report/sum-userall", sendDataBody)
+        .then((res) => {
+          setDtSumQtyUserAll(res.data.allData);
+          setDtSumQtyUser(res.data.dataTransByDate);
+          setDtForDownload(res.data.dataTransByDate);
+        });
     } catch (error) {
       console.log(error.message);
     }
@@ -99,7 +103,7 @@ export default function SalesReportUser() {
         ? date.dateFrom
         : moment().subtract(1, "weeks").format("YYYY-MM-DD"),
       dateTo: date.dateTo
-        ? moment(date.dateTo).format("YYYY-MM-DD")
+        ? moment(date.dateTo).add(1, "days").format("YYYY-MM-DD")
         : moment().format("YYYY-MM-DD"),
       branch_id: branch_id ? branch_id : "",
       sort: selectedSortBy ? selectedSortBy : "",
@@ -109,11 +113,12 @@ export default function SalesReportUser() {
     };
     try {
       await api()
-      .post("sales-report/sum-userall-pagination", sendDataBody).then((res) => {
-        setDtSumQtyUserAllPagination(res.data.allData)
-        setDtSumQtyUserPagination(res.data.dataTransByDate)
-        setTotalPages(res.data.total)
-      })
+        .post("sales-report/sum-userall-pagination", sendDataBody)
+        .then((res) => {
+          setDtSumQtyUserAllPagination(res.data.allData);
+          setDtSumQtyUserPagination(res.data.dataTransByDate);
+          setTotalPages(res.data.total);
+        });
     } catch (error) {
       console.log(error.message);
     }
@@ -180,7 +185,7 @@ export default function SalesReportUser() {
     if (shown.page > 0 && shown.page <= totalPages) {
       setPages(shown.page);
     }
-  }, [shown])  
+  }, [shown]);
   useEffect(() => {
     fetchDtBranch();
     fetchSumQtyUserAll();

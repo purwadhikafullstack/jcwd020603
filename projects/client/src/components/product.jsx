@@ -22,31 +22,31 @@ export default function Product() {
   const [productSearchResults, setProductSearchResults] = useState([]);
   const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
 
-  const fetchStock = async () => {
-    try {
-      const endpoint = `/stock?nearestBranch=${nearestBranch}&&lastId=${lastId}`;
-      const get = await api().get(endpoint);
-      if (lastId) {
-        setProductSearchResults((prevStocks) => [
-          ...prevStocks,
-          ...get.data.result,
-        ]);
-      } else {
-        setProductSearchResults(get.data.result);
-      }
-      setHasMore(get.data.hasMore);
-      setTempId(get.data.lastId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  useEffect(() => {
-    fetchStock();
-  }, [nearestBranch, lastId]);
+  // const fetchStock = async () => {
+  //   try {
+  //     const endpoint = `/stock?nearestBranch=${nearestBranch}&&lastId=${lastId}`;
+  //     const get = await api().get(endpoint);
+  //     if (lastId) {
+  //       setProductSearchResults((prevStocks) => [
+  //         ...prevStocks,
+  //         ...get.data.result,
+  //       ]);
+  //     } else {
+  //       setProductSearchResults(get.data.result);
+  //     }
+  //     setHasMore(get.data.hasMore);
+  //     setTempId(get.data.lastId);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchStock();
+  // }, [nearestBranch, lastId]);
 
-  const fetchMore = () => {
-    setLastId(tempId);
-  };
+  // const fetchMore = () => {
+  //   setLastId(tempId);
+  // };
 
   const performSearch = (searchTerm) => {
     api()
@@ -117,7 +117,7 @@ export default function Product() {
             ))}
           </Flex>
         </Flex>
-        <InfiniteScroll
+        {/* <InfiniteScroll
           dataLength={combinedSearchResults.length}
           next={fetchMore}
           hasMore={hasMore}
@@ -126,24 +126,24 @@ export default function Product() {
               <Image src={loading} w={"30px"} h={"30px"} />
             </Flex>
           }
-        >
-          <Grid id="productB">
-            {combinedSearchResults.map((val, idx) => (
-              <CardProduct
-                key={val.Product.id}
-                id={val.product_id}
-                url={val.Product?.photo_product_url}
-                product_name={val.Product?.product_name}
-                price={val.Product?.price}
-                desc={val.Product?.desc}
-                discount={val.Discount?.nominal}
-                quantity_stock={val.quantity_stock}
-                weight={val.Product?.weight}
-                stock_id={val.id}
-              />
-            ))}
-          </Grid>
-        </InfiniteScroll>
+        > */}
+        <Grid id="productB">
+          {combinedSearchResults.map((val, idx) => (
+            <CardProduct
+              key={val.Product.id}
+              id={val.product_id}
+              url={val.Product?.photo_product_url}
+              product_name={val.Product?.product_name}
+              price={val.Product?.price}
+              desc={val.Product?.desc}
+              discount={val.Discount?.nominal}
+              quantity_stock={val.quantity_stock}
+              weight={val.Product?.weight}
+              stock_id={val.id}
+            />
+          ))}
+        </Grid>
+        {/* </InfiniteScroll> */}
       </Flex>
     </>
   );

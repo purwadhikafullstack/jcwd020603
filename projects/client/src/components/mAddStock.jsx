@@ -177,7 +177,6 @@ export function AddStock(props) {
               colorScheme="green"
               onClick={() => {
                 addStock();
-                // props.fetchData();
               }}
             >
               Save
