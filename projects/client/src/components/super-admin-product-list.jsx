@@ -195,7 +195,7 @@ export default function SuperAdminProductList() {
                   category_id: "",
                 });
                 setShown({ page: 1 });
-                setSearch();
+                setSearch("");
               }}
             >
               Reset Filter

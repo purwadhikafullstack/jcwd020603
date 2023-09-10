@@ -258,7 +258,7 @@ export default function StockHistoryList() {
                   feature: "",
                 });
                 setShown({ page: 1 });
-                setSearch();
+                setSearch("");
               }}
             >
               Reset Filter

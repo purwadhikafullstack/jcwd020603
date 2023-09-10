@@ -69,6 +69,7 @@ export function AddProduct(props) {
       await api()
         .post("/product/v1", formData)
         .then((result) => {});
+      props.fetchData();
       toast({
         title: "Success",
         description: "Produk baru berhasil dibuat",

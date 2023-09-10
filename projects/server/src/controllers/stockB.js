@@ -255,7 +255,7 @@ const stockControllerB = {
       return res.status(200).send({
         message: "OK",
         result: stockAdmin.rows,
-        total: Math.ceil(stockAdmin.count / 6),
+        total: Math.ceil(stockAdmin.count / 4),
       });
     } catch (err) {
       await trans.rollback(); // Rollback only if an error occurs

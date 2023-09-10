@@ -104,14 +104,15 @@ export default function DiscountAddModal(props) {
             product_id: [...selectedId],
             discount_id: id,
           };
-         const editDiskon =  await api()
-            .patch("/discount", dataDiscountEdit)
-            if(editDiskon && selectedFile){
-              const formData = new FormData();
-              formData.append("PhotoDiscount", selectedFile);
-              await api()
-                .patch(`/discount/photo-discount/${dataDiscountEdit.discount_id}`, formData)
-            }
+          const editDiskon = await api().patch("/discount", dataDiscountEdit);
+          if (editDiskon && selectedFile) {
+            const formData = new FormData();
+            formData.append("PhotoDiscount", selectedFile);
+            await api().patch(
+              `/discount/photo-discount/${dataDiscountEdit.discount_id}`,
+              formData
+            );
+          }
           toast({
             title: "Data diskon berhasil diubah",
             status: "success",
@@ -145,15 +146,19 @@ export default function DiscountAddModal(props) {
             product_id: [...selectedId],
             discount_id,
           };
-        const tambahDiskon =  await api()
-            .post("/discount", dataDiscountTambah)
-              setGetDiscountId(tambahDiskon.data.data)
-            if( tambahDiskon.data.data.id && selectedFile){
-              const formData = new FormData();
-              formData.append("PhotoDiscount", selectedFile);
-              await api()
-                .patch(`/discount/photo-discount/${tambahDiskon.data.data.id}`, formData)
-            }
+          const tambahDiskon = await api().post(
+            "/discount",
+            dataDiscountTambah
+          );
+          setGetDiscountId(tambahDiskon.data.data);
+          if (tambahDiskon.data.data.id && selectedFile) {
+            const formData = new FormData();
+            formData.append("PhotoDiscount", selectedFile);
+            await api().patch(
+              `/discount/photo-discount/${tambahDiskon.data.data.id}`,
+              formData
+            );
+          }
           toast({
             title: "Data diskon berhasil ditambahkan",
             status: "success",
@@ -224,7 +229,7 @@ export default function DiscountAddModal(props) {
                 />
                 <Image
                   rounded={10}
-                  h={"20%"}
+                  h={"13%"}
                   w={"40%"}
                   mt={"30px"}
                   align={"center"}

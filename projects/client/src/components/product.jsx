@@ -1,4 +1,4 @@
-import { Flex, Grid, Image } from "@chakra-ui/react";
+import { Flex, Grid, Image, position } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchBar } from "./searchBar";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { CardCategory } from "./cardCategory";
 import InfiniteScroll from "react-infinite-scroll-component";
 import loading from "../assets/loading.webp";
+import { color } from "framer-motion";
 
 export default function Product() {
   const searchResults = useSelector((state) => state.search);
@@ -21,32 +22,6 @@ export default function Product() {
   const discount_id = location.state?.discount_id;
   const [productSearchResults, setProductSearchResults] = useState([]);
   const nearestBranch = JSON.parse(localStorage.getItem("nearestBranch"));
-
-  const fetchStock = async () => {
-    try {
-      const endpoint = `/stock?nearestBranch=${nearestBranch}&&lastId=${lastId}`;
-      const get = await api().get(endpoint);
-      if (lastId) {
-        setProductSearchResults((prevStocks) => [
-          ...prevStocks,
-          ...get.data.result,
-        ]);
-      } else {
-        setProductSearchResults(get.data.result);
-      }
-      setHasMore(get.data.hasMore);
-      setTempId(get.data.lastId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  useEffect(() => {
-    fetchStock();
-  }, [nearestBranch, lastId]);
-
-  const fetchMore = () => {
-    setLastId(tempId);
-  };
 
   const performSearch = (searchTerm) => {
     api()
@@ -117,16 +92,7 @@ export default function Product() {
             ))}
           </Flex>
         </Flex>
-        <InfiniteScroll
-          dataLength={combinedSearchResults.length}
-          next={fetchMore}
-          hasMore={hasMore}
-          loader={
-            <Flex justifyContent={"center"}>
-              <Image src={loading} w={"30px"} h={"30px"} />
-            </Flex>
-          }
-        >
+        {combinedSearchResults.length > 0 ? (
           <Grid id="productB">
             {combinedSearchResults.map((val, idx) => (
               <CardProduct
@@ -143,7 +109,21 @@ export default function Product() {
               />
             ))}
           </Grid>
-        </InfiniteScroll>
+        ) : (
+          <Flex
+            justifyContent={"center"}
+            h={"250px"}
+            fontSize={"larger"}
+            style={{
+              textAlign: "center",
+              alignItems: "center",
+              color: "darkgreen",
+            }}
+          >
+            Silahkan pilih kategori produk yang ingin anda cari terlebih dahulu
+            . . .
+          </Flex>
+        )}
       </Flex>
     </>
   );
