@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const db = require("../models");
 const mailer = require("../lib/mailer");
 const dotenv = require("dotenv");
+const moment = require("moment");
 dotenv.config();
 const url_foto_diskon = process.env.photo_discount_url;
 
@@ -149,8 +150,15 @@ const discountController = {
   },
 
   updateDiscount: async (req, res) => {
-    const { title, valid_start, valid_to, branch_id, nominal, product_id, discount_id } =
-      req.body;
+    const {
+      title,
+      valid_start,
+      valid_to,
+      branch_id,
+      nominal,
+      product_id,
+      discount_id,
+    } = req.body;
     try {
       await db.Discount.update(
         {
@@ -160,17 +168,19 @@ const discountController = {
       );
       await db.Stock.update(
         { discount_id: null },
-        { where: { 
-          discount_id: discount_id,
-          branch_id : branch_id
-        } }
+        {
+          where: {
+            discount_id: discount_id,
+            branch_id: branch_id,
+          },
+        }
       );
       await db.Stock.update(
         { discount_id: discount_id },
         {
           where: {
             product_id: { [db.Sequelize.Op.in]: product_id },
-            branch_id : branch_id
+            branch_id: branch_id,
           },
         }
       );
@@ -207,7 +217,11 @@ const discountController = {
   },
   getDiscountB: async (req, res) => {
     try {
-      const discount = await db.Discount.findAll();
+      const discount = await db.Discount.findAll({
+        where: {
+          valid_to: { [Op.gte]: moment() },
+        },
+      });
       return res.send(discount);
     } catch (err) {
       console.log(err.message);

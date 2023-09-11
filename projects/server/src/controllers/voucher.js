@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
 const db = require("../models");
+const moment = require("moment");
 
 const voucherController = {
   getAllVoucher: async (req, res) => {
@@ -8,6 +9,7 @@ const voucherController = {
       const fetch = await db.Voucher.findAll({
         where: {
           branch_id: req.query.branch_id,
+          valid_to: { [Op.gte]: moment() },
         },
       });
       await trans.commit();

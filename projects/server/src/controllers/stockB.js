@@ -115,6 +115,7 @@ const stockControllerB = {
       if (lastId > 0) {
         whereClause.id = { [Op.gt]: lastId };
       }
+
       console.log("where product", whereClause);
       const stocks = await db.Stock.findAll({
         where: whereClause,
