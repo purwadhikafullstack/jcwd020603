@@ -235,7 +235,8 @@ export default function AdminOrderDetail() {
                   <Flex fontWeight={"500"}>Bukti Pembayaran</Flex>
                   <Center
                     w={"70%"}
-                    h={"300px"}
+                    minH={"300px"}
+                    h={"100%"}
                     border={"2px solid gray"}
                     borderRadius={"10px"}
                     padding={"10px"}
@@ -245,6 +246,7 @@ export default function AdminOrderDetail() {
                         src={orderValue.order_transfer_url}
                         w={"100%"}
                         maxW={"300px"}
+                        h={"100%"}
                       />
                     ) : (
                       <Center textAlign={"center"} fontWeight={600}>
